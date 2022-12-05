@@ -1,0 +1,13 @@
+<mat-toolbar>
+  <div class="title">App Final</div>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+  <div
+    *ngFor="let menu of menus"
+    class="link"
+    [routerLink]="menu.key"
+    routerLinkActive="active"
+  >
+    {{ menu.value }}
+  </div>

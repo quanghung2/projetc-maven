@@ -1,0 +1,15 @@
+<div class="toast-component">
+  <div
+    (@fadeAnimation.done)="onFadeFinished($event)"
+    [@fadeAnimation]="{ value: animationState, params: { fadeIn: 150, fadeOut: 250 } }"
+    [ngClass]="{
+      success: toastType === 'success',
+      warning: toastType === 'warning',
+      error: toastType === 'error',
+      default: !toastType
+    }"
+    class="toast"
+  >
+    <div class="toast__message" [innerHTML]="data.message"></div>
+  </div>
+</div>

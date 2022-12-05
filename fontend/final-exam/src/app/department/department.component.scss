@@ -1,0 +1,52 @@
+:host {
+  display: block;
+
+  .container {
+    margin: auto;
+    padding: 16px;
+    background-color: white;
+    &__header {
+      margin-bottom: 1.6rem;
+    }
+
+    &__content {
+      table {
+        width: 100%;
+
+        .action {
+          color: rgba(0, 0, 0, 0.67);
+          visibility: hidden;
+        }
+
+        tr {
+          &:hover {
+            background-color: #f0f0f0;
+
+            .action {
+              visibility: visible !important;
+            }
+          }
+        }
+      }
+    }
+
+    pom-action-bar {
+      margin-bottom: 1.6rem;
+    }
+
+    &__no-config {
+      min-height: 500px;
+      color: var(--gray-700);
+
+      &__icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1.6rem;
+      }
+
+      &__message {
+        font-size: 20px;
+      }
+    }
+  }
+}

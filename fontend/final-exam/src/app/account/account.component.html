@@ -1,0 +1,79 @@
+<mat-toolbar><h1>Account</h1></mat-toolbar>
+
+
+<div class="container p-16">
+  <div  fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+    <mat-form-field>
+      <mat-label>Role</mat-label>
+      <mat-select>
+        <mat-option value="option1">Option 1</mat-option>
+        <mat-option value="option3">Option 2</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Department</mat-label>
+      <mat-select>
+        <mat-option value="option1">Option 1</mat-option>
+        <mat-option value="option3">Option 2</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+    <mat-form-field class="example-full-width">
+      <mat-label>Search by name</mat-label>
+      <input matInput type="text">
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.8rem">
+      <button mat-icon-button matTooltip="Refresh" (click)="refresh()">
+        <mat-icon>autorenew</mat-icon>
+      </button>
+      <button mat-flat-button color="primary" (click)="updateOrCreate()">Create</button>
+    </div>
+  </div>
+  <div class="container__content">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef>Username</th>
+        <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="fullName">
+        <th mat-header-cell *matHeaderCellDef>Full name</th>
+        <td mat-cell *matCellDef="let element">{{ element.fullName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let element">{{ element.role }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef>Department</th>
+        <td mat-cell *matCellDef="let element">{{ element.department }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="action" fxLayoutAlign="end center">
+            <button mat-icon-button>
+              <mat-icon matTooltip="Edit" (click)="updateOrCreate(element)">edit</mat-icon>
+            </button>
+            <button mat-icon-button>
+              <mat-icon matTooltip="Delete" (click)="deleteAccount(element)">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5">
+          <div fxLayout="column" fxLayoutAlign="center center">No Data Available</div>
+        </td>
+      </tr>
+    </table>
+    <mat-paginator hidePageSize="true" pageSize="10" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

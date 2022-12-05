@@ -1,0 +1,58 @@
+:host {
+  display: block;
+
+  .toast {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 290px;
+    box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 6px 10px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 18px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    color: #fff;
+    padding: 8px 6px 8px 16px;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    z-index: 99999;
+
+    &__message {
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+
+      word-break: break-word;
+
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+      width: 100%;
+      padding: 0.25rem 0;
+    }
+
+    &.success {
+      background: #43a047;
+      color: #155724;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      font-weight: 500;
+    }
+
+    &.warning {
+      background: #ffecb3;
+      border-color: #ffe082;
+      color: #795548;
+      font-weight: 500;
+    }
+
+    &.error {
+      background: #d32f2f;
+      color: #c62828;
+      background-color: #ffcdd2;
+      border-color: #ef9a9a;
+      font-weight: 500;
+    }
+  }
+}
