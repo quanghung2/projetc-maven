@@ -59,7 +59,7 @@ export class DepartmentComponent implements OnInit {
   updateOrCreate(department?: Department) {
     this.dialog
       .open(DepartmentStoreComponent, {
-        width: '500px',
+        width: '450px',
         disableClose: true,
         autoFocus: false,
         data: <DepartmentReq>{

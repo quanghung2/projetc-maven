@@ -35,7 +35,7 @@ export class DepartmentStoreComponent implements OnInit {
   addAccount() {
     this.dialog
       .open(AddAccountComponent, {
-        width: '500px',
+        width: '600px',
         disableClose: true,
         autoFocus: false,
         data: <DepartmentReq>{

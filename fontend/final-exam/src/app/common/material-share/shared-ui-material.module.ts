@@ -36,6 +36,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { ButtonLoadingDirective } from './directives/button-loading.directive';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 const providers = [
   MatCheckboxModule,
@@ -74,7 +75,9 @@ const providers = [
   ClipboardModule,
   FlexLayoutModule,
   LayoutModule,
-  DragDropModule
+  DragDropModule,
+  MatDatepickerModule
+
 ];
 
 const CUSTOM_DIRECTIVES = [ButtonLoadingDirective];

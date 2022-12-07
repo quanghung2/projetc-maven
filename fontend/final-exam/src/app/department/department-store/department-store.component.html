@@ -19,25 +19,15 @@
   </mat-form-field>
 </mat-dialog-content>
 
-<mat-dialog-actions fxLayout="row" fxLayoutAlign.gt-lg="space-between center">
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
   <button mat-stroked-button color="primary" (click)="addAccount()">Add Account</button>
   <div fxLayout="row" fxLayoutAlign.gt-lg="space-between center">
     <button mat-button mat-dialog-close>Cancel</button>
-  <ng-container *ngIf="isUpdate; else createBtt">
     <button
     mat-raised-button
     color="primary"
   >
-  Update
+  Save
   </button>
-  </ng-container>
-  <ng-template #createBtt>
-    <button
-    mat-raised-button
-    color="primary"
-  >
-    Save
-  </button>
-  </ng-template>
   </div>
 </mat-dialog-actions>

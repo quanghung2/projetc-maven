@@ -2,6 +2,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedUiMaterialModule } from '../common/material-share/shared-ui-material.module';
 import { AddAccountComponent } from './add-account/add-account.component';
@@ -20,6 +21,7 @@ const routes: Routes = [{ path: '', component: DepartmentComponent }];
     LayoutModule,
     SharedUiMaterialModule,
     RouterModule.forChild(routes),
+    MatDatepickerModule
   ],
   declarations: [DepartmentComponent, DepartmentStoreComponent, DeleteDepartmentComponent, AddAccountComponent],
   exports: [DepartmentComponent, DepartmentStoreComponent, DeleteDepartmentComponent, AddAccountComponent]

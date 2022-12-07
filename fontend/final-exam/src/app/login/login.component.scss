@@ -1,0 +1,17 @@
+:host {
+  display: flex;
+  justify-content: center;
+  margin: 100px 0px;
+
+  .container {
+    padding: 16px;
+
+    &__item {
+      width: 400px;
+    }
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

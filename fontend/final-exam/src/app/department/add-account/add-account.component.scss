@@ -1,1 +1,28 @@
+:host {
+  display: block;
+
+  .container {
+    margin: auto;
+    padding: 16px;
+    background-color: white;
+    &__header {
+      margin-bottom: 1.6rem;
+    }
+
+    &__content {
+      table {
+        width: 100%;
+        .action{
+          width: 10%;
+        }
+        .username {
+          width: 30%;
+        }
+        .fullName{
+          width: 30%;
+        }
+      }
+    }
+  }
+}
 
