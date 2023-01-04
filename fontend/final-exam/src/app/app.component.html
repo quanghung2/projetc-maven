@@ -1,4 +1,4 @@
-<ng-container *ngIf="isLogin; else login">
+
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav
       #sidenav
@@ -38,9 +38,4 @@
       <router-outlet></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-</ng-container>
-
-<ng-template #login>
-    <app-login></app-login>
-</ng-template>
 
