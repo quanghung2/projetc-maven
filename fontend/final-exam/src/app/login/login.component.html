@@ -1,57 +1,9 @@
-<!-- <div class="container">
-  <form [formGroup]="loginForm" >
-    <div class="frame-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
-      <div class="title">Sign in</div>
-      <mat-form-field fxFlexFill>
-        <mat-label>User Name</mat-label>
-        <input
-          #idInput
-          readonly
-          matInput
-          autocomplete="off"
-          placeholder="Email or number"
-          formControlName="username"
-          required
-        />
-      </mat-form-field>
-      <mat-form-field fxFlexFill>
-        <input
-          #passwordInput
-          readonly
-          matInput
-          autocomplete="off"
-          placeholder="Password"
-          formControlName="password"
-          required
-        />
-        <button type="button" mat-icon-button matSuffix>
-          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-        <mat-error *ngIf="password.invalid">{{ getErrorPassword() }}</mat-error>
-      </mat-form-field>
-      <mat-checkbox *ngIf="showRememberMe()" color="primary" formControlName="rememberMe" fxFlexAlign="start">
-        Remember me
-      </mat-checkbox>
-      <div class="noti-summary error" *ngIf="showErrorSummary">{{ error }}</div>
-      <button
-        mat-raised-button
-        [loading]="indicator"
-        [style.backgroundColor]="loginForm.valid"
-        [disabled]="loginForm.invalid || indicator"
-        fxFlexFill
-        color="primary"
-        type="submit"
-      >
-        Sign in
-      </button>
-      <a routerLink="/auth/resetpassword">Forgot Password?</a>
-    </div>
-  </form>
-</div> -->
-
 <mat-card>
-  <mat-card-title>Login</mat-card-title>
-  <mat-card-content>
+  <div style="text-align:center;">
+    <mat-card-title>Login</mat-card-title>
+  </div>
+
+  <mat-card-content >
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
       <div
         class="container"
@@ -117,10 +69,10 @@
           [disabled]="loginForm.invalid || indicator"
           color="primary"
           type="submit"
+
         >
           Sign in
         </button>
-        <button mat-raised-button color="primary">Register</button>
         </div>
 
       </div>
