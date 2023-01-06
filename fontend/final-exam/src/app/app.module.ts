@@ -11,8 +11,17 @@ import { SharedUiToastModule } from './common/toast/shared-ui-toast.module';
 import { HomeComponent } from './home/home.component';
 import { HeaderModule } from './sidebar/sidebar.module';
 import { ROUTE_LINK } from './common/contants';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
+  {
+    path: ROUTE_LINK.home,
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+  },
+  {
+    path: ROUTE_LINK.login,
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule)
+  },
   {
     path: ROUTE_LINK.account,
     loadChildren: () => import('./account/account.module').then(m => m.AccountModule)
@@ -26,7 +35,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    LoginComponent
   ],
   imports: [
     BrowserModule,

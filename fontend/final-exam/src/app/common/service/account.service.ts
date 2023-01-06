@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Account } from '../model/account';
@@ -7,7 +7,13 @@ import { Account } from '../model/account';
   providedIn: 'root'
 })
 export class AccountService {
+  header = new HttpHeaders();
   constructor(private http: HttpClient) {}
+
+  createAuthorizationHeader(username: string, password: string) {
+    this.header = new HttpHeaders().append('Authorization', 'Basic ' + btoa(`${username}:${password}`));
+    return this.header;
+  }
 
   getAll(): Observable<Account> {
     return this.http.get<Account>(`api/v1/accounts`)
@@ -25,4 +31,6 @@ export class AccountService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`api/v1/accounts`)
   }
+
+
 }
