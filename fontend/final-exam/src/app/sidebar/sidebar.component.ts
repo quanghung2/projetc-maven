@@ -13,8 +13,9 @@ export interface MenuSidebar {
 export class SidebarComponent implements OnInit {
   isLoading: boolean;
   menus: MenuSidebar[] = [
-    { key: 'account', value: 'Account', order: 0 },
-    { key: 'department', value: 'Department', order: 1 },
+    { key: 'home', value: 'Home', order: 0 },
+    { key: 'account', value: 'Account', order: 1 },
+    { key: 'department', value: 'Department', order: 2 },
   ];
 
   constructor() { }

@@ -20,13 +20,17 @@ const routes: Routes = [
   {
     path: ROUTE_LINK.department,
     loadChildren: () => import('./department/department.module').then(m => m.DepartmentModule)
+  },
+  { path: ROUTE_LINK.home, 
+    loadChildren: () => import('./home/home.module').then(m => m.HomeModule) 
+  },
+  { path: '',loadChildren: () => import('./home/home.module').then(m => m.HomeModule)  
   }
 ]
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HomeComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

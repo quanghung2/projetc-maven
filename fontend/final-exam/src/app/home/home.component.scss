@@ -1,0 +1,16 @@
+:host {
+    display: block;
+  
+    .container {
+      margin: auto;
+      padding: 16px;
+      background-color: white;
+      &__header {
+        margin-bottom: 1.6rem;
+      }
+    
+      .hello{
+        text-align: center;
+      }
+  }
+}

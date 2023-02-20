@@ -16,7 +16,7 @@ export class AddAccountComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   dataSource = new MatTableDataSource<Account>();
   readonly ROLE = ROLE;
-  readonly displayedColumns = ['action', 'username', 'fullName', 'role'];
+  readonly displayedColumns = ['username', 'fullName', 'role', 'action'];
   listAccount: Account[] = [{
     username: 'quanghung', fullName: '123', department: 'academy', role: ROLE.admin
   },
