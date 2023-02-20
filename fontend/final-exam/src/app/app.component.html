@@ -15,7 +15,7 @@
     <mat-sidenav-content>
       <mat-toolbar>
         <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
-          <button mat-icon-button color="primary">
+          <button mat-icon-button color="primary" (click)="goHome()">
             <mat-icon>home</mat-icon>
           </button>
             <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -39,7 +39,4 @@
 </mat-sidenav-container>
 
 
-<!-- <ng-template #login>
-  <app-login (submitEM)="loginSuccess($event)"></app-login>
-</ng-template> -->
 

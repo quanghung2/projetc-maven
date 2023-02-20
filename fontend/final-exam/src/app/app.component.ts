@@ -1,4 +1,5 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,13 +8,19 @@ import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 })
 export class AppComponent implements OnInit {
   isLogin: boolean;
-  constructor() { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    ) { }
 
   ngOnInit(): void {
   }
 
   loginSuccess(isLogin: boolean) {
     this.isLogin = isLogin
-    console.log("🚀 ~ this.isLogin", this.isLogin)
+  }
+
+  goHome() {
+    this.router.navigate(['home'], { relativeTo: this.route })
   }
 }
