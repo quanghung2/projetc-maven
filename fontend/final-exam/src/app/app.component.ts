@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +10,10 @@ export class AppComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  loginSuccess(isLogin: boolean) {
+    this.isLogin = isLogin
+    console.log("🚀 ~ this.isLogin", this.isLogin)
   }
 }

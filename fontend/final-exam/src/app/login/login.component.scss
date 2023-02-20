@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  justify-content: center;
+  margin: 100px 0px;
+
+  .container {
+    padding: 16px;
+
+    &__item {
+      width: 400px;
+    }
+  }
+
+  .mat-card{
+    padding:0 !important;
+  }
+
+  .mat-card-content{
+    padding:5px !important;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}

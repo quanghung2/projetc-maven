@@ -1,0 +1,84 @@
+<mat-card>
+  <div style="text-align:center;">
+    <mat-card-title>Login</mat-card-title>
+  </div>
+
+  <mat-card-content >
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <div
+        class="container"
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="0.8rem"
+        fxFlexFill
+      >
+        <mat-form-field fxFlexFill >
+          <input
+            #idInput
+            readonly
+            (input)="showErrorSummary = false"
+            (focus)="removeReadonlyAttr(idInput)"
+            matInput
+            autocomplete="off"
+            placeholder="User Name"
+            formControlName="username"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field fxFlexFill>
+          <input
+            #passwordInput
+            matInput
+            autocomplete="off"
+            placeholder="Password"
+            formControlName="password"
+            [type]="showPassword ? 'text' : 'password'"
+            required
+            (input)="showErrorSummary = false"
+            (focus)="removeReadonlyAttr(passwordInput)"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="showPassword = !showPassword"
+          >
+            <mat-icon>{{
+              showPassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          <mat-error *ngIf="password.invalid">{{
+            getErrorPassword()
+          }}</mat-error>
+        </mat-form-field>
+
+        <a routerLink="/resetpassword" fxFlexAlign="start">Forgot Password?</a>
+        <mat-checkbox
+          *ngIf="showRememberMe()"
+          color="primary"
+          formControlName="rememberMe" fxFlexAlign="start"
+        >
+          Remember me
+        </mat-checkbox>
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="3.2rem">
+          <button
+          mat-raised-button
+          [loading]="indicator"
+          [style.backgroundColor]="loginForm.valid"
+          [disabled]="loginForm.invalid || indicator"
+          color="primary"
+          type="submit"
+          (click)="submit()"
+
+        >
+          Sign in
+        </button>
+        </div>
+
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+
