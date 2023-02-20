@@ -18,7 +18,7 @@ const routes: Routes = [{ path: '', component: LoginComponent }];
     SharedUiMaterialModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [],
-  exports: []
+  declarations: [LoginComponent],
+  exports: [LoginComponent]
 })
 export class LoginModule {}

@@ -2,13 +2,19 @@
   display: flex;
   justify-content: center;
   margin: 100px 0px;
+  background-color: white;
 
   .container {
     padding: 16px;
-
+    background-color: white;
     &__item {
-      width: 400px;
+      width: 500px;
     }
+  }
+
+  .baner{
+    text-align: center;
+    margin-top: 2rem;
   }
 
   .mat-card{
