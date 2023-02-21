@@ -15,21 +15,21 @@ export class AccountService {
     return this.header;
   }
 
-  getAll(): Observable<Account> {
-    return this.http.get<Account>(`api/v1/accounts`)
+  getAll(): Observable<any> {
+    return this.http.get<any>(`http://localhost:8080/api/v1/accounts`)
   }
 
 
   create(req: Partial<Account>): Observable<Account> {
-    return this.http.post<Account>(`api/v1/accounts`, req)
+    return this.http.post<Account>(`http://localhost:8080/api/v1/accounts`, req)
   }
 
   update(req: Partial<Account>): Observable<Account> {
-    return this.http.put<Account>(`api/v1/accounts`, req)
+    return this.http.put<Account>(`http://localhost:8080/api/v1/accounts`, req)
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`api/v1/accounts`)
+    return this.http.delete<void>(`http://localhost:8080/api/v1/accounts`)
   }
 
 

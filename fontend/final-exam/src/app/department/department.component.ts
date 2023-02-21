@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { DepartmentService } from '../common/service/department.service';
 import { DeleteDepartmentComponent } from './delete-department/delete-department.component';
 import { DepartmentReq, DepartmentStoreComponent } from './department-store/department-store.component';
 
@@ -21,35 +22,17 @@ export class DepartmentComponent implements OnInit {
   dataSource = new MatTableDataSource<Department>();
   readonly displayedColumns = ['name', 'totalMember', 'type', 'createDate', 'actions'];
 
-  listDepartment: Department[] = [{
-    name: 'Sale', totalMember: '123', type: 'PM', createDate: '05/10/2021'
-  },
-  {
-    name: 'Academy', totalMember: '12', type: 'DEV', createDate: '05/12/2000'
-  },
-  {
-    name: 'HR', totalMember: '1', type: 'Scrum Master', createDate: '05/12/2000'
-  },
-  {
-    name: 'Education', totalMember: '2', type: 'DEV', createDate: '05/11/2021'
-  },
-  {
-    name: 'Tester', totalMember: '5', type: 'Test', createDate: '04/10/2021'
-  },
-  {
-    name: 'Education', totalMember: '8', type: 'DEV', createDate: '02/10/2021'
-  },
-  {
-    name: 'Tester', totalMember: '3', type: 'Test', createDate: '01/10/2021'
-  }
-]
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private departmentService: DepartmentService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Department>(this.listDepartment);
+    this.departmentService.getAll().subscribe(res => {
+      console.log(res)
+      this.dataSource = new MatTableDataSource<Department>(res.content);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
     });
+    })
+    
   }
 
   refresh() {
