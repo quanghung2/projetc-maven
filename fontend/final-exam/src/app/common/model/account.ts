@@ -4,5 +4,7 @@ export interface Account {
     lastName: string;
     role: string;
     departmentName: string;
+    departmentId: number;
+    id: number;
   }
 

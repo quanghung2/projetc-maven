@@ -18,6 +18,7 @@ export class ToastService {
   ) {}
 
   success(message: string, duration?: number) {
+    console.log(message)
     const positionStrategy = this.getPositionStrategy();
     const overlayRef = this.overlay.create({ positionStrategy });
 
@@ -54,6 +55,7 @@ export class ToastService {
   }
 
   error(message: string, duration?: number) {
+    console.log(message)
     const positionStrategy = this.getPositionStrategy();
     const overlayRef = this.overlay.create({ positionStrategy });
 

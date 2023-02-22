@@ -2,27 +2,23 @@
 
 
 <div class="container p-16">
-  <div  fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
-    <mat-form-field>
-      <mat-label>Role</mat-label>
-      <mat-select>
-        <mat-option value="option1">Option 1</mat-option>
-        <mat-option value="option3">Option 2</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Department</mat-label>
-      <mat-select>
-        <mat-option value="option1">Option 1</mat-option>
-        <mat-option value="option3">Option 2</mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
+  
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
-    <mat-form-field class="example-full-width">
-      <mat-label>Search by name</mat-label>
-      <input matInput type="text">
-    </mat-form-field>
+    <div  fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem" >
+      <mat-form-field>
+        <mat-label>Role</mat-label>
+        <mat-select [(ngModel)]="filteredRole" (ngModelChange)="onChangeRole($event)">
+          <mat-option *ngFor="let item of ROLE" [value]="item.key">
+            {{ item.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Search by name</mat-label>
+        <input matInput type="text" [formControl]="searchCtrl" placeholder="Enter name">
+      </mat-form-field>
+    </div>
+    
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.8rem">
       <button mat-icon-button matTooltip="Refresh" (click)="refresh()">
         <mat-icon>autorenew</mat-icon>

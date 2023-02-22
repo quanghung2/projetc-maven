@@ -24,15 +24,15 @@
     <mat-form-field>
       <mat-label>Role</mat-label>
       <mat-select [formControl]="role">
-        <mat-option value="USER">USER</mat-option>
-        <mat-option value="MANAGER">MANAGER</mat-option>
-        <mat-option value="ADMIN">ADMIN</mat-option>
+        <mat-option *ngFor="let item of ROLE" [value]="item.key">
+          {{ item.value }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Department</mat-label>
-      <mat-select [formControl]="departmentName">
+      <mat-select [formControl]="department">
         <mat-option *ngFor="let item of departmentList" [value]="item.key">
           {{ item.value }}
         </mat-option>

@@ -20,12 +20,12 @@ export class AccountService {
   }
 
 
-  create(req: Partial<Account>): Observable<Account> {
-    return this.http.post<Account>(`http://localhost:8080/api/v1/accounts`, req)
+  create(req: Partial<Account>): Observable<void> {
+    return this.http.post<void>(`http://localhost:8080/api/v1/accounts`, req)
   }
 
-  update(req: Partial<Account>): Observable<Account> {
-    return this.http.put<Account>(`http://localhost:8080/api/v1/accounts`, req)
+  update(req: Partial<Account>, id: number): Observable<void> {
+    return this.http.put<void>(`http://localhost:8080/api/v1/accounts/${id}`, req)
   }
 
   delete(id: string): Observable<void> {
