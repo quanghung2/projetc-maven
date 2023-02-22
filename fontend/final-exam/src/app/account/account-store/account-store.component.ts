@@ -3,7 +3,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Account } from 'src/app/common/model/account';
+import { Department } from 'src/app/common/model/department';
 import { AccountService } from 'src/app/common/service/account.service';
+import { DepartmentService } from 'src/app/common/service/department.service';
 import { ToastService } from 'src/app/common/toast/service/toast.service';
 
 export interface AccountReq {
@@ -17,6 +19,7 @@ export interface AccountReq {
 })
 export class AccountStoreComponent implements OnInit {
   isUpdate: boolean;
+  departmentList: Department[] = []
   username = new FormControl(null, Validators.required);
   firstName = new FormControl(null, Validators.required);
   lastName = new FormControl(null, Validators.required);
@@ -27,27 +30,19 @@ export class AccountStoreComponent implements OnInit {
     { key: 'MANAGER', value: 'MANAGER' },
     { key: 'ADMIN', value: 'ADMIN' },
   ];
-  readonly departmentList= [
-    {key: 1, value: 'Marketing'}, 
-    {key: 2, value: 'Sale'}, 
-    {key: 3, value: 'Bảo vệ'}, 
-    {key: 4, value: 'Nhân sự'}, 
-    {key: 5, value: 'Kỹ thuật'}, 
-    {key: 6, value: 'Tài chính'},
-    {key: 7, value: 'Phó giám đốc'},
-    {key: 8, value: 'Giám đốc'},
-    {key: 9, value: 'Thư kí'},
-    {key: 10, value: 'Bán hàng'},
-  ]
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AccountReq,
     private dialogRef: MatDialogRef<AccountStoreComponent>,
     private accountService: AccountService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private departmentService: DepartmentService
   ) {}
 
   ngOnInit(): void {
+    this.departmentService.getAll().subscribe(page => {
+      this.departmentList = page.content;
+    })
     this.isUpdate = this.data.account ? true : false;
     if(this.isUpdate) {
       this.username.setValue(this.data.account.username);

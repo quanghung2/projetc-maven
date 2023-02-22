@@ -33,8 +33,8 @@
     <mat-form-field>
       <mat-label>Department</mat-label>
       <mat-select [formControl]="department">
-        <mat-option *ngFor="let item of departmentList" [value]="item.key">
-          {{ item.value }}
+        <mat-option *ngFor="let item of departmentList" [value]="item.id">
+          {{ item.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
