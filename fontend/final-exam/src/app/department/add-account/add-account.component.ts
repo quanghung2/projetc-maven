@@ -27,12 +27,17 @@ export class AddAccountComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data.department.accounts)
     this.accountService.getAll()
     .pipe(finalize(() => (this.loading = false)))
     .subscribe(page => {
       this.accounts = page.content;
       this.updateDataSource(this.accounts)
     })
+  }
+
+  filterAccount(account: Account) {
+    return this.data.department?.accounts.some(a => a.accountId === account.id)
   }
 
   updateDataSource(items: Account[]) {
@@ -42,8 +47,8 @@ export class AddAccountComponent implements OnInit {
     });
   }
 
-  checkout(e: Account) {
-
+  toggleAccount(account: Account) {
+    
   }
 
 }

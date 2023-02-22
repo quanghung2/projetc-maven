@@ -26,4 +26,8 @@ export class DepartmentService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`http://localhost:8080/api/v1/departments/${id}`)
   }
+
+  addAccount(account: Account, req: Partial<Department>, id: number): Observable<void> {
+    return this.http.put<void>(`http://localhost:8080/api/v1/departments/${id}`, req)
+  }
 }
