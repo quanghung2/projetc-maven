@@ -28,8 +28,8 @@ export class AccountService {
     return this.http.put<void>(`http://localhost:8080/api/v1/accounts/${id}`, req)
   }
 
-  delete(id: string): Observable<void> {
-    return this.http.delete<void>(`http://localhost:8080/api/v1/accounts`)
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/api/v1/accounts/${id}`)
   }
 
 

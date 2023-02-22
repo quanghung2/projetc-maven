@@ -83,11 +83,10 @@ export class AccountStoreComponent implements OnInit {
         departmentId: this.department.value
       }
       this.accountService.create(body).subscribe(_=> {
-        console.log('hello')
         this.toastService.success('Create successfully');
         this.dialogRef.close(true)
       },
-      err => this.toastService.error('Update failed')
+      err => this.toastService.error('Create failed')
       );
     }
   }

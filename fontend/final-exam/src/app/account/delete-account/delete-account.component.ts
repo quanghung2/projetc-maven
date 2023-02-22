@@ -3,10 +3,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Account } from 'src/app/common/model/account';
+import { AccountService } from 'src/app/common/service/account.service';
+import { ToastService } from 'src/app/common/toast/service/toast.service';
+import { AccountReq } from '../account-store/account-store.component';
 
-export interface AccountReq {
-  account: Account
-}
 
 @Component({
   selector: 'delete-account',
@@ -14,20 +14,25 @@ export interface AccountReq {
   styleUrls: ['./delete-account.component.scss']
 })
 export class DeleteAccountComponent implements OnInit {
-  isUpdate: boolean;
-  username = new FormControl(null, Validators.required);
-  firstName = new FormControl(null, Validators.required);
-  lastName = new FormControl(null, Validators.required);
-  role = new FormControl(null, Validators.required);
-  department = new FormControl(null, Validators.required);
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AccountReq,
     private dialogRef: MatDialogRef<DeleteAccountComponent>,
+    private accountService: AccountService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.isUpdate = this.data.account ? true : false;
+  }
+
+  deleteAccount() {
+    this.accountService.delete(this.data.account.id).subscribe(
+      _=> {
+      this.toastService.success('Delete successfully');
+      this.dialogRef.close(true)
+    },
+      err => this.toastService.error('Delete failed')
+    );
   }
 
 }
