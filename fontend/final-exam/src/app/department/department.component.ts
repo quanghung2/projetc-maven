@@ -1,42 +1,66 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { Department } from '../common/model/department';
 import { DepartmentService } from '../common/service/department.service';
 import { DeleteDepartmentComponent } from './delete-department/delete-department.component';
 import { DepartmentReq, DepartmentStoreComponent } from './department-store/department-store.component';
+import { startWith, takeUntil, finalize } from 'rxjs/operators';
+import { DestroySubscriberComponent } from '../common/destroy-subscriber.component';
 
-export interface Department {
-  name: string;
-  totalMember: string;
-  type: string;
-  createDate: string;
-}
 @Component({
   selector: 'app-department',
   templateUrl: './department.component.html',
   styleUrls: ['./department.component.scss']
 })
-export class DepartmentComponent implements OnInit {
+export class DepartmentComponent extends DestroySubscriberComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  dataSource = new MatTableDataSource<Department>();
-  readonly displayedColumns = ['name', 'totalMember', 'type', 'createDate', 'actions'];
+  searchCtrl = new FormControl();
+  dataSource: MatTableDataSource<Department> = new MatTableDataSource<Department>();
+  data: Department[] = [];
+  loading: boolean;
+  readonly displayedColumns = ['name', 'totalMember', 'type', 'actions'];
 
-  constructor(private dialog: MatDialog, private departmentService: DepartmentService) { }
+  constructor(
+    private dialog: MatDialog, 
+    private departmentService: DepartmentService) 
+    { 
+      super();
+    }
 
   ngOnInit(): void {
-    this.departmentService.getAll().subscribe(res => {
-      console.log(res)
-      this.dataSource = new MatTableDataSource<Department>(res.content);
-    setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-    });
+    this.loading = true;
+    this.departmentService.getAll()
+    .pipe(finalize(() => (this.loading = false)))
+    .subscribe(page => {
+      this.data = page.content;
+      if (!this.searchCtrl.value) {
+        this.updateDataSource(this.data);
+      } else {
+        const data = this.data.filter(
+          x =>
+            x.name?.toLowerCase().includes(this.searchCtrl.value?.trim()?.toLowerCase())
+            );
+        this.updateDataSource(data);
+      }
     })
-    
+    this.initSearch();
   }
 
-  refresh() {
-
+  initSearch() {
+    this.searchCtrl.valueChanges.pipe(startWith(''), takeUntil(this.destroySubscriber$)).subscribe(value => {
+      if (!value?.trim()) {
+        this.updateDataSource(this.data);
+        return;
+      }
+      const data = this.data.filter(
+        x =>
+        x.name?.toLowerCase().includes(this.searchCtrl.value?.trim()?.toLowerCase())
+      );
+      this.updateDataSource(data);
+    })
   }
 
   updateOrCreate(department?: Department) {
@@ -57,7 +81,6 @@ export class DepartmentComponent implements OnInit {
       });
   }
 
-
   deleteDepartment(account: Department) {
     this.dialog
       .open(DeleteDepartmentComponent, {
@@ -74,5 +97,24 @@ export class DepartmentComponent implements OnInit {
           this.refresh();
         }
       });
+  }
+
+  refresh() {
+    this.loading = true;
+    this.searchCtrl.setValue('')
+    this.departmentService
+      .getAll()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(page => {
+        this.data = page.content;
+        this.updateDataSource(this.data)
+      })
+  }
+
+  updateDataSource(items: Department[]) {
+    this.dataSource.data = items;
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+    });
   }
 }

@@ -7,14 +7,8 @@ import { Account } from '../model/account';
   providedIn: 'root'
 })
 export class AccountService {
-  header = new HttpHeaders();
   constructor(private http: HttpClient) {}
-
-  createAuthorizationHeader(username: string, password: string) {
-    this.header = new HttpHeaders().append('Authorization', 'Basic ' + btoa(`${username}:${password}`));
-    return this.header;
-  }
-
+  
   getAll(): Observable<any> {
     return this.http.get<any>(`http://localhost:8080/api/v1/accounts`)
   }

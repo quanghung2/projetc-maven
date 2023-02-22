@@ -2,8 +2,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Department } from 'src/app/common/model/department';
+import { DepartmentService } from 'src/app/common/service/department.service';
+import { ToastService } from 'src/app/common/toast/service/toast.service';
 import { AddAccountComponent } from '../add-account/add-account.component';
-import { Department } from '../department.component';
 
 export interface DepartmentReq {
   department: Department
@@ -16,20 +18,31 @@ export interface DepartmentReq {
 })
 export class DepartmentStoreComponent implements OnInit {
   isUpdate: boolean;
-  username = new FormControl(null, Validators.required);
-  firstName = new FormControl(null, Validators.required);
-  lastName = new FormControl(null, Validators.required);
-  role = new FormControl(null, Validators.required);
-  department = new FormControl(null, Validators.required);
+  name = new FormControl(null, Validators.required);
+  type = new FormControl(null, Validators.required);
+
+
+  readonly TYPE = [
+    { key: 'DEV', value: 'DEV' },
+    { key: 'TEST', value: 'TEST' },
+    { key: 'ScrumMaster', value: 'SCRUMMASTER' }, 
+    { key: 'PM', value: 'PM' }
+  ];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DepartmentReq,
     private dialogRef: MatDialogRef<DepartmentStoreComponent>,
     private dialog: MatDialog,
+    private departmentService: DepartmentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
     this.isUpdate = this.data.department ? true : false;
+    if(this.isUpdate) {
+      this.name.setValue(this.data.department.name);
+      this.type.setValue(this.data.department.type);
+    }
   }
 
   addAccount() {
@@ -48,6 +61,33 @@ export class DepartmentStoreComponent implements OnInit {
           console.log(res)
         }
       });
+  }
+
+  saveOrUpdate() {
+    if(this.isUpdate) {
+      const body = {
+        name: this.name.value,
+        type: this.type.value
+      }
+      this.departmentService.update(body, this.data.department.id).subscribe(
+        _=> {
+        this.toastService.success('Updated successfully');
+        this.dialogRef.close(true)
+      },
+        err => this.toastService.error('Update failed')
+      );
+    } else {
+      const body = {
+        name: this.name.value,
+        type: this.type.value
+      }
+      this.departmentService.create(body).subscribe(_=> {
+        this.toastService.success('Create successfully');
+        this.dialogRef.close(true)
+      },
+      err => this.toastService.error('Create failed')
+      );
+    }
   }
 
 }

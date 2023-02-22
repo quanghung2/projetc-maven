@@ -2,6 +2,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DepartmentService } from 'src/app/common/service/department.service';
+import { ToastService } from 'src/app/common/toast/service/toast.service';
 import { DepartmentReq } from '../department-store/department-store.component';
 
 @Component({
@@ -10,20 +12,24 @@ import { DepartmentReq } from '../department-store/department-store.component';
   styleUrls: ['./delete-department.component.scss']
 })
 export class DeleteDepartmentComponent implements OnInit {
-  isUpdate: boolean;
-  username = new FormControl(null, Validators.required);
-  firstName = new FormControl(null, Validators.required);
-  lastName = new FormControl(null, Validators.required);
-  role = new FormControl(null, Validators.required);
-  department = new FormControl(null, Validators.required);
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DepartmentReq,
     private dialogRef: MatDialogRef<DeleteDepartmentComponent>,
+    private departmentService: DepartmentService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit(): void {
-    this.isUpdate = this.data.department ? true : false;
+    console.log(this.data.department.id)
   }
 
+  deleteDepartment() {
+    this.departmentService.delete(this.data.department.id).subscribe(
+      _=> {
+      this.toastService.success('Delete successfully');
+      this.dialogRef.close(true)
+    },
+      err => this.toastService.error('Delete failed')
+    );
+  }
 }
