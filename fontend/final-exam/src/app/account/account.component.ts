@@ -37,7 +37,10 @@ export class AccountComponent extends DestroySubscriberComponent implements OnIn
   }
 
   ngOnInit(): void {
-    this.accountService.getAll().subscribe(page => {
+    this.loading = true
+    this.accountService.getAll()
+    .pipe(finalize(() => (this.loading = false)))
+    .subscribe(page => {
       this.data = page.content;
       if (!this.searchCtrl.value) {
         this.updateDataSource(this.data);
@@ -130,6 +133,7 @@ export class AccountComponent extends DestroySubscriberComponent implements OnIn
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(page => {
         this.data = page.content;
+        this.updateDataSource(this.data)
       })
   }
 

@@ -1,8 +1,6 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <mat-toolbar><h1>Account</h1></mat-toolbar>
-
-
-<div class="container p-16">
-  
+<div *ngIf="!loading" class="container p-16">
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
     <div  fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem" >
       <mat-form-field>
