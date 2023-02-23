@@ -1,0 +1,53 @@
+<div class="org-chart">
+  <div *ngIf="!isLoading && chartDataRows.length" class="control_wrapper">
+    <button
+      type="button"
+      (click)="isZoomIn = true; isZoomOut = false; isMoveActive = false"
+      [ngClass]="{ active: isZoomIn }"
+      [disabled]="scale >= maxScale"
+    >
+      <mat-icon>zoom_in</mat-icon>
+    </button>
+    <button
+      type="button"
+      (click)="isZoomIn = false; isZoomOut = true; isMoveActive = false"
+      [ngClass]="{ active: isZoomOut }"
+      [disabled]="scale <= minScale"
+    >
+      <mat-icon>zoom_out</mat-icon>
+    </button>
+    <button
+      type="button"
+      (click)="isZoomIn = false; isZoomOut = false; isMoveActive = true"
+      [ngClass]="{ active: isMoveActive }"
+    >
+      <mat-icon>open_with</mat-icon>
+    </button>
+  </div>
+
+  <div
+    #containerRef
+    class="container"
+    (click)="onZoom($event)"
+    (mousedown)="onMoveStart($event)"
+    (mousemove)="onMove($event)"
+    (mouseup)="onMoveEnd()"
+    (mouseleave)="onMoveEnd()"
+    (wheel)="onWheel($event)"
+    [ngStyle]="{ cursor: getStyleCursor() }"
+  >
+    <div *ngIf="!chartDataRows.length && !isLoading" class="no-data">Organization chart data not available.</div>
+    <div
+      id="charts"
+      #chartRef
+      class="chart_wrapper"
+      [ngStyle]="{
+        transition: isMouseMove ? 'none' : ' 0.1s all',
+        transform: 'translate(' + pointX + 'px , ' + pointY + 'px )' + 'scale(' + scale + ')'
+      }"
+    ></div>
+    <div *ngIf="isLoading" class="container__loading">
+      <mat-spinner></mat-spinner>
+    </div>
+  </div>
+</div>

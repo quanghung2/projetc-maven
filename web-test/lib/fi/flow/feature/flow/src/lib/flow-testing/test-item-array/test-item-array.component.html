@@ -1,0 +1,69 @@
+<ng-container [formGroup]="formItem">
+  <h4 class="mb-8">
+    <strong>{{ formItem.get('title').value }}</strong>
+  </h4>
+
+  <div formArrayName="arrayItems" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" class="mb-8">
+    <div
+      [formGroupName]="i"
+      *ngFor="let arg of formArray.controls; let i = index"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxLayoutGap="4px"
+    >
+      <div class="widget-title" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex>
+        <div
+          [formGroupName]="j"
+          *ngFor="let subItem of $any(arg).controls; let j = index"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="8px"
+        >
+          <mat-form-field
+            *ngIf="subItem.get('dataType').value !== 'boolean' && subItem.get('dataType').value !== 'array'"
+            hideRequiredMarker="true"
+          >
+            <input
+              matInput
+              [attr.type]="subItem.get('dataType').value === 'number' ? 'number' : null"
+              [placeholder]="subItem.get('title').value"
+              formControlName="value"
+              required
+            />
+            <mat-error *ngIf="subItem.get('value').invalid">
+              {{ getErrorInput(subItem.get('value')) }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="subItem.get('dataType').value === 'boolean'" hideRequiredMarker="true">
+            <mat-select [placeholder]="subItem.get('title').value" formControlName="value" required>
+              <mat-option [value]="true">True</mat-option>
+              <mat-option [value]="false">False</mat-option>
+            </mat-select>
+            <mat-error *ngIf="subItem.get('value').invalid">
+              {{ getErrorInput(subItem.get('value')) }}
+            </mat-error>
+          </mat-form-field>
+
+          <b3n-test-item-array
+            *ngIf="subItem.get('dataType').value === 'array'"
+            [formItem]="$any(subItem)"
+            fxFlex
+          ></b3n-test-item-array>
+        </div>
+
+        <div class="widget-child">{{ i + 1 }}</div>
+      </div>
+
+      <div fxFlex="40px">
+        <button mat-icon-button type="button" color="warn" (click)="removeItem($any(formItem.get('arrayItems')), i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="mb-0">
+    <a href="javascript:;" class="link" (click)="addItem($any(formItem))">+ Add item</a>
+  </p>
+</ng-container>

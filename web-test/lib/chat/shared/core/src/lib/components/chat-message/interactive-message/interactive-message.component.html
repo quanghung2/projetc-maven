@@ -1,0 +1,11 @@
+<ng-container *ngIf="errorFormat; else load">
+  <span class="normal-text red-fg">{{ errorFormat }}</span>
+</ng-container>
+<ng-template #load>
+  <csh-interactive-loop
+    [messageId]="message.id"
+    [components]="firstComponents"
+    [parent]="null"
+    (showProfile)="showProfile.emit($event)"
+  ></csh-interactive-loop>
+</ng-template>

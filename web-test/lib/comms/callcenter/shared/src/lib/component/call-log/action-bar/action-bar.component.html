@@ -1,0 +1,117 @@
+<ng-container *ngIf="filter">
+  <div class="title-bar" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+    <mat-form-field *ngIf="filter.callType !== 'autodialer'">
+      <mat-select
+        (selectionChange)="onFilterChanged()"
+        [(ngModel)]="filter.callType"
+        [compareWith]="compareFn"
+        placeholder="Call type"
+      >
+        <mat-option *ngFor="let callType of callTypes" [value]="callType.key">{{ callType.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <span class="fill-remaining-space"></span>
+
+    <div class="advanced-search-trigger" (click)="isAdvancedSearch = !isAdvancedSearch" mat-icon-button>
+      <span> Advanced search </span>
+
+      <i class="material-icons" *ngIf="isAdvancedSearch"> keyboard_arrow_down </i>
+
+      <i class="material-icons" *ngIf="!isAdvancedSearch"> keyboard_arrow_up </i>
+    </div>
+
+    <mat-form-field>
+      <mat-select
+        (selectionChange)="onFilterChanged()"
+        [(ngModel)]="filter.timeRange"
+        [compareWith]="compareFn"
+        placeholder="Filter date"
+      >
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">{{ timeRange.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field (click)="selectedStartDate.open()" *ngIf="filter.timeRange == TimeRange.specific_date">
+      <input
+        (dateChange)="startDateChanged($event)"
+        [(ngModel)]="filter.startDate"
+        [matDatepicker]="selectedStartDate"
+        [max]="maxStart"
+        [min]="minStart"
+        matInput
+        placeholder="Start date"
+        readonly
+      />
+
+      <mat-datepicker-toggle [for]="selectedStartDate" matSuffix></mat-datepicker-toggle>
+
+      <mat-datepicker #selectedStartDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field (click)="selectedEndDate.open()" *ngIf="filter.timeRange == TimeRange.specific_date">
+      <input
+        (dateChange)="endDateChanged($event)"
+        [(ngModel)]="filter.endDate"
+        [matDatepicker]="selectedEndDate"
+        [max]="maxEnd"
+        [min]="minEnd"
+        matInput
+        placeholder="End date"
+        readonly
+      />
+
+      <mat-datepicker-toggle [for]="selectedEndDate" matSuffix></mat-datepicker-toggle>
+
+      <mat-datepicker #selectedEndDate></mat-datepicker>
+    </mat-form-field>
+
+    <button (click)="onExport()" class="export" mat-stroked-button matTooltip="Export">Export</button>
+
+    <button (click)="onFilterChanged()" mat-icon-button matTooltip="Refresh"><mat-icon>autorenew</mat-icon></button>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="isAdvancedSearch" class="mat-elevation-z0">
+      <div class="title-bar-expension" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem">
+        <mat-form-field>
+          <mat-select
+            [(ngModel)]="filter.filterBy"
+            (selectionChange)="clearAdvancedFilter()"
+            [compareWith]="compareFn"
+            placeholder="Filter by"
+          >
+            <mat-option [value]="'number'">Number</mat-option>
+
+            <mat-option [value]="'txnUuid'">Txn. Uuid</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="filter.filterBy === 'number'">
+          <input matInput placeholder="From number" [(ngModel)]="filter.fromNumber" (keyup.enter)="onFilterChanged()" />
+
+          <mat-icon *ngIf="filter.fromNumber" (click)="filter.fromNumber = ''" matSuffix>clear</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="filter.filterBy === 'number'">
+          <input matInput placeholder="To number" [(ngModel)]="filter.toNumber" (keyup.enter)="onFilterChanged()" />
+
+          <mat-icon *ngIf="filter.toNumber" (click)="filter.toNumber = ''" matSuffix>clear</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="filter.filterBy === 'txnUuid'">
+          <input
+            matInput
+            placeholder="Transaction Uuid"
+            [(ngModel)]="filter.txnUuid"
+            (keyup.enter)="onFilterChanged()"
+          />
+
+          <mat-icon *ngIf="filter.txnUuid" (click)="filter.txnUuid = ''" matSuffix>clear</mat-icon>
+        </mat-form-field>
+
+        <button (click)="onFilterChanged()" class="export" mat-stroked-button>Search</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>

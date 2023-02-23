@@ -1,0 +1,386 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Account</div>
+  <div class="title"><strong>Account info</strong></div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Sip Username</label></div>
+        <div class="ten wide column left aligned">
+          {{ currentAccount.account.username }}
+        </div>
+      </div>
+      <div class="row" *ngIf="currentAccount.account.config.authenticationMode != 'IP'">
+        <div class="six wide column right aligned info-label"><label>Sip Password</label></div>
+        <div class="ten wide column left aligned">
+          <div
+            class="ui small button"
+            ngxClipboard
+            [cbContent]="currentAccount.account.password"
+            (click)="onCopyPassword()"
+          >
+            Copy
+          </div>
+          <a href="javascript:void(0)" (click)="resetPassword()">Reset</a>
+        </div>
+      </div>
+      <div class="row" *ngIf="currentAccount.account.config.authenticationMode == 'IP'">
+        <div class="six wide column right aligned info-label"><label>Authentication</label></div>
+        <div class="ten wide column left aligned">IP Based</div>
+      </div>
+      <div class="row" *ngIf="currentAccount.account.config.authenticationMode == 'IP'">
+        <div class="six wide column right aligned info-label"><label>Transport protocol</label></div>
+        <div class="ten wide column left aligned">
+          <div class="protocol-row">
+            <div class="ui radio checkbox">
+              <input
+                id="udp"
+                type="radio"
+                [(ngModel)]="selectedProtocol"
+                value="udp"
+                name="protocol"
+                (change)="updateIpPeer()"
+              />
+              <label for="udp">UDP</label>
+            </div>
+            <div class="ui radio checkbox">
+              <input
+                id="tcp"
+                type="radio"
+                [(ngModel)]="selectedProtocol"
+                value="tcp"
+                name="protocol"
+                (change)="updateIpPeer()"
+              />
+              <label for="tcp">TCP</label>
+            </div>
+            <div class="ui radio checkbox">
+              <input
+                id="tls"
+                type="radio"
+                [(ngModel)]="selectedProtocol"
+                value="tls"
+                name="protocol"
+                (change)="updateIpPeer()"
+              />
+              <label for="tls">TLS</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="currentAccount.account.config.authenticationMode == 'IP'">
+        <div class="six wide column right aligned info-label"><label>IP Peers</label></div>
+        <div class="three wide column left aligned">
+          <div *ngFor="let ipPeer of currentAccount.account.config.ipPeers" style="float: left">
+            <div *ngIf="ipPeer.handleIncomingCall">
+              <span *ngIf="!editingIpPeer">{{ ipPeer.ip }}</span>
+            </div>
+          </div>
+          <i
+            class="ui icon edit"
+            toggle="tooltip"
+            title="Edit"
+            *ngIf="!editingIpPeer"
+            (click)="editingIpPeer = true"
+          ></i>
+          <div class="ui input" *ngIf="editingIpPeer">
+            <input type="text" name="ipPeer" [(ngModel)]="ipPeer" />
+            <i class="ui icon done" toggle="tooltip" title="Save" *ngIf="editingIpPeer" (click)="updateIpPeer()"></i>
+            <i
+              class="ui icon clear"
+              toggle="tooltip"
+              title="Cancel"
+              *ngIf="editingIpPeer"
+              (click)="editingIpPeer = false"
+            ></i>
+          </div>
+        </div>
+        <div class="one wide column left aligned info-label"><label>Port</label></div>
+        <div class="two wide column left aligned info-label">
+          <div class="ui input" style="width: 100%">
+            <input type="text" placeholder="port"  [(ngModel)]="selectedPort" (change)="updateIpPeer()" style="padding: 0.5rem">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Server Location</label></div>
+        <div class="ten wide column left aligned">
+          {{ pbxConfig.serverLocation }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Sip Server</label></div>
+        <div class="ten wide column left aligned">
+          <span *ngIf="userInfo.domain.indexOf('hoiio.com') > -1">{{ currentAccount.account.domain }}</span>
+          <span *ngIf="userInfo.domain.indexOf('hoiio.com') == -1">
+            <span *ngIf="currentAccount.account.domain.indexOf('hoiio.com') == -1">
+              {{ currentAccount.account.domain }}
+            </span>
+            <span *ngIf="currentAccount.account.domain.indexOf('hoiio.com') > -1">
+              {{ subSipDomain }}
+            </span>
+          </span>
+          <div class="help-block">{{ pbxConfig.sipDomainDesc }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>CA Certificate</label></div>
+        <div class="ten wide column left aligned">
+          <a *ngIf="tlsKey" href="{{ tlsKey }}" target="_blank">Download</a>
+          <a *ngIf="!tlsKey" href="javascript:void(0)" (click)="getTLSKey()">Get certificate</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Caller ID</label></div>
+        <div class="ten wide column left aligned">
+          <div class="ui input fluid">
+            <select sm-component (change)="updateCallerId($event.target.value)" class="ui dropdown">
+              <option
+                *ngFor="let cli of availableCallerIds"
+                value="{{ cli }}"
+                [selected]="currentAccount.outgoing.callerIdConfig.defaultCli == cli"
+              >
+                {{ cli }}
+              </option>
+              <option
+                *ngIf="availableCallerIds.indexOf(currentAccount.outgoing.callerIdConfig.defaultCli) < 0"
+                value="{{ currentAccount.outgoing.callerIdConfig.defaultCli }}"
+                [selected]="true"
+              >
+                {{ currentAccount.outgoing.callerIdConfig.defaultCli }}
+              </option>
+              <option value="private" [selected]="currentAccount.outgoing.callerIdConfig.defaultCli == 'private'">
+                private
+              </option>
+              <option *ngIf="currentAccount.features.cli_sipnumber" value="sipnumber" [selected]="useSipNumber">
+                Use SIP Numbers
+              </option>
+              <option *ngIf="currentAccount.features.cli_rebranding" value="pbxsetting" [selected]="usePBXSetting">
+                Use PBX Settings
+              </option>
+            </select>
+            <div *ngIf="usePBXSetting">
+              <div class="clirule" *ngIf="!currentAccount.account.config.callerIdPrepend">No prefix appended</div>
+              <div class="clirule" *ngIf="currentAccount.account.config.callerIdPrepend">
+                Auto append prefix {{ currentAccount.account.config.callerIdPrepend }}
+              </div>
+              <div class="clirule" *ngIf="currentAccount.account.config.callerIdRules">
+                <a href="javascript:void(0);" id="show-cli-rule-popup-owner" (click)="showCliRules($event)"
+                  >Verified numbers</a
+                >
+                <div
+                  sm-component
+                  class="ui popup"
+                  id="show-cli-rule-popup"
+                  popup-owner-id="show-cli-rule-popup-owner"
+                  popup-position="right center"
+                >
+                  <div class="rule-container">
+                    <div class="rule" *ngFor="let rule of currentAccount.account.config.callerIdRules | split: ','">
+                      {{ rule }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="useSipNumber || usePBXSetting" class="row">
+        <div class="six wide column right aligned info-label"><label>Default Number</label></div>
+        <div class="ten wide column left aligned">
+          <div class="ui input fluid">
+            <select sm-component (change)="updateDefaultCallerId($event.target.value)" class="ui dropdown">
+              <option value="">No default caller ID</option>
+              <option
+                *ngFor="let cli of currentAccount.account.numbers"
+                value="{{ cli }}"
+                [selected]="currentAccount.outgoing.callerIdConfig.defaultCli == cli"
+              >
+                {{ cli }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label></label></div>
+        <div class="row">
+          <a (click)="showAdvancedConfiguration()" class="advanced-configuration">Advanced configuration</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="title"><strong>Basic SIP Configuration</strong></div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="six wide column right aligned"><label>Codecs</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.codecSupported }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Dial Pattern</label></div>
+        <div class="ten wide column left aligned help-block">
+          Country Code + Area Code + Phone Number (e.g. 8498765432, 16505300061)
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>SIP Protocol</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.protocol }}
+        </div>
+      </div>
+      <div class="row" *ngIf="pbxConfig.basicSipConfiguration.protocolMethod">
+        <div class="six wide column right aligned"><label>SSL/TLS Protocol Method</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.protocolMethod }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>SIP Registration Period</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.registrationPeriod }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Audio Format</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.audioFormat }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>RTP Payload Size</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.payLoadSize }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>DTMF</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.basicSipConfiguration.dtmf }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="title"><strong>Firewall Configuration</strong></div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="two wide column right aligned"></div>
+        <div class="fourteen wide column left aligned info-label">
+          <label>Signaling (SIP)</label>
+          <div class="ui divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>IP Addresses</label></div>
+        <div class="ten wide column left aligned help-block">
+          <div *ngFor="let ip of pbxConfig.firewallConfig.signaling.ip">{{ ip }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Ports</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.firewallConfig.signaling.ports }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Direction</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.firewallConfig.signaling.direction }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="two wide column right aligned"></div>
+        <div class="fourteen wide column left aligned info-label">
+          <label>Audio (RTP)</label>
+          <div class="ui divider"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>IP Addresses</label></div>
+        <div class="ten wide column left aligned help-block">
+          <div *ngFor="let ip of pbxConfig.firewallConfig.audio.ips">{{ ip }}</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Ports</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.firewallConfig.audio.ports }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Direction</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.firewallConfig.audio.direction }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="title"><strong>NAT Configuration (Optional. Use only if PBX is behind NAT)</strong></div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="six wide column right aligned"><label>NAT Traversal</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.natConfig.traversal }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>STUN Server</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.natConfig.stunServer }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>STUN Port</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.natConfig.port }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>STUN Protocol</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.natConfig.protocol }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"><label>Direction</label></div>
+        <div class="ten wide column left aligned help-block">
+          {{ pbxConfig.natConfig.direction }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="title"><strong>Not supported</strong></div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <ul>
+        <li *ngFor="let item of pbxConfig.notSupports">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="isResettingPassword || isUpdatingDefaultCallerId || isUpdatingIpPeer || isGettingTLSKey"
+  class="ui active inverted dimmer inner-dimmer"
+>
+  <div class="ui text loader"></div>
+</div>
+
+<app-account-advance-modal
+  *ngIf="isShowAdvanceModal"
+  (closeModal)="onCloseModalAccountAdvance($event)"
+></app-account-advance-modal>
+<app-confirm-update-account-config
+  *ngIf="isShopModalConfirmUpdate"
+  (closeModal)="onCloseModalConfirmUpdate($event)"
+></app-confirm-update-account-config>

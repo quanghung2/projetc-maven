@@ -1,0 +1,26 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Link with Events</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <p *ngIf="triggerLinks?.length === 0">No applicable events to link</p>
+  <p *ngIf="triggerLinks?.length > 0">Choose the events that may trigger when the action is executed</p>
+
+  <mat-selection-list [multiple]="true" [(ngModel)]="listTriggerDefUuid">
+    <div class="mb-16" *ngFor="let connector of triggerLinks">
+      <p>{{ connector.connectorName }}</p>
+      <mat-list-option
+        *ngFor="let trigger of connector.triggerDefs"
+        color="primary"
+        [checkboxPosition]="'before'"
+        [disableRipple]="true"
+        [value]="trigger.originalUuid"
+      >
+        {{ trigger.name }}
+      </mat-list-option>
+    </div>
+  </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button type="button" color="primary" [loading]="setting" (click)="set()">Set</button>
+</mat-dialog-actions>

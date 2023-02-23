@@ -1,0 +1,67 @@
+<div mat-dialog-title>{{ ctaActionName }} Supplier</div>
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" class="dialog-content-container pb-8">
+    <mat-form-field *ngIf="ctaActionName === 'Create'">
+      <mat-select placeholder="Supplier" [(ngModel)]="partner" [disabled]="loadingNodes" required>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No suppliers found"
+            [formControl]="searchSupplierCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let supplier of filteredSuppliers$ | async" [value]="supplier">
+          {{ supplier.partnerName }} - {{ supplier.partnerUuid | slice: 0:8 }}
+        </mat-option>
+      </mat-select>
+      <mat-spinner *ngIf="loadingNodes" [diameter]="20" class="loading"></mat-spinner>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input #name="ngModel" [(ngModel)]="newSupplier.name" matInput placeholder="Name" required />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select [(ngModel)]="newSupplier.stack" placeholder="Stack" (selectionChange)="getPlans()" required>
+        <mat-option *ngFor="let s of stacks" [value]="s['value']">
+          {{ s['text'] }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select
+        placeholder="Plan"
+        [(ngModel)]="newSupplier.plan"
+        [disabled]="!newSupplier.stack || loadingPlan"
+        required
+      >
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No plans found"
+            [formControl]="searchPlanCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let plan of filteredPlans$ | async" [value]="plan">
+          {{ plan }}
+        </mat-option>
+      </mat-select>
+      <mat-spinner *ngIf="loadingPlan" [diameter]="20" class="loading"></mat-spinner>
+    </mat-form-field>
+
+    <mat-slide-toggle color="primary" [(ngModel)]="newSupplier.fallbackB3Skus">Fallback to B3 sku</mat-slide-toggle>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!newSupplier.name || !newSupplier.plan || (!partner && ctaActionName === 'Create')"
+    [loading]="updating"
+    (click)="submit()"
+  >
+    {{ ctaActionName }}
+  </button>
+</div>

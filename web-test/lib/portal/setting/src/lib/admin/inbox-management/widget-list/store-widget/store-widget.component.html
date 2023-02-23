@@ -1,0 +1,36 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span> {{ data?.isCreate ? 'Create Inbox' : 'Edit Inbox' }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<ng-container *ngIf="loading">
+  <div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="35"></mat-spinner>
+  </div>
+</ng-container>
+
+<div
+  *ngIf="!loading"
+  [formGroup]="group"
+  class="container-dialog"
+  mat-dialog-content
+  fxLayout="column"
+  fxLayoutAlign="start none"
+  fxLayoutGap="1.6rem"
+>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" placeholder="Enter your name widget" formControlName="name" />
+    <button *ngIf="name.value" (click)="name.setValue('')" mat-icon-button matSuffix>
+      <mat-icon class="search-box-icon">clear</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [loading]="isProcessing" [disabled]="group.invalid">
+    <span *ngIf="!data.isCreate"> Update </span>
+    <span *ngIf="data.isCreate"> Create </span>
+  </button>
+</div>

@@ -1,0 +1,193 @@
+<mat-toolbar>
+  <div fxLayout="column">
+    <a href="javascript:void(0)" class="mat-caption" (click)="goBack()">Back to Campaign</a>
+    <h1>{{ numberList?.name }}</h1>
+  </div>
+</mat-toolbar>
+
+<div class="filter" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+  <mat-form-field>
+    <input
+      matInput
+      placeholder="Search by number"
+      [(ngModel)]="queryParams.q"
+      #filterByNumber="ngModel"
+      (keyup.enter)="reload()"
+    />
+    <mat-icon (click)="reload()" matSuffix>search</mat-icon>
+    <mat-icon *ngIf="filterByNumber.value" (click)="queryParams.q = ''" matSuffix>clear</mat-icon>
+  </mat-form-field>
+
+  <section *ngIf="numberList" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+    <span matTooltip="{{ numberList.unstartCampaignReason }}">
+      <button
+        mat-button
+        [matTooltip]="
+          numberList.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : numberList.actionIconToolTipContent
+        "
+        (click)="changeNumberListStt(numberList)"
+        *ngIf="numberList.checkDnc && numberList.status === Status.draft; else start"
+        [disabled]="!numberList.checkDncAble || numberList.isCompleted"
+      >
+        <mat-icon>youtube_searched_for</mat-icon>
+        {{ numberList.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : numberList.actionIconToolTipContent }}
+      </button>
+    </span>
+
+    <ng-template #start>
+      <button
+        mat-button
+        [matTooltip]="
+          numberList.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : numberList.actionIconToolTipContent
+        "
+        *ngIf="numberList.status !== Status.published"
+        (click)="changeNumberListStt(numberList)"
+        [disabled]="!numberList.publishAble || numberList.isCompleted"
+      >
+        <mat-icon>play_arrow</mat-icon>
+        {{ numberList.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : numberList.actionIconToolTipContent }}
+      </button>
+    </ng-template>
+
+    <button
+      mat-button
+      [matTooltip]="
+        numberList.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : numberList.actionIconToolTipContent
+      "
+      *ngIf="numberList.status === Status.published"
+      (click)="changeNumberListStt(numberList)"
+      [disabled]="numberList.isCompleted"
+    >
+      <mat-icon>pause</mat-icon>
+      Pause
+    </button>
+
+    <button [loading]="isLoading" mat-icon-button (click)="reload()" matTooltip="Refresh">
+      <mat-icon>autorenew</mat-icon>
+    </button>
+
+    <b3n-upload-numbers
+      [numberListStatus]="numberList.status"
+      [campaignUuid]="currentNumberListId"
+      (uploadEvent)="isLoading = $event"
+      (uploadDoneEvent)="reload()"
+    ></b3n-upload-numbers>
+  </section>
+</div>
+
+<div id="queue-outbound-table" class="callcenter" *ngIf="numbers && numbers.length > 0">
+  <table mat-table [dataSource]="numbers">
+    <!-- Number Column -->
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef>Number</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.correctedNumber }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Date Upload Column -->
+    <ng-container matColumnDef="dateUpload">
+      <th mat-header-cell *matHeaderCellDef>Date Upload</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.uploadDate }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Start Column -->
+    <ng-container matColumnDef="startAt">
+      <th mat-header-cell *matHeaderCellDef>Start At</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.startedAt }}</span>
+      </td>
+    </ng-container>
+
+    <!-- End Column -->
+    <ng-container matColumnDef="endAt">
+      <th mat-header-cell *matHeaderCellDef>End At</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.endedAt }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Consent Status Column -->
+    <ng-container matColumnDef="dncStatus">
+      <th mat-header-cell *matHeaderCellDef>Consent Status</th>
+      <td mat-cell *matCellDef="let element">
+        <span>{{ element.dncStatus | camel2title }}</span>
+      </td>
+    </ng-container>
+
+    <!-- Status Column -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="status__wrapper">
+          <span>{{ element.status | camel2title }}</span>
+          <mat-icon
+            matTooltip="Force hangup by {{ element | forceHangup }}"
+            *ngIf="element.status === TxnStatusCampaign.hangupBySupervisor"
+            >info</mat-icon
+          >
+          <span *ngIf="element.status === TxnStatusCampaign.agentSkip"> {{ element.agentSkip }} </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [length]="totalCount"
+    [pageIndex]="pageable.page - 1"
+    [pageSize]="pageable.perPage"
+    (page)="onChangePage($event.pageIndex + 1)"
+    hidePageSize
+    showFirstLastButtons
+    *ngIf="totalCount > pageable.perPage"
+  >
+  </mat-paginator>
+</div>
+
+<div fxLayout="row" fxLayoutAlign="center center" class="no-record-msg" *ngIf="numbers && numbers.length === 0">
+  <h3>No record found</h3>
+</div>
+
+<!-- <button
+    mat-icon-button
+    [matTooltip]="
+      element.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : element.actionIconToolTipContent
+    "
+    *ngIf="element.status === numberListStatus.published"
+    (click)="changeNumberListStt(element)"
+  >
+    <mat-icon> pause </mat-icon>
+  </button> -->
+
+<!-- <span matTooltip="{{ element.unstartCampaignReason }}">
+      <button
+        mat-icon-button
+        [matTooltip]="element.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : element.actionIconToolTipContent"
+        (click)="changeNumberListStt(element)"
+        *ngIf="element.checkDnc && element.status === numberListStatus.draft; else start"
+        [disabled]="!element.checkDncAble"
+      >
+        <mat-icon [class.disable-color]="!element.checkDncAble">youtube_searched_for</mat-icon>
+      </button>
+    </span>
+
+    <ng-template #start>
+      <span matTooltip="{{ element.unstartCampaignReason }}">
+        <button
+          mat-icon-button
+          [matTooltip]="
+            element.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : element.actionIconToolTipContent
+          "
+          *ngIf="element.status !== numberListStatus.published"
+          (click)="changeNumberListStt(element)"
+          [disabled]="!element.publishAble"
+        >
+          <mat-icon [class.disable-color]="!element.publishAble">play_arrow</mat-icon>
+        </button>
+      </span>
+    </ng-template> -->

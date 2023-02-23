@@ -1,0 +1,127 @@
+:host {
+  a {
+    color: #039be5;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+}
+.private-note-content {
+  // max-height: calc(100vh - var(--app__toolbar--height) - 480px);
+  overflow: overlay;
+  .loading-container {
+    mat-spinner {
+      margin: 0 auto;
+    }
+  }
+  .empty {
+    opacity: 0.8;
+  }
+  .message {
+    display: flex;
+    position: relative;
+    align-items: center;
+    .message__avatar {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 50%;
+      color: #fff;
+      text-align: center;
+      line-height: 2.3;
+      text-transform: uppercase;
+      font-weight: 500;
+      background-color: #ddd;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+    .message__container {
+      margin: 5px 0;
+      padding: 0.2em;
+      width: 100%;
+      border: 1px solid #a7a7a7;
+      border-radius: 5px;
+      .message__metadata {
+        padding: 1rem 0.5rem;
+        pre.message_mention {
+          font-family: 'Open Sans', sans-serif;
+          max-width: 170px;
+          white-space: nowrap !important;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: inline-block;
+          margin: 0;
+          vertical-align: bottom;
+          color: #1264a3;
+          background-color: #1d9bd11a;
+          border-radius: 0.3em;
+          cursor: pointer;
+          font-weight: normal;
+        }
+
+        .message__time {
+          font-size: 12px;
+          color: #717274;
+          padding: 0.2em 0;
+          line-height: normal;
+        }
+      }
+      .message__text {
+        color: #2c2d30;
+        word-wrap: break-word;
+        line-height: 18px;
+        min-width: 60%;
+        padding: 0.5rem;
+      }
+      .message__attachment {
+        .right-actions {
+          display: none;
+          position: absolute;
+          top: 48px;
+          right: 30px;
+          .mat-icon {
+            cursor: pointer;
+            color: #000;
+          }
+        }
+        &:hover {
+          .right-actions {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+.actions {
+  margin-top: 1em;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  text-align: center;
+  a {
+    line-height: 36px;
+    float: right;
+    clear: both;
+  }
+  .btnAction {
+    margin-left: 10px;
+    #fileInput {
+      display: none;
+    }
+  }
+}
+
+.img_attachment {
+  margin-left: 32px;
+  position: relative;
+  img {
+    width: 300px;
+    height: 300px;
+    object-fit: contain;
+  }
+}

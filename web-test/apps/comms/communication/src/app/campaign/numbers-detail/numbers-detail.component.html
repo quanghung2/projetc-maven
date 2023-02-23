@@ -1,0 +1,78 @@
+<div mat-dialog-title fxLayoutAlign="space-between start">
+  <h1>Number List</h1>
+  <mat-icon mat-dialog-close>close</mat-icon>
+</div>
+
+<div mat-dialog-content class="container">
+  <ng-container *ngIf="loadingFirst; else view">
+    <div fxLayoutAlign="center center">
+      <mat-spinner diameter="35"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #view>
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <section fxLayoutAlign="space-between center">
+        <mat-form-field>
+          <input matInput placeholder="Search by number" [formControl]="searchCtrl" (keyup.enter)="reload()" />
+          <mat-icon (click)="reload()" matSuffix>search</mat-icon>
+          <mat-icon *ngIf="!!searchCtrl.value" (click)="searchCtrl.setValue(''); reload()" matSuffix>clear</mat-icon>
+        </mat-form-field>
+
+        <section fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+          <button [loading]="isLoading" mat-icon-button (click)="reload()" matTooltip="Refresh">
+            <mat-icon>autorenew</mat-icon>
+          </button>
+
+          <b3n-upload-numbers
+            [numberListStatus]="data.campaign.status"
+            [campaignUuid]="data.campaign.uuid"
+            (uploadEvent)="isLoading = $event"
+            (uploadDoneEvent)="reload()"
+          ></b3n-upload-numbers>
+        </section>
+      </section>
+      <section>
+        <ng-container *ngIf="!numbers || numbers.length === 0; else viewTable">
+          <div fxLayoutAlign="center center">
+            <h3>No record found</h3>
+          </div>
+        </ng-container>
+        <ng-template #viewTable>
+          <table mat-table [dataSource]="numbers">
+            <!-- Number Column -->
+            <ng-container matColumnDef="number">
+              <th mat-header-cell *matHeaderCellDef>Number</th>
+              <td mat-cell *matCellDef="let element">
+                <span>{{ element.correctedNumber }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Date Upload Column -->
+            <ng-container matColumnDef="dateUpload">
+              <th mat-header-cell *matHeaderCellDef>Upload At</th>
+              <td mat-cell *matCellDef="let element">
+                <span>{{ element.uploadDate }}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+
+          <mat-paginator
+            [length]="totalCount"
+            [pageIndex]="pageable.page - 1"
+            [pageSize]="pageable.perPage"
+            (page)="onChangePage($event.pageIndex + 1)"
+            hidePageSize
+            showFirstLastButtons
+            *ngIf="totalCount > pageable.perPage"
+          >
+          </mat-paginator>
+        </ng-template>
+      </section>
+    </div>
+  </ng-template>
+</div>
+
+<div mat-dialog-actions align="end"></div>

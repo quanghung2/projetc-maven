@@ -1,0 +1,52 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+<mat-toolbar><h1>Busy Lamp Field</h1></mat-toolbar>
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field>
+    <input matInput [formControl]="searchCtrl" placeholder="Search key" />
+    <button mat-icon-button matSuffix>
+      <mat-icon class="smaller-icon">search</mat-icon>
+    </button>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <button mat-button [loading]="loading" (click)="refresh()"><mat-icon>refresh</mat-icon> Refresh</button>
+    <button mat-flat-button color="primary" (click)="create()">Create</button>
+  </div>
+</mat-toolbar>
+
+<div class="px-16">
+  <table mat-table [dataSource]="dataSource" fxFlexFill>
+    <ng-container matColumnDef="monitorExtKey">
+      <th mat-header-cell *matHeaderCellDef>Key</th>
+      <td mat-cell *matCellDef="let e">{{ e.monitorExtKey }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="moniteesExtKeys">
+      <th mat-header-cell *matHeaderCellDef>Users</th>
+      <td mat-cell *matCellDef="let e">{{ customKeyToLabel(e.extListSorted) }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let e">
+        <div class="actions">
+          <button mat-icon-button (click)="edit(e)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="delete(e)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">
+        <div fxLayout="column" fxLayoutAlign="center center">No items found</div>
+      </td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" showFirstLastButtons hidePageSize></mat-paginator>
+</div>

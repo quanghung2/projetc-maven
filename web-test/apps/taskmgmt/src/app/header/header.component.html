@@ -1,0 +1,92 @@
+<mat-toolbar class="mat-elevation-z0">
+  <h2 (click)="goHome()" class="flex-spacer cursor-pointer">Support Center</h2>
+  <div></div>
+  <div class="header-right">
+    <button
+      [matMenuTriggerFor]="noti"
+      [matMenuTriggerData]="{ notis: notis }"
+      mat-icon-button
+      [matBadgeHidden]="unread === 0"
+      [matBadge]="unread"
+      matBadgePosition="after"
+      matBadgeColor="warn"
+      (click)="updateNoti()"
+      class="noti-case"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </div>
+</mat-toolbar>
+<!-- <div class="header-cases" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="header-left" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="3px">
+    <h2 class="mr-8 mb-0" (click)="goHome()"><strong></strong>Support Center</h2>
+  </div>
+  <div class="header-right" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem">
+    <button
+      [matMenuTriggerFor]="noti"
+      [matMenuTriggerData]="{ notis: notis }"
+      mat-icon-button
+      [matBadgeHidden]="unread === 0"
+      [matBadge]="unread"
+      matBadgePosition="after"
+      matBadgeColor="warn"
+      (click)="updateNoti()"
+      class="noti-case"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+  </div>
+</div> -->
+
+<mat-menu #noti="matMenu" xPosition="before">
+  <ng-template matMenuContent let-notis="notis">
+    <div class="content-menu">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <h2>Notifications</h2>
+      </div>
+
+      <ul class="notifications" *ngIf="notis.length > 0" #viewport (scroll)="onScroll($event)">
+        <li
+          *ngFor="let noti of notis"
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          fxLayoutGap="0.8rem"
+          (click)="clickNoti(noti)"
+          class="noti"
+        >
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <div
+              *ngIf="noti.triggeredByPhotoUrl"
+              class="avatar-large avatar"
+              [style.background-image]="noti.triggeredByPhotoUrl"
+            ></div>
+            <div *ngIf="!noti?.triggeredByPhotoUrl">
+              <span class="no-avatar avatar-large" fxLayoutAlign="center center"
+                >{{ noti?.triggeredByName | firstWord }}
+              </span>
+            </div>
+
+            <div class="noti-right">
+              <div>
+                <span class="noti-content-main"
+                  ><span> {{ noti?.triggeredByName || 'None' }}</span> {{ notificationContent[noti.type] }}</span
+                >
+                <span class="noti-content-second"> {{ noti.createdAt | distanceToNow }}</span>
+              </div>
+              <div class="noti-content-second">{{ noti?.caseTitle }}</div>
+            </div>
+          </div>
+
+          <div class="read" fxLayoutAlign="start end">
+            <button *ngIf="!noti?.isClicked">
+              <svg width="24px" height="24px">
+                <circle fill="var(--ds-icon-brand, #0052CC)" cx="50%" cy="50%" r="4"></circle>
+              </svg>
+            </button>
+          </div>
+        </li>
+      </ul>
+      <mat-hint *ngIf="notis.length === 0">No notifications</mat-hint>
+    </div>
+  </ng-template>
+</mat-menu>

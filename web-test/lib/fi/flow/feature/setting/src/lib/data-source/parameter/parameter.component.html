@@ -1,0 +1,43 @@
+<ng-container [formGroup]="group" *ngIf="group.get(key)['controls'].length > 0">
+  <div formArrayName="{{ key }}" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="30px">
+    <div
+      [formGroupName]="i"
+      *ngFor="let item of group.get(key)['controls']; let i = index"
+      fxLayout="row"
+      fxLayoutAlign="start start"
+      fxLayoutGap="20px"
+    >
+      <div fxLayout="column" fxLayoutAlign="start start" fxFlex="25">
+        <h4 class="mb-0">
+          <strong>{{ item.value.key }}</strong>
+        </h4>
+        <label class="label-status secondary">{{ title }}</label>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="75" fxLayoutGap="5px">
+        <mat-form-field>
+          <mat-select placeholder="Data type" formControlName="dataType">
+            <mat-option value="string">String</mat-option>
+            <mat-option value="number">Number</mat-option>
+            <mat-option value="boolean">Boolean</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <b3n-value-of-parameter
+          [optionForControl]="
+            $any({
+              title: 'Value',
+              expressionTree: item.value.defaultValueTree,
+              key: 'defaultValueTree',
+              required: item.value.hidden,
+              dataType: item.value.dataType
+            })
+          "
+          [contextVariables]="contextVariables"
+          (selectedValue)="selectValueOfConfig(item, $event)"
+        ></b3n-value-of-parameter>
+      </div>
+      <!-- {{ item.value | json }} -->
+    </div>
+  </div>
+</ng-container>

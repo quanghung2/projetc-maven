@@ -1,0 +1,71 @@
+:host {
+  display: block;
+  width: var(--left-sidebar-width);
+
+  .pom-sidebar {
+    min-height: 100vh;
+    &__org-info {
+      min-height: 200px;
+      text-align: center;
+      padding: 2rem 1.6rem;
+
+      img {
+        max-width: 75px;
+        margin-bottom: 0.8rem;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+      }
+      &__name {
+        font-weight: 600;
+        position: relative;
+        cursor: pointer;
+        .verified {
+          color: green;
+        }
+      }
+      &__time-display {
+        cursor: pointer;
+      }
+      &__progress-bar {
+        position: absolute;
+        top: 0;
+      }
+    }
+
+    &__info {
+      height: 135px;
+    }
+
+    &__group {
+      margin-top: 0.8rem;
+      .link {
+        cursor: pointer;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 14px;
+        color: rgb(97, 97, 97);
+
+        &:focus {
+          outline-style: none !important;
+        }
+
+        &.link {
+          &:hover,
+          &.active {
+            color: rgb(33, 33, 33);
+          }
+          &:hover {
+            background: var(--gray-200);
+          }
+          &.active {
+            font-weight: 500;
+            background-color: var(--gray-200);
+          }
+        }
+      }
+    }
+  }
+}

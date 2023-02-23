@@ -1,0 +1,38 @@
+:host {
+  display: block;
+
+  .notes {
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      background: #e6e6e6 !important;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #424242 !important;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    table {
+      tr {
+        .mat-column-actions {
+          width: 120px;
+        }
+
+        .action-container {
+          visibility: hidden;
+        }
+
+        &:hover {
+          .action-container {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

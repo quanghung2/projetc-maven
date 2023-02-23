@@ -1,0 +1,126 @@
+<div *ngIf="activity && me" [ngClass]="activity.type === 'comment' ? 'b p-16 comment-activity' : 'px-16 py-8'">
+  <div *ngIf="activity.type === 'comment'; else eventTemplate" class="flex column">
+    <!-- *ngIf="!isEditing; else editingComentTemp" -->
+    <ng-container>
+      <div class="event flex align-items-start gap-16">
+        <div class="event__avatar">
+          <div
+            *ngIf="activity.triggeredByPhotoUrl"
+            [style.background-image]="'url(' + activity.triggeredByPhotoUrl + ')'"
+            class="avatar"
+          ></div>
+          <span *ngIf="!activity.triggeredByPhotoUrl" class="no-avatar">{{ activity.byNameHtml | firstWord }} </span>
+        </div>
+        <div class="event__content flex column align-items-left justify-content-stretch gap-16">
+          <ng-container *ngIf="!isEditing">
+            <div class="flex align-items-center gap-16">
+              <span class="event__triggerby">{{ activity.triggeredByName }}</span>
+              <span class="content-left-time" [matTooltip]="activity.createdAt | date: 'dd-MM-yyy HH:mm'">
+                . {{ activity.createdAt | distanceToNow }}</span
+              >
+              <span class="flex-spacer"></span>
+              <div *ngIf="activity.triggeredByUuid === me.uuid">
+                <button mat-icon-button (click)="edit()">
+                  <mat-icon class="material-icons-outlined s-20">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="remove()">
+                  <mat-icon class="material-icons-outlined s-20">delete</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div>
+              <!-- 
+                TODO
+                use createdByOrg for current uploading files but should use ownerOrg after uploadFileSUpport new params
+                [ownerOrg]="case.createdByOrg"  
+              -->
+              <div
+                #htmlContent
+                lazyload
+                [text]="activity.description"
+                [ownerOrg]="activity.orgUuid"
+                [innerHTML]="activity.description | safe: 'html'"
+                class="ck-content"
+              ></div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isEditing">
+            <b3n-editor
+              [content]="editingContent"
+              [accessControlId]="case.accessControlId"
+              [ownerOrgUuid]="case.ownerOrgUuid"
+            >
+            </b3n-editor>
+
+            <div class="flex align-items-center justify-content-end gap-16">
+              <button *ngIf="case.status" [disabled]="progressing" mat-button (click)="isEditing = false">
+                Cancel
+              </button>
+              <button
+                [loading]="progressing"
+                [disabled]="progressing"
+                mat-stroked-button
+                color="primary"
+                (click)="update()"
+              >
+                Save
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <span
+          class="event__actions"
+          matTooltip="View log"
+          *ngIf="activity.eventType === 'editTitle' || activity.eventType === 'editDesc'"
+        >
+          <mat-icon>list_alt</mat-icon>
+        </span>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #eventTemplate>
+  <div class="event flex align-items-center gap-16">
+    <div class="event__avatar">
+      <span class="event__icon">
+        <mat-icon *ngIf="activity?.eventType === 'assign' || activity?.eventType === 'unassign'">person</mat-icon>
+        <mat-icon *ngIf="activity?.eventType === 'open'">open_with</mat-icon>
+        <mat-icon *ngIf="activity?.eventType === 'close'">close</mat-icon>
+        <mat-icon *ngIf="activity?.eventType === 'reopen'">autorenew</mat-icon>
+        <mat-icon *ngIf="activity?.eventType === 'editTitle' || activity?.eventType === 'editDesc'"
+          >edit</mat-icon
+        ></span
+      >
+    </div>
+    <div class="event__content flex align-items-center gap-8">
+      <span class="event__triggerby">{{ activity.triggeredByName }}</span>
+      <label *ngIf="['open', 'close', 'reopen'].includes(activity.eventType)" class="box {{ activity.eventType }}">
+        {{ activity.eventType }}</label
+      >
+
+      <span class="note-headline-light" *ngIf="activity.eventType === 'assign'">
+        assigned <a> {{ activity.affectedName || 'none' }}</a>
+      </span>
+      <span class="note-headline-light" *ngIf="activity.eventType === 'unassign'">
+        unassigned <a> {{ activity.affectedName || 'none' }}</a>
+      </span>
+      <span class="note-headline-light" *ngIf="activity.eventType === 'editTitle'">
+        edited <strong> title </strong>
+      </span>
+      <span class="note-headline-light" *ngIf="activity.eventType === 'editDesc'">
+        edited <strong> description </strong>
+      </span>
+      <span class="note-headline-light">{{ activity.updatedAt | distanceToNow }}</span>
+
+      <!-- (click)="viewLog(comment)" -->
+    </div>
+    <!-- <span
+      class="event__actions"
+      matTooltip="View log"
+      *ngIf="activity.eventType === 'editTitle' || activity.eventType === 'editDesc'"
+    >
+      <mat-icon>list_alt</mat-icon>
+    </span> -->
+  </div>
+</ng-template>

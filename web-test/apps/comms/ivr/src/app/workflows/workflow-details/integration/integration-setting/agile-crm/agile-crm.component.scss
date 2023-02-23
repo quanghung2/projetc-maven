@@ -1,0 +1,30 @@
+:host {
+  display: block;
+}
+
+.agile-content {
+  mat-form-field {
+    width: 100% !important;
+    margin-bottom: 1.6rem;
+  }
+
+  mat-hint {
+    color: rgba(0, 0, 0, 0.9);
+    font-size: 13px;
+  }
+
+  .material-icons {
+    font-size: 14px;
+    color: #2196f3;
+  }
+
+  mat-slide-toggle {
+    padding: 1.6rem 0;
+    font-weight: 500;
+    width: fit-content;
+  }
+
+  .agile-status {
+    margin-bottom: 0;
+  }
+}

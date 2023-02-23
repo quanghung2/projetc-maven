@@ -1,0 +1,42 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Update {{ data.type?.toLowerCase() }} definition general</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
+      <img *ngIf="iconUrl.value" [src]="iconUrl.value" fxFlex="60px" />
+      <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px" fxFlex>
+        <p class="mb-8">Recommend size: 60 x 60 pixels. Images with smaller size will scale.</p>
+        <input #uploadFile type="file" class="upload-file" (change)="onFileChange($event)" accept="image/*" />
+        <button mat-stroked-button type="button" (click)="uploadFile.click()" [loading]="uploading">Upload icon</button>
+      </div>
+    </div>
+    <mat-form-field hideRequiredMarker="true">
+      <input matInput placeholder="Name" formControlName="name" required />
+      <mat-error *ngIf="name.invalid">{{ getErrorInput(name) }}</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Description" formControlName="description" />
+      <mat-error *ngIf="formGroup.get('description').invalid">
+        {{ getErrorInput(formGroup.get('description')) }}
+      </mat-error>
+    </mat-form-field>
+    <b3n-visibility-domain
+      *ngIf="data.isShowVisibility"
+      [domainVisibility]="$any(formGroup.get('domainVisibility'))"
+    ></b3n-visibility-domain>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    type="button"
+    color="primary"
+    [loading]="isLoading"
+    [disabled]="formGroup.invalid"
+    (click)="onUpdate()"
+  >
+    Update
+  </button>
+</mat-dialog-actions>

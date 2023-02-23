@@ -1,0 +1,90 @@
+<button class="toggle-view" mat-flat-button color="primary" (click)="menuTrigger.openMenu()">
+  <mat-icon>add</mat-icon>
+  <div
+    [matMenuTriggerFor]="menu"
+    #menuTrigger="matMenuTrigger"
+    (menuClosed)="menuClosed()"
+    (menuOpened)="menuOpened()"
+  ></div>
+</button>
+
+<mat-menu #menu="matMenu" class="menu-quick-search" overlapTrigger="false">
+  <div class="container flex column justify-content-start align-items-none" (click)="$event.stopPropagation()">
+    <section class="action">
+      <div class="create-session flex justify-content-start align-items-center gap-11" (click)="openCreateChannel()">
+        <mat-icon>group_add</mat-icon>
+        <span> Create Channel</span>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <mat-form-field class="input-search" appearance="outline">
+        <input
+          #inputSearch
+          matInput
+          autocomplete="off"
+          placeholder="Find channels"
+          [formControl]="searchCtr"
+          (keydown)="focusSelectionList($event)"
+        />
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section class="result scroller-firefox spacer">
+      <ng-container *ngIf="loadingChannel$ | async; else viewResult">
+        <div class="flex justify-content-center align-items-center" style="margin-top: 15rem">
+          <mat-spinner diameter="35"></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-template #viewResult>
+        <mat-selection-list
+          [multiple]="false"
+          [formControl]="valueSelectedCtr"
+          (selectionChange)="onSelect($event)"
+          #selectionList
+        >
+          <ng-container *ngIf="filteredChannel$ | async as filteredChannel">
+            <ng-container *ngIf="filteredChannel.length > 0; else noResult">
+              <mat-list-option *ngFor="let channel of filteredChannel; trackBy: trackByChannel" [value]="channel">
+                <div class="flex justify-content-start align-items-center gap-16">
+                  <ng-container *ngIf="channel.isGroupChat; else directChat">
+                    <mat-icon *ngIf="channel.privacy === Privacy.private" class="icon-channel"> lock </mat-icon>
+                    <div
+                      *ngIf="channel.privacy !== Privacy.private"
+                      class="icon-channel flex justify-content-center align-items-center"
+                    >
+                      #
+                    </div>
+                    <div
+                      class="text-channel spacer"
+                      [innerHTML]="channel.displayName || 'Unknown user' | highlight: this.searchCtr.value"
+                    ></div>
+                  </ng-container>
+
+                  <ng-template #directChat>
+                    <ng-container *ngIf="channel?.directChatUsers?.otherUuid | selectUser | async as directChatUsers">
+                      <csh-render-member [user]="directChatUsers" [showDisplayName]="false"></csh-render-member>
+
+                      <div
+                        class="text-channel spacer"
+                        [innerHTML]="directChatUsers.displayName || 'Unknown user' | highlight: this.searchCtr.value"
+                      ></div>
+                    </ng-container>
+                  </ng-template>
+                </div>
+              </mat-list-option>
+            </ng-container>
+          </ng-container>
+        </mat-selection-list>
+      </ng-template>
+    </section>
+  </div>
+</mat-menu>
+
+<ng-template #noResult>
+  <ng-container *ngIf="!!searchCtr.value">
+    <span class="secondary-text flex justify-content-center align-items-center" style="padding: 1rem">No results</span>
+  </ng-container>
+</ng-template>

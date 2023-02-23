@@ -1,0 +1,97 @@
+<div class="missed-call-notification">
+  <form #form="ngForm" *ngIf="missedCallNotificationSettings" class="missed-call-notification__notification-tabcontent">
+    <div *ngIf="missedCallNotificationSettings" class="missed-call-notification__notification-tabcontent__toggle"></div>
+    <mat-form-field>
+      <input
+        (ngModelChange)="onChangeEmailAddresses($event)"
+        [(ngModel)]="emailAddresses"
+        matInput
+        name="emailAddresses"
+        placeholder="Email"
+        #email="ngModel"
+        required
+      />
+      <span (click)="clearEmail()" *ngIf="emailAddresses != ''" matSuffix>
+        <button mat-icon-button>
+          <mat-icon class="missed-call-notification__notification-tabcontent__close-icon">close</mat-icon>
+        </button>
+      </span>
+      <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">Email address is required </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select [(ngModel)]="missedCallNotificationSettings.data.smsType" name="smsType" placeholder="SMS">
+        <mat-option *ngFor="let option of smsTypeOptions" [value]="option.key"> {{ option.value }} </mat-option>
+      </mat-select>
+      <mat-hint>This will be charged to your account.</mat-hint>
+    </mat-form-field>
+
+    <div
+      *ngIf="missedCallNotificationSettings.data.smsType != SmsType.none"
+      class="child-component pointer-right"
+      class="sms-select"
+    >
+      <mat-form-field>
+        <mat-select
+          [(ngModel)]="missedCallNotificationSettings.data.sms.smsSender"
+          name="smsSender"
+          placeholder="Sender"
+          required
+        >
+          <mat-form-field class="search-senders">
+            <input [(ngModel)]="query" matInput name="searchNumber" placeholder="Search senders" />
+          </mat-form-field>
+          <mat-option *ngFor="let number of senderNumbers | listFilter: undefined:query" [value]="number">
+            {{ number }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="missedCallNotificationSettings.data.smsType == SmsType.custom">
+        <input
+          #customSmsAddress="ngModel"
+          [(ngModel)]="missedCallNotificationSettings.data.sms.customSmsAddress"
+          matInput
+          name="customSmsAddress"
+          placeholder="Phone number"
+          required
+        />
+        <mat-error *ngIf="customSmsAddress.invalid && (customSmsAddress.dirty || customSmsAddress.touched)"
+          >Phone number is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea
+          #smsMessage="ngModel"
+          [(ngModel)]="missedCallNotificationSettings.data.sms.smsMessage"
+          matInput
+          name="smsMessage"
+          placeholder="SMS message"
+          required
+          rows="5"
+        ></textarea>
+        <mat-error *ngIf="smsMessage.invalid && (smsMessage.dirty || smsMessage.touched)"
+          >SMS Message is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-checkbox (ngModelChange)="onChangeStatus($event)" [(ngModel)]="notificationStatus" name="notification"
+      >Receive notification for missed calls
+    </mat-checkbox>
+    <div class="missed-call-notification__notification-tabcontent__sensitive-settings">
+      <mat-checkbox
+        (ngModelChange)="storePressedKeysChanged($event)"
+        [(ngModel)]="sensitiveSettings.data.storePressedDigits"
+        name="storeKeys"
+        >Store pressed keys
+      </mat-checkbox>
+    </div>
+    <div class="toolbar-actions" fxLayout="">
+      <span class="fill-remaining-space"></span>
+      <button (click)="progress()" [disabled]="progressing || form.invalid" color="primary" mat-raised-button>
+        <span *ngIf="!progressing">Save</span> <span *ngIf="progressing">Saving</span>
+      </button>
+    </div>
+  </form>
+</div>

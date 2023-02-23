@@ -1,0 +1,104 @@
+<h1 mat-dialog-title>Set up Authenticator</h1>
+
+<div mat-dialog-content>
+  <div *ngIf="step==1">
+    <div class="bullet-list">
+      <ul>
+        <li class="item">
+          Get the Authenticator App from the
+          <a target="_blank" href="https://itunes.apple.com/us/app/google-authenticator/id388497605">App Store</a>
+          or
+          <a
+            target="_blank"
+            href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2"
+          >
+            Play Store
+          </a>
+        </li>
+
+        <li class="item">
+          In the App select
+          <strong>Set up account</strong>
+          .
+        </li>
+
+        <li class="item">
+          Choose
+          <strong>Scan barcode</strong>
+          .
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="loading" class="loading-container"><mat-spinner [diameter]="40">Loading...</mat-spinner></div>
+
+    <div class="qrCode" *ngIf="!loading"><qrcode [qrdata]="qrCode" [width]="150"></qrcode></div>
+  </div>
+
+  <div *ngIf="step==2">
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Enter the 6-digit code you see in the app"
+        [(ngModel)]="verificationCode"
+        (keypress)="resetError()"
+        (keyup.enter)="verify()"
+        class="verificationCode"
+      />
+
+      <mat-hint class="error-hint" *ngIf="error">{{error}}</mat-hint>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+
+  <button mat-raised-button *ngIf="step === 1" color="primary" (click)="next()">Next</button>
+
+  <button mat-raised-button [loading]="progressing" *ngIf="step === 2" color="primary" (click)="verify()">
+    Verify
+  </button>
+</div>
+
+<!--
+  <div class="ui modal authenticatorApp">
+    <i class="close icon" (click)="hide()"></i>
+    <div class="header" >
+      Set up Authenticator
+    </div>
+    <div class="content">
+      <div *ngIf="step==1">
+        <div class="ui bulleted list">
+          <div class="item">Get the Authenticator App from the
+            <a target="_blank" href="https://itunes.apple.com/us/app/google-authenticator/id388497605">App Store</a>
+            or <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Play Store</a>
+          </div>
+          <div class="item">In the App select <strong>Set up account</strong>.</div>
+          <div class="item">Choose <strong>Scan barcode</strong>.</div>
+        </div>
+        <div class="ui inverted dimmer loading" *ngIf="loading">
+          <div class="ui loader"></div>
+        </div>
+        <div class="text-center" *ngIf="!loading">
+          <qrcode [qrdata]="qrCode" [size]="150"></qrcode>
+        </div>
+      </div>
+      <div *ngIf="step==2">
+        <div class="ui form" [ngClass]="{'error': error}">
+          <div>Enter the 6-digit code you see in the app.</div>
+          <div class="field" [ngClass]="{'error': error}">
+            <input placeholder="Enter code" [(ngModel)] = "verificationCode" (keypress)="resetError()"
+              (keyup.enter)="verify()" class="verificationCode">
+            <div class="ui message small error" *ngIf="error"><p>{{error}}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui cancel link button" >Cancel</div>
+      <button class="ui large primary button" (click)="next()" [ngClass]="{loading: processing}" *ngIf="step==1">Next</button>
+      <button class="ui large primary button" (click)="verify()" [ngClass]="{loading: processing}" *ngIf="step==2">Verify</button>
+    </div>
+  </div>
+-->

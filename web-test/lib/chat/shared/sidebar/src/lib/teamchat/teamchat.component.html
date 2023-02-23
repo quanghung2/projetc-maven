@@ -1,0 +1,92 @@
+<div class="flex column justify-content-start align-items-none">
+  <mat-nav-list class="convo-list">
+    <mat-list-item
+      mat-list-item
+      [routerLink]="['landing']"
+      routerLinkActive="active"
+      (click)="closeSidebar($event)"
+      class="convo item-convo"
+    >
+      <mat-icon matListIcon class="icon s-16">home</mat-icon>
+      <div matLine class="convo__headline flex justify-content-space-between align-items-center">
+        <span style="text-overflow: ellipsis; overflow: hidden"> Home </span>
+      </div>
+    </mat-list-item>
+
+    <ng-container *ngIf="hasTeamChatLicense">
+      <mat-list-item
+        *ngFor="let channel of channelPersonals"
+        mat-list-item
+        (click)="closeSidebar($event)"
+        class="convo item-convo"
+        routerLinkActive="active"
+        [routerLink]="['conversations', channel.name.toLowerCase()]"
+      >
+        <mat-icon matListIcon class="icon s-16">{{ channel.icon }}</mat-icon>
+        <div matLine class="convo__headline flex justify-content-space-between align-items-center">
+          <span style="text-overflow: ellipsis; overflow: hidden"> {{ channel.name | titlecase }} </span>
+        </div>
+      </mat-list-item>
+    </ng-container>
+  </mat-nav-list>
+
+  <b3n-inbox
+    [timeZone]="timeZone"
+    [inbox]="inboxV2"
+    [isShowAllChannel]="isShowAllChannel"
+    (externalCountTop)="count.external = $event"
+  ></b3n-inbox>
+
+  <ng-container *ngIf="hasExtCallcenter">
+    <b3n-inbox
+      [timeZone]="timeZone"
+      [inbox]="inbox"
+      [isShowAllChannel]="isShowAllChannel"
+      (externalCountTop)="count.external = $event"
+    ></b3n-inbox>
+  </ng-container>
+
+  <ng-container *ngIf="hasTeamChatLicense">
+    <ng-container *ngIf="!isShowAllChannel">
+      <b3n-channel
+        [channelCs]="channelCs"
+        [isShowAllChannel]="isShowAllChannel"
+        [hasMention]="true"
+        (csNotStarCountTop)="count.hasInit = true; count.csNotStarTop = $event"
+        (csNotStarCountBottom)="count.hasInit = true; count.csNotStarBottom = $event"
+      ></b3n-channel>
+      <b3n-team [channelDMs]="channelDMs" (dmNotStarCount)="count.dmNotStar = $event"></b3n-team>
+    </ng-container>
+
+    <b3n-starred-convos
+      [channelCs]="channelCs"
+      [channelDMs]="channelDMs"
+      (csStarCount)="count.hasInit = true; count.csStar = $event"
+      (dmStarCount)="count.hasInit = true; count.dmStar = $event"
+    ></b3n-starred-convos>
+
+    <b3n-channel
+      [channelCs]="channelCs"
+      [isShowAllChannel]="isShowAllChannel"
+      [hasMention]="false"
+      (csNotStarCountTop)="count.hasInit = true; count.csNotStarTop = $event"
+      (csNotStarCountBottom)="count.hasInit = true; count.csNotStarBottom = $event"
+    ></b3n-channel>
+
+    <ng-container *ngIf="isShowAllChannel">
+      <b3n-team [channelDMs]="channelDMs" (dmNotStarCount)="count.hasInit = true; count.dmNotStar = $event"></b3n-team>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-container
+  *ngIf="
+    count.hasInit &&
+    count.external + count.csNotStarTop + count.csNotStarBottom + count.csStar + count.dmNotStar + count.dmStar === 0
+  "
+>
+  <div class="sidebar__item__no_case" style="padding: 2rem">
+    <mat-icon class="icon">groups</mat-icon>
+    <span class="text">No team chats</span>
+  </div>
+</ng-container>

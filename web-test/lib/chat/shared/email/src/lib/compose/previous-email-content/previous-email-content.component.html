@@ -1,0 +1,8 @@
+<div class="previous_container" *ngIf="textDisplay" [class.noBorderBottom]="noBorderBottom">
+  <div class="messageContent" *ngIf="showPreviousEmail">
+    <div [innerHTML]="textDisplay | safe: 'html'"></div>
+  </div>
+  <div class="previous_container_icon">
+    <mat-icon class="showHideBlockAction" (click)="showPreviousEmail = !showPreviousEmail">more_horiz</mat-icon>
+  </div>
+</div>

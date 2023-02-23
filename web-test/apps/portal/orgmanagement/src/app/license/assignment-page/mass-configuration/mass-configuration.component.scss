@@ -1,0 +1,67 @@
+:host {
+  display: block;
+  $normal-color: var(--gray-900);
+
+  .mass-configuration {
+    &__more-info {
+      margin-top: 0!important;
+    }
+    .file-name {
+      text-align: center;
+      color: var(--primary-500);
+    }
+    .label {
+      color: $normal-color;
+      width: 100%;
+      position: relative;
+      &.disabled-color {
+        color: var(--gray-300);
+        padding: 0.25rem 0;
+      }
+      &.normal-color {
+        color: $normal-color;
+        padding: 0.25rem 0;
+      }
+      .progress-bar-container {
+        mat-progress-bar {
+          height: 2px;
+          position: absolute;
+          width: 100%;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+    .submitted-jobs {
+      .full-width {
+        width: 100%;
+        .progress-percentage {
+          font-size: 14px;
+          margin-bottom: 2px;
+        }
+      }
+
+      .status {
+        font-weight: 500;
+      }
+      .job {
+        border: 1px solid lightgray;
+        border-radius: 4px;
+        padding: 1rem;
+        .failed {
+          color: red;
+        }
+        .success {
+          color: green;
+          margin-bottom: 0 !important;
+        }
+        .pending {
+          color: orange;
+        }
+      }
+      .job-done {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}

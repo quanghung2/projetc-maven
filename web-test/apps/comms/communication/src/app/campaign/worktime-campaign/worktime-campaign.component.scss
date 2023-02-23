@@ -1,0 +1,49 @@
+:host {
+  .container-dialog {
+    padding-bottom: 0.8rem;
+
+    .working-schedule-form {
+      padding: 1.6rem 0;
+
+      mat-form-field {
+        width: 100px;
+      }
+
+      &__title {
+        margin-bottom: 0.75rem;
+        color: rgba(0, 0, 0, 0.87);
+
+        &.custom-day {
+          margin-top: -0.25rem;
+        }
+
+        & mat-spinner {
+          margin-left: 0.8rem;
+        }
+      }
+
+      .working-time-table {
+        &__from,
+        &__to {
+          .mat-form-field-wrapper {
+            .mat-form-field-flex {
+              .mat-form-field-infix {
+                width: auto !important;
+              }
+            }
+          }
+        }
+        &__from {
+          margin-left: 2rem !important;
+          margin-right: 1.6rem !important;
+        }
+        td {
+          padding: 1px 15px;
+        }
+      }
+      &__picker {
+        visibility: hidden;
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<div fxFill class="container" fxLayout="column" fxLayoutAlign="start none">
+  <button mat-icon-button mat-dialog-close class="btn-clear">
+    <mat-icon>clear</mat-icon>
+  </button>
+
+  <div fxFlex="64px" class="header" fxLayout="column">
+    <div class="header__container" fxFlex fxLayout="row" fxLayoutAlign="start center">
+      <span fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="0.2rem">
+        <span> Messsage history:</span>
+        <span fxLayoutAlign="center center">
+          <span> {{ displayNameCustomer || 'Unknown Customer' }} </span>
+        </span>
+      </span>
+    </div>
+    <mat-divider fxFlex="1px"></mat-divider>
+    <div fxFlex="1px" class="viewing-date" fxLayout="row" fxLayoutAlign="center center">
+      <span>{{ viewDate$ | async | viewDate }}</span>
+    </div>
+  </div>
+
+  <div fxFlex class="body" fxLayout="row" fxLayoutAlign="start none" fxLayoutGap="0.5rem">
+    <div fxFlex fxLayout="column" fxLayoutAlign="start none">
+      <ng-container *ngIf="loading; else view">
+        <div fxFill fxLayoutAlign="center center">
+          <mat-spinner [diameter]="35"></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-template #view>
+        <csw-conversation-content *ngIf="ticket" [ticket]="ticket"></csw-conversation-content>
+      </ng-template>
+    </div>
+  </div>
+</div>

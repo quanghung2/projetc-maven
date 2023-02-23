@@ -1,0 +1,14 @@
+:host {
+  .container {
+    overflow: overlay;
+    height: calc(100vh - 64px); // mat-toolbar
+    .body {
+      width: 700px;
+      ::ng-deep {
+        .mat-slide-toggle-content {
+          flex: 1 1 auto;
+        }
+      }
+    }
+  }
+}

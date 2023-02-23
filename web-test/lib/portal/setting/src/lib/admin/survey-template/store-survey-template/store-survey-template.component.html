@@ -1,0 +1,21 @@
+<div class="config__container">
+  <div class="config__header">
+    <h1 mat-dialog-title>{{ noteTemplate ? 'Template Detail' : 'Create New Template' }}</h1>
+  </div>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <ng-container *ngIf="!loading">
+    <mat-form-field *ngIf="noteTemplate">
+      <mat-label>Title</mat-label>
+      <input readonly matInput [value]="noteTemplate.title" />
+    </mat-form-field>
+    <b3n-store-note-template
+      [module]="module"
+      (resetScreen)="onCancel($event)"
+      (toggleNoteTemplateForm)="onCancel()"
+      [noteTemplate]="noteTemplate"
+    ></b3n-store-note-template>
+  </ng-container>
+  <div class="config__action" *ngIf="noteTemplate">
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>

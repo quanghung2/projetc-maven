@@ -1,0 +1,174 @@
+<h1 mat-dialog-title>Add Blocks</h1>
+
+<mat-dialog-content>
+  <div fxLayout="row">
+    <div *ngIf="selectedBlockItem" fxFlex="33" fxLayout="column" fxLayoutGap="1.6rem" class="content-left-section">
+      <!-- {{selectedBranch.}} -->
+
+      <mat-list>
+        <mat-list-item
+          *ngFor="let blockItem of blockItems; let index = index"
+          (click)="selectBranch(blockItem)"
+          [ngClass]="{ 'active-multiple': blockItem === selectedBlockItem }"
+        >
+          <h4
+            matLine
+            matTooltip="{{
+              blockItem.block.uuid | branchLabel: parentBlock.nextBlocks:parentBlock.type:triggerReloadBranchLabel
+            }}"
+          >
+            <span
+              *ngIf="
+                blockItem.block.uuid | branchLabel: parentBlock.nextBlocks:parentBlock.type:triggerReloadBranchLabel
+              "
+            >
+              {{ blockItem.block.uuid | branchLabel: parentBlock.nextBlocks:parentBlock.type:triggerReloadBranchLabel }}
+            </span>
+
+            <span
+              *ngIf="
+                !(blockItem.block.uuid | branchLabel: parentBlock.nextBlocks:parentBlock.type:triggerReloadBranchLabel)
+              "
+            >
+              {{ blockTypeMap[blockItem.block.type] }}
+            </span>
+          </h4>
+
+          <p
+            matLine
+            *ngIf="blockItem.block.uuid | branchLabel: parentBlock.nextBlocks:parentBlock.type:triggerReloadBranchLabel"
+          >
+            {{ blockTypeMap[blockItem.block.type] }}
+          </p>
+
+          <span *ngIf="blockItem !== selectedBlockItem" (click)="deleteBlock(blockItem.block.uuid)">
+            <i class="material-icons">close</i>
+          </span>
+        </mat-list-item>
+      </mat-list>
+
+      <button mat-button (click)="addMoreBlock()">Add 1 more block</button>
+    </div>
+
+    <form #form="ngForm" fxFlex="67" class="content-right-section">
+      <section
+        *ngIf="parentBlock && [BlockType.gather, BlockType.condition, BlockType.webhook].includes(parentBlock.type)"
+        fxLayout="column"
+        fxLayoutAlign="start stretch"
+        fxLayoutGap="1.6rem"
+        class="block-section"
+      >
+        <h2 *ngIf="[BlockType.gather, BlockType.condition, BlockType.webhook].includes(parentBlock.type)">
+          {{ blockTypeMap[parentBlock.type] }} settings
+          <h4>Set up the branch information of the parent block.</h4>
+        </h2>
+
+        <b3n-gather-branch
+          *ngIf="parentBlock.type === BlockType.gather"
+          [blockUuid]="parentBlock.uuid"
+          [branch]="$any(selectedBranch)"
+          (triggerReloadBranchLabelEvent)="triggerReloadBranchLabelEvent()"
+        >
+        </b3n-gather-branch>
+
+        <b3n-condition-branch
+          *ngIf="parentBlock.type === BlockType.condition"
+          [blockUuid]="parentBlock.uuid"
+          [branch]="$any(selectedBranch)"
+          (branchChange)="selectedBranch = $any($event)"
+          (triggerReloadBranchLabelEvent)="triggerReloadBranchLabelEvent()"
+        >
+        </b3n-condition-branch>
+
+        <b3n-webhook-branch
+          *ngIf="parentBlock.type === BlockType.webhook"
+          [blockUuid]="parentBlock.uuid"
+          [branch]="$any(selectedBranch)"
+          (triggerReloadBranchLabelEvent)="triggerReloadBranchLabelEvent()"
+        >
+        </b3n-webhook-branch>
+
+        <mat-form-field>
+          <mat-select placeholder="Block type" [(ngModel)]="selectedBlockItem.block.type" name="block-type">
+            <mat-option *ngFor="let option of blockOptions" (click)="changeBlockType(option.key)" [value]="option.key">
+              {{ option.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+
+      <section fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" class="block-section">
+        <h2>
+          {{ blockTypeMap[selectedBlockItem.block.type] }} settings
+          <h4 class="sub">Set up the main information of the current block.</h4>
+        </h2>
+
+        <b3n-gather *ngIf="selectedBlockItem.block.type === BlockType.gather" [block]="$any(selectedBlockItem.block)">
+        </b3n-gather>
+
+        <b3n-transfer
+          *ngIf="selectedBlockItem.block.type === BlockType.transfer"
+          [block]="$any(selectedBlockItem.block)"
+          [isDevice]="isDevice"
+        >
+        </b3n-transfer>
+
+        <b3n-notification
+          *ngIf="selectedBlockItem.block.type === BlockType.notification"
+          [block]="$any(selectedBlockItem.block)"
+          [workflow]="data.workflow"
+        >
+        </b3n-notification>
+
+        <b3n-play *ngIf="selectedBlockItem?.block.type === BlockType.play" [block]="selectedBlockItem?.block">
+        </b3n-play>
+
+        <b3n-go
+          *ngIf="selectedBlockItem.block.type === BlockType.go"
+          [block]="$any(selectedBlockItem.block)"
+          [tree]="tree"
+        >
+        </b3n-go>
+
+        <b3n-condition *ngIf="selectedBlockItem.block.type === BlockType.condition" [block]="selectedBlockItem.block">
+        </b3n-condition>
+
+        <b3n-confirm *ngIf="selectedBlockItem.block.type === BlockType.confirmation" [block]="selectedBlockItem.block">
+        </b3n-confirm>
+
+        <b3n-webhook *ngIf="selectedBlockItem.block.type === BlockType.webhook" [block]="selectedBlockItem.block">
+        </b3n-webhook>
+
+        <b3n-monitor
+          *ngIf="selectedBlockItem.block.type === BlockType.monitor"
+          [block]="selectedBlockItem.block"
+        ></b3n-monitor>
+
+        <b3n-genie
+          *ngIf="selectedBlockItem.block.type === BlockType.genie"
+          [block]="$any(selectedBlockItem.block)"
+          [skills]="skills"
+        ></b3n-genie>
+
+        <b3n-common [block]="selectedBlockItem.block"></b3n-common>
+      </section>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+
+  <div>{{ invalid }}</div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="(form && form.invalid) || saving || isStartWithInvalid"
+    (click)="save()"
+  >
+    <span *ngIf="!saving">Save</span>
+
+    <span *ngIf="saving">Saving...</span>
+  </button>
+</mat-dialog-actions>

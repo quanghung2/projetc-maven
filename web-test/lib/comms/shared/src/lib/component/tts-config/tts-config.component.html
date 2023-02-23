@@ -1,0 +1,122 @@
+<form [formGroup]="ttsFormGroup" *ngIf="text2Speech" class="tts-section">
+  <mat-radio-group formControlName="type" fxLayout="row" class="radio__group" [hidden]="ttsOptions !== 'both'">
+    <mat-radio-button *ngFor="let option of radioOptions; trackBy: trackByOptions" [value]="option.key" fxFlex="50">{{
+      option.value
+    }}</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-card class="tts-block tts-section__card">
+    <ng-container *ngIf="ttsType === 'speech'" formGroupName="speech">
+      <mat-card-content>
+        <div *ngIf="!isAdvanceConfig" fxLayout="column">
+          <mat-form-field>
+            <mat-select formControlName="language" placeholder="Language" required>
+              <mat-option *ngFor="let locate of OBJECT_KEYS(locates)" [value]="locate">
+                {{ locates[locate] }}
+              </mat-option>
+            </mat-select>
+            <mat-error>Language is required </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <textarea rows="2" matInput placeholder="Message" formControlName="msg" [errorStateMatcher]="matcher">
+            </textarea>
+            <mat-error *ngIf="ttsFormGroup?.get('speech')?.get('msg').hasError('messageEmpty')">
+              Message is required
+            </mat-error>
+            <mat-error *ngIf="ttsFormGroup?.get('speech')?.get('msg').hasError('messageTooLong')">
+              Maximum 2000 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="isAdvanceConfig" class="tts-speech-advance-block" fxLayout="column">
+          <div class="advance-block-one" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="0.8rem">
+            <mat-form-field floatLabel="always">
+              <mat-select formControlName="language" placeholder="Language" required>
+                <mat-option *ngFor="let locate of OBJECT_KEYS(locates)" [value]="locate">
+                  {{ locates[locate] }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Language is required </mat-error>
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <mat-select formControlName="pitch" placeholder="Pitch">
+                <mat-option *ngFor="let pitch of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="pitch">
+                  {{ pitch }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field floatLabel="always">
+              <mat-select formControlName="rate" placeholder="Rate">
+                <mat-option *ngFor="let rate of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="rate">
+                  {{ rate }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="advance-block-two">
+            <mat-form-field floatLabel="always">
+              <mat-label>Gender - Voice name</mat-label>
+              <mat-select placeholder="Select Gender - Voice name" formControlName="voiceCode">
+                <mat-option *ngFor="let ttsVendor of venders" [value]="ttsVendor.voiceCode">
+                  {{ ttsVendor.gender }}-{{ ttsVendor.voiceCode }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <textarea formControlName="msg" matInput placeholder="Message" rows="3"> </textarea>
+              <mat-error>
+                {{ ttsFormGroup?.get('speech')?.get('msg').hasError('messageEmpty') ? 'Message is required' : '' }}
+                {{
+                  ttsFormGroup?.get('speech')?.get('msg').hasError('messageTooLong') ? 'Maximum 2000 characters' : ''
+                }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions *ngIf="ttsType === 'speech'" fxLayout="row" fxLayoutAlign="end center">
+        <button (click)="isAdvanceConfig = !isAdvanceConfig" mat-button>
+          Advance <i *ngIf="isAdvanceConfig" class="material-icons">expand_less</i>
+          <i *ngIf="!isAdvanceConfig" class="material-icons">expand_more</i>
+        </button>
+      </mat-card-actions>
+    </ng-container>
+    <ng-container *ngIf="ttsType === 'mp3'" formGroupName="mp3">
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+        <audio
+          *ngIf="playableUrl"
+          controls
+          style="width: 100%"
+          [src]="playableUrl | safe: 'resourceUrl'"
+          (error)="onErrorLoadFile()"
+        >
+          Your browser does not support the <code>audio</code> element.
+        </audio>
+
+        <span *ngIf="isMobileApp" class="yellow-800-fg">Please go to a portal to config for this feature.</span>
+        <button
+          *ngIf="!isMobileApp"
+          mat-button
+          color="primary"
+          class="btnAction cursor-pointer"
+          (click)="fileUpload.click()"
+        >
+          <span>{{ playableUrl ? 'Choose another MP3 file' : 'Choose MP3 file' }}</span>
+          <input #fileUpload (change)="uploadFile($event)" accept=".mp3,.mpeg/*" hidden type="file" />
+        </button>
+
+        <mat-progress-bar
+          *ngIf="uploading"
+          [ngStyle]="{
+            opacity: uploadResp && uploadResp?.percentage <= 100 ? 1 : 0
+          }"
+          [value]="uploadResp?.percentage"
+          mode="determinate"
+        >
+        </mat-progress-bar>
+      </div>
+    </ng-container>
+  </mat-card>
+</form>

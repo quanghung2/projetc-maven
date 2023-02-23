@@ -1,0 +1,87 @@
+<h2 mat-dialog-title>{{ inputData.recordData ? 'Update' : 'Create' }} Record</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formRecord" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start stretch">
+    <mat-form-field>
+      <mat-select placeholder="Matching" formControlName="matching" required>
+        <mat-option *ngFor="let matching of matchings" [value]="matching.key">
+          {{ matching.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Value</mat-label>
+      <input matInput placeholder="DEFAULT_ROUTE_ENTRY" formControlName="value" required />
+      <mat-error *ngIf="value.invalid">Value can't be empty</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span class="title">Action</span>
+      <mat-radio-group
+        class="py-10"
+        formControlName="action"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="16px"
+      >
+        <mat-radio-button value="route">Route</mat-radio-button>
+        <mat-radio-button value="refer">Refer</mat-radio-button>
+        <mat-radio-button value="block">Block</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div
+      *ngIf="action.value !== 'block'"
+      formGroupName="routes"
+      fxLayout="row"
+      fxLayoutGap="8px"
+      fxLayoutAlign="start center"
+    >
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Primary" formControlName="primary" required>
+          <ng-container *ngIf="action.value === 'route'">
+            <mat-option *ngFor="let peer of inputData.peers" [value]="peer.name">
+              {{ peer.name }}
+            </mat-option>
+          </ng-container>
+          <ng-container *ngIf="action.value === 'refer'">
+            <mat-option *ngFor="let table of inputData.tables" [value]="table.name">
+              {{ table.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngIf="primary.invalid">Primary can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Secondary" formControlName="secondary" required>
+          <ng-container *ngIf="action.value === 'route'">
+            <mat-option *ngFor="let peer of inputData.peers" [value]="peer.name">
+              {{ peer.name }}
+            </mat-option>
+          </ng-container>
+          <ng-container *ngIf="action.value === 'refer'">
+            <mat-option *ngFor="let table of inputData.tables" [value]="table.name">
+              {{ table.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+        <mat-error *ngIf="secondary.invalid">Secondary can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="26.5">
+        <mat-label>Load</mat-label>
+        <input matInput type="number" placeholder="Enter load" formControlName="load" required />
+        <mat-error *ngIf="load.errors?.['required']">Load can't be empty</mat-error>
+        <mat-error *ngIf="load.errors?.['min'] || load.errors?.['max']">Load is invalid</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="submitting" [disabled]="formRecord.invalid" (click)="onSave()">
+    {{ inputData.recordData ? 'Update' : 'Create' }}
+  </button>
+</div>

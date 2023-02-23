@@ -1,0 +1,66 @@
+<div mat-dialog-title>Provision Server</div>
+<div mat-dialog-content>
+  <form [formGroup]="formCreate" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Domain" formControlName="domain" required />
+        <mat-error *ngIf="domain.invalid">{{ getErrorDomain() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Cluster" formControlName="cluster" required />
+        <mat-error *ngIf="cluster.invalid">{{ getErrorCluster() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Version" formControlName="version" required />
+        <mat-error *ngIf="version.invalid">{{ getErrorVersion() }}</mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutGap="15px">
+        <mat-form-field>
+          <input matInput placeholder="Management IP" formControlName="mgntIp" required />
+          <mat-error *ngIf="mgntIp.invalid">{{ getErrorMgntIp() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Port" formControlName="apiPort" required />
+          <mat-error *ngIf="apiPort.invalid">{{ getErrorApiPort() }}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="10px">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="5px" fxFlex="50">
+          <label>Protocol</label>
+          <mat-radio-group color="primary" formControlName="apiProtocol">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+              <mat-radio-button value="https">HTTPS</mat-radio-button>
+              <mat-radio-button value="http">HTTP</mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+
+        <mat-checkbox color="primary" formControlName="apiSecure">Certificate verification</mat-checkbox>
+      </div>
+
+      <p>
+        <a href="javascript:;" (click)="showSupplier = !showSupplier">Bind to supplier</a>
+      </p>
+
+      <ng-container *ngIf="showSupplier">
+        <mat-form-field>
+          <input matInput placeholder="Supplier UUID" formControlName="supplierUuid" />
+        </mat-form-field>
+
+        <label class="pb-10">
+          <mat-checkbox color="primary" formControlName="supplierDefaultRoute">Default route</mat-checkbox>
+        </label>
+      </ng-container>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="creating" [disabled]="formCreate.invalid" (click)="create()">
+    Create
+  </button>
+</div>

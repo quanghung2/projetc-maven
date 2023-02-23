@@ -1,0 +1,67 @@
+<div mat-dialog-title>Config custom holiday</div>
+<div mat-dialog-content>
+  <div class="working-schedule-form" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <ng-container *ngIf="loading; else loadView">
+      <div fxLayoutAlign="center center">
+        <mat-spinner diameter="35"></mat-spinner>
+      </div>
+    </ng-container>
+    <ng-template #loadView>
+      <div fxLayout="row" class="title">
+        <div>Enable custom holiday</div>
+        <span class="fill-remaining-space"></span>
+        <mat-slide-toggle color="primary" [(ngModel)]="enableHoliday"></mat-slide-toggle>
+      </div>
+
+      <ng-container *ngIf="selectedGroup; else noSelected">
+        <section>
+          <div class="working-schedule-form__holidays">
+            <div class="working-schedule-form__title custom-day" fxLayout="row" fxLayoutAlign="start center">
+              Custom holiday ({{ selectedGroup.dates.length }})
+
+              <mat-form-field class="working-schedule-form__picker">
+                <input
+                  matInput
+                  readonly
+                  [matDatepicker]="holidayPicker"
+                  autocomplete="false"
+                  [min]="minDate"
+                  (dateChange)="addHoliday($event)"
+                  [(ngModel)]="dateInput"
+                />
+                <mat-datepicker-toggle matSuffix [for]="holidayPicker"></mat-datepicker-toggle>
+                <mat-datepicker #holidayPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-icon
+                class="working-schedule-form__holidays__add-icon"
+                (click)="holidayPicker.open()"
+                matTooltip="Add a holiday"
+                >add
+              </mat-icon>
+            </div>
+            <mat-chip-list class="public-holidays">
+              <mat-chip
+                id="chip_{{ i }}"
+                *ngFor="let date of selectedGroup.dates; let i = index"
+                removable="true"
+                (removed)="remove(date.date)"
+                >{{ date.date | date: 'mediumDate' }}
+                <mat-icon matChipRemove>close</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </div>
+        </section>
+      </ng-container>
+      <ng-template #noSelected>
+        <div class="working-schedule-form__holidays" fxLayout="row" fxLayoutAlign="center">
+          Please select a holiday group to view its custom holiday.
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="updating" (click)="update()">Update</button>
+</div>

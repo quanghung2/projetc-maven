@@ -1,0 +1,128 @@
+<h1 mat-dialog-title>Agent Management</h1>
+
+<ng-container *ngIf="!loading; else spinner">
+  <div *ngIf="orgConfig && queue" class="dialog-content-container agent-config" fxLayout="column" fxLayoutGap="1.6rem">
+    <h4 class="flex justify-content-end secondary-text">
+      Queue -&nbsp;<strong>{{ data.label }}</strong>
+    </h4>
+    <form [formGroup]="queueForm">
+      <div class="d-flex flex-column">
+        <mat-form-field class="mb-16">
+          <input
+            formControlName="ringTime"
+            matInput
+            name="ringTime"
+            placeholder="Ring time per agent (in seconds)"
+            type="number"
+            onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+            [errorStateMatcher]="matcher"
+          />
+
+          <mat-error *ngIf="ringTime.hasError('required')"> Ring time per agent is required </mat-error>
+          <mat-error *ngIf="ringTime.hasError('min') || ringTime.hasError('max')"> From 1 to 900 seconds </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="mb-16">
+          <mat-select formControlName="ringMode" name="ringMode" placeholder="Ring mode">
+            <ng-container *ngFor="let ringMode of selectRingMode">
+              <mat-option [value]="ringMode.key">{{ ringMode.value }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="ringMode.value === RingMode.stickyAgent" class="mb-16">
+          <mat-label>Number of dial to agents</mat-label>
+          <input
+            formControlName="dialNumber"
+            onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+            matInput
+            type="number"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-error *ngIf="dialNumber.invalid"> Accept value from 1 to 100 </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <section fxLayout="column" fxLayoutAlign="start none">
+      <span class="agent__header" fxLayoutAlign="start center">
+        Agents
+        <mat-icon
+          *ngIf="ringMode.value === RingMode.proficiency"
+          class="agent-proficiency-info-icon"
+          matTooltip="You can drag and drop to set agent proficiency or put value to textbox directly. Or input to textbox from 1 to 100"
+        >
+          info
+        </mat-icon>
+      </span>
+
+      <mat-form-field>
+        <mat-select
+          [disabled]="agentOptions.length === 0 || assignedAgents.length >= 1000"
+          name="agentList"
+          placeholder="{{ agentOptions?.length ? 'Select agent to assign' : 'No agent available' }}"
+        >
+          <mat-option (click)="assignAgent(agent)" *ngFor="let agent of agentOptions"
+            >{{ agent.displayText }}
+          </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="count > 0 && ringMode.value === RingMode.proficiency">
+          Proficiency values need to be higher than 0
+        </mat-hint>
+      </mat-form-field>
+      <div fxLayoutAlign="flex-end center">
+        <mat-hint *ngIf="assignedAgents.length > 0" [ngStyle]="assignedAgents.length >= 1000 && { color: 'red' }">
+          <span [ngPlural]="assignedAgents.length">
+            <ng-template ngPluralCase="=1">Selected agent(s): 1 | Total limit: 1000</ng-template>
+            <ng-template ngPluralCase="other"
+              >Selected agent(s): {{ assignedAgents.length }} | Total limit: 1000</ng-template
+            >
+          </span>
+        </mat-hint>
+        <mat-hint *ngIf="assignedAgents.length === 0"> No assigned agent </mat-hint>
+      </div>
+
+      <div (cdkDropListDropped)="dropAgents($event)" *ngIf="assignedAgents.length > 0" cdkDropList class="agent__rows">
+        <div *ngFor="let assignedAgent of assignedAgents; let i = index" cdkDrag class="sortable-box">
+          <span>{{ i + 1 }}. {{ assignedAgent.displayText }}</span>
+          <span class="fill-remaining-space"></span>
+          <input
+            *ngIf="ringMode.value === RingMode.proficiency"
+            [(ngModel)]="assignedAgent.proficiency"
+            class="form-control proficiency__input"
+            max="100"
+            maxlength="3"
+            min="0"
+            onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+            onkeyup="if (this.value > 100) { this.value = 100} else if (0 > this.value) {this.value = 0} "
+            (ngModelChange)="changeProficiency()"
+            pattern="\d*"
+            placeholder="0"
+            type="number"
+          />
+          <mat-icon (click)="deleteAssignedAgent(i)" class="code-option__btn-delete" matTooltip="Delele"
+            >delete</mat-icon
+          >
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div *ngIf="orgConfig && queue" align="end" mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button
+      (click)="save()"
+      [disabled]="queueForm.invalid || saving || (count > 0 && ringMode.value === RingMode.proficiency)"
+      [loading]="saving"
+      color="primary"
+      mat-flat-button
+    >
+      Update
+    </button>
+  </div>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="spinner-container" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

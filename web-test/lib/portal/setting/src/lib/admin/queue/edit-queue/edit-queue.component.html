@@ -1,0 +1,100 @@
+<h1 mat-dialog-title>Queue Configuration</h1>
+
+<ng-container *ngIf="!loading; else spinner">
+  <form [formGroup]="queueForm">
+    <div fxLayout="column" fxLayoutGap="0.5rem">
+      <mat-form-field>
+        <input
+          class="border"
+          type="text"
+          matInput
+          formControlName="label"
+          placeholder="Queue name"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="label.hasError('required')"> Queue name is required </mat-error>
+        <mat-error *ngIf="label.hasError('maxlength')"> Maximum 100 characters </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          type="number"
+          matInput
+          formControlName="priority"
+          onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+          placeholder="Queue priority"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="priority.invalid"> Accept value from 1 to 100 (1 is the highest) </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+          numberPatternQuantity
+          matInput
+          formControlName="extension"
+          placeholder="Queue extension"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="extension.invalid"> From 3 to 5 digits </mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="queue.callflowConfig.genieCode">
+        <mat-label>Flow Name</mat-label>
+        <mat-select formControlName="genieCode" placeholder="Flow Name" [errorStateMatcher]="matcher">
+          <mat-option *ngFor="let flow of data.listFlow" [value]="flow.code"> {{ flow.name }} </mat-option>
+        </mat-select>
+        <mat-error *ngIf="genieCode.invalid"> Flow name is required </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="short-line">
+        <mat-label>Wrap up time (seconds)</mat-label>
+        <input
+          formControlName="wrapupTime"
+          onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+          matInput
+          name="wrapupTime"
+          type="number"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="wrapupTime.invalid"> From 0 to 900 seconds </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>SLA threshold (seconds)</mat-label>
+        <mat-select formControlName="slaThreshold" name="slaThreshold">
+          <mat-option *ngFor="let slaThreshold of slaThresholds" [value]="slaThreshold.key">
+            {{ slaThreshold.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Abandoned threshold (seconds)</mat-label>
+        <mat-select formControlName="abandonedThreshold" name="abandonedThreshold">
+          <mat-option *ngFor="let abdThreshold of abdThresholds" [value]="abdThreshold.key">
+            {{ abdThreshold.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Close</button>
+      <button
+        mat-flat-button
+        [disabled]="saving || queueForm.invalid"
+        [loading]="saving"
+        (click)="save()"
+        color="primary"
+      >
+        Update
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #spinner>
+  <div fxLayout="column" fxLayoutAlign="center center" class="spinner-container">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

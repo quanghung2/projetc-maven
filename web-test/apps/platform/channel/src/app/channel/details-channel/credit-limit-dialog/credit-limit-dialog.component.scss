@@ -1,0 +1,9 @@
+:host {
+  display: block;
+
+  .credit-limit-dialog {
+    &__input {
+      width: 100%;
+    }
+  }
+}

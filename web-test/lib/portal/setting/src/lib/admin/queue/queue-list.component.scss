@@ -1,0 +1,88 @@
+.queue-container {
+  height: 100vh;
+  overflow: hidden;
+
+  &__header {
+    background-color: inherit;
+    height: 64px;
+  }
+
+  &__body {
+    padding: 0 1.6rem 1.6rem 1.6rem;
+    overflow: overlay;
+
+    tr {
+      &:hover {
+        .action__hover {
+          visibility: visible;
+        }
+      }
+    }
+
+    .filter-type {
+      width: 150px;
+    }
+    .mat-slide-toggle-content {
+      font-size: 12px !important;
+      font-weight: 500 !important;
+    }
+
+    .mat-icon {
+      cursor: pointer;
+
+      &.btn-duplicate {
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        margin-bottom: 3px;
+      }
+    }
+
+    .callcenter {
+      height: calc(100vh - 64px - 56px - 2rem);
+      overflow: auto;
+    }
+    .queue-table {
+      &--not-found {
+        text-align: center;
+      }
+    }
+
+    .mat-column-action {
+      text-align: right;
+      width: 200px;
+      .action__hover {
+        visibility: hidden;
+
+        mat-icon.basic {
+          color: rgba(0, 0, 0, 0.54);
+        }
+      }
+    }
+
+    .label {
+      display: inline-block;
+      line-height: 1;
+      vertical-align: baseline;
+      margin: 0 0.14285714em;
+      background-color: #e8e8e8 !important;
+      background-image: none;
+      padding: 4px 6px;
+      font-size: 12px;
+      letter-spacing: -0.5px;
+      color: rgba(0, 0, 0, 0.5);
+      text-transform: none;
+      font-weight: 600;
+      border: 0 solid transparent;
+      border-radius: 0.28571429rem;
+    }
+
+    .search-box-icon {
+      font-size: 20px !important;
+    }
+  }
+}
+
+::ng-deep .mat-menu-panel.queue-menu {
+  max-width: none;
+}

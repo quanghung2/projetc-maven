@@ -1,0 +1,16 @@
+{
+  "name": "api-workspace",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/workspace/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/workspace/**/*.ts", "libs/api/workspace/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

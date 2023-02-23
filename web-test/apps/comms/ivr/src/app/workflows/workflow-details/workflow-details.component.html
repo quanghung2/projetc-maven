@@ -1,0 +1,47 @@
+<router-outlet></router-outlet>
+
+<b3n-header-action fxLayout="row" fxLayoutGap="1.6rem">
+  <button
+    *ngFor="let tab of tabs"
+    [routerLink]="[tab.key, { uuid: selectedWorkflow?.uuid }]"
+    routerLinkActive="active"
+    mat-button
+    class="button-link"
+  >
+    {{ tab.value }}
+  </button>
+  <span class="fill-remaining-space"></span>
+  <div
+    *ngIf="selectedWorkflow?.numbers.length > 1"
+    class="fw-400"
+    matTooltip="{{ selectedWorkflow.numbers.join(', ') }}"
+  >
+    {{ selectedWorkflow.numbers.length }} numbers
+  </div>
+  <div *ngIf="selectedWorkflow?.numbers.length == 1" class="fw-400">{{ selectedWorkflow?.numbers }}</div>
+  <mat-form-field class="source-selection">
+    <mat-select #numberSelection [ngModel]="selectedWorkflow">
+      <ng-container *ngFor="let workflow of workflows">
+        <mat-option class="option" *ngIf="selectedWorkflow.uuid === workflow.uuid" [value]="workflow">{{
+          workflow.label
+        }}</mat-option>
+        <mat-option
+          (click)="routingSelectedWorkflow(workflow)"
+          *ngIf="selectedWorkflow.uuid != workflow.uuid"
+          [value]="workflow"
+          class="option"
+          >{{ workflow.label }}</mat-option
+        >
+      </ng-container>
+
+      <button
+        *ngIf="workflows.length >= 5"
+        mat-raised-button
+        class="create-button"
+        (click)="viewAllNumbers(); numberSelection.close()"
+      >
+        View all flows
+      </button>
+    </mat-select>
+  </mat-form-field>
+</b3n-header-action>

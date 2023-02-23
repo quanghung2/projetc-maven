@@ -1,0 +1,33 @@
+.invite__wrapper {
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    font-weight: 450;
+  }
+
+  .invite {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  mat-error {
+    font-size: 12px;
+    font-style: italic;
+    margin-top: -10px;
+    margin-bottom: 10px;
+  }
+
+  .button_wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: auto;
+  }
+
+  .notion {
+    font-size: 12px;
+    font-style: italic;
+  }
+}

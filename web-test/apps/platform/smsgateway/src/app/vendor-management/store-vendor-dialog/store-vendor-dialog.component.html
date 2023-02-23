@@ -1,0 +1,71 @@
+<form [formGroup]="form" class="dialog__wrapper" autocomplete="off">
+  <h3 mat-dialog-title>{{ data.title }} vendor</h3>
+  <mat-dialog-content class="dropdowns">
+    <mat-form-field appearance="fill">
+      <mat-label>Vendor Driver</mat-label>
+      <mat-select formControlName="code">
+        <mat-option *ngFor="let code of data.vendorCodes" [value]="code">{{ code }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Label</mat-label>
+      <input matInput formControlName="label" />
+      <mat-error *ngIf="label.errors?.['required']">* Label is required</mat-error>
+      <mat-error *ngIf="label.errors?.['pattern']">* Invalid input (letters and digits only)</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="label.touched && label.invalid">
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username" />
+      <mat-error *ngIf="username.errors?.['required']">* Username is required</mat-error>
+      <mat-error *ngIf="username.errors?.['maxlength']"
+        >* Invalid input (Max length is {{ username.errors?.['maxlength']?.requiredLength }})</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="username.touched && username.invalid">
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" />
+      <mat-icon (click)="hidePassword = !hidePassword" [matTooltip]="hidePassword ? 'Reveal' : 'Hide'" matSuffix>
+        {{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon
+      >
+      <mat-error *ngIf="password.errors?.['required']">* Password is required</mat-error>
+      <mat-error *ngIf="password.errors?.['maxlength']"
+        >* Invalid input (Max length is {{ password.errors?.['maxlength']?.requiredLength }})</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="password.touched && password.invalid">
+      <mat-label>Endpoint for SMS Send API</mat-label>
+      <input matInput formControlName="endpoint" />
+      <mat-error>* Endpoint is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="endpoint.touched && endpoint.invalid">
+      <mat-label>Rate Limit per second</mat-label>
+      <input matInput formControlName="restMaxRatePerSec" type="number" (keydown)="restMaxRatePerSecKeyDown($event)" />
+      <mat-error *ngIf="restMaxRatePerSec.errors?.['required']">* Rate Limit per second is required</mat-error>
+      <mat-error *ngIf="restMaxRatePerSec.errors?.['min']"
+        >* Invalid input (Minimum value is {{ restMaxRatePerSec.errors?.['min']?.min }})</mat-error
+      >
+      <mat-error *ngIf="restMaxRatePerSec.errors?.['max']"
+        >* Invalid input (Maximum value is {{ restMaxRatePerSec.errors?.['max']?.max }})</mat-error
+      >
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="buttons">
+    <button mat-button mat-dialog-close [disabled]="saving">Cancel</button>
+    <button
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [loading]="saving"
+      [disabled]="form.invalid"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>

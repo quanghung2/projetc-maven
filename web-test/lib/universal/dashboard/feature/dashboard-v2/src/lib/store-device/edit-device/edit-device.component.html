@@ -1,0 +1,16 @@
+<div class="device__wrapper">
+  <p class="title">Edit device</p>
+  <form class="device__form" [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error>Name is required</mat-error>
+    </mat-form-field>
+  </form>
+  <div class="device__actions">
+    <button mat-button matDialogClose>Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" [loading]="loading" (click)="save()">
+      Update
+    </button>
+  </div>
+</div>

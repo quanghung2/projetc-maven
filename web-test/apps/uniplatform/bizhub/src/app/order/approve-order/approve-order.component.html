@@ -1,0 +1,13 @@
+<div mat-dialog-title>{{ ctaTitle }}</div>
+<div mat-dialog-content>
+  <mat-form-field class="container-fluid">
+    <mat-label>Remark</mat-label>
+    <textarea matInput [formControl]="remark" placeholder="Enter remark..." rows="3"></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [color]="type === 'approve' ? 'primary' : 'warn'" (click)="confirm()">
+    {{ ctaButton }}
+  </button>
+</div>

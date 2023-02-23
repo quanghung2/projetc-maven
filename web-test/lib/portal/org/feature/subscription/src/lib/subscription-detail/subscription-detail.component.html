@@ -1,0 +1,105 @@
+<ng-container *ngIf="data$ | async as data">
+  <ng-container *ngIf="viewMain">
+    <div class="header-info" fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap=".8rem">
+        <img *ngIf="!!data.subscription.primaryItem?.logo" [src]="data.subscription.primaryItem?.logo" />
+        <div>
+          <h2>{{ data.subscription.primaryItem?.productName }}</h2>
+          <p>Latest updated on {{ data.subscription.updatedDateTime | date: 'MMM dd, yyyy' }}</p>
+        </div>
+      </div>
+      <button
+        *ngIf="data.subscription.autoRenew && data.unsubscribeBtn"
+        mat-flat-button
+        color="warn"
+        (click)="unsubscribe(data.subscription)"
+      >
+        Unsubscribe
+      </button>
+      <button
+        *ngIf="!data.subscription.autoRenew && data.unsubscribeBtn"
+        mat-flat-button
+        color="primary"
+        (click)="resubscribe(data.subscription)"
+      >
+        Re-subscribe
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="content">
+      <div class="item-detail">
+        <h5>Subscription</h5>
+        <div>{{ data.subscription.primaryItem?.skuName }}</div>
+      </div>
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="data.features">
+        <div class="item-detail">
+          <h5>Feature(s)</h5>
+          <div *ngFor="let i of data.subscription.features" fxLayout="row" fxLayoutAlign="space-between start">
+            <span>{{ i.skuName }}</span>
+            <span>{{ i.quantity }}</span>
+          </div>
+          <div *ngIf="data.subscription.features.length == 0">--</div>
+        </div>
+        <mat-divider></mat-divider>
+      </ng-container>
+
+      <div *ngIf="data.numbers" class="item-detail" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap=".5rem">
+        <div fxFlex>
+          <h5>Number(s)</h5>
+          <div>
+            <ng-container *ngIf="data.subscription.countNumbers == 0">--</ng-container>
+            <ng-container *ngIf="data.subscription.countNumbers == 1">
+              {{ data.subscription.numbers[0] ? data.subscription.numbers[0].number : '--' }}
+            </ng-container>
+            <ng-container *ngIf="data.subscription.countNumbers > 1"
+              >{{ data.subscription.countNumbers }} numbers</ng-container
+            >
+          </div>
+        </div>
+        <button
+          *ngIf="data.subscription.countNumbers > 1"
+          mat-icon-button
+          fxFlex="2.5rem"
+          (click)="viewMain = false; viewNumbers = true"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div
+        *ngIf="data.userAssignment"
+        class="item-detail"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        fxLayoutGap=".5rem"
+      >
+        <div fxFlex>
+          <h5>User(s)</h5>
+          <div>{{ assignee }}</div>
+        </div>
+        <button mat-icon-button fxFlex="2.5rem" (click)="viewMain = false; viewUsers = true">
+          <mat-icon>supervisor_account</mat-icon>
+        </button>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div *ngIf="data.billingCycle" class="item-detail" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap=".5rem">
+        <div fxFlex>
+          <h5>Billing Cycle</h5>
+          <div class="sale-model-code">{{ data.subscription.primaryItem?.saleModelCode }}</div>
+        </div>
+        <button mat-icon-button fxFlex="2.5rem" (click)="changeSaleModel(data.subscription)">
+          <mat-icon>receipt</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <pos-view-number *ngIf="viewNumbers" (backEvent)="viewMain = true; viewNumbers = false"></pos-view-number>
+  <pos-view-users
+    *ngIf="viewUsers"
+    (backEvent)="viewMain = true; viewUsers = false; updateData($event)"
+  ></pos-view-users>
+</ng-container>

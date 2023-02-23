@@ -1,0 +1,256 @@
+<div ngModelGroup="branch" class="condition-branch-content" fxLayout="column" fxLayoutGap="1.6rem">
+  <div fxLayout="row" fxLayoutGap="0.8rem" fxLayoutAlign="center center" class="condition-branch-content__type">
+    <mat-form-field>
+      <mat-label>Condition type</mat-label>
+      <mat-select [(ngModel)]="branch.type" (selectionChange)="onSelectionChange($event)" requied name="conditionType">
+        <mat-option *ngFor="let option of conditionBranchOptions" [value]="option.key"> {{ option.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="branch.type !== ConditionBranchType.otherwise">
+      <mat-label>Process order</mat-label>
+      <input
+        matInput
+        type="number"
+        placeholder="Ex: 1"
+        [(ngModel)]="branch.order"
+        permissibleLimits
+        [allowedMin]="1"
+        [allowedMax]="100"
+        #branchOrder="ngModel"
+        name="branchOrder"
+        required
+      />
+      <mat-error *ngIf="branchOrder.hasError('unacceptable')">Accept value from 1 to 100</mat-error>
+      <mat-error *ngIf="branchOrder.hasError('required')">Process order is required</mat-error>
+      <mat-hint align="start" *ngIf="branch.order">The lower value will be processed first.</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="branch.type === ConditionBranchType.callerIdPattern">
+    <mat-form-field class="start-with">
+      <mat-chip-list #chipList>
+        <mat-chip
+          *ngFor="let startWith of branch.startWithList"
+          removable="true"
+          (removed)="remove(startWith)"
+          [startWithRequired]="branch.startWithList"
+        >
+          {{ startWith }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Start with...* "
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          matChipInputAddOnBlur="true"
+          (matChipInputTokenEnd)="add($event)"
+        />
+      </mat-chip-list>
+      <!-- <mat-error>enter chips</mat-error> -->
+      <!-- <mat-error align="start" *ngIf="branch.startWithList.length == 0">Start with is required</mat-error> -->
+      <mat-hint align="start" *ngIf="branch.startWithList.length == 0" style="color: red"
+        >* Start with is required</mat-hint
+      >
+
+      <!--
+        <input
+          required
+          matInput
+          type="text"
+          placeholder="Ex: +65,+62"
+          [(ngModel)]="startWiths"
+          (ngModelChange)="onChangeStartWiths()"
+          name="startWiths"
+        />
+      -->
+    </mat-form-field>
+  </div>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="0.8rem"
+    *ngIf="branch.type === ConditionBranchType.callerIdPattern"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Min"
+        [(ngModel)]="branch.lowerLength"
+        (ngModelChange)="constructBranchLabel()"
+        permissibleLimits
+        [allowedMin]="1"
+        [allowedMax]="15"
+        #branchMin="ngModel"
+        name="min"
+      />
+      <mat-error *ngIf="branchMin.hasError('unacceptable')">Accept value from 1 to 15</mat-error>
+      <mat-hint>The minimum length of caller numbers (digits)</mat-hint>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        type="number"
+        placeholder="Max"
+        [(ngModel)]="branch.upperLength"
+        (ngModelChange)="constructBranchLabel()"
+        permissibleLimits
+        [allowedMin]="1"
+        [allowedMax]="15"
+        #branchMax="ngModel"
+        name="max"
+      />
+      <mat-error *ngIf="branchMax.hasError('unacceptable')">Accept value from 1 to 15</mat-error>
+      <mat-hint>The maximum length of caller numbers (digits)</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div
+    fxLayout="row"
+    fxLayoutGap="0.8rem"
+    fxLayoutAlign="space-between"
+    *ngIf="branch.type === ConditionBranchType.dateInRange"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        readonly
+        [matDatepicker]="pickerDateStart"
+        [value]="fromInDate"
+        (dateChange)="changeFrom($event)"
+        (click)="pickerDateStart.open()"
+        placeholder="Start time"
+        required
+      />
+      <!-- [value]="branch.fromInDate" -->
+      <mat-datepicker-toggle matSuffix [for]="pickerDateStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerDateStart type="datetime"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        readonly
+        matInput
+        [matDatepicker]="pickerDateEnd"
+        [value]="toInDate"
+        placeholder="End time"
+        (dateChange)="changeTo($event)"
+        (click)="pickerDateEnd.open()"
+        required
+      />
+      <!-- [value]="branch.toInDate" -->
+      <mat-datepicker-toggle matSuffix [for]="pickerDateEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerDateEnd type="datetime"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div
+    fxLayout="row"
+    fxLayoutGap="5px"
+    fxLayoutAlign="space-between"
+    *ngIf="branch.type === ConditionBranchType.timeInRange"
+    class="time-in-range"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        readonly
+        [matDatepicker]="pickerTimeStart"
+        placeholder="Start time"
+        [value]="fromInDate"
+        (dateChange)="changeFrom($event)"
+        (click)="pickerTimeStart.open()"
+        required
+      />
+      <!-- [value]="branch.fromInDate" -->
+      <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerTimeStart type="time"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        readonly
+        matInput
+        [matDatepicker]="pickerTimeEnd"
+        placeholder="End time"
+        [value]="toInDate"
+        (click)="pickerTimeEnd.open()"
+        (dateChange)="changeTo($event)"
+        required
+      />
+      <!-- [value]="branch.toInDate" -->
+      <mat-datepicker-toggle matSuffix [for]="pickerTimeEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerTimeEnd type="time"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="branch.type === ConditionBranchType.dayOfWeek">
+    <mat-form-field>
+      <mat-label>Select days</mat-label>
+      <mat-select
+        required
+        multiple
+        [(ngModel)]="branch.days"
+        name="selectedDays"
+        (selectionChange)="onSelectDaysOfWeekChanged($event)"
+      >
+        <div>
+          <button mat-button color="primary" (click)="selectAll()">Select all</button>
+          <button mat-button (click)="deselectAll()">Deselect all</button>
+          <mat-divider></mat-divider>
+        </div>
+        <mat-option *ngFor="let day of dayOfWeek" [value]="day.key">
+          {{ day.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div
+    *ngIf="branch.type === ConditionBranchType.callerIdInList"
+    fxLayout="row"
+    fxLayoutGap="0.8rem"
+    fxLayoutAlign="center center"
+  >
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.8rem" style="width: 100%">
+      <mat-progress-bar
+        *ngIf="branch.uploadIndicator && branch.uploadEvent?.percentage <= 100"
+        mode="determinate"
+        [value]="branch.uploadEvent?.percentage"
+      >
+      </mat-progress-bar>
+
+      <mat-card fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="0.8rem">
+        <div class="download-sample-file"><button (click)="downloadSample()" mat-button>Download sample</button></div>
+        <div class="upload-button">
+          <label for="multiple_{{ branch.nextBlockUuid }}">Choose csv file</label>
+          <input
+            type="file"
+            (change)="selectCSVFile($event)"
+            accept=".csv"
+            hidden
+            id="multiple_{{ branch.nextBlockUuid }}"
+          />
+          <div *ngIf="fileName" class="filename">{{ fileName }}</div>
+        </div>
+
+        <div>
+          <button (click)="downloadFile()" *ngIf="branch.s3Key" [disabled]="downloading" mat-button type="button">
+            <span *ngIf="!downloading">Download file</span> <span *ngIf="downloading">Downloading...</span>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <mat-form-field *ngIf="branch.type === ConditionBranchType.validateExpression">
+    <textarea
+      matInput
+      placeholder="Expression template"
+      required
+      [(ngModel)]="branch.expressionTemplate"
+      name="expressionTemplate"
+    ></textarea>
+    <mat-error>Expression template is required</mat-error>
+  </mat-form-field>
+</div>

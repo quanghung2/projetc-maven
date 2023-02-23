@@ -1,0 +1,48 @@
+<div class="ui active centered inline loader" *ngIf="loading; else defaultRules"></div>
+<ng-template #defaultRules>
+  <div class="rule__wrapper">
+    <ng-container *ngFor="let rule of keys(defaultRule)">
+      <div class="ui grid" class="rule__container">
+        <h5 class="ui header rule__header">{{ rule === defaultRuleMap.oRule ? 'Outbound' : 'Inbound' }} Call Rule</h5>
+        <table class="ui basic table rule__table">
+          <thead>
+            <tr>
+              <th class="header">Name</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row">
+              <td>{{ defaultRule[rule].name }}</td>
+              <td>
+                <div
+                  class="edit__icon"
+                  data-tooltip="Update"
+                  data-position="bottom center"
+                  (click)="rule === 'oRule' ? openOutboundModal() : openInboundModal()"
+                >
+                  <i class="edit icon"></i>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-container [ngSwitch]="rule">
+        <b3n-store-cpaas-default-outbound-rule
+          *ngSwitchCase="defaultRuleMap.oRule"
+          [oRule]="defaultRule[rule]"
+        ></b3n-store-cpaas-default-outbound-rule>
+        <ng-container *ngSwitchCase="defaultRuleMap.iRule">
+          <b3n-store-cpaas-default-inbound-rule
+            [iRule]="defaultRule[rule]"
+            (openStoreCallerIdPlanModal)="openStoreCallerIdPlanModal($event)"
+            (removeCallerIdPlan)="removeCallerIdPlan($event)"
+          ></b3n-store-cpaas-default-inbound-rule>
+          <b3n-store-caller-id-plan [rule]="defaultRule[rule]"></b3n-store-caller-id-plan>
+          <app-confirm-modal [hasCloseIcon]="false" [allowMultiple]="true"></app-confirm-modal>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>

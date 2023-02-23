@@ -1,0 +1,37 @@
+.previous_container {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding: 10px 15px 0;
+  border-bottom: 1px solid #ccc;
+
+  .messageContent {
+    white-space: normal !important;
+    word-wrap: break-word;
+    margin-bottom: 1em;
+    overflow-x: auto;
+    font-size: 12px;
+    * {
+      white-space: normal !important;
+      max-width: 100% !important;
+    }
+    ::ng-deep .MsoNormalTable {
+      width: auto !important;
+    }
+    img {
+      max-width: 100%;
+    }
+  }
+  .showHideBlockAction {
+    cursor: pointer;
+    background-color: var(--general-border);
+    color: var(--empty-color);
+    border-radius: 500px;
+    line-height: 20px;
+    width: 30px;
+    height: 20px;
+    text-align: center;
+  }
+  &.noBorderBottom {
+    border-bottom: none;
+  }
+}

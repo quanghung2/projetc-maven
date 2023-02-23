@@ -1,0 +1,80 @@
+<h1 mat-dialog-title>Action Events</h1>
+
+<ng-container *ngIf="!loading; else spinner">
+  <form #form="ngForm" *ngIf="queue">
+    <div mat-dialog-content>
+      <div class="dialog-content-container">
+        <div fxLayout="column" fxLayoutGap="1.6rem">
+          <ng-container *ngFor="let action of listAction">
+            <section class="actions-config">
+              <h3 class="actions-config__header" fxLayout="row" fxLayoutAlign="center start">
+                {{ action.label }} <span class="fill-remaining-space"></span>
+                <mat-slide-toggle
+                  (change)="enabledButton(action.key)"
+                  [checked]="queue.callflowConfig[action.key].enabled"
+                  color="primary"
+                >
+                </mat-slide-toggle>
+              </h3>
+              <div
+                *ngIf="queue.callflowConfig[action.key].enabled"
+                class="actions-config__content"
+                fxLayout="column"
+                fxLayoutAlign="start stretch"
+                fxLayoutGap="1.6rem"
+              >
+                <mat-form-field>
+                  <mat-label>{{ action.placeholderInput }}</mat-label>
+                  <input
+                    #formInput="ngModel"
+                    [(ngModel)]="queue.callflowConfig[action.key].threshold"
+                    [name]="action.key"
+                    matInput
+                    required
+                    type="number"
+                  />
+                  <mat-error *ngIf="formInput.invalid && (formInput.dirty || formInput.touched)" class="sms-warning">
+                    {{ action.placeholderInput }} is required
+                  </mat-error>
+                  <mat-hint *ngIf="queue.callflowConfig[action.key].threshold <= 0" align="start" style="color: red"
+                    >* {{ action.placeholderInput }} must be greater than 0
+                  </mat-hint>
+                </mat-form-field>
+
+                <b3n-flow-config
+                  #queueSizeComp
+                  [extensions]="extensions"
+                  [flowConfig]="queue.callflowConfig[action.key]"
+                  [formParents]="$any(formGroup.get(action.key))"
+                  [hangupMessage]="action.queueSizeHangupMessage"
+                  [key]="action.key"
+                  [queues]="queues"
+                  [skills]="skills"
+                ></b3n-flow-config>
+              </div>
+            </section>
+            <mat-divider> </mat-divider>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <div align="end" mat-dialog-actions>
+      <button mat-button mat-dialog-close>Close</button>
+      <button
+        (click)="save()"
+        [disabled]="invalidForm(form) || this.isInvalid"
+        [loading]="isSaving"
+        color="primary"
+        mat-flat-button
+      >
+        Update
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="spinner-container" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

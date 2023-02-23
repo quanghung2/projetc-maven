@@ -1,0 +1,143 @@
+.search-container {
+  width: 100%;
+  padding: 25px 250px 0px 250px;
+  .label {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  .ui.input {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .info {
+    color: #666666;
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .extra-info {
+    padding-left: 25px;
+    margin-top: 70px;
+    line-height: 25px;
+    border-left: 2px solid #40b5d8;
+  }
+}
+.status-container {
+  margin-top: 70px;
+  width: 100%;
+  .header {
+    color: #333333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .ui.page.table thead > tr > th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .ui.table tfoot tr:first-child > th:only-child {
+    padding: 5px;
+  }
+  .ui.table {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  .lookup-result-container {
+    position: relative;
+  }
+}
+.notes-container {
+  .label {
+    color: #919191;
+    font-size: 14px;
+    font-weight: bold;
+    float: left;
+    margin-right: 10px;
+  }
+  .collaps-eexplanation {
+    color: #007be0;
+    font-size: 14px;
+    float: left;
+  }
+  .icon {
+    border-radius: 2px;
+    border: 1px solid #dddddd;
+    margin-left: 10px;
+    color: #919191;
+    padding: 9px 17px 9px 2px;
+    line-height: 1px;
+  }
+  .ui.table {
+    width: auto;
+    margin: 5px 0px;
+  }
+  .ui.page.table tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .ui.page.table tr th {
+    padding: 0px;
+  }
+  .description {
+    color: #666666;
+  }
+}
+.log-container {
+  width: 100%;
+  margin-top: 60px;
+  .header {
+    color: #333333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .ui.page.menu {
+    margin-top: 45px;
+    margin-bottom: 30px;
+  }
+  .ui.calendar {
+    width: 200px;
+  }
+  .count-entry-container {
+    .label {
+      float: left;
+      margin-right: 10px;
+      line-height: 20px;
+    }
+    .ui.dropdown {
+      padding: 0px 10px;
+      line-height: 20px;
+      min-height: 15px;
+      min-width: 60px;
+      background-color: #e8e8e8;
+      border-radius: 2px;
+      .icon {
+        padding: 0px;
+        line-height: 20px;
+      }
+    }
+  }
+  .item.calendar.vertical.filter > label {
+    top: -20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .item.calendar.vertical.filter input {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+  .log-result-container {
+    position: relative;
+    margin-top: 30px;
+  }
+  .empty {
+    color: #919191;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+}
+.border-none {
+  border: none !important;
+}
+
+th[colspan]:not([colspan='1']) {
+  text-align: center;
+}

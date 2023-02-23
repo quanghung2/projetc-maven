@@ -1,0 +1,68 @@
+<div class="container flex column justify-content-start align-items-none" fxFill>
+  <div fxFlex="64px" class="header flex-column">
+    <div class="header__container spacer flex justify-content-start align-items-center">
+      <span class="flex justify-content-center align-items-center gap-2">
+        <button (click)="goBack()" mat-icon-button color="primary" class="go-back">
+          <mat-icon aria-label="Go back to search result" matTooltip="Go back to search result">
+            keyboard_backspace
+          </mat-icon>
+        </button>
+        <span> Messsage history:</span>
+        <span fxLayoutAlign="center center">
+          <ng-container [ngSwitch]="channel.type">
+            <ng-container *ngSwitchCase="ChannelType.gc">
+              <mat-icon class="icon" *ngIf="channel.privacy === Privacy.private">lock</mat-icon>
+              <span *ngIf="channel.privacy !== Privacy.private">#</span>
+              <span> {{ channel.name }} </span>
+            </ng-container>
+            <ng-container *ngSwitchCase="ChannelType.dm">
+              <ng-container *ngIf="directUser$ | async as directUser">
+                <mat-icon
+                  [fontSet]="!directUser.isOnline ? 'material-icons-outlined' : null"
+                  [class]="directUser.isOnline ? 'status__online' : 'status__offline'"
+                >
+                  lens
+                </mat-icon>
+                <span> {{ directUser.displayName }} </span>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </span>
+      </span>
+    </div>
+    <mat-divider fxFlex="1px"></mat-divider>
+    <div fxFlex="1px" class="viewing-date flex justify-content-center align-items-center" *ngIf="ui.viewDate">
+      <span>{{ ui.viewDate | viewDate }}</span>
+    </div>
+  </div>
+  <div class="body spacer flex column justify-content-start align-items-none">
+    <div fxFlex="1px" *ngIf="ui.loading" class="ui-loading">
+      <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
+
+    <div #viewport class="messages-viewport scroller-firefox">
+      <div
+        class="msg-item"
+        *ngFor="let item of messages; let i = index; trackBy: trackByIdx"
+        [class.hight-light]="item.id === message.id"
+        [id]="item.clientId"
+        [attr.data-ts]="item.ts"
+      >
+        <div class="group-by-date" *ngIf="i > 0 && setDisplayDate(item.ts) !== setDisplayDate(messages[i - 1].ts)">
+          <span>{{ item.ts | viewDate }}</span>
+        </div>
+
+        <csh-chat-message
+          [message]="item"
+          [configMessageOption]="{
+            isHideAction: true
+          }"
+          [previousMessage]="i > 0 ? messages[i - 1] : null"
+          [parentElr]="item.mt === MsgType.attachment ? viewport : null"
+          (showProfile)="onShowProfile($event)"
+        ></csh-chat-message>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="20px" class="footer"></div>
+</div>

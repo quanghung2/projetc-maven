@@ -1,0 +1,44 @@
+.item {
+  padding: 4px;
+  margin: 2px 0px 2px 2px;
+  border-radius: 3px;
+
+  .logo {
+    padding: 3px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+  }
+
+  .border-left {
+    border-left: 1px solid #cccccc;
+  }
+
+  .edit-item {
+    visibility: hidden;
+    color: #999;
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: #daecfb;
+    cursor: pointer;
+
+    .edit-item {
+      visibility: visible;
+    }
+  }
+}
+
+.collapse {
+  visibility: collapse;
+}
+
+.active {
+  border: 2px solid #4c9aff;
+  background-color: #daecfb;
+}
+
+.hightlight-group-item {
+  border-left: 4px solid #2196f3;
+  background: aliceblue;
+}

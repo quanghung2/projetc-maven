@@ -1,0 +1,219 @@
+<div class="ui page content container">
+  <!-- Page Control Menu-->
+  <div class="ui page control borderless menu">
+    <!-- Filter Recording Type-->
+    <div class="item vertical filter">
+      <label>Filter by Recording Type</label>
+      <div #dropdownType class="ui underline selected dropdown">
+        <div class="text">All Types</div>
+        <i class="icon dropdown"></i>
+        <div class="menu">
+          <div class="item" data-value="all">All Types</div>
+          <div class="item" data-value="ultimate">Business Ultimate</div>
+          <div class="item" data-value="businessplus">Business Plus</div>
+          <div class="item" data-value="business">Business</div>
+          <div class="item" data-value="professional">Professional</div>
+        </div>
+      </div>
+    </div>
+    <!-- Filter App-->
+    <div class="item vertical filter">
+      <label>Filter by App</label>
+      <div #dropdownApp class="ui underline selected dropdown">
+        <div class="text">All Apps</div>
+        <i class="icon dropdown"></i>
+        <div class="menu">
+          <div class="item" data-value="all">All Apps</div>
+          <div class="item" data-value="virtual">Virtual Line</div>
+          <div class="item" data-value="sip">SIP</div>
+          <div class="item" data-value="direct">Direct Line</div>
+          <div class="item" data-value="biz">Biz Phone</div>
+        </div>
+      </div>
+    </div>
+    <div class="right menu"></div>
+  </div>
+  <!-- Page Table -->
+  <div *ngIf="subscriptions == undefined">
+    <div class="ui active centered inline loader app-loader"></div>
+  </div>
+  <div *ngIf="subscriptions != undefined && subscriptions.length == 0">
+    <div class="">You did not have any subscription yet.</div>
+  </div>
+  <table class="ui page unstackable table" *ngIf="subscriptions != undefined && subscriptions.length > 0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>UUID</th>
+        <th>Recording Type</th>
+        <th>App</th>
+        <th>Assigned To</th>
+        <th>Assigned Type</th>
+        <th>Status Record</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let subscription of subscriptions; let i = index">
+        <td>
+          {{ (currentPage - 1) * sizePage + i + 1 }}
+        </td>
+        <td style="width: 160px">
+          {{ subscription.uuid.substr(0, 8) }}...
+          <div
+            class="ui tiny icon button"
+            data-tooltip="Copy to clipboard"
+            data-inverted=""
+            style="margin-left: 4px"
+            ngxClipboard
+            [cbContent]="subscription.uuid"
+          >
+            <i class="content copy icon"></i>
+          </div>
+        </td>
+
+        <div *ngIf="subscription.plan == undefined; then planInvalid; else planBlock"></div>
+
+        <!-- not planned -->
+        <ng-template #planInvalid>
+          <td class="disabled" colspan="5">This subscription plan is invalid.</td>
+        </ng-template>
+
+        <!-- planned -->
+        <ng-template #planBlock>
+          <td class="highlight">
+            {{ subscription | subscriptionInfo: 'RECORDING_TYPE':reload }}
+          </td>
+
+          <ng-container [ngSwitch]="subscription.plan.name">
+            <!-- biz phone -->
+            <ng-container *ngSwitchCase="'number_of_bp_ext'">
+              <td>
+                <img
+                  class="ui app image"
+                  src="https://ui.b3networks.com/external/icon/bizphone_128x128.png"
+                  alt="BizPhone"
+                />
+                BizPhone
+              </td>
+              <td class="disabled" colspan="3"></td>
+              <td>
+                <div
+                  *ngIf="!isAppV2"
+                  (click)="openBizPhoneModal(subscription)"
+                  class="ui icon tooltip button small outlined primary"
+                  data-type="settings"
+                  data-tooltip="Edit plan"
+                  data-inverted=""
+                  data-variation="small"
+                  data-position="top center"
+                >
+                  <i class="icon settings"></i>
+                </div>
+                <div
+                  *ngIf="isAppV2"
+                  class="ui icon tooltip button small outlined primary"
+                  data-inverted=""
+                  data-variation="small"
+                  data-tooltip="Please navigate to BizPhone to configure."
+                  data-position="top center"
+                >
+                  <i class="icon info outline"></i>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- cr compliance -->
+            <ng-container
+              *ngSwitchCase="subscription.plan.name.startsWith('cr_compliance') ? subscription.plan.name : ''"
+            >
+              <td>
+                <img
+                  class="ui app image"
+                  src="https://ui.b3networks.com/external/icon/callrecording_128x128.png"
+                  alt="Call Recording Compliance"
+                />
+                CR Compliance
+              </td>
+              <td class="disabled" colspan="3"></td>
+              <td>
+                <div
+                  (click)="openCrComplianceModal(subscription)"
+                  class="ui icon tooltip button small outlined primary"
+                  data-type="settings"
+                  data-tooltip="Edit plan"
+                  data-inverted=""
+                  data-variation="small"
+                  data-position="top center"
+                >
+                  <i class="icon settings"></i>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- apps -->
+            <ng-container *ngSwitchDefault>
+              <div *ngIf="subscription.assignedTo == undefined; then unAssignedAppBlock; else assignedAppBlock"></div>
+
+              <!-- unassigned app -->
+              <ng-template #unAssignedAppBlock>
+                <td class="disabled">
+                  <i class="large icon mic off"></i>
+                </td>
+                <td class="disabled" colspan="3">This plan is not assigned to any subscription.</td>
+                <td>
+                  <div
+                    (click)="openAssignModal(subscription)"
+                    class="ui icon tooltip button small outlined primary"
+                    data-type="add"
+                    data-id="2"
+                    data-tooltip="Assign now"
+                    data-inverted=""
+                    data-variation="small"
+                    data-position="top center"
+                  >
+                    <i class="icon add"></i>
+                  </div>
+                </td>
+              </ng-template>
+
+              <!-- assigned app -->
+              <ng-template #assignedAppBlock>
+                <td>
+                  <img
+                    class="ui app image"
+                    *ngIf="subscription.appLogo != undefined"
+                    src="{{ subscription.appLogo }}"
+                  />
+                  {{ subscription.appName }}
+                </td>
+                <td class="basic selectable">
+                  <a href="" (click)="openAssignModal(subscription)"
+                    >{{ subscription.assignedDisplay }}
+                    <i class="grey icon edit link"></i>
+                  </a>
+                </td>
+                <td>{{ subscription | subscriptionInfo: 'ASSIGNED_TYPE':reload }}</td>
+                <td>{{ subscription | subscriptionInfo: 'STATUS':reload }}</td>
+                <td>
+                  <div
+                    (click)="openSettingModal(subscription)"
+                    class="ui icon tooltip button small outlined primary"
+                    data-type="settings"
+                    data-id="1"
+                    data-tooltip="Edit plan"
+                    data-inverted=""
+                    data-variation="small"
+                    data-position="top center"
+                  >
+                    <i class="icon settings"></i>
+                  </div>
+                </td>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+        </ng-template>
+      </tr>
+    </tbody>
+  </table>
+</div>

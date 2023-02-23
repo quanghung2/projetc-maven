@@ -1,0 +1,47 @@
+<mat-toolbar><h1>Public Holiday</h1></mat-toolbar>
+
+<div class="container">
+  <div class="public-holiday__container">
+    <mat-card class="public-holiday__card mat-elevation-z0">
+      <div fxLayout="row" fxLayoutAlign="space-between start" class="mb-16">
+        <div>
+          <h3 class="fw-500">Public holiday</h3>
+          <p class="secondary-text">Default public holiday for organization</p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="openPublicHolidayConfig()">Edit</button>
+      </div>
+      <mat-card-content>
+        <div class="content__row">
+          <mat-icon class="material-icons-outlined">info</mat-icon>
+          <p *ngIf="scheduleOrg?.phCountryCode" class="information">
+            This organization is using Public holiday of
+            <strong>{{ getCountryName(scheduleOrg?.phCountryCode) }}</strong> for default settings.
+          </p>
+          <p *ngIf="!scheduleOrg?.phCountryCode" class="information">
+            This organization did not configuration any default Public holiday.
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="public-holiday__container">
+    <mat-card class="public-holiday__card mat-elevation-z0">
+      <div fxLayout="row" fxLayoutAlign="space-between start" class="mb-16">
+        <div>
+          <h3 class="fw-500">Custom holiday</h3>
+          <p class="secondary-text">Default custom holiday for organization</p>
+        </div>
+        <button mat-stroked-button color="primary" (click)="openCustomHolidayConfig()">Edit</button>
+      </div>
+      <mat-card-content>
+        <div class="content__row">
+          <mat-icon class="material-icons-outlined">info</mat-icon>
+          <p class="information">
+            {{ scheduleOrg?.groupHolidayUuid ? 'Enable' : 'No set' }}
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

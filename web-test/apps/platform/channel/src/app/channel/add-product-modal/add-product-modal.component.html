@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Add Products</h2>
+
+<mat-dialog-content class="mat-typography">
+  <mat-list>
+    <mat-list-item *ngFor="let product of products">
+      <mat-checkbox
+        class="example-margin"
+        [checked]="appChecked"
+        (change)="onChangeAppChecked($event, product?.productId)"
+      >
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+          <img [src]="product.logo || 'assets/application.svg'" class="product-logo" />
+          <div>{{ product.name }}</div>
+        </div>
+      </mat-checkbox>
+    </mat-list-item>
+  </mat-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    [loading]="isLoading"
+    [disabled]="!selectedProduct.length"
+    color="primary"
+    (click)="onAddApp()"
+  >
+    Add
+  </button>
+</mat-dialog-actions>

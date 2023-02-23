@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-hyperspace",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/hyperspace/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/hyperspace/**/*.ts", "libs/chat/shared/hyperspace/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

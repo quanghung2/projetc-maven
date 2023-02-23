@@ -1,0 +1,67 @@
+<ng-container *ngIf="chartData">
+  <ng-container *ngIf="chartData.datasets[0].type === ChartType.metric; then metricChart; else metricsChart">
+  </ng-container>
+</ng-container>
+
+<ng-template #metricChart>
+  <div fxLayout="column" fxLayoutAlign="space-around stretch" class="metrics">
+    <mat-list *ngIf="chartData.datasets.length > 1">
+      <mat-list-item *ngFor="let dataset of chartData.datasets">
+        <span class="metric__number">{{ dataset.data[0] }}</span>
+        <span class="metric__label"> {{ dataset.label }} </span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <div *ngIf="chartData.datasets.length === 1" class="metric metric--single">
+    <div class="metric__label">{{ chartData.datasets[0].label }}</div>
+    <div class="metric__number">{{ chartData.datasets[0].data[0] }}</div>
+  </div>
+</ng-template>
+
+<ng-template #metricsChart>
+  <ng-container *ngIf="chartData.datasets[0].type === ChartType.metrics; else tableChart">
+    <div fxLayout="column" fxLayoutAlign="space-around stretch" class="metrics">
+      <mat-list *ngIf="chartData.datasets[0].data.length > 1">
+        <mat-list-item *ngFor="let label of chartData.labels; let i = index">
+          <span class="metric__label"> {{ label }} </span>
+          <span class="spacer"></span>
+          <span class="metric__number">{{ chartData.datasets[0].data[i] }}</span>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #tableChart>
+  <ng-container *ngIf="chartData.datasets[0].type === ChartType.dataTable; else chartJS">
+    <table *ngIf="chartData.datasets[0].data.length > 0" mat-table [dataSource]="$any(chartData.datasets[0].data)">
+      <ng-container *ngFor="let label of chartData.labels; let i = index" matColumnDef="{{ label }}">
+        <th mat-header-cell *matHeaderCellDef>{{ label }}</th>
+        <td
+          mat-cell
+          *matCellDef="let row"
+          [class.ttl__row]="
+            type === 'nea_block_update' && ttlCheck.hasTtl && row[ttlCheck.index] && i === ttlCheck.index
+          "
+        >
+          {{ row[i] }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="chartData.labels"></tr>
+      <tr
+        [class.nea-block-update__active]="type === 'nea_block_update' && ttlCheck.hasTtl && row[ttlCheck.index]"
+        mat-row
+        *matRowDef="let row; columns: chartData.labels"
+      ></tr>
+    </table>
+
+    <div class="no-data white-box" *ngIf="!chartData.datasets[0].data.length">No data</div>
+  </ng-container>
+</ng-template>
+
+<ng-template #chartJS>
+  <ng-container>
+    <canvas #chart class="chart">{{ chart }}</canvas>
+    <div class="no-datasetData" *ngIf="!chartData.datasets[0].data.length">No data</div>
+  </ng-container>
+</ng-template>

@@ -1,0 +1,122 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">High Availability</div>
+
+  <div class="content">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="five wide column right aligned">Fail-Over</div>
+        <div class="ten wide column">
+          <select [(ngModel)]="selectedFailOver">
+            <option value="manual">Manual</option>
+            <option value="auto">Auto</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+  <div *ngIf="selectedFailOver === 'manual'">
+    <div class="title"><strong>Manual Fail-Over</strong></div>
+
+    <div class="content">
+      <div class="ui grid two column form">
+        <div class="row">
+          <div class="five wide column right aligned">Activate Backup Line</div>
+          <div class="ten wide column">
+            <!--<div sm-component class="ui toggle checkbox">
+						<input type="checkbox" [checked]="active === true" (change)="$event.target['checked']? (active = true) : (active = false)">
+					</div>-->
+            <div class="switcher">
+              <input
+                class="toggle"
+                type="checkbox"
+                id="toggle1"
+                [checked]="active === true"
+                (change)="$event.target['checked'] ? (active = true) : (active = false)"
+              />
+              <label class="switcher label" for="toggle1"></label>
+              <div class="box"></div>
+            </div>
+            <div class="help-block">
+              Backup line forwards all calls to your SIP number to a backup number of your choice. This is useful for
+              emergency situations such as network failure and phone system disruptions.
+            </div>
+            <div class="help-block">It is advisable to activate your backup line only when required.</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="five wide column right aligned">Customize based on DID numbers</div>
+          <div class="ten wide column">
+            <div *ngIf="!customize || active === false" class="field">
+              <button class="ui submit button" (click)="customizeIt()" [disabled]="active === false">
+                Customize it
+              </button>
+            </div>
+            <div *ngIf="customize && active === true">
+              <div class="inline fields label">
+                <div class="five wide field">DID number</div>
+                <div class="five wide field">Backup number</div>
+              </div>
+              <div *ngFor="let backupNumber of backupNumbers; let i = index" class="inline fields">
+                <div class="five wide field">
+                  <input type="text" [(ngModel)]="backupNumber.did" />
+                </div>
+                <div class="five wide field">
+                  <input type="text" [(ngModel)]="backupNumber.backup" />
+                </div>
+                <div class="five wide field">
+                  <a href="javascript:void(0)" (click)="removeBackupNumber(i)">Remove entry</a>
+                </div>
+              </div>
+              <div class="inline fields action">
+                <div class="five wide field">
+                  <a href="javascript:void(0)" (click)="addBackupNumber()">Add more entry</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="five wide column right aligned">Master Backup line number</div>
+          <div class="ten wide column">
+            <div class="field">
+              <input type="text" [(ngModel)]="defaultBackupNumber" [disabled]="active === false" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedFailOver === 'auto'">
+    <div class="title"><strong>Auto Fail-Over</strong></div>
+
+    <div class="content">
+      <div class="ui grid two column form">
+        <div class="row">
+          <div class="five wide column right aligned">2nd SIP Account</div>
+          <div class="ten wide column">
+            <select [(ngModel)]="sipAccount2">
+              <option *ngFor="let item of accounts" [value]="'sip:' + item.sipUsername + '@' + item.sipDomain">
+                {{ item.tag }} - {{ item.sipUsername }}
+              </option>
+            </select>
+            <div class="note-account">
+              Customers need 2 SIP Accounts to activate this function properly. The 1st SIP Account should belong to
+              Domain sip6 to detect failover effectively
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui divider"></div>
+  <div class="field right aligned">
+    <div class="ui primary submit button" (click)="saveChanges()">Save changes</div>
+  </div>
+</div>
+<div *ngIf="isSaving" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

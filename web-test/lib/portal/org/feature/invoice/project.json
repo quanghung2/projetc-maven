@@ -1,0 +1,16 @@
+{
+  "name": "portal-org-feature-invoice",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/invoice/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/org/feature/invoice/**/*.ts", "libs/portal/org/feature/invoice/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

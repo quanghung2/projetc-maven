@@ -1,0 +1,79 @@
+<div *ngIf="activeComponent !== enumTypeMenu.Landing" class="ui page top fixed centered menu">
+  <div class="borderless navicon item">
+    <!--<div class="ui basic borderless button left icon">
+			<i class="icon chevron left"></i>
+			<img class="ui app image" src="https://s3.amazonaws.com/apps-spidergate/global-dnc/GlobalDNC-logo-64.png" alt="">
+		</div>-->
+  </div>
+  <div class="ui container" *ngIf="subscriptionInfo && !subscriptionInfo.errorCode">
+    <a
+      *ngIf="subscriptionInfo.isOwner"
+      class="item"
+      [class.active]="activeComponent === enumTypeMenu.ComplianceWindow"
+      [routerLink]="['/compliance-window']"
+      [queryParamsHandling]="'merge'"
+    >
+      Compliance Window
+    </a>
+    <a
+      class="item"
+      *ngIf="!subscriptionInfo.isLegacy || subscriptionInfo.isOwner"
+      [class.active]="activeComponent === enumTypeMenu.CheckNumber"
+      [routerLink]="['/check-number']"
+      [queryParamsHandling]="'merge'"
+    >
+      Bulk Filtering
+    </a>
+    <a
+      *ngIf="subscriptionInfo.isAdmin && !subscriptionInfo.isChild"
+      class="item"
+      [class.active]="activeComponent === enumTypeMenu.ListManagement"
+      [routerLink]="['/list-management']"
+      [queryParamsHandling]="'merge'"
+    >
+      Consent Management
+    </a>
+    <a
+      class="item"
+      [class.active]="activeComponent === enumTypeMenu.OrgLinks"
+      [routerLink]="['/org-links']"
+      [queryParamsHandling]="'merge'"
+    >
+      Organization Links
+    </a>
+    <a
+      *ngIf="subscriptionInfo.isAdmin"
+      class="item"
+      [class.active]="activeComponent === enumTypeMenu.UserManagement"
+      [routerLink]="['/user-management']"
+      [queryParamsHandling]="'merge'"
+    >
+      License Management
+    </a>
+    <a
+      *ngIf="isCompliantFlag && (subscriptionInfo.isAdmin || subscriptionInfo.isOwner)"
+      class="item"
+      [class.active]="activeComponent === enumTypeMenu.CompliantFlag"
+      [routerLink]="['/compliant-flag']"
+      [queryParamsHandling]="'merge'"
+    >
+      Compliance Flag
+    </a>
+    <!--<a *ngIf="subscriptionInfo.role == 'ADMIN'" class="item" [class.active]="activeComponent === 'AdminTools'" [routerLink]="['/admin-tools']" [queryParamsHandling]="'merge'">
+			Admin Tools
+		</a>-->
+  </div>
+  <div class="ui container" *ngIf="subscriptionInfo && subscriptionInfo.errorCode === 'subscriptionNotFound'">
+    <a
+      class="item"
+      [class.active]="activeComponent === 'ListManagement'"
+      [routerLink]="['/list-management']"
+      [queryParamsHandling]="'merge'"
+    >
+      Consent Management
+    </a>
+  </div>
+  <div *ngIf="subscriptionInfo && subscriptionInfo.dpoSubscription" class="dpo-name">
+    {{ subscriptionInfo.dpoSubscription.orgName }}
+  </div>
+</div>

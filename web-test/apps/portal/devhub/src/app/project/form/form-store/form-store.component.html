@@ -1,0 +1,53 @@
+<div mat-dialog-title>{{ isUpdate ? 'Update Template' : 'Create New Template' }}</div>
+
+<div mat-dialog-content>
+  <form class="note-template__form" autocomplete="off" [formGroup]="form">
+    <div class="tool-bar__wrapper">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" />
+        <mat-error *ngIf="title.errors?.['required']">* Title is required</mat-error>
+        <mat-error *ngIf="title.errors?.['empty']">* Please add at least one item</mat-error>
+        <mat-error *ngIf="title.errors?.['exist']">* This item is already exists</mat-error>
+      </mat-form-field>
+    </div>
+    <b3n-form-store-item
+      *ngIf="showStoreItem"
+      (addItem)="addItem($event)"
+      (close)="triggerStoreItem($event)"
+      [item]="item"
+    ></b3n-form-store-item>
+
+    <h3 *ngIf="items.length">Questions</h3>
+    <div class="item__review">
+      <div class="item__wrapper" [class.selected]="item?.label === i.label" *ngFor="let i of items; let idx = index">
+        <div class="item__row">
+          <p>{{ i.label }}</p>
+          <div class="item__details secondary-text">
+            <ng-container>
+              <p>{{ i.type === 'options' ? 'Option' : (i.type | capitalizeCase) }}</p>
+              <mat-icon *ngIf="i.type === ItemType.Option" (click)="i.expand = !i.expand">{{
+                i.expand ? 'expand_more' : 'expand_less'
+              }}</mat-icon>
+            </ng-container>
+            <ng-container>
+              <mat-icon color="warn" [class.disabled]="item?.label === i.label" (click)="removeItem(idx)"
+                >clear</mat-icon
+              >
+            </ng-container>
+          </div>
+        </div>
+        <mat-list role="list" *ngIf="i.type === ItemType.Option && i.expand" class="item__options">
+          <mat-list-item role="listitem" *ngFor="let option of i.options">{{ option }}</mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end" class="mt-16">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button color="primary" (click)="updateOrCreate()" [loading]="adding" [disabled]="form.invalid">
+    {{ isUpdate ? 'Update' : 'Create' }}
+  </button>
+</div>

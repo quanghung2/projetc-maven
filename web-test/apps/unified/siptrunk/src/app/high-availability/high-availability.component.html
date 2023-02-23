@@ -1,0 +1,108 @@
+<div fxLayout="column" class="container" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+  <mat-form-field>
+    <mat-label>Fail Over</mat-label>
+    <mat-select [formControl]="selectFailOverCtrl">
+      <mat-option *ngFor="let item of failOverOpts" [value]="item.key">
+        {{ item.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <ng-container *ngIf="selectFailOverCtrl.value === FailOverEndpoint.auto; else manualOpt">
+    <mat-form-field>
+      <mat-label>2nd SIP Account</mat-label>
+      <mat-select [formControl]="selectAccountCtrl" [compareWith]="compareObjects">
+        <mat-select-trigger>
+          <div matTooltip="{{ selectAccountCtrl.value?.displayNumbers }}" matTooltipClass="mat-tooltip">
+            {{ selectAccountCtrl.value?.sipUsername }}
+          </div>
+        </mat-select-trigger>
+        <mat-option *ngFor="let item of accounts$ | async" [value]="item">
+          {{ item.sipUsername }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <span class="help-block">
+      Customers need 2 SIP Accounts to activate this function properly. The 1st SIP Account should belong to Domain sip6
+      to detect failover effectively
+    </span>
+  </ng-container>
+  <ng-template #manualOpt>
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between start">
+      <span fxFlex="200px"> Activate Backup Line</span>
+      <mat-slide-toggle color="primary" [(ngModel)]="active"> </mat-slide-toggle>
+    </div>
+    <span class="help-block">
+      Backup line forwards all calls to your SIP number to a backup number of your choice. This is useful for emergency
+      situations such as network failure and phone system disruptions.
+    </span>
+    <span class="help-block">It is advisable to activate your backup line only when required.</span>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <span> Customize based on DID numbers</span>
+      <button *ngIf="!customize || !active" mat-raised-button (click)="customizeIt()" [disabled]="!active">
+        Customize it
+      </button>
+
+      <div *ngIf="customize && active" fxLayout="column" fxLayoutAlign="end start">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="did-number">
+            <th mat-header-cell *matHeaderCellDef>DID number</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field>
+                <input matInput type="text" placeholder="Enter DID number" [(ngModel)]="element.did" />
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="backup-number">
+            <th mat-header-cell *matHeaderCellDef>Backup number</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field>
+                <input matInput type="text" placeholder="Enter backup number" [(ngModel)]="element.backup" />
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <div class="actions" *ngIf="backupNumbers.length > 1">
+                <button mat-icon-button color="warn" (click)="removeBackupNumber(i)" matTooltip="Delete rule">
+                  <mat-icon>deleted</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+        <a href="javascript:void(0)" (click)="addBackupNumber()">Add more entry</a>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <span fxFlex="200px"> Master Backup line number</span>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          placeholder="Enter backup line number"
+          [(ngModel)]="defaultBackupNumber"
+          [disabled]="!active"
+        />
+      </mat-form-field>
+    </div>
+  </ng-template>
+  <button
+    fxFlexAlign="end"
+    mat-stroked-button
+    color="primary"
+    [loading]="progressing"
+    [disabled]="progressing"
+    (click)="onSave()"
+  >
+    Apply
+  </button>
+</div>

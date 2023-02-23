@@ -1,0 +1,16 @@
+{
+  "name": "shared-utils-message",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/utils/message/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/utils/message/**/*.ts", "libs/shared/utils/message/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

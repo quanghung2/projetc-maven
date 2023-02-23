@@ -1,0 +1,19 @@
+<div class="sso-idp" fxLayout="column" fxLayoutAlign="center center">
+  <ng-container *ngIf="loading; else loaded">
+    <div>
+      <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #loaded>
+    <div
+      *ngIf="showErrorMessage"
+      class="ssoidp-error-message"
+      fxFlex="100"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+    >
+      <div>Your organization does not have Single Sign-on configured yet.</div>
+      <div>Please contact the administrator to resolve.</div>
+    </div>
+  </ng-template>
+</div>

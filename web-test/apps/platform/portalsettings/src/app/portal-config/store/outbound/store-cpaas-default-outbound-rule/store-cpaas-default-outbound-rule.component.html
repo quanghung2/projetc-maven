@@ -1,0 +1,46 @@
+<div class="ui large modal outbound store-rule__container transition hidden" id="outbound">
+  <loader [loading]="loading"></loader>
+  <div class="dimmer" *ngIf="isChildModalOpen$ | async as isChildModalOpen"></div>
+  <div class="header">Configure outbound rule</div>
+  <div class="content" #tabs>
+    <div class="ui tabular menu">
+      <a
+        *ngFor="let dataTab of dataTabs; let i = index"
+        (click)="tab(i)"
+        [attr.data-tab]="dataTab.key"
+        [class.active]="activeTab === i"
+        class="item"
+      >
+        {{ dataTab.value }}
+      </a>
+    </div>
+    <div
+      *ngFor="let dataTab of dataTabs; let i = index"
+      [attr.data-tab]="dataTab.key"
+      [class.active]="activeTab === i"
+      [style]="activeTab !== i ? { display: 'none !important' } : ''"
+      class="ui bottom attached tab"
+    >
+      <ng-template [ngTemplateOutlet]="this[dataTab.key]"></ng-template>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui deny button">Cancel</div>
+  </div>
+</div>
+
+<ng-template #dialPlans>
+  <b3n-dial-plans [oRule]="oRule" (setLoading)="setLoading($event)" (refresh)="refresh()"></b3n-dial-plans>
+</ng-template>
+
+<ng-template #countriesWhitelist>
+  <b3n-countries-whitelist
+    [oRule]="oRule"
+    (setLoading)="setLoading($event)"
+    (refresh)="refresh()"
+  ></b3n-countries-whitelist>
+</ng-template>
+
+<ng-template #organizationLink>
+  <b3n-org-link [oRule]="oRule" (setLoading)="setLoading($event)" (refresh)="refresh()"></b3n-org-link>
+</ng-template>

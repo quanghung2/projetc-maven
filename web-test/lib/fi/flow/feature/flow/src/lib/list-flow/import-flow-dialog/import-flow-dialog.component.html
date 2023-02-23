@@ -1,0 +1,13 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Import Flow</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <p>
+    <strong>{{ flow.name }}</strong> has been imported
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button *ngIf="flow.totalWarnings > 0" mat-raised-button color="primary" (click)="resolve()">Resolve</button>
+  <button *ngIf="flow.totalWarnings === 0" mat-raised-button color="primary" (click)="view()">View</button>
+</div>

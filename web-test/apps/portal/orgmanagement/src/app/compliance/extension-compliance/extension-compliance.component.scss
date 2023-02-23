@@ -1,0 +1,16 @@
+.extensions {
+  &__content {
+    table {
+      width: 100%;
+      .mat-row:hover {
+        background-color: #fafafa;
+      }
+      .actions {
+        visibility: hidden;
+      }
+      tr.mat-row:hover .actions {
+        visibility: visible;
+      }
+    }
+  }
+}

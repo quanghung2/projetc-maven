@@ -1,0 +1,23 @@
+<div class="flex justify-content-start align-items-start">
+  <div class="prechat-survey flex column justify-content-start align-items-none gap-025">
+    <div class="header" style="flex: 1 1 40px" fxLayoutAlign="center center">
+      <span class="label">Prechat survey</span>
+    </div>
+    <div class="body">
+      <div class="flex column justify-content-start align-items-none gap-025">
+        <span class="label">Your name:</span>
+        <span class="value">{{ message?.body?.data?.name }}</span>
+      </div>
+      <div class="flex column justify-content-start align-items-none gap-025">
+        <span class="label">E-mail:</span>
+        <span class="value">
+          <a href="mailto:{{ message?.body?.data?.email }}" target="_blank">{{ message?.body?.data?.email }}</a>
+        </span>
+      </div>
+      <div class="flex column justify-content-start align-items-none gap-025" *ngIf="message?.body?.data?.number">
+        <span class="label">Number:</span>
+        <span class="value">{{ message.body.data.number }}</span>
+      </div>
+    </div>
+  </div>
+</div>

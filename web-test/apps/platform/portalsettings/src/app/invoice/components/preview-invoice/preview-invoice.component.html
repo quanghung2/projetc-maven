@@ -1,0 +1,172 @@
+<div class="sender ui grid">
+  <div class="row">
+    <div class="eight wide column">
+      <img src="{{ partnerInfo.logo }}" />
+
+      <div class="info">
+        <div>
+          <b>{{ partnerInfo.name }}</b>
+        </div>
+        <div>{{ invoice.taxNumber }}</div>
+        <div>{{ invoice.companyRegistrationNumber }}</div>
+        <div>{{ partnerInfo.billingInfo.address1 }}</div>
+        <div>{{ partnerInfo.billingInfo.address2 }}</div>
+        <div>
+          <span>{{ partnerInfo.billingInfo.city }}</span>
+          <span *ngIf="partnerInfo.billingInfo.state || partnerInfo.billingInfo.zip" class="no-left-whitespace">,</span>
+          <span>{{ partnerInfo.billingInfo.state }} {{ partnerInfo.billingInfo.zip }}</span>
+        </div>
+        <div>{{ partnerBillingCountry }}</div>
+      </div>
+    </div>
+
+    <div class="right aligned eight wide column">
+      <h3 class="no-margin uppercase"><b>Tax Invoice</b></h3>
+      <div>Number# {{ invoice.number }}</div>
+      <br />
+      <div><b>Balance Due</b></div>
+      <h2 class="no-margin">
+        <b *ngIf="invoice.isPaid()">0.00</b>
+        <b *ngIf="!invoice.isPaid()">{{ invoice.amountDue | number: '1.2-2' }}</b>
+      </h2>
+      <div>
+        <b>{{ invoice.currency }}</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="receiver ui grid">
+  <div class="row">
+    <div class="eight wide column">
+      <div>Bill To</div>
+      <div>{{ invoice.billedInfo.name }}</div>
+      <div>{{ invoice.billedInfo.address1 }}</div>
+      <div>{{ invoice.billedInfo.address2 }}</div>
+      <div>
+        <span>{{ invoice.billedInfo.city }}</span>
+        <span *ngIf="invoice.billedInfo.state || invoice.billedInfo.zip" class="no-left-whitespace">,</span>
+        <span>{{ invoice.billedInfo.state }} {{ invoice.billedInfo.zip }}</span>
+      </div>
+      <div>{{ invoice.billedInfo.country.name }}</div>
+    </div>
+
+    <div class="right aligned eight wide column">
+      <table class="payment">
+        <tbody>
+          <tr>
+            <td class="right aligned">
+              <span class="grey">Invoice Date:</span>
+            </td>
+            <td class="right aligned">
+              <b>{{ invoice.issuedDate | date: 'dd MMM yyyy' }}</b>
+            </td>
+          </tr>
+          <tr>
+            <td class="right aligned">
+              <span class="grey">Account ID:</span>
+            </td>
+            <td class="right aligned">
+              <b>{{ invoice.billedWalletUuid }}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<table class="ui table item-list top-align">
+  <thead>
+    <tr>
+      <th>Item &amp; Description</th>
+      <th class="quantity right aligned">Quantity</th>
+      <th class="unit-price right aligned">
+        Unit Price <br />
+        (Excl. Tax)
+      </th>
+      <th class="discount right aligned">Unit Discount</th>
+      <th class="tax right aligned">Tax</th>
+      <th class="amount right aligned">
+        Amount {{ invoice.currency }} <br />
+        (Excl. Tax)
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of invoice.items">
+      <td [innerHTML]="item.description | sanitizeHtml"></td>
+      <td class="quantity right aligned">{{ item.quantity }}</td>
+      <td class="unit-price right aligned">{{ item.unitPriceExclTax | number: '1.1-4' }}</td>
+      <td class="discount right aligned">{{ item.discountAmount | number: '1.1-3' }}</td>
+      <td class="tax right aligned">{{ item.totalTaxAmount | number: '1.1-3' }}</td>
+      <td class="amount right aligned">{{ item.amountExclTax | number: '1.3-3' }}</td>
+    </tr>
+  </tbody>
+
+  <tfoot class="borderless compact">
+    <tr>
+      <td class="right aligned" colspan="5">
+        Subtotal
+        <span *ngIf="getTotalDiscountAmount() > 0">
+          (includes a discount of {{ getTotalDiscountAmount() | number: '1.2-3' }})
+        </span>
+      </td>
+      <td class="right aligned">{{ getSubTotalAmount() | number: '1.3-3' }}</td>
+    </tr>
+
+    <tr *ngFor="let ta of taxAmountMap">
+      <td class="right aligned" colspan="5">Total Tax {{ ta.left }}%</td>
+      <td class="right aligned">{{ ta.right | number: '1.3-3' }}</td>
+    </tr>
+
+    <tr>
+      <td class="slight-bold-text right aligned" colspan="5">Total {{ invoice.currency }}</td>
+      <td class="slight-bold-text right aligned">{{ invoice.amount | number: '1.2-2' }}</td>
+    </tr>
+
+    <tr *ngIf="invoice.adjustingAmount > 0">
+      <td class="right aligned" colspan="5">Less Amount Credited</td>
+      <td class="right aligned">{{ invoice.adjustingAmount | number: '1.2-2' }}</td>
+    </tr>
+
+    <tr *ngIf="invoice.paidAmount > 0">
+      <td class="right aligned" colspan="5">Less Amount Paid</td>
+      <td class="right aligned">{{ invoice.paidAmount | number: '1.2-2' }}</td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td colspan="5">
+        <hr />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="uppercase bigtext very-bold-text right aligned" colspan="5">Balance</td>
+      <td class="uppercase bigtext very-bold-text right aligned">{{ invoice.amountDue | number: '1.2-2' }}</td>
+    </tr>
+
+    <tr>
+      <td></td>
+      <td colspan="5">
+        <hr />
+        <hr />
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<div
+  *ngIf="invoice.isInvoice() && !invoice.isPaid() && invoice.unpaidNote && invoice.unpaidNote !== ''"
+  class="instruction ui segment"
+>
+  <div [innerHTML]="invoice.unpaidNote | sanitizeHtml"></div>
+</div>
+
+<div
+  *ngIf="invoice.isInvoice() && invoice.isPaid() && invoice.paidNote && invoice.paidNote !== ''"
+  class="instruction ui segment"
+>
+  <div [innerHTML]="invoice.paidNote | sanitizeHtml"></div>
+</div>

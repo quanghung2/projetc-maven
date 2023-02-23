@@ -1,0 +1,69 @@
+.dialog-content-container {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+}
+textarea {
+  white-space: break-spaces;
+  padding: 8px;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 11px;
+  width: 95%;
+  resize: none;
+}
+mat-slide-toggle {
+  margin-left: 10px;
+  margin-top: -3px;
+}
+.statement {
+  padding: 8px;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 11px;
+  white-space: break-spaces;
+  height: 155px;
+  overflow: scroll;
+}
+
+.formInput {
+  margin-top: 30px;
+  .name-field {
+    margin-right: 10px;
+  }
+  mat-form-field {
+    width: 95%;
+  }
+}
+.name-field {
+  align-items: center !important;
+  display: grid;
+}
+.test {
+  border: 1px solid #888;
+  background-color: #333;
+  border-radius: 6px;
+  color: white;
+}
+.title {
+  margin-bottom: 6px !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ok {
+  color: rgb(54, 179, 126);
+}
+.error {
+  color: rgb(255, 86, 48);
+}
+.mini-title {
+  font-size: 10px;
+}
+
+.response {
+  border-left: 2px solid #d6d9dc;
+  padding-left: 20px;
+}
+.response-body {
+  margin-top: 2px;
+}
+.request-body {
+  margin-top: 1.6rem;
+}

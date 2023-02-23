@@ -1,0 +1,46 @@
+<h1 mat-dialog-title>Incoming call from {{ call.callerId }}</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutAlign="start start">
+    <div fxFlex="70">
+      <div fxLayout="row">
+        <mat-form-field appearance="outline">
+          <mat-label>From</mat-label>
+          <input matInput value="{{ call.callerId }}" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Queue</mat-label>
+          <input matInput value="{{ call.queueName || '-' }}" />
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field class="example-full-width">
+          <textarea matInput placeholder="Script"></textarea>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field appearance="outline">
+          <mat-label>Disposition Code</mat-label>
+          <input matInput value="{{ call.code || '-' }}" />
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field class="example-full-width">
+          <textarea matInput rows="5" placeholder="Note" value="{{ call.note }}"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxFlex="30">
+      <h4 mat-subheader>LASTEST 5 CALLS</h4>
+      <div *ngFor="let call of lastest5Calls">
+        <div><strong>At:</strong>{{ call.first.talking.timestamp | userDate }}</div>
+        <div><strong>Status:</strong>{{ call.status }}</div>
+        <div><strong>Disposition Code:</strong>{{ call.code }}</div>
+        <div><strong>Note:</strong>{{ call.note }}</div>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end"><button mat-button mat-dialog-close>Close</button></div>

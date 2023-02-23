@@ -1,0 +1,46 @@
+<h1 mat-dialog-header>Select flow</h1>
+<div mat-dialog-content>
+  <div *ngIf="workflows && workflows.length === 0" class="no-subscription">
+    <h1>You do not have any flow yet</h1>
+    <h3><button mat-raised-button color="primary" (click)="create()">Click here</button> to create one</h3>
+  </div>
+
+  <table *ngIf="workflows && workflows.length > 0" mat-table [dataSource]="workflows">
+    <ng-container matColumnDef="label">
+      <th *matHeaderCellDef mat-header-cell>Flow name</th>
+      <td mat-cell *matCellDef="let workflow">{{ workflow.label }}</td>
+    </ng-container>
+    <ng-container matColumnDef="numbers">
+      <th mat-header-cell *matHeaderCellDef>Asigned numbers</th>
+      <td mat-cell *matCellDef="let workflow">
+        <span *ngIf="workflow.numbers.length <= 2">{{ workflow.numbersInString || 'No number assigned' }}</span>
+        <span *ngIf="workflow.numbers.length > 2" matTooltip="{{ workflow.numbers.join(', ') }}"
+          >{{ workflow.numbers.length }} numbers</span
+        >
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef>Last modified</th>
+      <td mat-cell *matCellDef="let workflow">{{ workflow.updatedAt | userDate }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="toggleSelected(row)"
+      [class.selected]="selectedWorkflow?.uuid === row.uuid"
+    ></tr>
+  </table>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    *ngIf="workflows && workflows.length > 0 && sourceCount > workflows.length"
+    mat-stroked-button
+    (click)="create()"
+  >
+    Create new one
+  </button>
+  <button mat-raised-button color="primary" [disabled]="!selectedWorkflow" (click)="confirm()">Select</button>
+</div>

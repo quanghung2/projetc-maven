@@ -1,0 +1,77 @@
+@import '../app.component.scss';
+
+button.label {
+  padding: 0;
+  line-height: 25px;
+}
+table {
+  width: 100%;
+  min-width: 800px;
+
+  .legs-container {
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    .title {
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .statement {
+      padding: 20px 40px;
+
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      font-size: 12px;
+      white-space: break-spaces;
+    }
+
+    &.showing {
+      margin: 1.6rem 0;
+    }
+  }
+
+  tr {
+    color: red !important;
+    &.row {
+      cursor: pointer;
+
+      &:not(.expanded-row):hover {
+        background: whitesmoke;
+      }
+
+      &:not(.expanded-row):active {
+        background: #efefef;
+      }
+
+      td {
+        border-bottom-width: 0 !important;
+      }
+
+      &.expanded-row {
+        background-color: #e0e0e0;
+      }
+    }
+
+    &.child-row {
+      height: 0 !important;
+    }
+
+    &.no-data-table {
+      &.hidden {
+        display: none;
+      }
+    }
+
+    td,
+    th {
+      padding-right: 1.6rem;
+    }
+
+    .footer-table {
+      margin-right: 1.6rem;
+
+      button {
+        cursor: pointer;
+      }
+    }
+  }
+}

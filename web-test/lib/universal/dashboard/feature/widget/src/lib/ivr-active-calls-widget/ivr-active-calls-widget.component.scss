@@ -1,0 +1,41 @@
+.ivr-active-call__wrapper {
+  display: flex;
+  overflow-x: scroll;
+  width: 100%;
+  height: calc(100% - 20px);
+}
+
+.ivr-active-call__empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.ivr-active-call__table {
+  height: fit-content;
+
+  .text-red {
+    color: red;
+  }
+}
+
+.table__border {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.table-1__width {
+  width: 100%;
+  min-width: 100%;
+}
+
+.table-2__width {
+  width: calc(100% / 2);
+  min-width: calc(100% / 2);
+}
+
+.table-3__width {
+  width: calc(100% / 3);
+  min-width: calc(100% / 3);
+}

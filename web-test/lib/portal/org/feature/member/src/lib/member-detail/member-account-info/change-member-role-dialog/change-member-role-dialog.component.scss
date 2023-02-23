@@ -1,0 +1,15 @@
+:host {
+  display: block;
+
+  .member-role {
+    &__message {
+      margin-bottom: 1.6rem;
+    }
+    &__select {
+      width: 100%;
+    }
+    &__spinner {
+      height: 50px;
+    }
+  }
+}

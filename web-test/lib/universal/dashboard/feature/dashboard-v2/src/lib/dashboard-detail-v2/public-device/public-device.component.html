@@ -1,0 +1,35 @@
+<div class="public-device__container">
+  <mat-icon class="close" matDialogClose>close</mat-icon>
+  <mat-horizontal-stepper [@.disabled]="true" linear #stepper *ngIf="form">
+    <mat-step [stepControl]="selectDashboardForm" #first_step>
+      <ng-template matStepLabel>Select Dashboards</ng-template>
+      <ng-container *ngIf="stepper.selected == null || stepper.selected == first_step">
+        <b3n-select-dashboard
+          [invalid]="publicDevices.length >= maxAccessDevice"
+          [form]="selectDashboardForm"
+          [dashboard2s]="dashboard2s"
+          [dashboard2sFilter]="dashboard2sFilter"
+          [dashboard2Map]="dashboard2Map"
+          [disableDashboardOptions]="disableDashboardOptions"
+          [dashboardOptionLeft]="dashboardOptionLeft"
+          (dashboardOptionClick)="dashboardOptionClick($event)"
+          (clearDashboardOptions)="clearDashboardOptions()"
+        ></b3n-select-dashboard>
+      </ng-container>
+    </mat-step>
+    <mat-step #second_step>
+      <ng-template matStepLabel>Verify</ng-template>
+      <ng-container *ngIf="stepper.selected == second_step">
+        <b3n-otp-verify
+          [otpVerifyForm]="otpVerifyForm"
+          [deviceVerifyForm]="deviceVerifyForm"
+          [loading]="loading"
+          [invalid]="invalid"
+          [verifiedDevice]="verifiedDevice"
+          (submit)="submit()"
+          (close)="dialogRef.close()"
+        ></b3n-otp-verify>
+      </ng-container>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

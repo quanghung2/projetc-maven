@@ -1,0 +1,11 @@
+.store-rule__container {
+  position: relative;
+
+  .dimmer {
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: 0.2;
+    z-index: 1;
+  }
+}

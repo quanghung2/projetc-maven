@@ -1,0 +1,88 @@
+<mat-form-field *ngIf="!optionForInput.renderDirective" hideRequiredMarker="true" fxFlex>
+  <mat-label>{{ optionForInput.title }}</mat-label>
+  <input
+    *ngIf="optionForInput.dataType !== 'boolean'"
+    matInput
+    [attr.type]="optionForInput.dataType === 'number' ? 'number' : null"
+    [formControl]="valueCtrl"
+    [required]="requireField"
+  />
+  <mat-select *ngIf="optionForInput.dataType === 'boolean'" [formControl]="valueCtrl" [required]="requireField">
+    <mat-option [value]="true">True</mat-option>
+    <mat-option [value]="false">False</mat-option>
+  </mat-select>
+  <mat-error *ngIf="valueCtrl.invalid">{{ getErrorInput() }}</mat-error>
+</mat-form-field>
+
+<ng-container [ngSwitch]="optionForInput.renderDirective?.type">
+  <div *ngSwitchCase="renderDirectiveType.File" fxLayout="column" fxLayoutAlign="start start" fxFlex>
+    <label>
+      {{ optionForInput.title }}
+      <ng-container *ngIf="requireField">(Please upload a file with a maximum size of 5MB)</ng-container>
+      <ng-container *ngIf="!requireField">(The maximum file size is 5 MB)</ng-container>
+    </label>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <label *ngIf="optionForInput.expressionTree?.actualFileName">
+        Uploaded file:
+        <a href="javascript:;" class="link" (click)="downloadFile(optionForInput.expressionTree)">
+          {{ optionForInput.expressionTree.actualFileName }}
+        </a>
+      </label>
+      <input
+        #uploadFile
+        type="file"
+        style="display: none"
+        (change)="onFileChange($event)"
+        [accept]="
+          optionForInput.renderDirective.supportedMimeTypes.length > 0
+            ? optionForInput.renderDirective.supportedMimeTypes.join(',')
+            : null
+        "
+      />
+      <button mat-stroked-button type="button" (click)="uploadFile.click()" [loading]="uploading">Upload</button>
+    </div>
+  </div>
+
+  <mat-form-field *ngSwitchCase="renderDirectiveType.SingleSelect" hideRequiredMarker="true" fxFlex>
+    <mat-select [placeholder]="optionForInput.title" [formControl]="valueCtrl" [required]="requireField">
+      <mat-option *ngFor="let config of dataSources" [value]="config.value">{{ config.label }}</mat-option>
+      <mat-option *ngIf="dataSources?.length === 0" disabled>No available items</mat-option>
+    </mat-select>
+    <mat-error *ngIf="valueCtrl.invalid">{{ getErrorInput() }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngSwitchCase="renderDirectiveType.SuggestiveSingleSelect" hideRequiredMarker="true" fxFlex>
+    <input
+      type="text"
+      matInput
+      [placeholder]="optionForInput.title"
+      [formControl]="valueCtrl"
+      [matAutocomplete]="auto"
+      [required]="requireField"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let config of dataSources" [value]="config">{{ config.label }}</mat-option>
+      <mat-option *ngIf="dataSources?.length === 0" disabled>No available items</mat-option>
+    </mat-autocomplete>
+    <mat-error *ngIf="valueCtrl.invalid">{{ getErrorInput() }}</mat-error>
+  </mat-form-field>
+
+  <div *ngSwitchCase="renderDirectiveType.RadioList" fxFlex>
+    <label>
+      {{ optionForInput.title }}
+      <ng-container *ngIf="requireField">(please select one)</ng-container>
+    </label>
+    <mat-radio-group
+      color="primary"
+      [formControl]="valueCtrl"
+      [required]="requireField"
+      fxLayout="row"
+      fxLayoutGap="16px"
+      class="mt-10 mb-20"
+    >
+      <mat-radio-button *ngFor="let config of dataSources" style="font-size: 14px" [value]="config.value">
+        {{ config.label }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+</ng-container>

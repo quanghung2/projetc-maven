@@ -1,0 +1,43 @@
+:host {
+  .working-schedule-form {
+    padding: 1.6rem 0;
+
+    &__title {
+      margin-bottom: 0.75rem;
+      color: rgba(0, 0, 0, 0.87);
+
+      &.custom-day {
+        margin-top: -0.25rem;
+      }
+
+      & mat-spinner {
+        margin-left: 0.8rem;
+      }
+    }
+
+    &__holidays {
+      background: #fafafa;
+      border: 1px solid #eeeeee;
+      border-radius: 5px;
+      margin-bottom: 1.6rem;
+      padding: 1.6rem;
+      position: relative;
+      &__add-icon {
+        color: gray;
+        margin-left: 1.6rem;
+        cursor: pointer;
+      }
+    }
+
+    &__picker {
+      position: absolute;
+      top: 0;
+      left: 0;
+      visibility: hidden;
+    }
+
+    .select-group {
+      width: 200px;
+    }
+  }
+}

@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ clidModalInput.isEdit ? 'Update' : 'Create' }} CLID</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start stretch">
+    <mat-form-field>
+      <mat-label>CLID</mat-label>
+      <input matInput placeholder="Enter CLID" formControlName="clid" type="number" required />
+      <mat-error *ngIf="clid.errors?.['required']">CLID can't be empty</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span class="title">Matching</span>
+      <mat-radio-group
+        class="py-10"
+        formControlName="matching"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="16px"
+      >
+        <mat-radio-button *ngFor="let matching of matchings" [value]="matching.key">
+          {{ matching.value }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Primary route" formControlName="peer1" required>
+          <mat-option *ngFor="let peer of clidModalInput?.peers" [value]="peer?.name">
+            {{ peer?.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="peer1.invalid">Primary route can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Secondary route" formControlName="peer2" required>
+          <mat-option *ngFor="let peer of clidModalInput?.peers" [value]="peer?.name">
+            {{ peer?.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="peer2.invalid">Secondary route can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="26.5">
+        <mat-label>Load</mat-label>
+        <input matInput placeholder="Enter load" formControlName="load" type="number" required />
+        <mat-error *ngIf="load.errors?.['required']">Load can't be empty</mat-error>
+        <mat-error *ngIf="load.errors?.['min'] || load.errors?.['max']">Load is invalid</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Tag</mat-label>
+      <input
+        matInput
+        placeholder="Ex: abc1_xyz"
+        formControlName="tag"
+        [b3nRetrictInput]="'([a-zA-Z]+[\\d_]*)+$'"
+        required
+      />
+      <mat-error *ngIf="tag.errors?.['required']">Tag can't be empty</mat-error>
+      <mat-error *ngIf="tag.errors?.['pattern']">
+        Tag must be at least 2 characters and the first character must be characters includes(a-zA-Z)
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close cdkFocusInitial>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="isLoading" [disabled]="formGroup.invalid" (click)="onSave()">
+    {{ clidModalInput?.isEdit ? 'Update' : 'Create' }}
+  </button>
+</div>

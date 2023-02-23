@@ -1,0 +1,17 @@
+:host {
+  mat-form-field {
+    min-width: 150px !important;
+
+    ::ng-deep .mat-form-field-flex {
+      align-items: flex-end;
+
+      mat-icon {
+        cursor: pointer;
+      }
+
+      .hidden-icon {
+        display: none;
+      }
+    }
+  }
+}

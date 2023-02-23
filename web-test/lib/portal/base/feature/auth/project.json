@@ -1,0 +1,16 @@
+{
+  "name": "portal-base-feature-auth",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/base/feature/auth/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/base/feature/auth/**/*.ts", "libs/portal/base/feature/auth/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

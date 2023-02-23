@@ -1,0 +1,106 @@
+<mat-drawer-container [hasBackdrop]="false">
+  <mat-drawer-content>
+    <div class="permission">
+      <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+      <mat-toolbar class="permission-toolbar">
+        <h1>Permission Management</h1>
+      </mat-toolbar>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="0.8rem" class="action-bar px-16">
+        <mat-form-field class="search-box">
+          <mat-label>Search Member</mat-label>
+          <input [formControl]="filterCtrl" matInput placeholder="Search by Name " />
+          <button mat-icon-button matSuffix>
+            <mat-icon class="search-icon">search</mat-icon>
+          </button>
+        </mat-form-field>
+        <div fxLayoutGap="0.8rem">
+          <button mat-button [disabled]="loading$ | async" (click)="reload()">
+            <mat-icon>refresh</mat-icon> Refresh
+          </button>
+          <button (click)="openAddDialog()" mat-raised-button color="primary">Assign</button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="uuid" sticky>
+            <th mat-header-cell *matHeaderCellDef>UUID</th>
+            <td *matCellDef="let element" mat-cell>
+              <div
+                (click)="copy($event)"
+                class="uuid-column"
+                matTooltip="Click to copy"
+                [cdkCopyToClipboard]="element.uuid"
+              >
+                {{ element.shortUuid }}
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name" sticky>
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let element">{{ element.displayName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="permissions">
+            <th mat-header-cell *matHeaderCellDef>Permissions</th>
+            <td mat-cell *matCellDef="let element">
+              <div [class]="element.role">
+                {{ element.permissions?.join(' − ') || '−' }}
+              </div>
+            </td>
+          </ng-container>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length + businessHubPermissions?.length">
+              <div class="no-member">No members found.</div>
+            </td>
+          </tr>
+
+          <ng-container
+            *ngFor="let permission of businessHubPermissions; let i = index; trackBy: trackBy"
+            [matColumnDef]="permission.action"
+          >
+            <th mat-header-cell *matHeaderCellDef>{{ permission.displayText }}</th>
+            <td mat-cell *matCellDef="let element">
+              <mat-icon class="done-icon teal-fg" *ngIf="memberMapping[element.identityUuid][permission.action]"
+                >done</mat-icon
+              >
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions" sticky>
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button>
+                <mat-icon (click)="showDetail(element, $event)" class="edit-icon">edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator
+        *ngIf="memberPage?.totalCount > 0"
+        [pageIndex]="pageable.page"
+        [pageSize]="pageable.perPage"
+        [length]="memberPage?.totalCount"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        hidePageSize
+      ></mat-paginator>
+    </div>
+  </mat-drawer-content>
+
+  <mat-drawer #sidenav [autoFocus]="false" class="station-detail" mode="over" opened="false" position="end">
+    <b3n-permission-detail
+      [member]="selectedMember"
+      [allPermissions]="businessHubPermissions"
+      (closeSidebarEvent)="sidebar.close()"
+      (permissionChangeEvent)="reload()"
+    ></b3n-permission-detail>
+  </mat-drawer>
+</mat-drawer-container>

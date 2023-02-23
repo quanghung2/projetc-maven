@@ -1,0 +1,16 @@
+{
+  "name": "api-inbox",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/inbox/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/inbox/**/*.ts", "libs/api/inbox/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

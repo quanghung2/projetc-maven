@@ -1,0 +1,18 @@
+<div
+  [fxLayout]="isSection ? 'row wrap' : 'column'"
+  [fxLayoutAlign]="isSection ? 'start start' : 'start none'"
+  [fxLayoutGap]="isSection ? '1.6rem' : '0.6rem'"
+>
+  <csh-interactive-detail
+    *ngFor="let component of components"
+    [messageId]="messageId"
+    [component]="component"
+    [groupParent]="groupRoot"
+    [isDialog]="isDialog"
+    [uploadPercentage]="uploadPercentageMap?.[component?.element?.id]"
+    [uploadStatusMap]="uploadStatusMap"
+    [isSubmiting]="isSubmiting"
+    (showProfile)="showProfile.emit($event)"
+    (closeDialog)="closeDialog.emit($event)"
+  ></csh-interactive-detail>
+</div>

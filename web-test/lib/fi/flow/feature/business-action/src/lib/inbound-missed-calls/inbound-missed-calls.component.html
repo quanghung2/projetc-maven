@@ -1,0 +1,102 @@
+<h3>
+  <strong>{{ baUser.trigger ? baUser.trigger.def.name : inputReq.triggerDef.name }}</strong>
+</h3>
+
+<p class="text-red" *ngIf="baUser.trigger?.latestDef.uuid !== baUser.trigger?.def.uuid">
+  This event has been upgraded. Previous configuration may not work anymore. Please reconfigure
+</p>
+
+<!-- EDIT OR UPGRADE EVENT -->
+<b3n-trigger-param
+  *ngIf="baUser.trigger"
+  [triggerDef]="
+    baUser.trigger.latestDef.uuid !== baUser.trigger.def.uuid ? baUser.trigger.latestDef : baUser.trigger.def
+  "
+  [triggerConfig]="baUser.trigger.configs"
+  [defaultParam]="inputReq.defaultParam"
+  [hideDefaultParam]="inputReq.hideDefaultParam"
+  (changeConfigs)="saveReq.trigger = $event"
+  (invalid)="invalidTriggerReq = $event"
+></b3n-trigger-param>
+
+<!-- NEW EVENT -->
+<b3n-trigger-param
+  *ngIf="!baUser.trigger"
+  [triggerDef]="inputReq.triggerDef"
+  [defaultParam]="inputReq.defaultParam"
+  [hideDefaultParam]="inputReq.hideDefaultParam"
+  (changeConfigs)="saveReq.trigger = $event"
+  (invalid)="invalidTriggerReq = $event"
+></b3n-trigger-param>
+
+<mat-form-field class="w-100">
+  <mat-select placeholder="Action" [formControl]="actionCtrl">
+    <mat-option *ngFor="let a of actionDefs" [value]="a.uuid">{{ a.presentName }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- ACTION -->
+<mat-card
+  *ngFor="let a of baUser.actions; let i = index"
+  class="mat-elevation-z0"
+  [class.display-none]="!a.actionDef.hasParameter"
+>
+  <p class="text-red" *ngIf="a.state === ActionBaUserState.DEPRECATED">
+    This action has been deprecated and may no longer work. Please choose another action
+  </p>
+
+  <b3n-action-param
+    *ngIf="!a.showLatestActionDef"
+    [actionDef]="a.actionDef"
+    [actionConfig]="a.configs"
+    [allowEdit]="a.state !== ActionBaUserState.DEPRECATED"
+    (changeConfigs)="saveReq.actions[i] = $event"
+    (invalid)="invalidActionReq[i] = $event"
+  ></b3n-action-param>
+
+  <b3n-action-param
+    *ngIf="a.showLatestActionDef"
+    [actionDef]="a.latestActionDef"
+    [actionConfig]="a.configs"
+    (changeConfigs)="saveReq.actions[i] = $event"
+    (invalid)="invalidActionReq[i] = $event"
+  ></b3n-action-param>
+</mat-card>
+
+<!-- ADD ACTION -->
+<mat-card
+  *ngFor="let a of addActionReqInput; let i = index"
+  class="mat-elevation-z0"
+  [class.display-none]="!a.hasParameter"
+>
+  <b3n-action-param
+    [actionDef]="a"
+    (changeConfigs)="addActionReqOutput[i] = $event"
+    (invalid)="invalidActionReq[i + baUser.actions.length] = $event"
+  ></b3n-action-param>
+</mat-card>
+
+<div class="mt-20" dir="rtl" fxLayoutGap="4px">
+  <button
+    mat-stroked-button
+    color="primary"
+    [loading]="saving"
+    [disabled]="invalidTriggerReq || !actionReqValid()"
+    (click)="submit()"
+  >
+    Apply
+  </button>
+
+  <button
+    mat-button
+    color="primary"
+    *ngIf="
+      baUser.actions[0] &&
+      baUser.actions[0].state === ActionBaUserState.NEW_BUSINESS_ACTION &&
+      baUser.actions[0].showLatestActionDef === false
+    "
+    (click)="baUser.actions[0].showLatestActionDef = true"
+  >
+    Upgrade
+  </button>
+</div>

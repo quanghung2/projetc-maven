@@ -1,0 +1,30 @@
+<div mat-dialog-title>Change role for {{ data.displayName }}</div>
+
+<div mat-dialog-content class="member-role">
+  <div *ngIf="!fetching; else spinner">
+    <div class="member-role__message">
+      <strong>{{ data.displayName }}</strong> is currently
+      <span *ngIf="data.isRoleStartWithAVowel"> an {{ data.role | titlecase }} </span>
+      <span *ngIf="!data.isRoleStartWithAVowel"> a {{ data.role | titlecase }} </span>
+    </div>
+    <mat-form-field class="member-role__select" *ngIf="!progressing">
+      <mat-label>New role</mat-label>
+      <mat-select [(ngModel)]="selectedRole">
+        <mat-option *ngFor="let role of roles" [value]="role">{{ role | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <ng-template #spinner>
+    <div class="member-role__spinner" fxLayout="row" fxLayoutAlign="center center">
+      <mat-spinner diameter="30" strokeWidth="2"></mat-spinner>
+    </div>
+  </ng-template>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [loading]="progressing" [disabled]="progressing" color="primary" (click)="updateRole()">
+    Update
+  </button>
+</div>

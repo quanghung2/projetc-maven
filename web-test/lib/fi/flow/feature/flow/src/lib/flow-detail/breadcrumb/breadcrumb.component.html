@@ -1,0 +1,19 @@
+<ul *ngIf="flow$ | async as flow">
+  <li class="title">Navigator</li>
+  <li><a href="javascript:;" (click)="goToRoot(flow)">Root</a></li>
+  <ng-container *ngFor="let b of flow.ui.breadcrumb; let i = index">
+    <ng-container *ngIf="i < flow.ui.breadcrumb.length - 1">
+      <li *ngFor="let p of b.paths">
+        <a *ngIf="p.isCurrent" href="javascript:;" (click)="goToAction(flow, b, p)">
+          {{ p.pathName }}
+        </a>
+      </li>
+    </ng-container>
+
+    <ng-container *ngIf="i === flow.ui.breadcrumb.length - 1">
+      <li [class]="p.isCurrent ? 'child active' : 'child'" *ngFor="let p of b.paths">
+        <a href="javascript:;" (click)="goToAction(flow, b, p)">{{ p.pathName }}</a>
+      </li>
+    </ng-container>
+  </ng-container>
+</ul>

@@ -1,0 +1,146 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .history-container {
+    padding: 0 16px;
+
+    table {
+      width: 100%;
+      min-width: 800px;
+
+      tr {
+        .btn-metadata {
+          visibility: hidden;
+
+          .mat-icon {
+            color: #0f7ce1;
+
+            &.active {
+              visibility: visible;
+              background: transparent;
+            }
+
+            font-size: 20px;
+            height: 20px;
+            width: 20px;
+            margin-bottom: 6px;
+          }
+        }
+
+        &:hover .btn-metadata {
+          visibility: visible;
+        }
+
+        &.row {
+          cursor: pointer;
+
+          td {
+            border-bottom-width: 0;
+          }
+        }
+
+        &.no-data-table {
+          &.hidden {
+            display: none;
+          }
+        }
+
+        td,
+        th {
+          padding-right: 1.6rem;
+        }
+
+        .footer-table {
+          margin-right: 1.6rem;
+
+          button {
+            cursor: pointer;
+          }
+        }
+
+        .small-icon {
+          font-size: 16px !important;
+          width: 16px !important;
+          height: 16px !important;
+          margin-right: 4px !important;
+        }
+      }
+    }
+
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      border-radius: 4px;
+      font-size: 14px;
+      color: #424242;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+
+      &.failed,
+      &.rejected {
+        color: #bf2600;
+      }
+
+      &.forwarding,
+      &.cancel,
+      &.busy,
+      &.unanswered {
+        color: #ff991f;
+      }
+
+      &.answered {
+        color: #36b37e;
+      }
+
+      &.incoming {
+        color: #36b37e;
+      }
+
+      &.outgoing {
+        color: #00b8d9;
+      }
+
+      &.internal {
+        color: #36b37e;
+      }
+
+      &.dispatched,
+      &.delivered {
+        color: #36b37e;
+      }
+
+      &.deliveryFailed {
+        color: #ff991f;
+      }
+
+      &.deliveryExpired {
+        color: #97a0af;
+      }
+    }
+
+    .calltype {
+      width: 75px;
+    }
+  }
+
+  .icon-help {
+    font-size: 18px;
+    color: #424242;
+    cursor: pointer;
+  }
+
+  mat-drawer {
+    width: 385px;
+    position: fixed;
+  }
+}
+
+::ng-deep .blocked-tooltip {
+  white-space: pre-line;
+  text-align: center;
+}

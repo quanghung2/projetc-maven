@@ -1,0 +1,93 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<section class="country-whitelist" *ngIf="!loading">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="action-bar">
+    <mat-form-field appearance="legacy">
+      <mat-label>Search country or code</mat-label>
+      <input matInput (keyup)="applyFilter($event)" />
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutGap="0.75rem">
+      <button
+        *ngIf="isAdmin"
+        (click)="storeCountryWhiteList(UpdateCountryAction.ADD)"
+        mat-stroked-button
+        color="primary"
+      >
+        Add countries
+      </button>
+      <button
+        *ngIf="isAdmin"
+        (click)="storeCountryWhiteList(UpdateCountryAction.REMOVE)"
+        [disabled]="allowedCountries.length === 0"
+        mat-stroked-button
+      >
+        Remove all
+      </button>
+    </div>
+  </div>
+  <div>
+    <table mat-table [dataSource]="countriesDataSource">
+      <ng-container matColumnDef="country">
+        <th mat-header-cell *matHeaderCellDef>Location</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.getLocationWithLabel() }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Country code</th>
+        <td mat-cell *matCellDef="let element">+{{ element.code }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="areaCode">
+        <th mat-header-cell *matHeaderCellDef>Area code</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.areaCode ? '(' + element.areaCode + ')' : '-' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="passcode">
+        <th mat-header-cell *matHeaderCellDef>Passcode required</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox
+            [checked]="element.passcode"
+            (change)="togglePassCode(element.ISO2, element.areaCode)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="actions-column">
+            <button
+              *ngIf="isAdmin"
+              (click)="storeCountryWhiteList(UpdateCountryAction.EDIT, element)"
+              mat-icon-button
+              matTooltip="Edit"
+            >
+              <mat-icon class="actions-icon">edit</mat-icon>
+            </button>
+            <button *ngIf="isAdmin" (click)="removeCountryFromWhiteList(element)" mat-icon-button matTooltip="Remove">
+              <mat-icon class="actions-icon">delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="countryWhiteListDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let rule; columns: countryWhiteListDisplayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6">
+          <div fxLayout="column" fxLayoutAlign="center center">No country found</div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      #countryWhiteListPaginator
+      [pageSizeOptions]="[10, 15, 20]"
+      showFirstLastButtons
+      hidePageSize
+    ></mat-paginator>
+  </div>
+</section>

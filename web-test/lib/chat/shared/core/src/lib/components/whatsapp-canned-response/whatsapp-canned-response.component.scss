@@ -1,0 +1,13 @@
+:host {
+  .btnCancel {
+    margin-right: 10px;
+  }
+
+  .dialog-title {
+    display: inline-flex !important;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}

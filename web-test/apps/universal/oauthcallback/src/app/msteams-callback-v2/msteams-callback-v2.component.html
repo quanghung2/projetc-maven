@@ -1,0 +1,17 @@
+<div fxFill fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1rem">
+  <ng-container *ngIf="loading; else loadView">
+    <mat-spinner></mat-spinner>
+    <div>Please do not refresh this page.</div>
+  </ng-container>
+  <ng-template #loadView>
+    <ng-container *ngIf="!hasData; else redirectUrl">
+      <i class="material-icons not-found"> clear </i>
+      <div>Unexpected error when verifying from MSTeams. Please try again from our portal settings.</div>
+    </ng-container>
+    <ng-template #redirectUrl>
+      <i class="material-icons icon-done"> done </i>
+      <div>Completed verifying from MSTeams. You will be redirected to the home page after {{ remainTime }}s.</div>
+      <button mat-raised-button color="primary" [disabled]="!originalDomain" (click)="redirectLink()">Go now</button>
+    </ng-template>
+  </ng-template>
+</div>

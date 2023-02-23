@@ -1,0 +1,71 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Security</div>
+  <div class="title">
+    <strong
+      >IP White List
+      <i
+        sm-component
+        class="icon info outline"
+        data-position="right center"
+        [attr.data-content]="
+          'IP whitelist allows authorised IP addresses to connect by SIP. Empty means no restrictions.'
+        "
+      ></i
+    ></strong>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="four wide column right aligned"></div>
+        <div class="eight wide column">
+          <div class="field">
+            <div class="ui action input">
+              <form autocomplete="off">
+                <input
+                  type="text"
+                  placeholder="IP address"
+                  [(ngModel)]="ipAddress"
+                  name="ipAdress"
+                  autocomplete="none"
+                />
+              </form>
+              <button class="ui primary button" (click)="add()" [disabled]="!ipAddress">Add IP address</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table *ngIf="currentAccount.account.config.ipWhiteList.length > 0" class="ui selectable table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>IP address</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ip of currentAccount.account.config.ipWhiteList; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ ip }}</td>
+          <td>
+            <i class="delete icon" (click)="remove(i)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="currentAccount.account.config.ipWhiteList.length == 0">
+      <div class="ui grid two column form">
+        <div class="row empty-content">
+          <div class="five wide column right aligned">
+            <i class="drive icon"></i>
+          </div>
+          <div class="eight wide column"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="isAdding || isRemoving" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

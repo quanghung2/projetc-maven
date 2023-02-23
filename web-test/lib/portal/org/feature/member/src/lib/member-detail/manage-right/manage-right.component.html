@@ -1,0 +1,90 @@
+<div *ngIf="member && profileOrg" fxFill fxLayout="column" fxLayoutGap="16px">
+  <section *ngFor="let group of groups" fxLayout="column" fxLayoutGap="16px">
+    <h3>{{ group.name }}</h3>
+    <ng-container [ngSwitch]="group.name">
+      <ng-container *ngSwitchCase="'People'">
+        <ng-container *ngIf="profileOrg.isOwner && !member.isOwner; else viewOrgPermissionOnly">
+          <mat-slide-toggle [(ngModel)]="group.isPermission" (change)="toggleSection($event, group)" name="toggle">
+            Turn {{ group.isPermission ? 'off' : 'on' }} permission to manage the {{ group.name }}.
+          </mat-slide-toggle>
+        </ng-container>
+        <ng-template #viewOrgPermissionOnly>
+          <div class="secondary-text">
+            This member {{ group.isPermission || member.isOwner ? 'was' : "wasn't" }} granted to manage the
+            {{ group.name }}.
+            <div></div>
+          </div>
+        </ng-template>
+        <ng-container *ngIf="group.isPermission">
+          <ng-container *ngIf="teams$ | async as teams" [formGroup]="managePeopleFG">
+            <mat-slide-toggle
+              *ngIf="profileOrg.isOwner && teams.length; else viewPeoplePermissionOnly"
+              formControlName="everyone"
+              (change)="toggleManagePeople(teams, $event)"
+            >
+              <span
+                >Turn
+                {{
+                  !teams.length
+                    ? 'off on to allow this user manage Organization Settings'
+                    : 'on to grant manage the whole organization.'
+                }}
+              </span>
+            </mat-slide-toggle>
+
+            <div *ngIf="profileOrg.isOwner && !member.isOwner && !teams.length">
+              <a (click)="assign(teams)" class="cursor-pointer"> Assign to manage team only </a>
+            </div>
+
+            <mat-list *ngIf="!member.isOwner && teams.length" role="list">
+              <h3 matSubheader fxLayoutAlign="space-between center">
+                <span> Admin of teams</span>
+                <a *ngIf="profileOrg.isOwner" (click)="assign(teams)" class="cursor-pointer"> Grant more team </a>
+              </h3>
+              <mat-list-item
+                *ngFor="let team of teams; let idx = index"
+                role="listitem"
+                [class.bb]="teams.length > 1 && idx < teams.length - 1"
+                class="team__item"
+              >
+                <div fxFlex="auto" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                  <shc-copy-button [text]="team.uuid" [tooltip]="'Click to copy'"></shc-copy-button>
+                  <span>{{ team.name }}</span>
+                </div>
+                <button *ngIf="profileOrg.isOwner" mat-icon-button (click)="revokeManagement(team)">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </mat-list-item>
+              <div *ngIf="!teams.length" class="p-16 text-center secondary-text">No teams available</div>
+            </mat-list>
+
+            <ng-template #viewPeoplePermissionOnly>
+              <div class="secondary-text">
+                <span *ngIf="!teams.length"> This member has the privilege to manage the whole organization. </span>
+                <span *ngIf="teams.length">This member was granted to manage members belong the below team(s). </span>
+              </div>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+        <mat-divider></mat-divider>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div>
+          <ng-container *ngIf="profileOrg.isOwner && !member.isOwner; else viewOrgPermissionOnly">
+            <mat-slide-toggle [(ngModel)]="group.isPermission" (change)="toggleSection($event, group)" name="toggle">
+              Turn {{ group.isPermission ? 'off' : 'on' }} permission to manage the {{ group.name }}.
+            </mat-slide-toggle>
+          </ng-container>
+          <ng-template #viewOrgPermissionOnly>
+            <div class="secondary-text">
+              This member {{ group.isPermission || member.isOwner ? 'was' : "wasn't" }} granted to manage the
+              {{ group.name }}.
+              <div></div>
+            </div>
+          </ng-template>
+        </div>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </ng-container>
+  </section>
+</div>

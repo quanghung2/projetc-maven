@@ -1,0 +1,164 @@
+<div class="import-members">
+  <h2 mat-dialog-title>Import members</h2>
+
+  <mat-accordion>
+    <mat-radio-group [(ngModel)]="selectedType" fxLayout="column" fxLayoutGap="1rem">
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header (click)="selectedType = Type.PORTAL_ACCESS">
+          <mat-panel-title>
+            <mat-radio-button [value]="Type.PORTAL_ACCESS">Portal Access</mat-radio-button>
+          </mat-panel-title>
+          <mat-panel-description>Name and email</mat-panel-description>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="portalAccess"></ng-container>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel *ngIf="showPortalAccessUsername">
+        <mat-expansion-panel-header (click)="selectedType = Type.PORTAL_ACCESS_USERNAME">
+          <mat-panel-title>
+            <mat-radio-button [value]="Type.PORTAL_ACCESS_USERNAME">Portal Access</mat-radio-button>
+          </mat-panel-title>
+          <mat-panel-description>Name, Username, Password</mat-panel-description>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="portalAccessUsername"></ng-container>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header (click)="selectedType = Type.NO_PORTAL_ACCESS">
+          <mat-panel-title>
+            <mat-radio-button [value]="Type.NO_PORTAL_ACCESS">No Portal Access</mat-radio-button>
+          </mat-panel-title>
+          <mat-panel-description>Only name</mat-panel-description>
+        </mat-expansion-panel-header>
+        <ng-container *ngTemplateOutlet="noPortalAccess"></ng-container>
+      </mat-expansion-panel>
+    </mat-radio-group>
+  </mat-accordion>
+
+  <ng-template #portalAccess>
+    <div class="import-members__content">
+      <div *ngIf="fileNamePortalAccess" class="import-members__name">{{ fileNamePortalAccess }}</div>
+
+      <div fxLayout="column">
+        <button
+          mat-stroked-button
+          class="import-members__upload-btn"
+          [class.disable-color]="progressing"
+          (click)="file.click()"
+        >
+          Select CSV File
+          <input #file (change)="selectCsvFile($event)" accept=".csv" hidden type="file" />
+        </button>
+        <mat-progress-bar
+          *ngIf="progressing"
+          mode="determinate"
+          [value]="uploadFileProgress"
+          class="import-members__content__progress-bar"
+        ></mat-progress-bar>
+      </div>
+      <a
+        href="https://ui.b3networks.com/samples/sample_organization_users_emails.csv"
+        target="_blank"
+        mat-button
+        color="primary"
+        class="import-members__sample"
+        >Download sample file</a
+      >
+      <section *ngIf="licenseEnabled == false">
+        <mat-checkbox [(ngModel)]="createPinPortalAccess"> Automatically create PIN for imported members</mat-checkbox>
+      </section>
+    </div>
+  </ng-template>
+
+  <ng-template #portalAccessUsername>
+    <div class="import-members__content">
+      <div *ngIf="fileNamePortalAccessUsername" class="import-members__name">{{ fileNamePortalAccessUsername }}</div>
+
+      <div fxLayout="column">
+        <button
+          mat-stroked-button
+          class="import-members__upload-btn"
+          [class.disable-color]="progressing"
+          (click)="file.click()"
+        >
+          Select CSV File
+          <input #file (change)="selectCsvFile($event)" accept=".csv" hidden type="file" />
+        </button>
+        <mat-progress-bar
+          *ngIf="progressing"
+          mode="determinate"
+          [value]="uploadFileProgress"
+          class="import-members__content__progress-bar"
+        ></mat-progress-bar>
+      </div>
+      <a
+        href="https://ui.b3networks.com/samples/sample_organization_usernames.csv"
+        target="_blank"
+        mat-button
+        color="primary"
+        class="import-members__sample"
+      >
+        Download sample file
+      </a>
+      <section *ngIf="teams.length">
+        <mat-form-field fxFlex>
+          <mat-label>Assign team</mat-label>
+          <mat-select placeholder="Select team for members" [formControl]="teamUuidCtrl">
+            <mat-option *ngIf="!isManagedTeam" value="">No Team</mat-option>
+            <mat-option *ngFor="let team of teams" [value]="team.uuid">{{ team.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+    </div>
+  </ng-template>
+
+  <ng-template #noPortalAccess>
+    <div class="import-members__content">
+      <div *ngIf="fileKeyNoPortalAccess" class="import-members__name">{{ fileNameNoPortalAccess }}</div>
+
+      <div fxLayout="column">
+        <button
+          mat-stroked-button
+          class="import-members__upload-btn"
+          [class.disable-color]="progressing"
+          (click)="file.click()"
+        >
+          Select CSV File
+          <input #file (change)="selectCsvFile($event)" accept=".csv" hidden type="file" />
+        </button>
+        <mat-progress-bar
+          *ngIf="progressing"
+          mode="determinate"
+          [value]="uploadFileProgress"
+          class="import-members__content__progress-bar"
+        ></mat-progress-bar>
+      </div>
+      <a
+        href="https://ui.b3networks.com/samples/sample_organization_users.csv"
+        target="_blank"
+        mat-button
+        color="primary"
+        class="import-members__sample"
+        >Download sample file</a
+      >
+      <section *ngIf="licenseEnabled == false">
+        <mat-checkbox [(ngModel)]="createPinNoPortalAccess">
+          Automatically create PIN for imported members</mat-checkbox
+        >
+      </section>
+    </div>
+  </ng-template>
+
+  <div mat-dialog-actions align="end">
+    <button [matDialogClose]="true" mat-button>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="uploading"
+      [disabled]="!fileNamePortalAccess && !fileNamePortalAccessUsername && !fileNameNoPortalAccess"
+      color="primary"
+      (click)="uploadFile()"
+    >
+      Upload
+    </button>
+  </div>
+</div>

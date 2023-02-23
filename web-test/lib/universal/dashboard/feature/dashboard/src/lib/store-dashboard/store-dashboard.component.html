@@ -1,0 +1,57 @@
+<h1 mat-dialog-title>
+  <span *ngIf="type === StoreType.create">Create dashboard</span>
+  <span *ngIf="type === StoreType.update">Update dashboard</span>
+</h1>
+<div mat-dialog-content>
+  <form #form="ngForm" fxLayout="column" fxLayoutGap="1rem">
+    <mat-form-field floatLabel="never">
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="dashboard.name"
+        placeholder="Name"
+        name="dashboardName"
+        required
+        (keyup.enter)="progress()"
+        #dashboardName="matInput"
+      />
+    </mat-form-field>
+
+    <div
+      *ngIf="type === StoreType.create"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxLayoutGap="1rem"
+      class="dashboard-type"
+    >
+      <label>Service: </label>
+      <mat-radio-group
+        [(ngModel)]="selectedType"
+        (ngModelChange)="radioButtonChanged($event)"
+        name="dashboardType"
+        fxFlex="1 1 auto"
+        fxLayoutGap="1rem"
+      >
+        <mat-radio-button color="primary" *ngFor="let option of radioOptions" [value]="option.key">{{
+          option.value
+        }}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end" fxLayoutGap="0.5rem">
+  <button mat-dialog-close mat-button>Close</button>
+
+  <button
+    mat-stroked-button
+    [disabled]="progressing || form.invalid"
+    (click)="progress()"
+    color="primary"
+    class="store-dashboard-actions__store-type-button"
+  >
+    <span *ngIf="type === StoreType.create && !progressing">Create</span>
+    <span *ngIf="type === StoreType.create && progressing">Creating...</span>
+    <span *ngIf="type === StoreType.update && !progressing">Update</span>
+    <span *ngIf="type === StoreType.update && progressing">Updating...</span>
+  </button>
+</div>

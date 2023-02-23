@@ -1,0 +1,51 @@
+<div *ngIf="statistic" class="container" fxLayout="column" fxLayoutAlign="space-around stretch">
+  <div class="item" fxFlex>
+    <mat-list>
+      <mat-list-item>
+        <span class="number">{{ statistic.totalCall }}</span
+        >&nbsp;
+        <div [ngPlural]="statistic.totalCall">
+          <ng-template ngPluralCase="=0">TOTAL CALL</ng-template>
+          <ng-template ngPluralCase="=1">TOTAL CALL</ng-template>
+          <ng-template ngPluralCase="other">TOTAL CALLS</ng-template>
+        </div>
+      </mat-list-item>
+      <mat-list-item>
+        <span class="number green">{{ statistic.answered }}</span
+        >&nbsp;
+        <div [ngPlural]="statistic.answered">
+          <ng-template ngPluralCase="=0">ANSWERED CALL</ng-template>
+          <ng-template ngPluralCase="=1">ANSWERED CALL</ng-template>
+          <ng-template ngPluralCase="other">ANSWERED CALLS</ng-template>
+        </div>
+      </mat-list-item>
+      <mat-list-item>
+        <span class="number red">{{ statistic.unanswered }}</span
+        >&nbsp;
+        <div [ngPlural]="statistic.unanswered">
+          <ng-template ngPluralCase="=0">UNANSWERED CALL</ng-template>
+          <ng-template ngPluralCase="=1">UNANSWERED CALL</ng-template>
+          <ng-template ngPluralCase="other">UNANSWERED CALLS</ng-template>
+        </div>
+      </mat-list-item>
+      <mat-list-item>
+        <span class="number red">{{ statistic.busy }}</span
+        >&nbsp;
+        <div [ngPlural]="statistic.busy">
+          <ng-template ngPluralCase="=0">BUSY CALL</ng-template>
+          <ng-template ngPluralCase="=1">BUSY CALL</ng-template>
+          <ng-template ngPluralCase="other">BUSY CALLS</ng-template>
+        </div>
+      </mat-list-item>
+      <mat-list-item>
+        <span class="number red">{{ statistic.failed }}</span
+        >&nbsp;
+        <div [ngPlural]="statistic.failed">
+          <ng-template ngPluralCase="=0">FAILED CALL</ng-template>
+          <ng-template ngPluralCase="=1">FAILED CALL</ng-template>
+          <ng-template ngPluralCase="other">FAILED CALLS</ng-template>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<h1 mat-dialog-title *ngIf="channel.isEmail">Assign members to {{ channel.description }}</h1>
+<div mat-dialog-content>
+  <div class="form-container">
+    <div
+      member-box
+      [existingMembers]="existingMembers"
+      [isAgentMember]='true'
+      (memberIdsChanged)="onMembersChanged($event)"
+      class="member-box"
+    ></div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="submit()">Assign</button>
+</div>

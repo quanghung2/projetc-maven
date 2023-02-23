@@ -1,0 +1,16 @@
+{
+  "name": "api-call",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/call/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/call/**/*.ts", "libs/api/call/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

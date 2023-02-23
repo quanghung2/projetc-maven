@@ -1,0 +1,31 @@
+<ng-container [formGroup]="form" *ngIf="hasExtensionFilterV2">
+  <mat-form-field class="extension-select__field">
+    <mat-label>Extension(s)</mat-label>
+    <mat-select formControlName="extensions" multiple #extensionsDropdown>
+      <mat-form-field class="extensions__search" appearance="fill" id="extensions__search">
+        <mat-label>Extensions(s)</mat-label>
+        <input matInput type="text" formControlName="searchExt" />
+        <button *ngIf="searchExt.value" matSuffix mat-icon-button aria-label="Clear" (click)="searchExt.setValue('')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-select-trigger *ngIf="selectAllExtension">All</mat-select-trigger>
+      <ng-container *ngIf="allExtensionsFilter.length">
+        <mat-divider></mat-divider>
+        <div class="extensions__all" [class.extension-select__all]="selectAllExtension">
+          <mat-checkbox
+            color="primary"
+            [checked]="selectAllExtension"
+            (change)="toggleSelectAllExtension($event.checked)"
+            >{{ selectAllExtension ? 'Unselect All' : 'Select All' }}</mat-checkbox
+          >
+        </div>
+        <mat-divider></mat-divider>
+        <mat-option *ngFor="let ext of allExtensionsFilter" [value]="ext.extKey" (click)="optionClick(ext.extKey)">{{
+          ext.displayText
+        }}</mat-option>
+      </ng-container>
+      <mat-option id="no-ext" [value]="-1" *ngIf="!allExtensionsFilter.length">No extension</mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

@@ -1,0 +1,115 @@
+<form autocomplete="off">
+  <div class="configure-content" *ngIf="!loading">
+    <div class="big-title">Dial Plan</div>
+    <div class="ui divider"></div>
+    <div class="content">
+      <div class="ui grid two column form">
+        <div class="row">
+          <div class="five wide column right aligned">
+            <span>If number starts with</span>
+          </div>
+          <div class="two wide column right aligned">
+            <div class="field">
+              <input type="text" [(ngModel)]="planModel.startWiths" name="startWith" autocomplete="none" />
+            </div>
+          </div>
+          <div class="three wide column right aligned">
+            <span>and has a length of</span>
+          </div>
+          <div class="two wide column right aligned">
+            <div class="field">
+              <input type="text" [(ngModel)]="planModel.withLengths" name="withLengths" autocomplete="none" />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="five wide column right aligned">
+            <span>Remove number of leading digits</span>
+          </div>
+          <div class="two wide column right aligned">
+            <div class="field">
+              <input
+                type="text"
+                [(ngModel)]="planModel.numOfDigitRemoved"
+                name="numOfDigitRemoved"
+                autocomplete="none"
+              />
+            </div>
+          </div>
+          <div class="three wide column right aligned">
+            <span>then append prefix</span>
+          </div>
+          <div class="two wide column right aligned">
+            <div class="field">
+              <input type="text" [(ngModel)]="planModel.appendPrefix" name="appendPrefix" autocomplete="none" />
+            </div>
+          </div>
+          <div class="two wide column right aligned">
+            <div class="field">
+              <button
+                class="ui primary submit button"
+                (click)="addPlan()"
+                [disabled]="
+                  (!planModel.startWiths && !planModel.withLengths) ||
+                  (!planModel.numOfDigitRemoved && !planModel.appendPrefix)
+                "
+              >
+                Add Plan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table *ngIf="currentAccount.outgoing.dialPlanConfig.dialPlanList.length > 0" class="ui selectable table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Matching Pattern</th>
+            <th>Replacement</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let plan of currentAccount.outgoing.dialPlanConfig.dialPlanList; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>
+              Starts with <strong>{{ plan.matcher.startWiths }}</strong> and has a length of
+              <strong>{{ plan.matcher.withLengths | arrayNumber }}</strong>
+            </td>
+            <td>
+              Remove <strong>{{ plan.action.numOfDigitRemoved }}</strong> leading digits and prepend
+              <strong>{{ plan.action.appendPrefix }}</strong>
+            </td>
+            <td>
+              <i class="delete icon" (click)="removePlan(i)"></i>
+              <i *ngIf="i > 0" class="arrow upward icon" (click)="swapPlan(i, i - 1)"></i>
+              <i
+                *ngIf="i < currentAccount.outgoing.dialPlanConfig.dialPlanList.length - 1"
+                class="arrow downward icon"
+                (click)="swapPlan(i, i + 1)"
+              ></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="currentAccount.outgoing.dialPlanConfig.dialPlanList.length == 0">
+        <div class="ui grid two column form">
+          <div class="row empty-content">
+            <div class="five wide column right aligned">
+              <i class="drive icon"></i>
+            </div>
+            <div class="eight wide column">
+              <div class="empty-dial-plan">Empty Dial Plan</div>
+              <div>
+                No plan for outgoing call. Destination will not be modified when call is routed through X SIP service
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isAddingPlan || isRemovingPlan || isSwappingPlan" class="ui active inverted dimmer inner-dimmer">
+    <div class="ui text loader"></div>
+  </div>
+</form>

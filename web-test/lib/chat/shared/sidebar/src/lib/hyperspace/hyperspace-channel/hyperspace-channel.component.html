@@ -1,0 +1,89 @@
+<ng-container *ngIf="channels$ | async as channels; else loading">
+  <ng-container *ngIf="channels.length > 0; else noData">
+    <mat-nav-list class="convo-list">
+      <mat-list-item
+        *ngFor="let convo of channels; trackBy: trackByFn"
+        mat-list-item
+        [routerLink]="['hyperspace', hyperspaceId, convo.id]"
+        routerLinkActive="active"
+        (click)="closeSidebar($event)"
+        class="convo item-convo"
+      >
+        <ng-container *ngIf="convo.type === ChannelType.gc; else directView">
+          <ng-container *ngIf="convo.isDraft$ | async; else noDraft">
+            <mat-icon matListIcon class="icon">edit</mat-icon>
+          </ng-container>
+          <ng-template #noDraft>
+            <mat-icon
+              matListIcon
+              *ngIf="convo.privacy === Privacy.private"
+              class="icon"
+              [class.unread]="convo.unreadCount > 0"
+            >
+              lock
+            </mat-icon>
+            <span
+              matListIcon
+              *ngIf="convo.privacy !== Privacy.private"
+              class="icon"
+              [class.unread]="convo.unreadCount > 0"
+            >
+              #
+            </span>
+          </ng-template>
+
+          <p
+            matLine
+            class="convo__headline flex justify-content-space-between align-items-center gap-20"
+            [class.unread]="convo.unreadCount > 0"
+            [matBadge]="convo.mentionCount < 10 ? convo.mentionCount : '9+'"
+            matBadgeOverlap="false"
+            [matBadgeHidden]="convo.mentionCount === 0"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+          >
+            <span style="text-overflow: ellipsis; overflow: hidden">
+              {{ convo?.name }}
+            </span>
+          </p>
+        </ng-container>
+        <ng-template #directView>
+          <ng-container *ngIf="convo.isDraft$ | async; else noDraft">
+            <mat-icon matListIcon class="icon">edit</mat-icon>
+          </ng-container>
+          <ng-template #noDraft>
+            <mat-icon
+              matListIcon
+              [class]="'status__' + (convo?.directChatUsers.otherUuid | selectUser | async)?.status"
+              class="s-16"
+            >
+              lens
+            </mat-icon>
+          </ng-template>
+          <p
+            matLine
+            class="convo__headline flex justify-content-space-between align-items-center gap-20"
+            [class.unread]="convo.unreadCount > 0"
+            [matBadge]="convo.unreadCount < 10 ? convo.unreadCount : '9+'"
+            matBadgeOverlap="false"
+            [matBadgeHidden]="convo.unreadCount === 0"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+          >
+            <span style="text-overflow: ellipsis; overflow: hidden">
+              {{ (convo?.directChatUsers.otherUuid | selectUser | async)?.displayName || 'Unknown user' }}
+            </span>
+          </p>
+        </ng-template>
+      </mat-list-item>
+    </mat-nav-list>
+  </ng-container>
+  <ng-template #noData>
+    <small class="no-data flex justify-content-center align-items-center">Empty</small>
+  </ng-template>
+</ng-container>
+<ng-template #loading>
+  <div class="flex justify-content-center align-items-start">
+    <mat-spinner diameter="20"></mat-spinner>
+  </div>
+</ng-template>

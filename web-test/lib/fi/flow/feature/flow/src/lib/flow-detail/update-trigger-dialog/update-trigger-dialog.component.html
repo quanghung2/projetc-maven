@@ -1,0 +1,21 @@
+<div class="mb-24" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="16px">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+    <img [src]="trigger.def.iconUrl" class="w-40 h-40" />
+    <h3 class="mb-0" fxFlex>
+      <strong>1. {{ trigger.def.triggerDefName }}</strong>
+    </h3>
+  </div>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</div>
+
+<div *ngIf="!showResolveDependency" mat-dialog-content>
+  <b3n-update-trigger-parameters (closeDialog)="dialogRef.close(true)"></b3n-update-trigger-parameters>
+</div>
+
+<div *ngIf="showResolveDependency" mat-dialog-content>
+  <b3n-resolve-dependency
+    fxFlex
+    [resolveDependencyInput]="dataOfResolve"
+    (resultResolve)="resultResolve($event)"
+  ></b3n-resolve-dependency>
+</div>

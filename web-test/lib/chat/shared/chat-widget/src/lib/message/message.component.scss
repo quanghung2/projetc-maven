@@ -1,0 +1,123 @@
+:host {
+  font-size: 13px;
+  .text {
+    &__time {
+      line-height: normal;
+      color: #717274;
+      font-size: 11px;
+    }
+
+    &__author {
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 13px;
+    }
+
+    &__message {
+      display: table-cell;
+      word-break: break-word;
+      line-height: 18px;
+    }
+
+    &__system {
+      color: #bdbfc4;
+    }
+  }
+
+  .prechat-survey {
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    min-width: 200px;
+    width: 80%;
+    overflow: hidden;
+
+    .label {
+      color: #5a6976;
+      font-size: 14px;
+    }
+  }
+
+  .message {
+    min-height: 14px;
+    padding: 0 1rem;
+
+    ::ng-deep .mat-card {
+      padding: 1rem;
+    }
+
+    &.agent .text__message {
+      background: #e8eaec;
+      padding: 6px 12px 8px;
+
+      &.first {
+        border-radius: 1.4rem 1.4rem 1.4rem 0.3rem;
+      }
+
+      &.middle {
+        border-radius: 0.3rem 1.4rem 1.4rem 0.3rem;
+      }
+
+      &.last {
+        border-radius: 0.3rem 1.4rem 1.4rem;
+      }
+
+      &.loading {
+        background-image: url('/assets/icons/loading.gif');
+        background-position: center center;
+        background-repeat: no-repeat;
+        height: 35px;
+        width: 67px;
+        background-size: cover;
+      }
+    }
+
+    &.customer .text__message {
+      background: #3e7ce4;
+      padding: 6px 12px 8px;
+      color: #fff;
+
+      ::ng-deep {
+        a {
+          color: white !important;
+        }
+      }
+
+      &.first {
+        border-radius: 1.4rem 1.4rem 0.3rem;
+      }
+
+      &.middle {
+        border-radius: 1.4rem 0.3rem 0.3rem 1.4rem;
+      }
+
+      &.last {
+        border-radius: 1.4rem 0.3rem 1.4rem 1.4rem;
+      }
+    }
+
+    .avarta {
+      width: 50px;
+      height: 50px;
+      min-width: 32px;
+      border-radius: 50%;
+      user-select: none;
+      object-fit: cover;
+    }
+
+    .icon__author {
+      font-size: 35px;
+      height: 35px;
+      width: 35px;
+      color: #777;
+    }
+  }
+
+  .system {
+    padding-bottom: 200px;
+
+    .btn-create {
+      width: 200px;
+    }
+  }
+}

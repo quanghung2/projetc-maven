@@ -1,0 +1,58 @@
+<mat-toolbar><h1>Form</h1></mat-toolbar>
+
+<div class="ms-data p-16">
+  <div fxLayout="row" fxLayoutAlign="end start" fxLayoutGap="8px">
+    <button [loading]="isLoading" mat-icon-button (click)="reload()" matTooltip="Refresh">
+      <mat-icon>autorenew</mat-icon>
+    </button>
+    <button *ngIf="editable" mat-flat-button color="primary" (click)="updateOrCreate()">Create</button>
+  </div>
+
+  <div class="ms-data__content">
+    <table mat-table [dataSource]="noteTemplates">
+      <ng-container matColumnDef="templateUuid">
+        <th mat-header-cell *matHeaderCellDef>Template Uuid</th>
+        <td mat-cell *matCellDef="let element">
+          <div
+            (cdkCopyToClipboardCopied)="copied()"
+            [cdkCopyToClipboard]="element.templateUuid"
+            matTooltip="Click to copy"
+            class="uuid-column"
+          >
+            {{ element.templateUuid.substring(0, 8) }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>Title</th>
+        <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="action" fxLayoutAlign="end center">
+            <!-- <button mat-icon-button>
+              <mat-icon matTooltip="update" (click)="updateOrCreate(element)">edit</mat-icon>
+            </button> -->
+            <button mat-icon-button>
+              <mat-icon matTooltip="View detail" (click)="viewDetail(element)">visibility</mat-icon>
+            </button>
+            <button *ngIf="editable" mat-icon-button>
+              <mat-icon matTooltip="Delete" (click)="deleteTemp(element)">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3">
+          <div fxLayout="column" fxLayoutAlign="center center">No Data Available</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

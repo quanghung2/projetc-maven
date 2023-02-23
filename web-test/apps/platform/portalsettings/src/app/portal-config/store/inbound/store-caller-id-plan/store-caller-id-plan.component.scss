@@ -1,0 +1,52 @@
+@mixin flex-column($gap) {
+  display: flex !important;
+  flex-direction: column;
+  gap: $gap;
+}
+
+.caller-id__modal {
+  min-height: 200px;
+}
+
+.content {
+  @include flex-column(20px);
+}
+
+.caller-id__container {
+  @include flex-column(10px);
+
+  h3 {
+    color: rgba(0, 0, 0, 0.54);
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .caller-id__info {
+    line-height: 2;
+    word-break: break-word;
+
+    span {
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 2px;
+      padding: 2px 8px;
+    }
+  }
+
+  .input__wrapper {
+    @include flex-column(10px);
+
+    .input {
+      width: 100%;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  float: right;
+
+  .button {
+    margin: 0 !important;
+  }
+}

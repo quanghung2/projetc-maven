@@ -1,0 +1,50 @@
+:host {
+  button {
+    outline: none;
+    &.active {
+      cursor: not-allowed;
+    }
+    &::ng-deep .mat-button-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 36px;
+    }
+    &.fullWidth {
+      width: 100%;
+    }
+    &.mat-fab {
+      .spinner {
+        margin-top: -15px;
+      }
+    }
+    .spinner {
+      position: absolute;
+      top: 25%;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      &.active {
+        opacity: 1;
+      }
+    }
+    .button-text {
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+      &.active {
+        opacity: 0;
+      }
+    }
+    mat-icon.mat-button-icon {
+      padding-right: 5px;
+      transition: opacity 0.3s ease-in-out;
+      &.is-mat-icon {
+        font-size: 18px;
+        position: relative;
+        top: 3px;
+      }
+      &.active {
+        opacity: 0;
+      }
+    }
+  }
+}

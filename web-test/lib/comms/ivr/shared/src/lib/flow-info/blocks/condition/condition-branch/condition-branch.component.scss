@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+
+.condition-branch-content {
+  &__type {
+    margin-bottom: 0.8rem !important;
+  }
+  mat-form-field {
+    min-width: 0;
+    width: 100%;
+  }
+  .upload-button {
+    label {
+      cursor: pointer; // min-width: 130px;
+    }
+  }
+  .upload {
+    margin-bottom: 2rem;
+  }
+
+  mat-card {
+    width: 100%;
+  }
+}
+
+.start-with {
+  min-width: auto;
+}
+
+.filename {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.67);
+}

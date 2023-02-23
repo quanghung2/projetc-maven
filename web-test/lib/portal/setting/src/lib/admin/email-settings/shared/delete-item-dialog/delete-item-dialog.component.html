@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>Delete {{ data.key }}</h1>
+<div mat-dialog-content>
+  Are you sure you want to delete {{ data.key }} <strong>{{ data.displayText }}</strong> ?
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="delete()">Delete</button>
+</div>

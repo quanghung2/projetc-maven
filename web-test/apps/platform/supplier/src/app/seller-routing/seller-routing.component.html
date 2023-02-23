@@ -1,0 +1,94 @@
+<div class="content-container">
+  <div fxLayout="row" class="action-bar">
+    <div fxFlex fxLayout="row" fxLayoutGap="0.8rem" fxLayoutAlign="end center">
+      <mat-form-field>
+        <input
+          matInput
+          [disabled]="isLoading"
+          placeholder="Search by supplier"
+          [(ngModel)]="filterSetting.routing"
+          (keyup.enter)="updateFilterSetting()"
+        />
+
+        <mat-icon (click)="updateFilterSetting()" matSuffix>search</mat-icon>
+        <mat-icon
+          *ngIf="filterSetting.routing !== ''"
+          (click)="filterSetting.routing = ''; updateFilterSetting()"
+          matSuffix
+          >clear</mat-icon
+        >
+      </mat-form-field>
+      <button mat-icon-button [loading]="isLoading" (click)="reload()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" mat-flat-button (click)="onShowUpdateSellerRouting()">
+        Create Routing
+      </button>
+    </div>
+  </div>
+  <div *ngIf="routingsFiltered && routingsFiltered.length > 0; else noData" class="supplier mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="supplier">
+        <th mat-header-cell *matHeaderCellDef>Supplier</th>
+        <td mat-cell *matCellDef="let element">
+          <span>{{ element.supplier.name }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="orgUuid">
+        <th mat-header-cell *matHeaderCellDef>Organization UUID</th>
+        <td mat-cell *matCellDef="let element">
+          <div
+            class="uuid-column"
+            (cdkCopyToClipboardCopied)="copied()"
+            [cdkCopyToClipboard]="element.orgUuid"
+            mat-button
+            matTooltip="Click to copy"
+          >
+            {{ element.orgUuid | slice: 0:8 }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.type | replaceSpecialCharacter | titlecase }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef>Created Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.createdDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedDate">
+        <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+        <td mat-cell *matCellDef="let element">{{ element.updatedDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="edit-supplier">
+            <button mat-icon-button matTooltip="Edit" (click)="onShowUpdateSellerRouting(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Delete" (click)="showConfirmDelete(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+  <ng-template #noData>
+    <div *ngIf="!isLoading" class="no-data" fxLayout="column" fxLayoutAlign="center center">
+      <h3 class="message">No record found</h3>
+    </div>
+  </ng-template>
+</div>

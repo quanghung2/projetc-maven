@@ -1,0 +1,11 @@
+:host {
+    .convo-container {
+      height: calc(100vh - var(--app__warning--height) - var(--app__toolbar--height));
+      overflow: hidden;
+  
+      .body {
+        overflow: hidden;
+      }
+    }
+  }
+  

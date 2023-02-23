@@ -1,0 +1,51 @@
+<div *ngIf="dashboard" class="dashboard">
+  <b3n-dashboard-detail-toolbar
+    [dashboard]="dashboard"
+    [loading]="loading"
+    [publicAccess]="publicAccess"
+    [hasEditPermission]="hasEditPermission"
+    (addChartChanged)="addChart()"
+    (editableChanged)="onEditableChanged($event)"
+    (settingChanged)="onFilterChanged($event)"
+  ></b3n-dashboard-detail-toolbar>
+
+  <ng-container *ngIf="dashboard && cards && cards.length > 0">
+    <div
+      [ngStyle]="{ height: publicAccess ? 'calc(100vh - 64px)' : 'calc(100vh - 64px - 54px)' }"
+      class="dashboard__content"
+    >
+      <gridster [options]="dashboardOption">
+        <gridster-item
+          *ngFor="let card of cards; trackBy: trackByCard"
+          [item]="card.config"
+          class="mat-elevation-z1"
+          id="{{ card.uuid }}"
+        >
+          <b3n-card
+            class="dashboard__card"
+            (loaded)="onLoadedCard(card)"
+            (removed)="removeCard(card)"
+            [card]="card"
+            [editable]="dashboardOption.resizable.enabled"
+            [filter]="filter"
+          ></b3n-card>
+        </gridster-item>
+      </gridster>
+    </div>
+  </ng-container>
+
+  <div
+    *ngIf="cards && cards.length === 0"
+    class="empty-box"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="1em"
+  >
+    <h1>You do not have any chart. Please create one first.</h1>
+    <!--
+      <h3>
+        <button mat-stroked-button color="primary" (click)="addChart() && onEditableChanged(true)">Create chart</button>
+      </h3>
+    -->
+  </div>
+</div>

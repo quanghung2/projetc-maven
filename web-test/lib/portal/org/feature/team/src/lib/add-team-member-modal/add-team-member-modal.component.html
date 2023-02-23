@@ -1,0 +1,62 @@
+<div class="team-member-modal">
+  <h2 mat-dialog-title>Add members</h2>
+
+  <div class="mat-typography" fxLayout="column" fxLayoutAlign="start strecht" fxLayoutGap="0.8rem">
+    <mat-form-field appearance="legacy">
+      <mat-label>Search user</mat-label>
+      <input matInput placeholder="Enter user name" [formControl]="searchMember" />
+      <button *ngIf="!isLoading" matSuffix mat-icon-button>
+        <mat-icon class="btn-search">search</mat-icon>
+      </button>
+      <mat-spinner matSuffix class="spinner" *ngIf="isLoading" diameter="20"> </mat-spinner>
+    </mat-form-field>
+
+    <ng-container *ngIf="selectedMembers.length">
+      <mat-label>Selected members ({{ selectedMembers.length }})</mat-label>
+      <div class="chiplist-container">
+        <mat-chip-list>
+          <mat-chip color="primary" *ngFor="let member of selectedMembers" (removed)="onSelectedMember(member)">
+            {{ member.displayName }}
+            <mat-icon matChipRemove> close </mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </ng-container>
+
+    <div class="list-member" fxFlex="column">
+      <ng-container *ngIf="members.length">
+        <mat-selection-list>
+          <mat-list-option
+            *ngFor="let member of members"
+            checkboxPosition="before"
+            [value]="member.uuid"
+            [selected]="isSelectedMember(member.uuid)"
+            (click)="onSelectedMember(member)"
+          >
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <img *ngIf="member.photoUrl" [src]="member.photoUrl" class="avatar" />
+              <mat-icon *ngIf="!member.photoUrl" svgIcon="member" class="avatar avatar--gray"></mat-icon>
+              <span>{{ member.displayName }}</span>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </ng-container>
+
+      <ng-container *ngIf="!members.length && !isLoading">
+        <div class="no-user">No user found</div>
+      </ng-container>
+    </div>
+  </div>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-flat-button
+      [loading]="isSave"
+      [disabled]="!selectedMembers.length || isSave"
+      color="primary"
+      (click)="onSave()"
+    >
+      Add
+    </button>
+  </mat-dialog-actions>
+</div>

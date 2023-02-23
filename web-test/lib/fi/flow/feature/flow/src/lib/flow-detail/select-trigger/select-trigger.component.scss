@@ -1,0 +1,12 @@
+.select-trigger {
+  .mat-selection-list {
+    padding-top: 0;
+    max-height: 68vh;
+    overflow: auto;
+  }
+
+  .mat-list-option {
+    height: 70px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,34 @@
+<div mat-dialog-title>{{ (data.orgLinkConfig ? 'Update' : 'New') + ' organization link' }}</div>
+<form [formGroup]="form" autocomplete="off" fxLayout="column">
+  <mat-form-field appearance="fill">
+    <mat-label>Group</mat-label>
+    <mat-select formControlName="linkUuid">
+      <mat-option *ngFor="let orgLink of data.orgLinks" [value]="orgLink.uuid">
+        {{ orgLink.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Organization</mat-label>
+    <mat-select formControlName="targetOrgUuid">
+      <mat-option *ngFor="let orgMember of currentLink.organizations" [value]="orgMember.uuid">
+        {{ orgMember.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Prefix</mat-label>
+    <input
+      matInput
+      formControlName="prefix"
+      onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+    />
+    <mat-error>* Prefix is required</mat-error>
+  </mat-form-field>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close="">Cancel</button>
+    <button [loading]="false" [disabled]="form.invalid" mat-flat-button color="primary" (click)="configOrgLinkConfig()">
+      <span>{{ data.orgLinkConfig ? 'Update' : 'Add' }}</span>
+    </button>
+  </div>
+</form>

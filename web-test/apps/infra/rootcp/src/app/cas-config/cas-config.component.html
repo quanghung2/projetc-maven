@@ -1,0 +1,48 @@
+<mat-toolbar><h1>CAS Config</h1></mat-toolbar>
+
+<div class="container" fxLayout="column" fxLayoutAlign="start none">
+  <div class="header" fxLayout="row" fxLayoutAlign="center center">
+    <div class="action" fxLayout="row" fxLayoutAlign="space-between start" [style.paddingBottom.px]="16">
+      <div [formGroup]="formCASConfig" fxLayout="row" fxLayoutAlign="start center">
+        <mat-form-field [style.marginRight.px]="16">
+          <mat-select required formControlName="appModule" [compareWith]="comparer">
+            <mat-option *ngFor="let cas of CASModules" [value]="cas.key"> {{ cas.value }} </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Search App Module</mat-label>
+
+          <input matInput type="text" formControlName="searchAppConfig" />
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-stroked-button color="primary" [style.marginTop.px]="4" (click)="createConfig()">Add app</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" fxLayout="column" fxLayoutAlign="start center" *ngFor="let data of dataCASConfig | keyvalue">
+    <div class="cas-action" fxLayout="row" fxLayoutAlign="space-between center">
+      <h3 class="title">{{ data.key }}</h3>
+
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <mat-icon matTooltip="Remove app" (click)="updateConfig(data)">edit</mat-icon>
+
+        <mat-icon matTooltip="Remove app" (click)="deleteConfig(data)">close</mat-icon>
+      </div>
+    </div>
+
+    <mat-form-field class="cas-module" appearance="outline">
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        disabled
+        [ngModel]="showDataCasConfig($any(data.value))"
+      ></textarea>
+    </mat-form-field>
+  </div>
+</div>

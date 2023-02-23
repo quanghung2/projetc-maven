@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .pending-jobs-container {
+    padding: 0 10px;
+
+    table {
+      width: 100%;
+
+      tr {
+        .footer-table {
+          margin-right: 1.6rem;
+        }
+      }
+      .pointer {
+        .action-job {
+          text-align: right;
+        }
+      }
+    }
+
+    .delete {
+      color: #bf2600;
+    }
+  }
+}

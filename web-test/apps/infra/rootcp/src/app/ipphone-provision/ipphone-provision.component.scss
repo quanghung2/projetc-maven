@@ -1,0 +1,20 @@
+:host {
+  .container {
+    width: 70vw;
+    padding: 1.6rem;
+
+    .body {
+      .btn-action {
+        visibility: hidden;
+      }
+
+      table {
+        tr:hover {
+          .btn-action {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

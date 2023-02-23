@@ -1,0 +1,113 @@
+<h1 mat-dialog-title>Music on hold configuration</h1>
+
+<ng-container *ngIf="!loading; else spinner">
+  <div mat-dialog-content class="mat-dialog-content" *ngIf="queue">
+    <div class="dialog-content-container" fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="2rem">
+      <div fxLayout="row">
+        <div class="background-sound sound">
+          <div class="title">Background sound</div>
+          <div class="content">
+            <div class="uploader cfg-item">
+              <div fxLayout="row" fxLayoutGap="1.6rem" class="upload-btn">
+                <label fxFlexAlign="center">Upload</label>
+                <div fxFlex="auto">
+                  <label class="mat-stroked-button" for="file-moh">Upload file (5MB Max)</label>
+                  <form id="uploadMoh" style="display: none">
+                    <input
+                      type="file"
+                      id="file-moh"
+                      style="display: none"
+                      (change)="onBackgroundFileChange($event)"
+                      accept="audio/mp3"
+                    />
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="background" class="moh-url cfg-item">
+              <div class="empty-url" *ngIf="backgroundUploading">
+                <mat-progress-bar mode="determinate" [value]="backgroundUploadProgress"></mat-progress-bar>
+              </div>
+              <div class="empty-url" *ngIf="!audioUrl && !backgroundUploading">
+                <div>You have not uploaded an MP3 file yet.</div>
+              </div>
+              <div class="valid-url" *ngIf="audioUrl && !backgroundUploading">
+                <audio
+                  controls
+                  preload="auto"
+                  [src]="audioUrl | safe: 'resourceUrl'"
+                  type="audio/mp3"
+                  (error)="audioUrl = ''"
+                >
+                  Your browser does not support the
+                  <code>audio</code>
+                  element.
+                </audio>
+              </div>
+            </div>
+            <div class="bkg-sound-length cfg-item" *ngIf="audioUrl || marketings.length > 0">
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <mat-select
+                      placeholder="Breaking time between marketing messages"
+                      [(value)]="'' + background.length"
+                    >
+                      <mat-option value="-1"> Full-length </mat-option>
+                      <mat-option value="5"> 5 seconds </mat-option>
+                      <mat-option value="10"> 10 seconds </mat-option>
+                      <mat-option value="15"> 15 seconds </mat-option>
+                      <mat-option value="20"> 20 seconds </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxFlex="1 1 auto" class="marketing-msgs sound">
+          <div fxLayout="row" class="title">
+            <div>Marketing Messages</div>
+            <span class="fill-remaining-space"></span>
+            <button mat-icon-button (click)="addNewMarketingMsg()" matTooltip="Add new message">
+              <mat-icon aria-label="Add marketing message">add</mat-icon>
+            </button>
+          </div>
+          <div class="content">
+            <div class="msgs" fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="2rem">
+              <div
+                class="msg"
+                *ngFor="let marketing of marketings; let i = index"
+                fxLayout="column"
+                fxLayoutAlign="space-between start"
+                fxLayoutGap="0.8rem"
+              >
+                <div fxLayout="row" class="mat-h3">
+                  <div fxFlexAlign="center">Message {{ i + 1 }}</div>
+                  <span class="fill-remaining-space"></span>
+                  <button mat-icon-button (click)="removeMarketingMsg(i)" matTooltip="Remove message">
+                    <mat-icon aria-label="Remove">close</mat-icon>
+                  </button>
+                </div>
+                <div class="msg-cfg">
+                  <b3n-tts-mp3-msg-cfg [ttsCfg]="marketing" [showPlay]="true" [showNote]="false"></b3n-tts-mp3-msg-cfg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button (click)="save()" [loading]="saving" color="primary">Update</button>
+  </div>
+</ng-container>
+
+<ng-template #spinner>
+  <div fxLayout="column" fxLayoutAlign="center center" class="spinner-container">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

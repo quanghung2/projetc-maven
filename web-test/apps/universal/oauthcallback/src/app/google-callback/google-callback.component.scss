@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  height: 100vh;
+
+  i.not-found {
+    color: #d64f46;
+    font-size: 60px;
+    border-radius: 50%;
+    border: 2px solid #d64f46;
+  }
+
+  i.icon-done {
+    color: green;
+    font-size: 60px;
+    border-radius: 50%;
+    border: 2px solid green;
+  }
+}

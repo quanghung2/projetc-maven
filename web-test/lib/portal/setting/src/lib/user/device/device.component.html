@@ -1,0 +1,137 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Devices</h1>
+</sui-template-portal>
+
+<div *ngIf="extension$ | async" class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+  <div fxLayout="row" class="full-width">
+    <span class="fill-remaining-space"></span>
+    <button
+      [disabled]="!extension?.ringConfig.activatedDevices.includes(DeviceType.MOBILE)"
+      (click)="openManageDialog()"
+      mat-button
+      color="primary"
+    >
+      Manage mobile devices
+    </button>
+  </div>
+  <div *ngIf="extension && extension.ringConfig" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+    <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+      <ng-container *ngIf="activatedDevices">
+        <span class="secondary-text">Select devices to receive an inbound call.</span>
+        <ng-container *ngIf="activatedDevices.length === 0; else loadList">
+          <mat-hint fxLayoutAlign="center"> No actived devices</mat-hint>
+        </ng-container>
+        <ng-template #loadList>
+          <div fxFlexAlign="stretch" class="item__rows">
+            <div cdkDropList (cdkDropListDropped)="dropDispositionCodes($event)">
+              <ng-container *ngFor="let device of activatedDevices; let i = index">
+                <ng-container *ngIf="extension.ringConfig.activatedDevices.includes(device?.deviceType)">
+                  <div
+                    cdkDrag
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                    class="sortable-box"
+                    fxLayoutGap="7px"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="deviceItemTmp"
+                      [ngTemplateOutletContext]="{ device: device, i: i, extension: extension }"
+                    ></ng-container>
+                  </div>
+
+                  <mat-divider *ngIf="i < activatedDevices.length - 1"></mat-divider>
+                </ng-container>
+              </ng-container>
+            </div>
+            <ng-container *ngFor="let device of activatedDevices; let i = index">
+              <ng-container *ngIf="!extension.ringConfig.activatedDevices.includes(device?.deviceType)">
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="space-between center"
+                  class="unsortable-box disabled"
+                  fxLayoutGap="1.6rem"
+                >
+                  <ng-container
+                    [ngTemplateOutlet]="deviceItemTmp"
+                    [ngTemplateOutletContext]="{ device: device, i: i, extension: extension }"
+                  ></ng-container>
+                </div>
+                <mat-divider *ngIf="i < activatedDevices.length - 1"></mat-divider>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+
+    <div fxLayout="column" class="full-width mb-30" *ngIf="extension.isCallcenter">
+      <mat-form-field>
+        <mat-label> Primary device </mat-label>
+        <mat-select [(ngModel)]="primaryDevice">
+          <mat-option *ngFor="let device of listDevicesSelector" [value]="device">
+            {{ device.deviceType | extDevice }}
+            <span *ngIf="device.deviceInfo"> ({{ device.deviceInfo.deviceName }}) </span>
+          </mat-option>
+        </mat-select>
+        <mat-hint fxLayoutAlign="start">
+          Only the primary device will ring for all calls from the contact center queue.
+        </mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row">
+      <mat-form-field fxFlex="350px">
+        <mat-label>Ring mode</mat-label>
+        <mat-select [(ngModel)]="extension.ringConfig.ringMode">
+          <mat-option [value]="RingMode.ringAll">Ring All</mat-option>
+          <mat-option [value]="RingMode.sequential">Sequential</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <b3n-ringme-form
+      *ngIf="extension.ringConfig.ringMode === RingMode.ringAll"
+      class="full-width"
+      [extension]="extension"
+    ></b3n-ringme-form>
+
+    <div fxLayout="column" *ngIf="extension.ringConfig.ringMode === RingMode.sequential" class="full-width">
+      <mat-form-field>
+        <mat-label> Per Device Ring Time (seconds)</mat-label>
+        <mat-select [(ngModel)]="extension.ringConfig.ringTime">
+          <mat-option *ngFor="let opt of optRingTime" [value]="opt.key">
+            {{ opt.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button
+      fxFlexAlign="end"
+      mat-stroked-button
+      color="primary"
+      [loading]="progressing"
+      [disabled]="progressing"
+      (click)="onSave()"
+    >
+      Apply
+    </button>
+  </div>
+</div>
+
+<ng-template #deviceItemTmp let-device="device" let-i="i" let-extension="extension">
+  <!-- fxFlex="1 1 auto" fxLayout="row" -->
+  <mat-checkbox
+    fxLayoutAlign="start center"
+    [checked]="extension.ringConfig.activatedDevices.includes(device?.deviceType)"
+    (change)="shiftChanged(device.deviceType)"
+  >
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <span
+        >{{ i + 1 }}. {{ device?.deviceType | extDevice }}
+        <span *ngIf="deviceCountMapping[device.deviceType] > 1">
+          ({{ deviceCountMapping[device.deviceType] }} licenses)
+        </span>
+      </span>
+    </div>
+  </mat-checkbox>
+</ng-template>

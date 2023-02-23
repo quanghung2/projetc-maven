@@ -1,0 +1,54 @@
+<div *ngIf="data$ | async as data" class="memberDetail">
+  <b3n-profile-info
+    (closeSidenavEvent)="closeSidenav()"
+    (memberDetailChanged)="change()"
+    [member]="data.member"
+    [type]="'member'"
+  ></b3n-profile-info>
+
+  <div>
+    <mat-tab-group
+      animationDuration="0ms"
+      class="memberDetail__account-info"
+      [selectedIndex]="selectIndexTab"
+      (selectedIndexChange)="selectIndexTab = $event"
+    >
+      <mat-tab>
+        <ng-template mat-tab-label> Account Info</ng-template>
+        <ng-template matTabContent>
+          <pom-member-account-info
+            (memberDetailChanged)="change()"
+            [allowMemberImport]="data.allowImport"
+            [member]="data.member"
+            [profileOrg]="data.org"
+          ></pom-member-account-info>
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab *ngIf="!data.org.licenseEnabled || (data.org?.isUpperAdmin && data.member?.isUpperAdmin)">
+        <ng-template mat-tab-label> Permissions </ng-template>
+        <ng-template matTabContent>
+          <div class="content p-16">
+            <pom-manage-right
+              *ngIf="data.org.licenseEnabled; else notCPASSUser"
+              [member]="data.member"
+              [profileOrg]="data.org"
+              [groups]="groups"
+            ></pom-manage-right>
+            <ng-template #notCPASSUser>
+              <b3n-permission [member]="data.member" [type]="'member'"></b3n-permission>
+            </ng-template>
+          </div>
+        </ng-template>
+      </mat-tab>
+      <mat-tab *ngIf="data.org.licenseEnabled">
+        <ng-template mat-tab-label> Licenses</ng-template>
+        <ng-template matTabContent>
+          <div class="content">
+            <pom-manage-license [member]="data.member"></pom-manage-license>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+<div class="notification-settings">
+  <section>
+    <mat-form-field floatLabel="always">
+      <mat-label>Email</mat-label>
+      <mat-select [(ngModel)]="setting.data.emailType">
+        <mat-option *ngFor="let option of emailTypeOptions" [value]="option.key"> {{ option.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </section>
+  <section class="field child-component pointer-right">
+    <form [formGroup]="form">
+      <div *ngIf="setting.data.emailType != 'none'">
+        <mat-form-field class="chip-list">
+          <mat-chip-list #chipList class="chip-list-email" formControlName="email">
+            <mat-chip
+              *ngFor="let emailAddress of listEmailAddress"
+              [removable]="'true'"
+              (removed)="remove(emailAddress)"
+              >{{ emailAddress }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input
+              [matChipInputFor]="chipList"
+              placeholder="Enter email address"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event)"
+              name="chiplist"
+              formControlName="email"
+            />
+          </mat-chip-list>
+          <mat-error *ngIf="form.invalid">Not a valid email</mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </section>
+  <section fxLayout="row" fxLayoutAlign="end center">
+    <button mat-raised-button color="primary" type="" submit (click)="save()" [disabled]="form.invalid || saving">
+      <span *ngIf="!saving">Save</span> <span *ngIf="saving">Saving..</span>
+    </button>
+  </section>
+</div>

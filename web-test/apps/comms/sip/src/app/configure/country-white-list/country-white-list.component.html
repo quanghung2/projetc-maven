@@ -1,0 +1,81 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Security</div>
+  <div class="title">
+    <strong
+      >Country White List
+      <i
+        sm-component
+        class="icon info outline"
+        data-position="right center"
+        [attr.data-content]="
+          'Country whitelist restricts calls to be made to specific destinations. Empty means no restrictions.'
+        "
+      ></i
+    ></strong>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="four wide column right aligned"></div>
+        <div class="eight wide column">
+          <div class="field">
+            <div class="ui action input">
+              <div class="ui search">
+                <div class="ui icon input">
+                  <form autocomplete="off">
+                    <input
+                      id="input-country-prefix"
+                      class="prompt"
+                      type="text"
+                      placeholder="Country prefix"
+                      name="countryPrefix"
+                      [(ngModel)]="countryPrefix"
+                      autocomplete="none"
+                    />
+                  </form>
+                </div>
+                <div class="results"></div>
+              </div>
+              <!--<input class="ui search" type="text" placeholder="Country prefix" [(ngModel)]="countryPrefix">-->
+              <button class="ui primary button" (click)="add()" [disabled]="!countryPrefix">Add Country</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table *ngIf="currentAccount.account.config.countryWhiteList.length > 0" class="ui selectable table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Country prefix</th>
+          <th>Country code</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let country of currentAccount.account.config.countryWhiteList; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ country }}</td>
+          <td>{{ country | country }}</td>
+          <td>
+            <i class="delete icon" (click)="remove(i)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="currentAccount.account.config.countryWhiteList.length == 0">
+      <div class="ui grid two column form">
+        <div class="row empty-content">
+          <div class="five wide column right aligned">
+            <i class="drive icon"></i>
+          </div>
+          <div class="eight wide column"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="isAdding || isRemoving" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

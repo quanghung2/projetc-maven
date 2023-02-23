@@ -1,0 +1,51 @@
+<div class="container py-16">
+  <div fxLayout="row" fxLayoutAlign="end center" class="mb-8">
+    <button mat-raised-button color="primary" (click)="createMutex()">Create Relationship</button>
+  </div>
+
+  <div *ngIf="loading" class="mt-120" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="50" [strokeWidth]="2"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading" fxLayout="column" fxLayoutAlign="start stretch">
+    <h3 class="mt-120 text-center" *ngIf="baMutexs.length === 0">
+      <p>You don't have any relationship.</p>
+    </h3>
+
+    <table *ngIf="baMutexs.length > 0" mat-table [dataSource]="baMutexs">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let e">{{ e.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let e">
+          <span *ngFor="let a of e.actions; let i = index">
+            {{ a.name }}<span *ngIf="i < e.actions.length - 1">, </span>
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastUpdatedAt">
+        <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+        <td mat-cell *matCellDef="let e">{{ e.lastUpdatedAt | date: 'dd MMM yyyy HH:mm' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let e">
+          <button mat-icon-button (click)="updateMutex(e)" matTooltip="Update">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteMutex(e.id)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>

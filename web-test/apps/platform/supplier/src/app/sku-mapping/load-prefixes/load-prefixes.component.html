@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>List Prefixes</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let pre of prefixes">{{ pre }}</mat-chip>
+    </mat-chip-list>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</div>

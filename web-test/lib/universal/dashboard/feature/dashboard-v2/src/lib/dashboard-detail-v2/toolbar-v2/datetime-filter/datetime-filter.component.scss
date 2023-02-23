@@ -1,0 +1,12 @@
+.datetime-select__field {
+  //! Change DATETIME_WIDTH base on width and margin
+  width: 180px;
+  margin-right: 16px;
+}
+
+::ng-deep .mat-custom-date {
+  button.mat-custom-date-year,
+  button.mat-custom-date-monthday {
+    font-size: 30px !important;
+  }
+}

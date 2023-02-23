@@ -1,0 +1,21 @@
+@import '../portal-config.component';
+
+[hidden] {
+  display: none;
+}
+
+tag-input {
+  width: 100%;
+}
+
+.disabled {
+  cursor: none;
+  pointer-events: unset;
+}
+
+::ng-deep {
+  tag {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+    font-size: 14px !important;
+  }
+}

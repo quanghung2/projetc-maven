@@ -1,0 +1,76 @@
+:host {
+  .call-note {
+    cursor: pointer;
+  }
+
+  .label {
+    font-weight: 300;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: baseline;
+    margin: 0 0.14285714em;
+    background-color: #e8e8e8;
+    background-image: none;
+    padding: 4px 6px;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: none;
+    font-weight: 600;
+    border: 0 solid transparent;
+    border-radius: 0.28571429rem;
+  }
+
+  .total {
+    margin-left: 1em;
+  }
+
+  .mat-icon {
+    cursor: pointer;
+  }
+
+  .calllog-table {
+    &--not-found {
+      text-align: center;
+    }
+  }
+
+  .voicemail-col {
+    .mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .status {
+    div {
+      float: left;
+    }
+    .duration {
+      i {
+        font-size: 1em;
+        cursor: pointer;
+      }
+      margin-left: 0.3rem;
+    }
+  }
+
+  .paginator {
+    text-align: right;
+    background: #ffffff;
+    padding: 0.8rem 2rem;
+    i {
+      font-size: 1.6rem;
+      width: 0.8rem;
+    }
+  }
+
+  .pointer {
+    cursor: pointer;
+  }
+}
+
+.mat-table {
+  width: 100%;
+}

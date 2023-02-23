@@ -1,0 +1,82 @@
+<ng-container *ngIf="channel$ | async"></ng-container>
+
+<div *ngIf="loadingHistory$ | async" class="ui-loading">
+  <mat-progress-bar mode="query"></mat-progress-bar>
+</div>
+
+<div *ngIf="errApiLoadFirst" fxFill fxLayoutAlign="center center">
+  <ng-container *ngIf="refetchHistory$ | async"></ng-container>
+  <button color="primary" mat-icon-button (click)="refetchHistory()">
+    <mat-icon class="icon-refresh">refresh</mat-icon>
+  </button>
+</div>
+
+<div #viewport class="messages-viewport" *ngIf="!reloadView" tabindex="0">
+  <div
+    *uiScroll="let message of datasource; let i = index"
+    class="msg-item"
+    [id]="message?.current?.clientId"
+    [attr.data-ts]="message?.current?.ts"
+    [class.hight-light]="message?.current?.clientId === hoverMessage"
+  >
+    <div *ngIf="!message.isFake; else fakeMsg">
+      <div class="group-by-date" *ngIf="message.pre && message.isDiffDate">
+        <span>{{ message.current?.ts | viewDate }}</span>
+      </div>
+
+      <div class="msg-item__content">
+        <div
+          *ngIf="isShowNewMessage && !!message.current?.id && newMessageId === message.current.id"
+          class="new-message flex justify-content-center align-items-center"
+        >
+          <span>New messages</span>
+        </div>
+        <csh-chat-message
+          [message]="message.current"
+          [previousMessage]="message.pre"
+          [parentElr]="message.current.mt === MsgType.attachment ? viewport : null"
+          [editingMessageId]="editingMessageId"
+          [configMessageOption]="configMessageOption"
+          (showProfile)="onShowProfile($event)"
+          (mentionsChanged)="onMentionsChanged($event)"
+          (edited)="focusQuillEditorApp()"
+          (addBookmarkMessage)="addBookmarkMessage($event)"
+          (removeBookmarkMessage)="removeBookmarkMessage($event)"
+          (replyingMessage)="replyingMessage($event)"
+          (jumpToMessage)="onJumpToMessage($event)"
+          (rightClickMessage)="onRightClickMessage($event)"
+        ></csh-chat-message>
+      </div>
+    </div>
+
+    <ng-template #fakeMsg>
+      <div style="height: 20px"></div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-container *ngIf="enableScrollBottom$ | async">
+  <button class="read-message" mat-mini-fab (click)="scrollToLastestMessage()">
+    <mat-icon>expand_more</mat-icon>
+  </button>
+</ng-container>
+
+<!-- matTooltip="Scroll to lastest message" -->
+<!-- <a id="back2Bottom" *ngIf="convo.unreadCount > 0" (click)="scrollToUnreadMsg()"> You have new messages </a> -->
+
+<div
+  class="right-click-message-menu"
+  (menuClosed)="menuClosed($event)"
+  style="visibility: hidden; position: fixed"
+  [matMenuTriggerFor]="rightMenu"
+></div>
+<mat-menu #rightMenu="matMenu">
+  <ng-template matMenuContent let-item="item">
+    <ng-container *ngFor="let menu of item.menus">
+      <button mat-menu-item (click)="handleRightClick(item, menu)">
+        <mat-icon>{{ menu.icon }}</mat-icon>
+        <span>{{ menu.value }}</span>
+      </button>
+    </ng-container>
+  </ng-template>
+</mat-menu>

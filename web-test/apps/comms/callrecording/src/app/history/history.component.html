@@ -1,0 +1,223 @@
+<div class="ui page content container" *ngIf="isManager || isHasSub">
+  <!--<div class="ui banner info message" style="margin-bottom: 24px !important;">
+    <p>
+      <i class="publish icon"></i>NEW UPDATE: We've just upgraded the Search Feature for faster response performance. Now you can only search by entering a full phone number.
+    </p>
+  </div>-->
+  <!-- Page Control Menu-->
+  <div>
+    <div class="ui page control borderless menu">
+      <!-- Filter App-->
+      <div #dropdownApp class="item vertical filter">
+        <label>Filter by App</label>
+        <div class="ui underline selected dropdown">
+          <div class="text">All Apps</div>
+          <i class="icon dropdown"></i>
+          <div class="menu">
+            <div class="item" data-value="all">All Apps</div>
+            <div class="item" data-value="virtual_line">Virtual Line</div>
+            <div class="item" data-value="sip">SIP</div>
+            <div class="item" data-value="direct_line">Direct Line</div>
+            <div class="item" data-value="biz_phone">BizPhone</div>
+            <div class="item" data-value="extensions">Extensions</div>
+            <div class="item" data-value="wallboard">Wallboard</div>
+          </div>
+        </div>
+      </div>
+      <!-- From Date-->
+      <div #fromDateElement class="item vertical filter">
+        <div class="ui calendar from-date" id="from-date">
+          <div class="ui input right icon">
+            <i class="today icon"></i>
+            <input type="text" placeholder="From date" />
+          </div>
+        </div>
+      </div>
+      <!-- To Date-->
+      <div #toDateElement class="item vertical filter">
+        <div class="ui calendar to-date">
+          <div class="ui input right icon">
+            <i class="today icon"></i>
+            <input type="text" placeholder="To date" />
+          </div>
+        </div>
+      </div>
+      <!-- Search-->
+      <div class="item search filter">
+        <div class="ui search">
+          <div class="ui icon input">
+            <form [formGroup]="searchForm" (ngSubmit)="doSearch($event)">
+              <input formControlName="query" class="prompt" type="text" placeholder="Enter phone number..." /><i
+                class="search icon"
+              ></i>
+            </form>
+          </div>
+          <div class="results"></div>
+        </div>
+      </div>
+      <div class="right menu" *ngIf="isManager">
+        <div class="item">
+          <div class="ui primary button" (click)="showExportModal()">Export CSV</div>
+          <div class="ui button backup-btn" (click)="showBackupConfig()" *ngIf="term.isBackUpEnabled">Backup</div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Table -->
+    <div *ngIf="histories == undefined">
+      <div class="ui active centered inline loader app-loader"></div>
+    </div>
+    <div *ngIf="histories != undefined && histories.length == 0">
+      <div class="">You don't have any history!</div>
+    </div>
+    <table class="ui page unstackable table" [ngClass]="{ hidden: histories == undefined || histories.length == 0 }">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Subscription</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Call Detail</th>
+          <th style="width: 10em">Note</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr class="history" *ngFor="let history of histories; let i = index">
+          <td>{{ (currentPage - 1) * sizePage + i + 1 }}</td>
+          <ng-template [ngIf]="history.app === AppType.BIZ_PHONE">
+            <td><img class="ui app image" src="{{ history.appLogo }}" alt="{{ history.app }}" /> BizPhone</td>
+            <td>{{ history.callFrom }}</td>
+            <td>{{ history.callTo }}</td>
+          </ng-template>
+          <ng-template [ngIf]="history.app === AppType.extensions">
+            <td><img class="ui app image" src="{{ history.appLogo }}" alt="{{ history.app }}" /> Extensions</td>
+            <td>{{ history.callFrom }}</td>
+            <td>{{ history.callTo }}</td>
+          </ng-template>
+          <ng-template [ngIf]="history.app === AppType.number">
+            <td><img class="ui app image" src="{{ history.appLogo }}" alt="{{ history.app }}" /> Numbers</td>
+            <td>{{ history.callFrom }}</td>
+            <td>{{ history.callTo }}</td>
+          </ng-template>
+          <ng-template
+            [ngIf]="history.app !== AppType.BIZ_PHONE && history.app !== 'extensions' && history.app !== 'number'"
+          >
+            <td style="white-space: nowrap">
+              <img class="ui app image" src="{{ history.appLogo }}" alt="{{ history.app }}" />
+              {{ history.subscription }}
+            </td>
+            <td>{{ history.callFrom }}</td>
+            <td>{{ history.callTo }}</td>
+          </ng-template>
+
+          <td>
+            {{ history.startedAt | date: user.timeFormat:user.timezoneOffset }} ({{
+              $any(history).finishedAt - $any(history).startedAt | durationMinutes
+            }})
+          </td>
+          <td>
+            <div class="note text">{{ parseNote(history.note) }}</div>
+            <a *ngIf="isManager" class="note update" (click)="showNoteUpdate(history)">Update</a>
+            <a *ngIf="!isManager" class="note update">{{ parseNote(history.note) }}</a>
+          </td>
+
+          <!--record history is active-->
+          <td class="action" *ngIf="history.status === 'ACTIVE' || history.status === 'BACKED_UP'">
+            <div class="ui basic buttons">
+              <div
+                (click)="play(history)"
+                [attr.id]="'play-' + history.txnUuid"
+                [attr.data-html]="history['popupContent']"
+                *ngIf="!term.isEncryptionEnabled"
+                class="ui icon tooltip button small outlined primary"
+                data-tooltip="Play mp3"
+                data-inverted=""
+                data-variation="small"
+                data-position="top center"
+              >
+                <i class="icon link play arrow"></i>
+              </div>
+
+              <div
+                (click)="getDownloadLink(history, 'mp3')"
+                class="ui icon tooltip button small outlined primary"
+                data-tooltip="Download mp3"
+                data-inverted=""
+                data-variation="small"
+                data-position="top center"
+              >
+                <i class="icon link file download"></i>
+              </div>
+
+              <div
+                (click)="getDownloadLink(history, 'txt')"
+                *ngIf="term.isEncryptionEnabled && isManager"
+                class="ui icon tooltip button small outlined primary"
+                data-tooltip="Download checksum"
+                data-inverted=""
+                data-variation="small"
+                data-position="top center"
+              >
+                <i class="icon receipt"></i>
+              </div>
+
+              <div
+                (click)="showAchieve(history)"
+                *ngIf="isManager"
+                class="ui icon tooltip button small outlined primary"
+                data-tooltip="Delete file"
+                data-inverted=""
+                data-variation="small"
+                data-position="top center"
+              >
+                <i class="icon link delete"></i>
+              </div>
+            </div>
+          </td>
+
+          <!--record history is archived -->
+          <td class="action" *ngIf="history.status === HistoryStatus.ARCHIVED">
+            <div
+              (click)="showAchieved(history)"
+              *ngIf="isManager"
+              class="ui icon tooltip button small outlined primary"
+              data-tooltip="Show info"
+              data-inverted=""
+              data-variation="small"
+              data-position="top center"
+            >
+              <i class="icon info"></i>
+            </div>
+          </td>
+
+          <td class="action" *ngIf="false">
+            <div class="ui small basic green label">
+              <i class="cloud icon"></i>
+              backed up
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="7">
+            <div class="ui right floated pagination menu">
+              <a [class.disabled]="currentPage == 1" class="icon item" (click)="fetchHistories(currentPage - 1)">
+                <i class="icon chevron left"></i>
+              </a>
+
+              <ng-template ngFor let-page [ngForOf]="getPageList(currentPage)" let-i="index">
+                <a class="item" [class.active]="page == currentPage" (click)="fetchHistories(page)">{{ page }}</a>
+              </ng-template>
+
+              <a [class.disabled]="currentPage >= maxPage" class="icon item" (click)="fetchHistories(currentPage + 1)">
+                <i class="icon chevron right"></i>
+              </a>
+            </div>
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

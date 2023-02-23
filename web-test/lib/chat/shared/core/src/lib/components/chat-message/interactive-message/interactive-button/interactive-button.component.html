@@ -1,0 +1,14 @@
+<ng-container *ngIf="errorText; else render">
+  <span class="normal-text red-fg">{{ errorText }}</span>
+</ng-container>
+<ng-template #render>
+  <button
+    mat-stroked-button
+    [color]="isColorMaterial ? $any(component?.color) : null"
+    [style.color]="!isColorMaterial ? $any(component?.color) : null"
+    [loading]="isProgressing"
+    (click)="onClick()"
+  >
+    {{ component.label?.text }}
+  </button>
+</ng-template>

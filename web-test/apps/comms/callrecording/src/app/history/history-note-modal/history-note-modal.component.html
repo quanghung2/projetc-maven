@@ -1,0 +1,21 @@
+<i class="close icon"></i>
+<div class="header">Update note</div>
+<div class="content">
+  <div class="ui form">
+    <div class="field">
+      <label>Update note:</label>
+      <textarea rows="4" [(ngModel)]="history.note"></textarea>
+    </div>
+  </div>
+</div>
+<div class="actions">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button">Cancel</div>
+        <div class="ui approve large primary button" (click)="onSave($event)">Save</div>
+      </div>
+    </div>
+  </div>
+</div>

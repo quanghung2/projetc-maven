@@ -1,0 +1,118 @@
+<ng-container *ngIf="isUpdate; else createCG">
+  <h2 mat-dialog-title>Update call group</h2>
+</ng-container>
+<ng-template #createCG>
+  <h2 mat-dialog-title>Create a new call group</h2>
+</ng-template>
+<mat-dialog-content>
+  <h3>Base setting</h3>
+  <ng-container *ngIf="!isUpdate">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" class="mb-6">
+      <mat-form-field class="w-100">
+        <input
+          matInput
+          [formControl]="extKeyCtrl"
+          onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+          placeholder="Group key"
+          required
+        />
+        <mat-error>{{
+          (extKeyCtrl.value || '').length > 5 ||
+          ((extKeyCtrl.value || '').length > 0 && (extKeyCtrl.value || '').length < 2)
+            ? 'From 2 to 5 digits'
+            : 'Group key is required'
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px" class="mb-6">
+    <mat-form-field class="w-100">
+      <input matInput [formControl]="extLabelCtrl" placeholder="Group label" required />
+      <mat-error *ngIf="extLabelCtrl.invalid">{{
+        (extLabelCtrl.value || '').length > 160 ? 'Maximum 160 characters' : 'Group label is required'
+      }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <mat-form-field>
+      <mat-select class="ring-mode" [formControl]="extRingModeCtrl" placeholder="Ring configuration">
+        <mat-option *ngFor="let mode of ringMode" [value]="mode.key">
+          {{ mode.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="extRingModeCtrl.value === 'sequential'">
+      <mat-select class="ring-time" [formControl]="extRingTimeCtrl" placeholder="Ring time">
+        <mat-option *ngFor="let mode of optRingTime" [value]="mode.key">
+          {{ mode.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <h3 class="mt-20">Inbound missed calls</h3>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <b3n-call-duration
+      class="ring-mode"
+      [fg]="cancelFG"
+      [actions]="missedCallsType"
+      (ttsChanged)="ttsChanged($event)"
+    ></b3n-call-duration>
+  </div>
+
+  <h3 class="mt-20">Call group members</h3>
+
+  <div class="mb-20" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="16px">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <div fxLayout="row" class="mb-0">
+      <mat-form-field fxFlex="auto">
+        <mat-label>Add user</mat-label>
+        <input
+          placeholder="Enter new user..."
+          #extensionInput
+          matInput
+          [formControl]="searchCtrl"
+          [matAutocomplete]="auto"
+          [disabled]="selection.selected.length === 20"
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let extension of extensions$ | async" [value]="extension.extKey">
+            {{ extension.displayText }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <mat-label class="secondary-text">Added user(s): {{ selection.selected.length }} | Total limit: 20</mat-label>
+    </div>
+    <ng-container *ngIf="selection.selected.length === 0; else loadList">
+      <mat-hint fxLayoutAlign="center">No user</mat-hint>
+    </ng-container>
+    <ng-template #loadList>
+      <div cdkDropList class="item_rows" (cdkDropListDropped)="dropDispositionCodes($event)">
+        <div class="sortable-box" *ngFor="let extKey of selection.selected; let i = index" cdkDrag>
+          <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+            <span>{{ i + 1 }}. {{ (extKey | selectExtension | async)?.displayText }}</span>
+            <mat-icon (click)="deleteExt(extKey)" class="code-option__btn-delete" matTooltip="Delele">
+              delete
+            </mat-icon>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="saving"
+    [disabled]="extLabelCtrl.invalid"
+    (click)="saveOrUpdate()"
+  >
+    Save Changes
+  </button>
+</mat-dialog-actions>

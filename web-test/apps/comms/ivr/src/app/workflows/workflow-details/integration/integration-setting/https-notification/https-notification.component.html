@@ -1,0 +1,96 @@
+<div class="https-notification">
+  <mat-form-field>
+    <input [(ngModel)]="integration.command.url" matInput placeholder="URL" />
+    <mat-hint>The URL to receive the notification when there is an incoming call.</mat-hint>
+  </mat-form-field>
+
+  <section>
+    <div class="params-title">Additional Header Fields</div>
+    <div fxLayout="row" fxLayoutGap="1.6rem">
+      <mat-form-field> <input [(ngModel)]="nameHeader" matInput placeholder="Name" /> </mat-form-field>
+      <mat-form-field>
+        <input
+          (keyup.enter)="addHeaders(nameHeader, valueHeader)"
+          [(ngModel)]="valueHeader"
+          matInput
+          placeholder="Value"
+        />
+        <span matSuffix
+          ><button (click)="addHeaders(nameHeader, valueHeader)" class="suffix-icon" color="primary" mat-button>
+            Enter
+          </button></span
+        >
+      </mat-form-field>
+    </div>
+
+    <table *ngIf="(integration.command.headers | json) !== '{}' && integration.command.headers" style="width: 100%">
+      <thead>
+        <tr class="table-header">
+          <td>Name</td>
+          <td>Value</td>
+          <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let header of integration.command.headers | keyvalue" style="background: white">
+          <td>{{ header.key }}</td>
+          <td>{{ header.value }}</td>
+          <td>
+            <span>
+              <button mat-icon-button><mat-icon (click)="removeHeaders(header)">delete</mat-icon></button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="params-title">Additional Request Parameters</div>
+    <div fxLayout="row" fxLayoutGap="1.6rem">
+      <mat-form-field> <input [(ngModel)]="nameParameters" matInput placeholder="Name" /> </mat-form-field>
+      <mat-form-field>
+        <input
+          (keyup.enter)="addParameters(nameParameters, valueParameters)"
+          [(ngModel)]="valueParameters"
+          matInput
+          placeholder="Value"
+        />
+        <span matSuffix
+          ><button
+            (click)="addParameters(nameParameters, valueParameters)"
+            class="suffix-icon"
+            color="primary"
+            mat-button
+          >
+            Enter
+          </button></span
+        >
+      </mat-form-field>
+    </div>
+
+    <table
+      *ngIf="(integration.command.parameters | json) !== '{}' && integration.command.parameters"
+      style="width: 100%"
+    >
+      <thead>
+        <tr class="table-header">
+          <td>Name</td>
+          <td>Value</td>
+          <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let param of integration.command.parameters | keyvalue" style="background: white">
+          <td>{{ param.key }}</td>
+          <td>{{ param.value }}</td>
+          <td>
+            <span>
+              <button mat-icon-button><mat-icon (click)="removeParameters(param)">delete</mat-icon></button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

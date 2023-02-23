@@ -1,0 +1,31 @@
+<ng-container *ngIf="{ isExpand: isExpand$ | async } as ui">
+  <div class="flex column justify-content-start align-items-none">
+    <div class="sidebar__title flex justify-content-start align-items-center">
+      <mat-icon class="icon icon-expand" (click)="toggleSection()">
+        {{ ui.isExpand ? 'arrow_drop_down' : 'arrow_right' }}
+      </mat-icon>
+
+      <div class="text-overflow spacer flex justify-content-space-between align-items-center">
+        <span class="name-title">{{ hyper.otherOrg?.name }}</span>
+        <b3n-hyperspace-quick-search [hyper]="hyper"></b3n-hyperspace-quick-search>
+      </div>
+
+      <ng-container *ngIf="!ui.isExpand">
+        <ng-container *ngIf="{ count: countUnreadHyper$ | async } as data">
+          <span
+            [class.unread]="data.count > 0"
+            [matBadge]="data.count < 10 ? data.count : '9+'"
+            matBadgeOverlap="false"
+            [matBadgeHidden]="data.count === 0"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+            class="flex justify-content-center align-items-center"
+          >
+          </span>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <b3n-hyperspace-channel *ngIf="ui.isExpand" [hyperspaceId]="hyper.hyperspaceId"></b3n-hyperspace-channel>
+  </div>
+</ng-container>

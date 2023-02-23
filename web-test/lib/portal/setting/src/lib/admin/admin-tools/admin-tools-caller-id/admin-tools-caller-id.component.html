@@ -1,0 +1,32 @@
+<ng-container *ngIf="allNumbers">
+  <h3 class="m-0">Auto-attendant numbers</h3>
+
+  <mat-form-field class="full-width" floatLabel="never">
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let number of numbers"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(number)"
+      >
+        {{ number }}
+        <mat-icon matChipRemove>clear</mat-icon>
+      </mat-chip>
+      <input
+        [placeholder]="allNumbers.length ? 'Select numbers' : 'No number available'"
+        #fruitInput
+        [formControl]="numberCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [disabled]="!allNumbers.length"
+      />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let number of filteredNumbers | async" [value]="number">
+        {{ number }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-hint class="secondary-text subtitle">Allow auto-attendant numbers as caller ID</mat-hint>
+  </mat-form-field>
+</ng-container>

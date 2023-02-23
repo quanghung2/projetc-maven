@@ -1,0 +1,405 @@
+<loader [loading]="isLoading"></loader>
+<div class="ui page small content container" *ngIf="!isLoading">
+  <form #form="ngForm">
+    <div class="ui grid">
+      <div class="row actions">
+        <div class="column left floated">
+          <div class="notice">
+            <em>Changes won't be automatically updated if you don't <b>Save</b>.</em>
+          </div>
+        </div>
+        <div class="column right aligned right floated">
+          <div class="ui outlined button" (click)="reset()">Reset</div>
+          <div
+            class="ui primary button"
+            (click)="save()"
+            [class.disabled]="form.invalid || !hasChanges() || isUpdating || !isAllIpValid()"
+            [class.loading]="isUpdating"
+          >
+            Save Changes
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Minimum password length: </span>
+        </div>
+        <div class="nine wide column">
+          <div class="ui small input" [class.error]="minimumLength.invalid || minimumLength.value < 1">
+            <input
+              type="number"
+              name="minimumLength"
+              [(ngModel)]="config.passwordPolicy.minimumLength"
+              #minimumLength="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Maximum password length: </span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="maximumLength.invalid || maximumLength.value < minimumLength.value"
+          >
+            <input
+              type="number"
+              name="maximumLength"
+              [(ngModel)]="config.passwordPolicy.maximumLength"
+              #maximumLength="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="uppercaseRequired"
+              name="uppercaseRequired"
+              [(ngModel)]="config.passwordPolicy.uppercaseRequired"
+            />
+            <label class="switcher label" for="uppercaseRequired"></label>
+            <div class="box"></div>
+          </div>
+          <span>Require at least one uppercase letter</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="lowercaseRequired"
+              name="lowercaseRequired"
+              [(ngModel)]="config.passwordPolicy.lowercaseRequired"
+            />
+            <label class="switcher label" for="lowercaseRequired"></label>
+            <div class="box"></div>
+          </div>
+          <span>Require at least one lowercase letter</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="numberRequired"
+              name="numberRequired"
+              [(ngModel)]="config.passwordPolicy.numberRequired"
+            />
+            <label class="switcher label" for="numberRequired"></label>
+            <div class="box"></div>
+          </div>
+          <span>Require at least one number</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="nonAlphanumericRequired"
+              name="nonAlphanumericRequired"
+              [(ngModel)]="config.passwordPolicy.nonAlphanumericRequired"
+            />
+            <label class="switcher label" for="nonAlphanumericRequired"></label>
+            <div class="box"></div>
+          </div>
+          <span>Require at least one non-alphanumeric character</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="passwordExpiration"
+              name="passwordExpiration"
+              [(ngModel)]="config.passwordPolicy.passwordExpiration"
+            />
+            <label class="switcher label" for="passwordExpiration"></label>
+            <div class="box"></div>
+          </div>
+          <span>Enable password expiration</span>
+        </div>
+      </div>
+
+      <div class="child row" *ngIf="config.passwordPolicy.passwordExpiration">
+        <div class="seven wide column">
+          <span style="padding-left: 74px">Password expiration period (in days):</span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="expirationInDays.invalid || config.passwordPolicy.expirationInDays < 1"
+          >
+            <input
+              type="number"
+              name="expirationInDays"
+              [(ngModel)]="config.passwordPolicy.expirationInDays"
+              #expirationInDays="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="preventPasswordReuse"
+              name="preventPasswordReuse"
+              [(ngModel)]="config.passwordPolicy.preventPasswordReuse"
+            />
+            <label class="switcher label" for="preventPasswordReuse"></label>
+            <div class="box"></div>
+          </div>
+          <span>Prevent password reuse</span>
+        </div>
+      </div>
+
+      <div class="child row" *ngIf="config.passwordPolicy.preventPasswordReuse">
+        <div class="seven wide column">
+          <span style="padding-left: 74px">Number of passwords to remember:</span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="passwordReusePreventionCount.invalid || passwordReusePreventionCount.value < 1"
+          >
+            <input
+              type="number"
+              name="passwordReusePreventionCount"
+              [(ngModel)]="config.passwordPolicy.passwordReusePreventionCount"
+              #passwordReusePreventionCount="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input class="toggle" type="checkbox" id="lockLogin" name="lockLogin" [(ngModel)]="config.lockLogin" />
+            <label class="switcher label" for="lockLogin"></label>
+            <div class="box"></div>
+          </div>
+          <span>Login lockout</span>
+        </div>
+      </div>
+
+      <div class="child row" *ngIf="config.lockLogin">
+        <div class="seven wide column">
+          <span style="padding-left: 74px">Number of allowed login attempts:</span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="loginLockedAfterXAttempts.invalid || loginLockedAfterXAttempts.value < 1"
+          >
+            <input
+              type="number"
+              name="loginLockedAfterXAttempts"
+              [(ngModel)]="config.loginLockedAfterXAttempts"
+              #loginLockedAfterXAttempts="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="tfaEnforced"
+              name="tfaEnforced"
+              [(ngModel)]="config.tfaEnforced"
+            />
+            <label class="switcher label" for="tfaEnforced"></label>
+            <div class="box"></div>
+          </div>
+          <span>Enforce 2FA for the whole domain</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="enabledSessionCookie"
+              name="enabledSessionCookie"
+              [(ngModel)]="config.enabledSessionCookie"
+            />
+            <label class="switcher label" for="enabledSessionCookie"></label>
+            <div class="box"></div>
+          </div>
+          <span>Expire cookie when browser closes</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Web session timeout (in hours): </span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="sessionExpiryTimeInHours.invalid || sessionExpiryTimeInHours.value < 1"
+          >
+            <input
+              type="number"
+              name="sessionExpiryTimeInHours"
+              [(ngModel)]="config.sessionExpiryTimeInHours"
+              #sessionExpiryTimeInHours="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Mobile session expiry time (in hours): </span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="mobileSessionExpiryTimeInHours.invalid || mobileSessionExpiryTimeInHours.value < 0"
+          >
+            <input
+              type="number"
+              name="mobileSessionExpiryTimeInHours"
+              [(ngModel)]="config.mobileSessionExpiryTimeInHours"
+              #mobileSessionExpiryTimeInHours="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Desktop session expiry time (in hours): </span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="desktopSessionExpiryTimeInHours.invalid || desktopSessionExpiryTimeInHours.value < 0"
+          >
+            <input
+              type="number"
+              name="desktopSessionExpiryTimeInHours"
+              [(ngModel)]="config.desktopSessionExpiryTimeInHours"
+              #desktopSessionExpiryTimeInHours="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="seven wide column">
+          <span>Web session idle timeout (in minutes): </span>
+        </div>
+        <div class="nine wide column">
+          <div
+            class="ui small input"
+            [class.error]="webSessionTimeoutInMinutes.invalid || webSessionTimeoutInMinutes.value < 0"
+          >
+            <input
+              type="number"
+              name="webSessionTimeoutInMinutes"
+              [(ngModel)]="config.webSessionTimeoutInMinutes"
+              #webSessionTimeoutInMinutes="ngModel"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="preventConcurrentActiveWebSession"
+              name="preventConcurrentActiveWebSession"
+              [(ngModel)]="config.preventConcurrentActiveWebSession"
+            />
+            <label class="switcher label" for="preventConcurrentActiveWebSession"></label>
+            <div class="box"></div>
+          </div>
+          <span>Prevent concurrent active Web sessions</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="column">
+          <div>
+            <div class="switcher">
+              <input
+                class="toggle"
+                type="checkbox"
+                id="ipWhitelisting"
+                name="ipWhitelisting"
+                [(ngModel)]="ipWhitelisting"
+              />
+              <label class="switcher label" for="ipWhitelisting"></label>
+              <div class="box"></div>
+            </div>
+            <span>IP Whitelisting</span>
+          </div>
+          <div class="caption">
+            Restrict access to your web-portal and Bizphone mobile login to only trusted IP addresses
+          </div>
+          <div class="ipaddresses" *ngIf="ipWhitelisting">
+            <div class="item" *ngFor="let ip of allowedIPs">
+              <button class="circular ui icon button red" (click)="removeIp(ip)">
+                <i class="icon remove"></i>
+              </button>
+              <div class="ui small input" [class.error]="ip.touched && ip.invalid">
+                <input [formControl]="ip" autocomplete="off" />
+              </div>
+              <div class="ui message small error" *ngIf="ip.touched && ip.invalid"><p>Must be IPv4 format.</p></div>
+            </div>
+            <div class="item">
+              <button class="circular ui icon button green" (click)="addIpInput()">
+                <i class="icon add"></i>
+              </button>
+              <span> Add new</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

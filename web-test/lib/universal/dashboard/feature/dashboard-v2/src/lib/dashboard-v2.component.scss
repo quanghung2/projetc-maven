@@ -1,0 +1,134 @@
+@import './responsive.scss';
+
+:host {
+  width: 100%;
+
+  mat-toolbar {
+    background-color: #fafafa;
+    font-weight: 400;
+  }
+
+  .toolbar__wrapper {
+    display: flex;
+
+    .org__logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+}
+
+::ng-deep .dashboard__menu {
+  max-height: 750px !important;
+  min-height: unset !important;
+
+  .mat-menu-content {
+    padding: 0 !important;
+  }
+
+  .active-item {
+    background-color: var(--dashboard2-primary) !important;
+    color: #ffffff;
+
+    .default {
+      border-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+  }
+}
+
+::ng-deep.mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+  display: none !important;
+}
+
+.remain__tab {
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.6;
+}
+
+.tab {
+  width: 100%;
+  white-space: normal;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 0;
+}
+
+.btn__tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 350px;
+
+  .star__wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  span {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 16px;
+  }
+
+  .default {
+    line-height: initial;
+    font-size: 12px;
+    padding: 2px 4px;
+    border: 1px solid var(--dashboard2-primary);
+    color: var(--dashboard2-primary);
+  }
+
+  mat-icon {
+    height: 18px;
+    width: 18px;
+    font-size: 18px;
+    margin: 0;
+    color: #ffc300;
+  }
+}
+
+.settings {
+  justify-content: flex-start;
+  gap: 16px;
+
+  mat-icon {
+    color: var(--dashboard2-primary);
+  }
+}
+
+.dashboard__error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: calc(100% - 68px);
+  background-color: #fafafa;
+  color: #f44336;
+  font-size: 20px;
+  flex-direction: column;
+  gap: 16px;
+  font-weight: 500;
+  text-align: center;
+
+  mat-icon {
+    height: 30px;
+    width: 30px;
+    font-size: 30px;
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}

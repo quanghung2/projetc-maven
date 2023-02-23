@@ -1,0 +1,13 @@
+<mat-form-field *ngIf="showForApp === AppName.FLOW && authorDataSource?.type === 'STATIC'">
+  <mat-select [placeholder]="optionForControl.title" [formControl]="inputCtrl">
+    <mat-option [value]="nullValue">{{ nullValue.label }}</mat-option>
+    <mat-option *ngFor="let v of $any(authorDataSource.config)" [value]="v">{{ v.label }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR">
+  <mat-select [placeholder]="optionForControl.title" [formControl]="inputCtrl">
+    <mat-option [value]="nullValue">{{ nullValue.label }}</mat-option>
+    <mat-option *ngFor="let v of dataSource" [value]="v">{{ v.label }}</mat-option>
+  </mat-select>
+</mat-form-field>

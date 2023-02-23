@@ -1,0 +1,18 @@
+<ng-container *ngIf="convo$ | async as convo">
+  <ng-container *ngIf="txn.channel === ChatTypeTxn.whatsapp">
+    <csw-conversation-footer
+      [ticket]="convo"
+      [txn]="txn"
+      [isMergeTxnContact]="true"
+      (uploadedFiles)="uploadFileV2($event, convo, 0)"
+    ></csw-conversation-footer>
+  </ng-container>
+  <ng-container *ngIf="txn.channel === ChatTypeTxn.livechat">
+    <csl-conversation-footer
+      [ticket]="convo"
+      [txn]="txn"
+      [isMergeTxnContact]="true"
+      (uploadedFiles)="uploadFile($event, convo, 0)"
+    ></csl-conversation-footer>
+  </ng-container>
+</ng-container>

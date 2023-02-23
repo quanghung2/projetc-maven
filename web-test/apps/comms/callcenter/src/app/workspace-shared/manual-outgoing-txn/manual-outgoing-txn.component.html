@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>
+  {{ _me.assignedTxn.typeShowPopup === TxnType.crossAppIn ? 'Direct Inbound Calls' : 'Direct Outbound Calls' }}
+</h1>
+
+<div mat-dialog-content>
+  <div class="container" fxLayout.gt-sm="row" fxLayout="column" fxLayoutAlign=" stretch" fxLayoutGap="1.6rem">
+    <div>
+      <div><strong>UUID:</strong> {{ _me.assignedTxn.txnUuid }}</div>
+      <div><strong>Status:</strong> {{ _me.assignedTxn.status }}</div>
+      <div *ngIf="_me.assignedTxn.from"><strong>From:</strong> {{ _me.assignedTxn.from }}</div>
+      <div *ngIf="_me.assignedTxn.to"><strong>To:</strong> {{ _me.assignedTxn.to }}</div>
+      <div
+        class="customer-info info"
+        *ngIf="
+          _me.assignedTxn.typeShowPopup !== TxnType.crossAppIn &&
+          _me.assignedTxn.dests &&
+          _me.assignedTxn.dests.length > 0
+        "
+      >
+        <div><strong>Customer Info</strong></div>
+        <ul>
+          <li *ngFor="let item of _me.assignedTxn.dests">Number: {{ item.dest }}</li>
+        </ul>
+      </div>
+      <div
+        *ngIf="_me.assignedTxn.displayData && ObjectKeys(_me.assignedTxn.displayData).length > 0"
+        class="customer-info info"
+      >
+        <div><strong>Other Info</strong></div>
+        <ul>
+          <li *ngFor="let key of ObjectKeys(_me.assignedTxn.displayData)">
+            {{ key }}: {{ _me.assignedTxn.displayData[key] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <span class="fill-remaining-space"></span>
+  <button mat-raised-button color="primary" (click)="closePopup()">Close</button>
+</div>

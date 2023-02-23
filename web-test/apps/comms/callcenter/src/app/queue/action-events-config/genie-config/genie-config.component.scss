@@ -1,0 +1,22 @@
+:host {
+  .container-form {
+    border: 1px solid #cccccc;
+    padding: 1.6rem;
+    border-radius: 4px;
+
+    .container-list-field {
+      .field-container {
+        padding: 0 1.6rem;
+
+        span {
+          padding: 5px;
+          background-color: rgba(204, 204, 204, 0.5);
+        }
+      }
+    }
+
+    .exist-skill {
+      color: red;
+    }
+  }
+}

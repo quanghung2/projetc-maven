@@ -1,0 +1,128 @@
+::ng-deep .custom-menu {
+  max-width: 400px !important;
+  width: 400px !important;
+
+  .container {
+    .box {
+      width: fit-content;
+      color: #007be0;
+      border: 1px solid #007be0;
+      padding: 1px 5px;
+      font-size: 12px;
+      text-align: center;
+      border-radius: 2px;
+
+      &.other-org {
+        color: #e95849;
+        border: 1px solid #e95849;
+      }
+    }
+
+    .menu-header {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      grid-gap: 15px;
+      padding: 15px 15px 10px;
+
+      .avatar-wrapper {
+        .relative {
+          position: relative;
+        }
+
+        .avatar-menu {
+          width: 100px;
+          height: 100px;
+          font-size: 35px;
+          font-weight: 600;
+          line-height: 100px;
+          text-align: center;
+          vertical-align: middle;
+          background-color: #e0e0e0;
+          border-radius: 50%;
+          box-shadow: 1px 1px 4px gray;
+        }
+
+        mat-icon {
+          position: absolute;
+          width: 20px !important;
+          height: 20px !important;
+          font-size: 20px !important;
+          border-radius: 50%;
+          bottom: 0;
+          right: 7px;
+        }
+      }
+
+      &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-width: 300px;
+
+        p {
+          margin: 0;
+        }
+
+        &--name,
+        &--team > a {
+          overflow-wrap: break-word;
+        }
+
+        &--name {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 16px;
+          line-height: 25px;
+          font-weight: bold;
+        }
+
+        &--team {
+          mat-icon {
+            color: #7f7f7f;
+          }
+
+          span {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .menu-content {
+      padding: 10px 15px;
+
+      &__about {
+        font-size: 12px;
+        overflow-wrap: break-word;
+      }
+
+      &__title {
+        font-weight: bold;
+      }
+
+      mat-icon {
+        color: #7f7f7f;
+      }
+
+      .line {
+        margin-bottom: 10px;
+
+        span {
+          color: #7f7f7f;
+        }
+      }
+    }
+
+    .menu-actions {
+      display: flex;
+      gap: 15px;
+      border-top: 1px solid #f4f4f4;
+      padding: 15px;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
+}

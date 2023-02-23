@@ -1,0 +1,62 @@
+<mat-form-field
+  *ngIf="optionForControl.dataType !== 'boolean'"
+  hideRequiredMarker="true"
+  class="fake {{ optionForControl.disabled ? 'mat-form-field-disabled' : '' }}"
+>
+  <mat-label>{{ optionForControl.title }}</mat-label>
+  <button
+    mat-icon-button
+    matPrefix
+    (click)="$event.stopPropagation(); $event.preventDefault()"
+    [matMenuTriggerFor]="menu"
+    *ngIf="!optionForControl.disabled && contextVariables?.length > 0"
+  >
+    <mat-icon matTooltip="Select initial value" [matTooltipPosition]="'above'">playlist_add</mat-icon>
+  </button>
+
+  <mat-chip-list #chipList [required]="optionForControl.required">
+    <mat-chip *ngFor="let value of selectValues" (removed)="remove(value)" [disabled]="optionForControl.disabled">
+      {{ value }}
+      <mat-icon matChipRemove *ngIf="!optionForControl.disabled">cancel</mat-icon>
+    </mat-chip>
+    <ng-container *ngIf="selectValues.length === 0">
+      <input
+        autocomplete="off"
+        matInput
+        [formControl]="inputCtrl"
+        [matChipInputFor]="chipList"
+        [readonly]="optionForControl.disabled ? 'readonly' : null"
+        [b3nRetrictInput]="getRegex()"
+      />
+    </ng-container>
+  </mat-chip-list>
+  <mat-error *ngIf="chipList.errorState">{{ textError }}</mat-error>
+</mat-form-field>
+
+<mat-form-field *ngIf="optionForControl.dataType === 'boolean'">
+  <mat-select [placeholder]="optionForControl.title" [formControl]="checkboxCtrl">
+    <mat-option [value]="true">True</mat-option>
+    <mat-option [value]="false">False</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-menu #menu="matMenu" class="fif-menu dropdown-menu">
+  <ng-template matMenuContent>
+    <div
+      class="content-menu"
+      fxLayout="row"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="0px"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+    >
+      <b3n-context-menu
+        *ngIf="contextVariables?.length > 0"
+        [contextVariables]="contextVariables"
+        [optionForControl]="optionForControl"
+        (selectProp)="selectProperty($event)"
+        (selectFunc)="selectFunction($event)"
+      >
+      </b3n-context-menu>
+    </div>
+  </ng-template>
+</mat-menu>

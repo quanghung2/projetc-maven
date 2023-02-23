@@ -1,0 +1,38 @@
+.slide-show {
+  text-align: center;
+
+  .img__wrapper {
+    position: relative;
+  }
+
+  .ui.image {
+    width: auto;
+    margin: 0 auto;
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .left {
+    user-select: none !important;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+  }
+
+  .right {
+    user-select: none !important;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+  }
+}
+
+::ng-deep.slideshow-modal__container {
+  padding: 0;
+
+  mat-dialog-container {
+    padding: 0;
+    overflow: hidden;
+  }
+}

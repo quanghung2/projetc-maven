@@ -1,0 +1,47 @@
+<div class="twofa-verifyEmail">
+  <div class="content">
+    <div class="row hint" *ngIf="action==='enable2Fa'">
+      We will send an verification code to your email the next time you login.
+    </div>
+    <p class="row"><span class="header">Your current email: </span> <strong> {{email}}</strong></p>
+    <div class="row">
+      <button
+        mat-stroked-button
+        [loading]="sendOtpButtonOptions.loading"
+        [disabled]="sendOtpButtonOptions.disabled"
+        (click)="sendOtpCodeToEmail()"
+      >
+        {{sendOtpButtonOptions.text}}
+      </button>
+    </div>
+    <div class="row">
+      <mat-form-field *ngIf="sanitizedCode">
+        <span matPrefix>{{sanitizedCode}} - &nbsp;</span>
+        <input
+          matInput
+          placeholder="Verification Code"
+          [(ngModel)]="code"
+          (ngModelChange)="validateCode()"
+          (keyup.enter)="continue()"
+        />
+        <mat-hint class="error-hint" *ngIf="error.code">{{error.code}}</mat-hint>
+      </mat-form-field>
+      <mat-form-field *ngIf="!sanitizedCode">
+        <input matInput placeholder="Verification Code" [(ngModel)]="code" />
+      </mat-form-field>
+    </div>
+    <div class="ui small message" *ngIf="error.serverError">{{error.serverError}}</div>
+  </div>
+  <div class="mat-dialog-actions floatRight">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="continueButtonOptions.loading"
+      [disabled]="continueButtonOptions.disabled"
+      color="primary"
+      (click)="continue()"
+    >
+      Continue
+    </button>
+  </div>
+</div>

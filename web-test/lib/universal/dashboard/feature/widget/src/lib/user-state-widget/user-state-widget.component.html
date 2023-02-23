@@ -1,0 +1,20 @@
+<div class="no__data" *ngIf="!userStatesFilter.length">{{ questionV2.question?.messages?.noData }}</div>
+<ng-container *ngIf="userStatesFilter.length">
+  <div class="user-state__wrapper">
+    <div class="user-state__block" *ngFor="let userState of userStatesFilter; let i = index" [id]="'block_' + i">
+      <div class="block__header" [style.backgroundColor]="userState.color">
+        <p>{{ userState.text || '-' }}</p>
+      </div>
+      <div class="block__body" [style.borderColor]="userState.color">
+        <p
+          [class.text__overflow]="userState.info.length >= 30"
+          [matTooltip]="userState.info.length >= 30 ? userState.info : ''"
+          matTooltipPosition="above"
+        >
+          {{ userState.info }}
+        </p>
+        <p>{{ userState.duration }}</p>
+      </div>
+    </div>
+  </div>
+</ng-container>

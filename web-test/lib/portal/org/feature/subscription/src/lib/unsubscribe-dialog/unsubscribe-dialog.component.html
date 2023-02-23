@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Sorry to see you go, please let us know why</h1>
+<div mat-dialog-content>
+  <div class="content" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+    <mat-radio-group [(ngModel)]="selectedId">
+      <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+        <mat-radio-button color="primary" *ngFor="let r of reasons" [value]="r.id">
+          {{ r.text }}
+        </mat-radio-button>
+      </div>
+    </mat-radio-group>
+    <mat-form-field floatLabel="always" fxFlexFill *ngIf="selectedId == 6">
+      <mat-label>Leave a comment</mat-label>
+      <textarea matInput rows="4" [(ngModel)]="reason"></textarea>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [loading]="loading" [disabled]="loading" color="warn" (click)="unsubscribe()">
+    Unsubscribe
+  </button>
+</div>

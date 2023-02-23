@@ -1,0 +1,28 @@
+<h1 mat-dialog-title *ngIf="mobileNumber">Change Phone Number</h1>
+<h1 mat-dialog-title *ngIf="!mobileNumber">Create Phone Number</h1>
+
+<div>
+  <div class="row" *ngIf="mobileNumber">
+    <span class="header">Your current phone number:</span> <strong> {{mobileNumber}}</strong>
+  </div>
+  <div class="row">
+    <mat-form-field>
+      <input matInput placeholder="New number" [(ngModel)]="inputMobileNumber" name="number" #number="ngModel" required />
+      <mat-error *ngIf="number.invalid && (number.dirty || number.touched)">Number is required</mat-error>
+      <mat-hint>E.g: +6512345678</mat-hint>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    [loading]="progressing"
+    [disabled]="!inputMobileNumber"
+    color="primary"
+    (click)="updatePersonal()"
+  >
+    {{ctaButtonText}}
+  </button>
+</div>

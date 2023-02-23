@@ -1,0 +1,36 @@
+<div ngModelGroup="block">
+  <div>
+    <mat-form-field>
+      <mat-select
+        placeholder="Forward Block"
+        [(ngModel)]="block.goBlock.nextBlockUuid"
+        required
+        #notification="ngModel"
+        (selectionChange)="selectionChange($event)"
+        required
+        name="nextBlockUuidNotify"
+      >
+        <mat-form-field class="searchBlock">
+          <input matInput placeholder="Search blocks..." [(ngModel)]="query" name="searchBock" />
+        </mat-form-field>
+        <mat-option *ngFor="let node of nodes | blockFilter: query" [value]="node.uuid">
+          {{ node.label }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="notification.invalid && (notification.dirty || notification.touched)"
+        >You must enter a value</mat-error
+      >
+    </mat-form-field>
+  </div>
+  <div class="goTime">
+    <mat-form-field floatLabel="always">
+      <mat-label>Foward times</mat-label>
+      <mat-select [(ngModel)]="block.goTimes" name="blockGoTimes">
+        <mat-option *ngFor="let repeatTime of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" [value]="repeatTime">
+          {{ repeatTime }} times
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <b3n-tts [text2Speech]="block.tts" [blockUuid]="block.uuid"></b3n-tts>
+</div>

@@ -1,0 +1,31 @@
+:host {
+  display: block;
+
+  .display-smpp {
+    max-width: 550px;
+    margin: auto;
+    padding: 3rem 0;
+
+    .hidden {
+      display: none;
+    }
+
+    .item-left {
+      color: var(--gray-600);
+    }
+
+    .item-right {
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+  }
+
+  .no-data-container {
+    padding: 3rem;
+
+    .no-smpp-message {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 16px;
+    }
+  }
+}

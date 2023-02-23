@@ -1,0 +1,41 @@
+.state-select__field {
+  //! Change STATE_WIDTH base on width and margin
+  width: 180px;
+  margin-right: 16px;
+}
+
+::ng-deep .states__all {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  mat-checkbox {
+    font-size: 14px;
+    padding: 0 16px;
+    width: 100%;
+  }
+
+  .mat-checkbox-ripple {
+    display: none !important;
+  }
+
+  .mat-checkbox-layout {
+    width: 100%;
+  }
+
+  .mat-checkbox-inner-container {
+    margin-left: 0;
+    display: none;
+  }
+}
+
+.state-select__all {
+  color: var(--dashboard2-primary);
+  background-color: rgba(0, 0, 0, 0.04);
+}

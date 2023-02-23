@@ -1,0 +1,26 @@
+<ng-container *ngIf="actionMapping$ | async as actionMapping">
+  <mat-sidenav-container
+    class="sidenav-container"
+    *ngIf="actionMapping['Manage'] || actionMapping['View']; else errorPage"
+  >
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      opened
+      class="sidenav"
+      [fixedInViewport]="true"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
+    >
+      <b3n-filemgnt-sidebar></b3n-filemgnt-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <ng-template #errorPage>
+    <b3n-access-denied></b3n-access-denied>
+  </ng-template>
+</ng-container>

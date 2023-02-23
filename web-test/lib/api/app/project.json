@@ -1,0 +1,16 @@
+{
+  "name": "api-app",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/app/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/app/**/*.ts", "libs/api/app/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

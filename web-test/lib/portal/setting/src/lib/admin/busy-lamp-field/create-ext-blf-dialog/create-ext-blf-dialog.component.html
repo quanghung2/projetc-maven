@@ -1,0 +1,66 @@
+<h2 mat-dialog-title>Create a new extension BLF group</h2>
+<mat-dialog-content>
+  <div class="mb-20" fxLayout="row">
+    <mat-form-field fxFlex="auto">
+      <mat-select [(ngModel)]="monitorExtKey" placeholder="Group key">
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="searchKeyCtrl"
+            placeholderLabel="Search extension..."
+            noEntriesFoundLabel="No extension found"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let extension of extensionsKey$ | async" [value]="extension.extKey">
+          {{ extension.displayText }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <ng-container *ngIf="monitorExtKey">
+    <h3 class="mb-4">Extension BLF group members</h3>
+    <div class="mb-20" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="16px">
+      <div fxLayout="row" class="mb-0">
+        <mat-form-field fxFlex="auto">
+          <mat-label>Add user</mat-label>
+          <input
+            placeholder="Enter new user..."
+            matInput
+            [formControl]="searchCtrl"
+            [matAutocomplete]="auto"
+            [disabled]="selection.selected.length === 20"
+          />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let extension of extensions$ | async" [value]="extension.extKey">
+              {{ extension.displayText }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <mat-label class="secondary-text">Added user(s): {{ selection.selected.length }} | Total limit: 20</mat-label>
+      </div>
+      <ng-container *ngIf="selection.selected.length === 0; else loadList">
+        <mat-hint fxLayoutAlign="center">No user</mat-hint>
+      </ng-container>
+      <ng-template #loadList>
+        <div cdkDropList class="item_rows" (cdkDropListDropped)="dropDispositionCodes($event)">
+          <div class="sortable-box" *ngFor="let extKey of selection.selected; let i = index" cdkDrag>
+            <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+              <span>{{ i + 1 }}. {{ (extKey | selectExtension | async)?.displayText }}</span>
+              <mat-icon (click)="deleteExt(extKey)" class="code-option__btn-delete" matTooltip="Delele">
+                delete
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" [loading]="saving" (click)="create()">Create</button>
+</mat-dialog-actions>

@@ -1,0 +1,34 @@
+:host {
+  display: block;
+
+  .download-page {
+    ::ng-deep .material-icons {
+      font-size: 90px;
+    }
+    ::ng-deep .mat-icon {
+      width: 75px;
+      height: 75px;
+    }
+    height: 100vh;
+
+    &__title {
+      font-size: 18px;
+      color: rgba(0, 0, 0, 0.8);
+      margin-bottom: 0.25rem;
+      margin-top: 0.5rem;
+    }
+
+    &__size {
+      color: rgba(0, 0, 0, 0.5);
+      margin-bottom: 2rem;
+    }
+
+    &__downloaded-btn {
+      margin-bottom: 1.5rem;
+    }
+
+    .resource-not-found {
+      color: #555555 !important;
+    }
+  }
+}

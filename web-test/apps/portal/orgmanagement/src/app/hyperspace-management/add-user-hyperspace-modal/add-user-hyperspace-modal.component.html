@@ -1,0 +1,50 @@
+<div class="team-member-modal">
+  <h2 mat-dialog-title>Add User</h2>
+
+  <mat-dialog-content class="mat-typography" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.8rem">
+    <mat-form-field appearance="legacy">
+      <mat-label>Search users</mat-label>
+      <input matInput placeholder="Enter username" [formControl]="searchMember" />
+      <button mat-icon-button matSuffix>
+        <mat-icon *ngIf="!searchMember.value">search</mat-icon>
+        <mat-icon *ngIf="searchMember.value" (click)="searchMember.reset()"> close </mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="list-member" fxFlex="column">
+      <ng-container *ngIf="members$ | async as members">
+        <mat-selection-list>
+          <mat-list-option
+            *ngFor="let member of members"
+            checkboxPosition="before"
+            [value]="member.uuid"
+            [selected]="usersSelected.includes(member.userUuid)"
+            [disabled]="data.users.includes(member.userUuid)"
+            (click)="onSelectedMember(member)"
+          >
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <img *ngIf="member.photoUrl" [src]="member.photoUrl" class="avatar" />
+              <mat-icon *ngIf="!member.photoUrl" svgIcon="member" class="avatar avatar--gray"></mat-icon>
+              <span>{{ member.displayName }}</span>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+
+        <ng-container *ngIf="!members.length">
+          <div class="no-user">No user found</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="isSave"
+      [disabled]="!usersSelected.length || isSave"
+      color="primary"
+      (click)="onSave()"
+    >
+      Add
+    </button>
+  </mat-dialog-actions>
+</div>

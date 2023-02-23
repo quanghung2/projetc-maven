@@ -1,0 +1,34 @@
+<div class="mb-24" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="16px">
+  <b3n-edit-action-name
+    fxFlex
+    [icon]="'assets/flow-shared/icons/brandching.svg'"
+    [number]="action.number"
+    [name]="actionName"
+    [allowEdit]="flow.editable"
+    (setName)="actionName = $event"
+    (editing)="editingName = $event"
+  ></b3n-edit-action-name>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</div>
+<div mat-dialog-content>
+  <b3n-def-action-switching
+    *ngIf="contextVariables && actionSwitching"
+    [contextVariables]="contextVariables"
+    [actionDetail]="actionSwitching"
+    (changeConfigs)="configs = $event"
+    (invalid)="invalidConfig = $event"
+  ></b3n-def-action-switching>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    *ngIf="flow.editable"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="updating"
+    [disabled]="editingName || invalidConfig"
+    (click)="update()"
+  >
+    Update
+  </button>
+</div>

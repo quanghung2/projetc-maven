@@ -1,0 +1,62 @@
+:host {
+  .title-header {
+    font-size: 18px;
+  }
+
+  .custom-field-container {
+    .list-custom-field {
+      border: solid thin lightgray;
+      border-radius: 5px;
+    }
+
+    .position-mode {
+      color: blue;
+      cursor: pointer;
+    }
+
+    .cursor-drop {
+      cursor: all-scroll;
+    }
+  }
+
+  .item__rows {
+    border: solid thin lightgray;
+    padding-top: 0;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 5px;
+
+    .sortable-box {
+      font-size: 14px;
+      cursor: move;
+      border-bottom: solid thin lightgray;
+
+      &:hover {
+        background: #f4f4f4;
+
+        .code-option__btn-delete {
+          visibility: visible;
+        }
+      }
+
+      &:nth-last-child(1) {
+        border-bottom: none;
+      }
+
+      .code-option__btn-delete {
+        visibility: hidden;
+        font-size: 21px;
+        color: gray;
+        cursor: pointer;
+      }
+
+      .proficiency__input {
+        width: 65px;
+        border-radius: 0;
+        margin-right: 15px;
+      }
+    }
+  }
+}

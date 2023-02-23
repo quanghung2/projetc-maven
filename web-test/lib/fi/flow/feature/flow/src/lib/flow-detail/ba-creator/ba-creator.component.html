@@ -1,0 +1,121 @@
+<div [formGroup]="formBaCreator" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <h3><strong>Input</strong></h3>
+  <ng-container formGroupName="input">
+    <div
+      formArrayName="parameters"
+      fxLayout="column"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="8px"
+      class="drop-list"
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+    >
+      <div
+        class="widget-title"
+        [formGroupName]="i"
+        *ngFor="let item of inputParameters.controls; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        cdkDrag
+        cdkDragLockAxis="y"
+        [cdkDragDisabled]="!flow.editable"
+      >
+        <div class="cdk-drag-placeholder" *cdkDragPlaceholder></div>
+        <div class="widget-child">{{ i + 1 }}</div>
+
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px" fxFlex>
+          <mat-form-field hideRequiredMarker="true">
+            <input matInput placeholder="Parameter Name" formControlName="title" required />
+            <mat-error *ngIf="item.get('title').invalid">{{ getErrorInput(item.get('title')) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field hideRequiredMarker="true">
+            <mat-select
+              placeholder="Data type"
+              formControlName="dataTypeFake"
+              (selectionChange)="changeDataType($event, $any(item))"
+              required
+            >
+              <mat-option value="string">String</mat-option>
+              <mat-option value="number">Number</mat-option>
+              <mat-option value="boolean">Boolean</mat-option>
+              <mat-option *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR" value="array">Array</mat-option>
+              <mat-option *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR" value="file">File</mat-option>
+              <mat-option *ngFor="let d of dataSources" [value]="d.uuid">{{ d.displayText }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('dataType').hasError('required')">Field is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field
+            hideRequiredMarker="true"
+            *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR && item.value.dataTypeFake === 'array'"
+          >
+            <mat-select placeholder="Item Data Type" formControlName="arrayItemDataType">
+              <mat-option value="string">String</mat-option>
+              <mat-option value="number">Number</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <b3n-regex-pattern
+            *ngIf="
+              showForApp === AppName.BUSINESS_ACTION_CREATOR &&
+              (item.value.dataTypeFake === 'string' ||
+                item.value.dataTypeFake === 'number' ||
+                item.value.dataTypeFake === 'array')
+            "
+            [item]="$any(item)"
+          ></b3n-regex-pattern>
+
+          <mat-form-field
+            formGroupName="renderDirective"
+            *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR && item.value.renderDirective?.valueListUuid"
+          >
+            <mat-select placeholder="Render type" formControlName="type">
+              <mat-option [value]="renderDirectiveType.SingleSelect">Single select</mat-option>
+              <mat-option [value]="renderDirectiveType.SuggestiveSingleSelect">Suggestive single select</mat-option>
+              <mat-option [value]="renderDirectiveType.RadioList">Radio list</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="item.value.dataTypeFake === 'file'" formGroupName="renderDirective">
+            <mat-label>Support extension type</mat-label>
+            <mat-chip-list #chipList formControlName="supportedMimeTypes">
+              <mat-chip
+                *ngFor="let i of item.value.renderDirective.supportedMimeTypes; let idx = index"
+                (removed)="remove($any(item), idx)"
+              >
+                {{ i }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Enter your type (Ex: .mp3, .wav)"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true"
+                (matChipInputTokenEnd)="add($any(item), $event)"
+              />
+            </mat-chip-list>
+            <mat-hint>Empty is allow all types</mat-hint>
+          </mat-form-field>
+
+          <b3n-dependent-input
+            *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR && dataSources"
+            [myForm]="$any(item)"
+            [parameters]="inputParameters.value"
+            [dataSourcesInput]="dataSources"
+            [allowEdit]="flow.editable"
+          ></b3n-dependent-input>
+        </div>
+
+        <div *ngIf="flow.editable" fxFlex="40px">
+          <button mat-icon-button type="button" color="warn" (click)="removeInputParam(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <p *ngIf="flow.editable">
+    <a href="javascript:;" class="link" (click)="addInputParam()">+ Add more paramaters</a>
+  </p>
+</div>

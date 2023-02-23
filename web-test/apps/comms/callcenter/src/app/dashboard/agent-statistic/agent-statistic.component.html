@@ -1,0 +1,69 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <div [ngPlural]="statuses.total">
+        <ng-template ngPluralCase="=0">No agent</ng-template>
+        <ng-template ngPluralCase="=1">1 agent</ng-template>
+        <ng-template ngPluralCase="other">{{ statuses.total }} agents</ng-template>
+      </div>
+    </mat-card-title>
+    <span class="fill-remaining-space"></span>
+    <div *ngIf="loading">
+      <mat-progress-spinner strokeWidth="2" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <div fxLayout="column" fxLayoutAlign="space-around stretch" class="container">
+      <div fxFlex class="item">
+        <mat-list>
+          <mat-list-item>
+            <span class="number green-fg">{{ statuses.available }}</span
+            >&nbsp;
+            <div [ngPlural]="statuses.available">
+              <ng-template ngPluralCase="=0">AGENT AVAILABLE</ng-template>
+              <ng-template ngPluralCase="=1">AGENT AVAILABLE</ng-template>
+              <ng-template ngPluralCase="other">AGENTS AVAILABLE</ng-template>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="number blue-fg">{{ statuses.talking }}</span
+            >&nbsp;
+            <div [ngPlural]="statuses.talking">
+              <ng-template ngPluralCase="=0">AGENT TALKING</ng-template>
+              <ng-template ngPluralCase="=1">AGENT TALKING</ng-template>
+              <ng-template ngPluralCase="other">AGENTS TALKING</ng-template>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="number orange-fg">{{ statuses.wrapup }}</span
+            >&nbsp;
+            <div [ngPlural]="statuses.wrapup">
+              <ng-template ngPluralCase="=0">AGENT WRAPUP</ng-template>
+              <ng-template ngPluralCase="=1">AGENT WRAPUP</ng-template>
+              <ng-template ngPluralCase="other">AGENTS WRAPUP</ng-template>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="number red-fg">{{ statuses.busy }}</span
+            >&nbsp;
+            <div [ngPlural]="statuses.busy">
+              <ng-template ngPluralCase="=0">AGENT BUSY</ng-template>
+              <ng-template ngPluralCase="=1">AGENT BUSY</ng-template>
+              <ng-template ngPluralCase="other">AGENTS BUSY</ng-template>
+            </div>
+          </mat-list-item>
+          <mat-list-item>
+            <span class="number grey-fg">{{ statuses.offline }}</span
+            >&nbsp;
+            <div [ngPlural]="statuses.offline">
+              <ng-template ngPluralCase="=0">AGENT OFFLINE</ng-template>
+              <ng-template ngPluralCase="=1">AGENT OFFLINE</ng-template>
+              <ng-template ngPluralCase="other">AGENTS OFFLINE</ng-template>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

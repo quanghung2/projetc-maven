@@ -1,0 +1,15 @@
+.modal.password {
+  .hint {
+    margin-top: 10px;
+    opacity: 0.8;
+    line-height: 15px;
+    font-size: 12px;
+  }
+}
+
+.row {
+  mat-form-field {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

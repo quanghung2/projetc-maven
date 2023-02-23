@@ -1,0 +1,43 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+<mat-toolbar><h1>Licenses</h1></mat-toolbar>
+
+<div>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button mat-button [disabled]="isLoading" (click)="getData()"><mat-icon>refresh</mat-icon> Refresh</button>
+  </div>
+
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.skuName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="available">
+      <th mat-header-cell *matHeaderCellDef>Available licenses</th>
+      <td mat-cell *matCellDef="let element">{{ element.isPerUserLicense ? element.statsByUser.available : '-' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="assigned">
+      <th mat-header-cell *matHeaderCellDef>Assigned licenses</th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="element.isPerUserLicense" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <mat-progress-bar
+            fxFlex="100px"
+            [value]="(element.statsByUser.assigned / element.statsByUser.total) * 100"
+          ></mat-progress-bar>
+          <span> {{ element.statsByUser.assigned }}/{{ element.statsByUser.total }}</span>
+        </div>
+        <span *ngIf="!element.isPerUserLicense">-</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="showDetails(row)" class="cursor-pointer"></tr>
+  </table>
+  <mat-paginator pageSize="10" showFirstLastButtons hidePageSize></mat-paginator>
+</div>

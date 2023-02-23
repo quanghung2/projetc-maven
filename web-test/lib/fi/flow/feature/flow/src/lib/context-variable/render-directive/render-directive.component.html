@@ -1,0 +1,150 @@
+<ng-container *ngIf="optionForControl.dataType !== 'array'">
+  <ng-container [ngSwitch]="renderDirective?.type">
+    <div *ngSwitchCase="renderDirectiveType.File" fxLayout="column" fxLayoutAlign="start start">
+      <label>
+        {{ optionForControl.title }}
+        <ng-container *ngIf="!optionForControl.disabled && !optionForControl.isOptional">
+          (Please upload a file with a maximum size of 5MB)
+        </ng-container>
+        <ng-container *ngIf="!optionForControl.disabled && optionForControl.isOptional">
+          (The maximum file size is 5 MB)
+        </ng-container>
+      </label>
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <label *ngIf="optionForControl.expressionTree?.actualFileName">
+          Uploaded file:
+          <a href="javascript:;" class="link" (click)="downloadFile(optionForControl.expressionTree)">
+            {{ optionForControl.expressionTree.actualFileName }}
+          </a>
+        </label>
+        <input
+          #uploadFile
+          type="file"
+          style="display: none"
+          (change)="onFileChange($event)"
+          [accept]="renderDirective.supportedMimeTypes.length > 0 ? renderDirective.supportedMimeTypes.join(',') : null"
+        />
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="uploadFile.click()"
+          *ngIf="!optionForControl.disabled"
+          [loading]="uploading"
+        >
+          Upload
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngSwitchCase="renderDirectiveType.SingleSelect">
+      <mat-form-field hideRequiredMarker="true">
+        <mat-select
+          [placeholder]="optionForControl.title"
+          [formControl]="valueCtrl"
+          [required]="!optionForControl.isOptional"
+        >
+          <mat-option *ngFor="let config of dataSources" [value]="config.value">{{ config.label }}</mat-option>
+          <mat-option *ngIf="dataSources?.length === 0" disabled>No available items</mat-option>
+        </mat-select>
+        <mat-error *ngIf="valueCtrl.invalid">This field is required</mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <b3n-select-context-var
+      *ngSwitchCase="renderDirectiveType.SuggestiveSingleSelect"
+      [optionForControl]="optionForControl"
+      [contextVariables]="contextVariables"
+      [dataSources]="dataSources"
+      [typeBooleanCheckbox]="typeBooleanCheckbox"
+      [reqValidate]="reqValidate"
+      (expressionTree)="expressionTree.emit($event)"
+    ></b3n-select-context-var>
+
+    <ng-container *ngSwitchCase="renderDirectiveType.RadioList">
+      <label>
+        {{ optionForControl.title }}
+        <ng-container *ngIf="!optionForControl.disabled && !optionForControl.isOptional">
+          (please select one)
+        </ng-container>
+      </label>
+      <mat-radio-group
+        color="primary"
+        [formControl]="valueCtrl"
+        [required]="!optionForControl.isOptional"
+        fxLayout="row"
+        fxLayoutGap="15px"
+        class="mt-10 mb-20"
+      >
+        <mat-radio-button *ngFor="let config of dataSources" [value]="config.value">
+          {{ config.label }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-container *ngIf="optionForControl.dataType === 'array'">
+  <ng-container [ngSwitch]="renderDirective?.type">
+    <div
+      *ngSwitchCase="renderDirectiveType.SingleSelect"
+      [formGroup]="$any(formArrayValues)"
+      fxLayout="column"
+      fxLayoutGap="4px"
+    >
+      <span class="title-array">{{ optionForControl.title }}</span>
+      <div class="widget-title" *ngFor="let form of formArrayValues.controls; let i = index">
+        <div [formGroupName]="i" fxLayout="row" fxLayoutAlign="start center">
+          <mat-form-field hideRequiredMarker="true" fxFlex>
+            <mat-label>&nbsp;</mat-label>
+            <mat-select formControlName="value" (selectionChange)="onChange()" required>
+              <mat-option *ngFor="let config of form.get('sources').value" [value]="config">
+                {{ config.label }}
+              </mat-option>
+              <mat-option *ngIf="form.get('sources').value?.length === 0" disabled>No available items</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('value').invalid">This field is required</mat-error>
+          </mat-form-field>
+
+          <div *ngIf="optionForControl.isOptional || formArrayValues.controls.length > 1" class="delete-button-custom">
+            <button *ngIf="!optionForControl.disabled" mat-icon-button (click)="removeItem(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="widget-child">{{ i + 1 }}</div>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button *ngIf="!optionForControl.disabled" mat-stroked-button color="primary" type="button" (click)="addItem()">
+          ADD
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngSwitchCase="renderDirectiveType.CheckBox">
+      <label>
+        {{ optionForControl.title }}
+        <ng-container *ngIf="!optionForControl.disabled && !optionForControl.isOptional">
+          (please select one)
+        </ng-container>
+      </label>
+
+      <mat-selection-list
+        [multiple]="true"
+        [(ngModel)]="values"
+        (selectionChange)="onChange()"
+        [disabled]="optionForControl.disabled"
+      >
+        <mat-list-option
+          *ngFor="let config of dataSources"
+          color="primary"
+          [checkboxPosition]="'before'"
+          [disableRipple]="true"
+          [value]="config"
+        >
+          {{ config.label }}
+        </mat-list-option>
+      </mat-selection-list>
+    </ng-container>
+  </ng-container>
+</ng-container>

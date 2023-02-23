@@ -1,0 +1,21 @@
+<div class="permission permission__container" fxLayout="column" >
+  <ng-container *ngIf="permissions.length > 0">
+    <div *ngFor="let permission of permissions; let i = index; trackBy: trackBy" class="permission__item">
+      <div class="permission__header">
+        <div class="permission__header__title">
+          {{ permission.description }}
+        </div>
+      </div>
+      <div fxLayout="column" fxLayoutGap="0.75rem" class="permission__content">
+        <mat-slide-toggle
+          *ngFor="let action of permission.actions"
+          [(ngModel)]="action.granted"
+          (change)="permissionChanged(permission.service, action.name, $event)"
+        >
+          {{ action.description | titlecase }}
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </ng-container>
+  <div class="no-permissions" *ngIf="permissions.length === 0">No modifiable permissions</div>
+</div>

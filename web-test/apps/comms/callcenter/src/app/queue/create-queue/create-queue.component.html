@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>
+  <span *ngIf="!queue.data.clonedQueue.uuid">Create a queue</span>
+  <span *ngIf="queue.data.clonedQueue.uuid">Duplicate a queue from {{ queue.data.clonedQueue.label }}</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <input
+        matInput
+        #name="ngModel"
+        [(ngModel)]="queue.data.label"
+        placeholder="Queue label"
+        (keyup.enter)="create()"
+        required
+      />
+      <mat-hint class="text-red" *ngIf="name.invalid && (name.dirty || name.touched)">Queue name is required</mat-hint>
+    </mat-form-field>
+    <div class="queue-type">
+      <p class="mat-caption">Queue Type</p>
+      <mat-radio-group class="mat-caption" [(ngModel)]="queueType" aria-label="Select an option">
+        <mat-radio-button value="manual">Normal</mat-radio-button>
+        <mat-radio-button value="flow">Flow integration</mat-radio-button>
+      </mat-radio-group>
+      <mat-form-field *ngIf="queueType == 'flow'">
+        <mat-label>Flow Name</mat-label>
+        <mat-select [(ngModel)]="queue.data.genieCode" placeholder="Flow Name">
+          <mat-option *ngFor="let flow of queue['listFlow']" [value]="flow.code"> {{ flow.name }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="create()" color="primary">Create</button>
+</div>

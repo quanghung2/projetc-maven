@@ -1,0 +1,45 @@
+.first-word {
+  text-transform: capitalize;
+}
+.header-primary {
+  margin-bottom: 0px !important;
+}
+.header-secondary {
+  font-size: 13px;
+  margin-bottom: 30px;
+}
+.working-schedule {
+  background: #fafafa;
+  border: 1px solid #eeeeee;
+  border-radius: 5px;
+  margin-bottom: 1.6rem;
+  padding: 1.6rem;
+  &__add-icon {
+    color: gray;
+    margin-left: 1.6rem;
+    cursor: pointer;
+  }
+  &__title {
+    margin-bottom: 0.75rem;
+    color: rgba(0, 0, 0, 0.87);
+
+    &.custom-day {
+      margin-top: -0.25rem;
+    }
+
+    & mat-spinner {
+      margin-left: 0.8rem;
+    }
+  }
+
+  &__picker {
+    visibility: hidden;
+    height: 0px;
+  }
+  .public-schedules {
+    width: 100%;
+    .mat-chip-list-wrapper {
+      width: 100% !important;
+    }
+  }
+}

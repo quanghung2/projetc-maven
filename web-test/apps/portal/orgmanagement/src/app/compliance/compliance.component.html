@@ -1,0 +1,28 @@
+<mat-drawer-container>
+  <mat-drawer-content>
+    <mat-toolbar fxLayoutGap="1.6rem">
+      <h1>Compliance Configuration</h1>
+      <nav *ngIf="links.length > 1" mat-tab-nav-bar>
+        <a
+          mat-tab-link
+          *ngFor="let link of links"
+          [routerLink]="link.key"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [active]="rla.isActive"
+        >
+          {{ link.value }}
+        </a>
+      </nav>
+    </mat-toolbar>
+    <div class="compliance-page">
+      <div class="main-container px-16 pt-16">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </mat-drawer-content>
+  <mat-drawer #sidenav mode="over" opened="false" position="end">
+    <div [attr.id]="RIGHT_SETTING_SIDEBAR_ID"></div>
+  </mat-drawer>
+</mat-drawer-container>

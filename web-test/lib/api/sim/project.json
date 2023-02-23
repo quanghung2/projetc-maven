@@ -1,0 +1,16 @@
+{
+  "name": "api-sim",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/sim/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/sim/**/*.ts", "libs/api/sim/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

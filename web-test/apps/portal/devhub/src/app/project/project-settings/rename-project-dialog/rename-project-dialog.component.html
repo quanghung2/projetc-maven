@@ -1,0 +1,22 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Rename project</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <mat-form-field hideRequiredMarker="true">
+    <input matInput placeholder="Name" [formControl]="nameCtrl" (keyup.enter)="update()" required />
+    <mat-error *ngIf="nameCtrl.invalid">Name is required</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="updating"
+    [disabled]="nameCtrl.invalid"
+    (click)="update()"
+  >
+    Update
+  </button>
+</div>

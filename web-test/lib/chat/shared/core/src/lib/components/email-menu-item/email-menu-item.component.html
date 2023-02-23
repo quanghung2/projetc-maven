@@ -1,0 +1,22 @@
+<mat-list-item
+  mat-list-item
+  [routerLink]="menu.routerLink"
+  routerLinkActive="active"
+  (click)="closeSidebar($event)"
+  class="menu__item"
+>
+  <div matLine>
+    <div class="flex justify-content-start align-items-center">
+      <ng-container *ngIf="menu.agent; else menuIcon">
+        <b3n-agent-avatar [agent]="menu.agent"></b3n-agent-avatar>
+      </ng-container>
+      <ng-template #menuIcon>
+        <mat-icon class="menu__item__icon" *ngIf="menu.icon">{{ menu.icon }}</mat-icon>
+        <span class="menu__item__badge" *ngIf="!menu.icon"></span>
+      </ng-template>
+      <span class="menu__item__text">{{ menu.displayText }}</span>
+      <div class="spacer"></div>
+      <div *ngIf="menu.count > 0" class="menu__item__count">{{ menu.count }}</div>
+    </div>
+  </div>
+</mat-list-item>

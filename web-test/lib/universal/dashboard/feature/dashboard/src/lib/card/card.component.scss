@@ -1,0 +1,44 @@
+:host {
+  height: 100%;
+
+  .card {
+    height: calc(100% - 2rem);
+    border-top: 2px solid #00897b;
+    box-shadow: none;
+
+    .card__header {
+      text-align: center;
+
+      .remove__button {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+
+    .card__content {
+      height: calc(100% - 20px);
+      overflow: auto;
+
+      .card__progress {
+        position: absolute;
+        left: 0;
+        width: 100%;
+      }
+    }
+
+    .nec-ivr-active-calls,
+    .current-agent-overview {
+      overflow: hidden;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+  }
+}

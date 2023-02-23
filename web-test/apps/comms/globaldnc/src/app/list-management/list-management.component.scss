@@ -1,0 +1,19 @@
+.empty {
+  color: #919191;
+  font-size: 14px;
+  margin-top: 30px;
+}
+.result-container {
+  position: relative;
+  .ui.inline.dropdown .dropdown.icon {
+    top: 0px;
+  }
+}
+.count {
+  color: #919191;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 24px;
+  float: left;
+  margin-right: 15px;
+}

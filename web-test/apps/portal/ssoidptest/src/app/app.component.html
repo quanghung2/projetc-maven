@@ -1,0 +1,16 @@
+<div
+  *ngIf="loading; else helloWorld"
+  class="sso-idp-test"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+  fxLayoutGap="1.5rem"
+>
+  <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+  <div *ngIf="counter > 0">
+    Redirect in {{ counter }} seconds. Or click on this <a href="" (click)="redirectLink($event)">link</a>
+  </div>
+</div>
+
+<ng-template #helloWorld>
+  <h1 *ngIf="loggedInInfo">Hello bro</h1>
+</ng-template>

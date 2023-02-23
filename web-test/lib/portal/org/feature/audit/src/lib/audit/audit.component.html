@@ -1,0 +1,29 @@
+<mat-toolbar>
+  <h1>Audit</h1>
+</mat-toolbar>
+<div class="audit-container px-16">
+  <poa-action-bar
+    [timeZone]="timeZone"
+    [auditEventName]="auditEventName"
+    [actionOptions]="actionOptions"
+    [selectedModuleFilter]="moduleFilter"
+    (filterChange)="onSearchLog()"
+    (onSearch)="onSearchLog()"
+    (onAppChange)="appNameSelected = $event"
+  ></poa-action-bar>
+
+  <div>
+    <poa-apps-audit [rawData]="logs" [appNameSelected]="appNameSelected"></poa-apps-audit>
+    <mat-paginator
+      *ngIf="logs.length > 0"
+      hidePageSize="true"
+      showFirstLastButtons="true"
+      [length]="configPage.totalCount"
+      [pageIndex]="configPage.currentPage"
+      [pageSize]="configPage.pageSize"
+      [pageSizeOptions]="[10]"
+      (page)="pageChaged($event)"
+    >
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="32px" class="mb-16">
+  <h1>Log</h1>
+  <nav mat-tab-nav-bar>
+    <ng-container *ngFor="let tab of tabs">
+      <a mat-tab-link *ngIf="!tab.hidden" (click)="curTab = tab.key" [active]="curTab === tab.key">
+        {{ tab.value }}
+      </a>
+    </ng-container>
+  </nav>
+</mat-toolbar>
+
+<ng-container [ngSwitch]="curTab">
+  <ng-container *ngSwitchCase="'programmableFlow'">
+    <b3n-flow-log *ngIf="flowVerMaps" [projectUuid]="projectUuid" [flowVerMaps]="flowVerMaps"></b3n-flow-log>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'webhooks'">
+    <b3n-webhooks-log></b3n-webhooks-log>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'openApiReqs'">
+    <b3n-open-api-reqs-log></b3n-open-api-reqs-log>
+  </ng-container>
+</ng-container>

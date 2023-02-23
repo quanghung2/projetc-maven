@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+.transfer-block {
+  ::ng-deep .sim-checkbox {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.67);
+  }
+  ::ng-deep .transfer-tab-group {
+    .mat-tab-header-pagination {
+      display: none !important;
+    }
+
+    .mat-tab-label {
+      min-width: 140px !important;
+    }
+
+    .mat-tab-body-wrapper {
+      padding-top: 1.6rem;
+    }
+
+    .mat-chip-list-wrapper {
+      width: 100% !important;
+    }
+  }
+
+  mat-form-field,
+  .eleven,
+  mat-button-toggle-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .prefix-number-field {
+    max-width: 128px;
+  }
+
+  .forward-by-keys-section {
+    padding-bottom: 1.6rem;
+  }
+}
+
+.requied-msg {
+  font-style: italic;
+  font-size: 0.85em;
+  color: red;
+}

@@ -1,0 +1,17 @@
+:host {
+  display: block;
+
+  .container {
+    max-width: 700px;
+    margin: auto;
+    padding: 3rem 0;
+
+    .item-left {
+      color: var(--gray-600);
+    }
+    .item-right {
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+  }
+}

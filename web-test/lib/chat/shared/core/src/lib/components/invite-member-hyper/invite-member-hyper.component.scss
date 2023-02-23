@@ -1,0 +1,40 @@
+.team-member-modal {
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    &--gray {
+      padding: 3px;
+      background: var(--gray-300);
+    }
+  }
+
+  .list-member {
+    min-height: 490px;
+    overflow: auto;
+    text-align: center;
+
+    .box {
+      color: #007be0;
+      border: 1px solid #007be0;
+      padding: 1px 5px;
+      font-size: 12px;
+      text-align: center;
+      border-radius: 2px;
+
+      &.other-org {
+        color: #e95849;
+        border: 1px solid #e95849;
+      }
+    }
+  }
+
+  .mat-dialog-container {
+    overflow: hidden;
+  }
+  .item-member:hover {
+    background-color: #f0f0f0;
+  }
+}

@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  width: 280px;
+}
+
+::ng-deep .mat-select-panel.select-project {
+  max-height: 495px !important;
+
+  .option-container {
+    max-height: 450px;
+    overflow: auto;
+  }
+
+  .mat-option.option-project {
+    height: 45px !important;
+  }
+}
+
+.link {
+  cursor: pointer;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-size: 14px;
+  color: rgb(97, 97, 97);
+
+  &:focus {
+    outline-style: none !important;
+  }
+
+  &.link {
+    &:hover,
+    &.active {
+      color: rgb(33, 33, 33);
+    }
+    &:hover {
+      background: var(--gray-200);
+    }
+    &.active {
+      font-weight: 500;
+      background-color: var(--gray-200);
+    }
+  }
+}

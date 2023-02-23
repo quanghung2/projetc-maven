@@ -1,0 +1,33 @@
+:host {
+  display: block;
+
+  .mobile-devices {
+    .mat-table {
+      .mat-row:hover .actions {
+        visibility: visible;
+      }
+      .mat-column-actions {
+        width: 50px;
+        
+        .actions {
+          visibility: hidden;
+
+          .btn-edit {
+            color: var(--gray-700);
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+            margin-top: 4px;
+            cursor: pointer;
+          }
+        }
+      }
+      .mat-column-createdTime {
+        padding: 0 1rem;
+      }
+      .no-devices {
+        margin-top: 1.5rem;
+      }
+    }
+  }
+}

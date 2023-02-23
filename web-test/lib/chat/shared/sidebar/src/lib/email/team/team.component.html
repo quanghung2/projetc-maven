@@ -1,0 +1,63 @@
+<div class="bottom flex column justify-content-start align-items-none">
+  <div class="sidebar__wrapper flex column justify-content-start align-items-none">
+    <div class="flex justify-content-space-between align-items-center">
+      <div class="sidebar__title flex justify-content-start align-items-center gap-025">
+        <mat-icon class="icon icon-expand" (click)="toggleView()">
+          {{ (isExpand$ | async) ? 'arrow_drop_down' : 'arrow_right' }}
+        </mat-icon>
+        <span>Team Inboxes</span>
+      </div>
+      <div>
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="team__settings mr-8">
+          <mat-icon class="team__settings__icon">settings</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" class="inbox-menu" xPosition="after">
+          <div class="inbox-menu-container" (click)="stopPropagation($event)">
+            <div class="header">
+              <h3 class="text-center mb-4">Inboxes</h3>
+              <div class="d-flex justify-content-between">
+                <mat-form-field style="flex: 1">
+                  <input
+                    type="text"
+                    placeholder="Search inbox"
+                    matInput
+                    [formControl]="inboxControl"
+                    [matAutocomplete]="auto"
+                  />
+                  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let inbox of filterInboxes | async" [value]="inbox">
+                      {{ inbox.name }}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+                <button mat-raised-button color="primary" class="btnAdd" (click)="addInbox()">Add</button>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="action">
+              <div class="title">Create</div>
+              <div class="item" (click)="openCreateInboxDlg()">
+                <mat-icon>add_circle</mat-icon>
+                <span>New team inbox</span>
+              </div>
+            </div>
+            <div class="list">
+              <div class="title">My Inboxes</div>
+              <ng-container *ngIf="displayInboxes.length > 0">
+                <div class="item" *ngFor="let inbox of displayInboxes">
+                  <div class="name">{{ inbox.name }}</div>
+                  <a (click)="removeInbox(inbox)"><mat-icon>delete_outline</mat-icon></a>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </mat-menu>
+      </div>
+    </div>
+    <mat-nav-list class="pt-0" [hidden]="!(isExpand$ | async)">
+      <ng-container *ngFor="let menu of menus">
+        <b3n-email-menu-item [menu]="menu"></b3n-email-menu-item>
+      </ng-container>
+    </mat-nav-list>
+  </div>
+</div>

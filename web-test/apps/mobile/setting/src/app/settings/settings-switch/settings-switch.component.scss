@@ -1,0 +1,80 @@
+::ng-deep .switch__dialog {
+  .mat-dialog-container {
+    border-radius: 0;
+  }
+}
+
+mat-dialog-content {
+  max-height: none;
+}
+
+.select-form {
+  padding-top: 1.6rem;
+}
+
+.org-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.6rem;
+  .org-item {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(112, 112, 112, 0.1);
+    cursor: pointer;
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      min-width: 50px;
+      min-height: 50px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    }
+
+    .name {
+      padding: 15px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 15px;
+    }
+
+    &.active,
+    &:hover {
+      border-color: #2483f3;
+      color: #007be0;
+    }
+
+    &:hover {
+      background: rgba(112, 112, 112, 0.05);
+    }
+  }
+  .linkDemo {
+    background: #36b37e;
+    color: white;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  mat-radio-group {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  .org-item {
+    flex-direction: column !important;
+    justify-content: flex-start;
+    gap: 16px !important;
+
+    button {
+      align-self: flex-end !important;
+    }
+  }
+}

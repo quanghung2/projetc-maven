@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>Create inbound rule</h1>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Name" name="name" formControlName="name" (keyup.enter)="create()" />
+      <mat-error>{{
+        formGroup.controls['name'].value.length > 100 ? 'Maximum 100 characters' : 'Name is required'
+      }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [loading]="progressing"
+    [disabled]="progressing || formGroup.invalid"
+    (click)="create()"
+  >
+    Create
+  </button>
+</div>

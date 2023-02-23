@@ -1,0 +1,20 @@
+:host {
+  .histories-container {
+    height: calc(100vh - var(--app__warning--height) - var(--app__toolbar--height));
+
+    .body {
+      padding-top: 1.6rem;
+      overflow: overlay;
+
+      ::ng-deep {
+        mat-form-field {
+          font-size: 14px;
+        }
+
+        .btn-download {
+          margin-top: 5px;
+        }
+      }
+    }
+  }
+}

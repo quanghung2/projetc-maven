@@ -1,0 +1,28 @@
+<section fxLayout="row" [style.minHeight]="minHeight" fxLayoutAlign="space-around center">
+  <mat-card
+    id="survey-content"
+    name="surveyContent"
+    #surveyContent
+    [style.minHeight]="minHeight"
+    fxLayout="column"
+    fxLayoutAlign="center stretch"
+    fxLayoutGap="0.5rem"
+  >
+    <div class="title">Please rate our services</div>
+    <bar-rating
+      class="rating"
+      [starSize]="starSize"
+      [defaultRate]="feedbackInfo.rate"
+      (value)="feedbackInfo.rate = $event"
+    ></bar-rating>
+    <mat-form-field appearance="outline" class="opinion">
+      <textarea matInput [(ngModel)]="feedbackInfo.message" class="opinion-area" placeholder="Your opinion"></textarea>
+    </mat-form-field>
+    <div class="action" align="end">
+      <button mat-button>Cancel</button>
+      <button mat-raised-button class="primary" (click)="submit()">
+        <span *ngIf="!isSending">Send</span> <span *ngIf="isSending">Sending</span>
+      </button>
+    </div>
+  </mat-card>
+</section>

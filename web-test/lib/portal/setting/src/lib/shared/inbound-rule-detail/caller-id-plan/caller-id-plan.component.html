@@ -1,0 +1,86 @@
+<section class="caller-id-plan">
+  <mat-divider *ngIf="!onDialog"></mat-divider>
+
+  <div class="action-bar">
+    <ng-container *ngIf="data.isDefaultRule; else inboundRule"
+      ><h1 class="action-bar__title" fxLayout="row" fxLayoutAlign="start center">Default inbound call rule</h1>
+      <div class="secondary-text">Default rule when a user didn't assign any specific direction.</div>
+    </ng-container>
+    <ng-template #inboundRule>
+      <h1 class="action-bar__title" fxLayout="row" fxLayoutAlign="start center">Manage inbound rule</h1>
+    </ng-template>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <button (click)="openStoreCallerIdDialog()" *ngIf="isAdmin" color="primary" mat-stroked-button>New plan</button>
+    </div>
+  </div>
+  <div>
+    <table [dataSource]="dataSource" mat-table>
+      <ng-container matColumnDef="pattern">
+        <th *matHeaderCellDef mat-header-cell>Matching pattern</th>
+        <td *matCellDef="let element" mat-cell>
+          Start with
+          <span class="border border-radius-4 py-2 px-8">{{
+            element.startWith.length > 0 ? element.startWith : '-'
+          }}</span>
+          and has length of
+          <span class="border border-radius-4 py-2 px-8">{{
+            element.numberLength.length > 0 ? element.numberLength : '-'
+          }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="replacement">
+        <th *matHeaderCellDef mat-header-cell>Replacement</th>
+        <td *matCellDef="let element" mat-cell>
+          Remove
+          <span class="border border-radius-4 py-2 px-8">{{ element.removePrefix || '-' }}</span> leading digits and
+          prepend
+          <span class="border border-radius-4 py-2 px-8">{{ element.appendPrefix || '-' }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let element; let index" mat-cell>
+          <div *ngIf="isAdmin" class="actions-column">
+            <button (click)="openStoreCallerIdDialog(element)" mat-icon-button matTooltip="Update">
+              <mat-icon class="actions-icon">edit</mat-icon>
+            </button>
+            <button (click)="remove(element)" mat-icon-button matTooltip="Remove">
+              <mat-icon class="actions-icon">delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="callerIdDisplayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let rule; columns: callerIdDisplayedColumns" mat-row></tr>
+      <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" colspan="3">
+          <div fxLayout="column" fxLayoutAlign="center center">No records available</div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      #callerIdPlansPaginator
+      [pageSizeOptions]="[10, 15, 20]"
+      hidePageSize
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</section>
+
+<div *ngIf="onDialog" align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <ng-container *ngIf="data.isDefaultRule">
+    <button
+      mat-raised-button
+      (click)="editInboundRule()"
+      [loading]="savingRule"
+      [color]="defaultRule?.status === RULE_STATUS.ACTIVE ? 'warn' : 'primary'"
+    >
+      {{ defaultRule?.status === RULE_STATUS.ACTIVE ? 'Disable' : 'Enable' }}
+    </button>
+  </ng-container>
+</div>

@@ -1,0 +1,109 @@
+<mat-toolbar><h1>Organization Connect</h1></mat-toolbar>
+
+<div class="org-link__container" *ngIf="loading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<div class="org-link__container" [hidden]="loading">
+  <form class="org-link__toolbar" autocomplete="off" [formGroup]="form">
+    <div class="filter__wrapper">
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="name" placeholder="Search by name" #input />
+        <button type="button" mat-icon-button matSuffix>
+          <mat-icon class="icon__search">search</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="status">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="">All</mat-option>
+          <mat-option value="accepted">Active</mat-option>
+          <mat-option value="pending">Pending Acceptance</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" type="button" (click)="openOrgLinkInvite()">Create Connection</button>
+  </form>
+
+  <table mat-table [dataSource]="dataSource" class="org-link__table">
+    <ng-container matColumnDef="uuid">
+      <th mat-header-cell *matHeaderCellDef>Connection ID</th>
+      <td mat-cell *matCellDef="let orgLink">
+        <div
+          class="uuid"
+          matTooltip="Click to copy"
+          ngxClipboard
+          [cbContent]="orgLink.uuid"
+          (cbOnSuccess)="copied()"
+          (cbOnError)="copyFailed()"
+        >
+          {{ orgLink.uuid | slice: 0:8 }}...
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let orgLink">{{ orgLink.name }}</td>
+    </ng-container>
+    <ng-container matColumnDef="members">
+      <th mat-header-cell *matHeaderCellDef>Members</th>
+      <td mat-cell *matCellDef="let orgLink">
+        <div class="member__wrapper">
+          <ng-container *ngIf="orgLink.organizations.length <= MAX_MEMBER_NUMBER; else extendMembers">
+            <ng-container *ngFor="let org of orgLink.organizations"
+              ><img [src]="org.logoUrl ? org.logoUrl : DEFAULT_ORG_LOGO" />
+            </ng-container>
+          </ng-container>
+          <ng-template #extendMembers>
+            <ng-container *ngFor="let org of [].constructor(MAX_MEMBER_NUMBER); let i = index"
+              ><img [src]="orgLink.organizations[i].logoUrl ? orgLink.organizations[i].logoUrl : DEFAULT_ORG_LOGO" />
+            </ng-container>
+            <div class="remain__member">+ {{ orgLink.organizations.length - MAX_MEMBER_NUMBER }}</div>
+          </ng-template>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef>Created At</th>
+      <td mat-cell *matCellDef="let orgLink">{{ orgLink.createdAt | date }}</td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let orgLink">
+        <div [ngClass]="orgLink.status === 'Accepted' ? 'accepted' : 'pending'">
+          {{ orgLink.status === 'Accepted' ? 'Active' : 'Pending Acceptance' }}
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let orgLink">
+        <div class="icons">
+          <mat-icon
+            matTooltip="Details"
+            class="material-icons-round"
+            (click)="openOrgLinkDetails(orgLink.organizations, orgLink.uuid)"
+            >info</mat-icon
+          >
+          <ng-container *ngIf="!orgLink.isDefaultMemberAccepted">
+            <mat-icon color="primary" matTooltip="Accept" (click)="accept(orgLink.uuid)">done</mat-icon>
+            <mat-icon color="warn" matTooltip="Deny" (click)="deny(orgLink.uuid)">close</mat-icon>
+          </ng-container>
+        </div>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="noData">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div fxLayoutAlign="center center">
+          <span class="mat-body-1">No Data Available</span>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr mat-footer-row *matFooterRowDef="['noData']" class="no-data-table" [hidden]="orgLinks?.length"></tr>
+  </table>
+
+  <mat-paginator [showFirstLastButtons]="true" [pageSize]="pageSize"></mat-paginator>
+</div>

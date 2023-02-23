@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-core",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/core/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/core/**/*.ts", "libs/chat/shared/core/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

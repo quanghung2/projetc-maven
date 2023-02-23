@@ -1,0 +1,108 @@
+.sp__container {
+  width: 400px;
+  height: 100%;
+  background-color: #fafafa;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h3 {
+    margin: 0;
+    font-weight: 500;
+    font-size: 20px;
+  }
+}
+
+.sp-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.sp-hide {
+  display: none;
+}
+
+.sp-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sp-dashboards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+  overflow: scroll;
+}
+
+.sp-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 5px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .name {
+      display: flex;
+      gap: 8px;
+    }
+
+    .default {
+      line-height: initial;
+      font-size: 12px;
+      padding: 2px 4px;
+      border: 1px solid var(--dashboard2-primary);
+      color: var(--dashboard2-primary);
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 500;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    mat-icon {
+      cursor: pointer;
+    }
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(230, 230, 228);
+    border-radius: 4px;
+    background-color: #f0f0ee;
+    padding: 0 16px;
+
+    mat-checkbox {
+      font-size: 14px;
+      padding: 8px 0;
+    }
+
+    ::ng-deep.mat-checkbox-layout,
+    ::ng-deep.mat-checkbox-label {
+      width: 100%;
+    }
+
+    ::ng-deep.mat-ripple-element {
+      display: none !important;
+    }
+  }
+}
+
+.sp-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}

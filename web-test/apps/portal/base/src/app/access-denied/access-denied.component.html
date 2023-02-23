@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="center center" class="view-not-found">
+  <div><mat-icon>warning</mat-icon></div>
+  <div>
+    <h1>Access denied</h1>
+    <div class="text">
+      <p class="general">
+        <span>Sorry, you don't have any permission on this organization. Please check the URL, otherwise, click </span>
+        <a [style.cursor]="'pointer'" (click)="showSwitchOrganizationDialog()">here</a>
+        <span> to switch to other organization.</span>
+      </p>
+    </div>
+  </div>
+</div>

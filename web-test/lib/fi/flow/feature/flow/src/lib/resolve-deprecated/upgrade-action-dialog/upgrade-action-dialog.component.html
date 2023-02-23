@@ -1,0 +1,78 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Upgrade Action</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <div
+    fxLayout="row"
+    fxLayoutAlign="space-between none"
+    fxLayoutGap="16px"
+    *ngIf="oldActionDef && selectedActionDef && contextVariables"
+  >
+    <div fxFlex="45">
+      <h4 class="mb-8"><strong>Outdated Action</strong></h4>
+
+      <ng-container [ngSwitch]="inputDialog.actionDetail.type">
+        <b3n-def-action-api
+          *ngSwitchCase="ActionType.API"
+          [contextVariables]="contextVariables"
+          [selectedActionDef]="oldActionDef"
+          [actionDetail]="$any(inputDialog.actionDetail)"
+          [disabledEdit]="true"
+        ></b3n-def-action-api>
+
+        <b3n-def-action-subroutine-call
+          *ngSwitchCase="ActionType.SUBROUTINE_CALL"
+          [contextVariables]="contextVariables"
+          [selectedActionDef]="oldActionDef"
+          [actionDetail]="$any(inputDialog.actionDetail)"
+          [disabledEdit]="true"
+        ></b3n-def-action-subroutine-call>
+      </ng-container>
+    </div>
+    <div class="divider" fxFlex="1px"></div>
+    <div fxFlex="55">
+      <h4 class="mb-8"><strong>Newest Action</strong></h4>
+      <ng-container *ngIf="!showResolveDependency">
+        <div [formGroup]="formUpgradeAction" fxLayout="column" fxLayoutAlign="start stretch">
+          <ng-container [ngSwitch]="selectedActionDef.type">
+            <b3n-def-action-api
+              *ngSwitchCase="ActionType.API"
+              [contextVariables]="contextVariables"
+              [selectedActionDef]="selectedActionDef"
+              (changeConfigs)="setConfigsAction($event)"
+              (invalid)="invalidForm = $event"
+            ></b3n-def-action-api>
+
+            <b3n-def-action-subroutine-call
+              *ngSwitchCase="ActionType.SUBROUTINE_CALL"
+              [contextVariables]="contextVariables"
+              [selectedActionDef]="selectedActionDef"
+              (changeConfigs)="setConfigsAction($event)"
+              (invalid)="invalidForm = $event"
+            ></b3n-def-action-subroutine-call>
+          </ng-container>
+        </div>
+
+        <div dir="rtl" class="mt-16 mb-2">
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [loading]="upgrading"
+            [disabled]="invalidForm"
+            (click)="upgrade()"
+          >
+            Upgrade
+          </button>
+        </div>
+      </ng-container>
+
+      <b3n-resolve-dependency
+        *ngIf="showResolveDependency"
+        [resolveDependencyInput]="dataOfResolve"
+        (resultResolve)="resultResolve($event)"
+      ></b3n-resolve-dependency>
+    </div>
+  </div>
+</div>

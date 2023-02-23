@@ -1,0 +1,47 @@
+<mat-form-field floatLabel="always" hideRequiredMarker="true">
+  <mat-label>{{ quill?.quillEditor?.getContents().length() > 1 ? optionForControl.title : '' }}</mat-label>
+  <button
+    type="button"
+    mat-icon-button
+    matPrefix
+    [matMenuTriggerFor]="menu"
+    (click)="$event.stopPropagation(); $event.preventDefault()"
+    *ngIf="!optionForControl.disabled && contextVariables?.length > 0 && isShowContextVar"
+  >
+    <mat-icon matTooltip="Use an output of previous action" [matTooltipPosition]="'above'">playlist_add</mat-icon>
+  </button>
+
+  <mat-chip-list #chipList [required]="!optionForControl.isOptional"> </mat-chip-list>
+  <quill-editor
+    #quill
+    matInput
+    [modules]="modules"
+    [placeholder]="optionForControl.title"
+    (onEditorCreated)="onCreatedQuill($event)"
+  ></quill-editor>
+  <mat-error *ngIf="chipList.errorState">{{ textError }}</mat-error>
+</mat-form-field>
+
+<mat-menu #menu="matMenu" class="fif-menu dropdown-menu">
+  <ng-template matMenuContent>
+    <div
+      class="content-menu"
+      fxLayout="row"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="0px"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+    >
+      <div *ngIf="contextVariables?.length === 0" class="section" fxFlex>
+        <span>No applicable outputs</span>
+      </div>
+      <b3n-menu-variable
+        *ngIf="contextVariables?.length > 0"
+        [contextVariables]="contextVariables"
+        [keyForContextVar]="keyForContextVar"
+        [optionForControl]="optionForControl"
+        (selectProp)="selectProperty($event)"
+      >
+      </b3n-menu-variable>
+    </div>
+  </ng-template>
+</mat-menu>

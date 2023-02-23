@@ -1,0 +1,14 @@
+:host {
+  .square {
+    width: 10px;
+    height: 10px;
+
+    &.green {
+      background-color: #36b37e;
+    }
+
+    &.red {
+      background-color: #ff5630;
+    }
+  }
+}

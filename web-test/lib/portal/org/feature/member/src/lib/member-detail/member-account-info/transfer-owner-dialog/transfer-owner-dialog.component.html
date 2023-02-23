@@ -1,0 +1,26 @@
+<div class='transfer-member-role'>
+  <h1 mat-dialog-title>Transfer owner</h1>
+  <div class="black-list-content" mat-dialog-content>
+    <form #form="ngForm">
+      <mat-form-field class="transfer-role-input">
+        <input
+          matInput
+          required
+          placeholder="New owner uuid"
+          [(ngModel)]="newOwnerUuid"
+          name="ownerUuid"
+          #ownerUuid="ngModel"
+        />
+        <mat-error *ngIf="ownerUuid.invalid && (ownerUuid.dirty || ownerUuid.touched)">New owner uuid is required</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions align='end'>
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button color="primary" [disabled]="progressing || form.invalid" (click)="transfer()">
+      <span *ngIf="!progressing">Transfer</span>
+      <span *ngIf="progressing">Transferring...</span>
+    </button>
+  </div>
+
+</div>

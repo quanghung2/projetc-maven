@@ -1,0 +1,46 @@
+:host {
+  display: block;
+
+  .overview {
+    max-width: 550px;
+    margin: auto;
+    padding: 2rem 0;
+
+    .hidden {
+      display: none;
+    }
+    .item-left {
+      color: var(--gray-600);
+    }
+    .item-right {
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+
+    .available {
+      color: #5cb85c !important;
+    }
+
+    .offline {
+      color: #bbb9b9 !important;
+    }
+
+    .busy,
+    .dnd {
+      color: red !important;
+    }
+
+    mat-icon.available,
+    mat-icon.dnd,
+    mat-icon.busy,
+    mat-icon.offline {
+      font-size: 13px !important;
+      width: 13px !important;
+      height: 13px !important;
+    }
+  }
+
+  .number {
+    line-height: 15px;
+  }
+}

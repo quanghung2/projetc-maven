@@ -1,0 +1,18 @@
+<ng-container *ngIf="errorText; else renderText">
+  <span class="normal-text red-fg">{{ errorText }}</span>
+</ng-container>
+<ng-template #renderText>
+  <ng-container *ngIf="!builtTextMessage.isTriggerDirective; else trigger">
+    <span class="normal-text" [innerHTML]="builtTextMessage?.text | safe: 'html'"></span>
+  </ng-container>
+  <ng-template #trigger>
+    <span
+      class="normal-text"
+      lazyloadUnknown
+      [text]="builtTextMessage.text"
+      [innerHTML]="builtTextMessage?.text | safe: 'html'"
+      (showProfile)="showProfile.emit($event)"
+      (downloadFileWithFileKey)="onDownloadFileWithFileKey($event)"
+    ></span>
+  </ng-template>
+</ng-template>

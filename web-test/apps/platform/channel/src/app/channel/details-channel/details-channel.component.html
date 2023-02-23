@@ -1,0 +1,234 @@
+<div class="channel-detail" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="2rem">
+  <div class="channel-detail__header" fxLayout="column" fxLayoutAlign="start start" fxFlexAlign="center">
+    <mat-toolbar class="channel-detail__header__toolbar" fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="start start" class="channel-detail__header__toolbar__title">
+        <mat-icon routerLink="/" matTooltip="Back" class="channel-detail__header__toolbar__back-icon"
+          >arrow_back
+        </mat-icon>
+        <span>{{ channel?.partnerName }}</span>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center" class="channel-detail__header__toolbar__action">
+        <div class="channel-detail__header__toolbar__action__tab">
+          <mat-form-field *ngIf="partner && partner.supportedCurrencies.length">
+            <mat-label>Currency</mat-label>
+            <mat-select (selectionChange)="onSelectChanged($event)" [value]="selectedCurrency">
+              <mat-option *ngFor="let currency of partner.supportedCurrencies" [value]="currency">
+                {{ currency }}
+              </mat-option>
+            </mat-select>
+            <input matInput hidden />
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button [matMenuTriggerFor]="menu" *ngIf="selectedWallet">Actions</button>
+        <mat-menu #menu="matMenu">
+          <button (click)="exportSubscription()" mat-menu-item>Export subscriptions</button>
+          <button (click)="openCreditLimitDialog()" mat-menu-item>Set credit limit</button>
+          <button (click)="onOpenTransaction()" mat-menu-item>View transactions</button>
+          <button (click)="onEditTab()" mat-menu-item>Edit tags</button>
+          <button (click)="onConvertPayment()" mat-menu-item>Convert payment</button>
+        </mat-menu>
+      </div>
+      <span class="spacer"></span>
+    </mat-toolbar>
+
+    <div
+      fxLayout="row"
+      fxFlexAlign="center"
+      fxLayoutAlign="space-between start"
+      class="channel-detail__header__user-infomation mat-elevation-z1"
+      *ngIf="selectedWallet; else noTransaction"
+    >
+      <section fxLayout="row" fxLayoutGap="0.8rem">
+        <div fxLayout="column" fxLayoutGap="0.8rem" fxLayoutAlign="start end">
+          <strong class="title"> Contact info: </strong>
+          <label>Email: </label>
+          <label>Phone: </label>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="0.8rem">
+          <span>{{ channel?.owner?.displayName }}</span>
+          <a class="email" [href]="'mailTo:' + channel?.owner?.email">{{ channel?.owner?.email }}</a>
+          <a class="phone-number" [href]="'tel:' + channel?.owner?.mobileNumber">{{ channel?.owner?.mobileNumber }}</a>
+        </div>
+      </section>
+      <section fxLayout="row" fxLayoutGap="0.8rem">
+        <div fxLayout="column" fxLayoutGap="0.8rem" fxLayoutAlign="start end">
+          <strong class="title">Trade balance: </strong>
+          <label>Billed:</label>
+          <label>UnBilled:</label>
+          <div class="credit-litmit-label">Credit limit:</div>
+        </div>
+
+        <div fxLayout="column" fxLayoutGap="0.8rem" fxLayoutAlign="start none">
+          <ng-container>
+            <span>
+              {{ selectedWallet?.balance < 0 ? 'DR' : 'CR' }}
+              {{ this.formatAbs(selectedWallet?.balance) | number: '1.0-6' }}
+              {{ selectedWallet?.currency }}</span
+            >
+            <span>
+              {{ selectedWallet?.billed < 0 ? 'DR' : 'CR' }}
+              {{ this.formatAbs(selectedWallet?.billed) | number: '1.0-6' }}
+              {{ selectedWallet?.currency }}</span
+            >
+            <span
+              >{{ selectedWallet?.unbilled < 0 ? 'DR' : 'CR' }}
+              {{ this.formatAbs(selectedWallet?.unbilled) | number: '1.0-6' }}
+              {{ selectedWallet?.currency }}</span
+            >
+            <div>
+              <span>{{ selectedWallet.creditLimit | number: '1.0-6' }} {{ selectedWallet.currency }}</span>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+      <section class="tag" fxLayout="row" fxLayoutGap="0.8rem">
+        <strong class="title">Tags: </strong>
+        <div *ngIf="buyerTag && ObjectsKeys(buyerTag).length; else noTag" fxLayout="column" fxLayoutGap="0.8rem">
+          <ng-container *ngFor="let tagKey of ObjectsKeys(buyerTag); index as idx">
+            <div fxLayout="row" *ngIf="idx < 2">
+              <span>
+                <label>{{ tagKey }}</label>
+                - {{ buyerTag[tagKey] }}
+              </span>
+            </div>
+          </ng-container>
+        </div>
+        <ng-template #noTag><span>No tag yet</span></ng-template>
+      </section>
+    </div>
+
+    <ng-template #noTransaction>
+      <span class="py-10"
+        >The linkage account is only created when having a transaction on this currency. You can set
+        <a class="channel-detail__credit" (click)="openCreditLimitDialog()">the credit limit</a> for this currency to
+        initialize.
+      </span>
+    </ng-template>
+  </div>
+
+  <div class="channel-detail__body" fxLayout="column" fxLayoutAlign="start start" fxFlexAlign="center">
+    <mat-toolbar
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxFlexAlign="center"
+      class="channel-detail__body__add-product"
+    >
+      <strong class="available-product">
+        <span>
+          Selling products
+          <span
+            mat-button
+            matTooltipPosition="above"
+            [matTooltip]="
+              'Selling ' + sellingProducts.length + ' of ' + availableProducts?.length + ' available Products'
+            "
+            >({{ sellingProducts?.length }}/{{ availableProducts?.length }})</span
+          >
+        </span>
+      </strong>
+
+      <section fxLayoutGap="1.6rem" fxLayoutAlign="start baseline">
+        <mat-checkbox [checked]="isSelectedSelling" (change)="onChangeSellingProduct($event.checked)"
+          >Selling only
+        </mat-checkbox>
+
+        <mat-form-field class="search-product" floatLabel="never">
+          <mat-label class="grey-800-fg">Search product by Name or ProductID</mat-label>
+          <input [(ngModel)]="searchValue" matInput (keyup)="onSearchProduct($event)" />
+          <button (click)="reset()" mat-icon-button matSuffix>
+            <mat-icon class="icon">{{ searchValue ? 'close' : 'search' }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          [loading]="loadingAvailableProduct"
+          [disabled]="!getAllProducts.length"
+          color="primary"
+          (click)="onShowAddProduct()"
+        >
+          Add available
+        </button>
+      </section>
+    </mat-toolbar>
+    <div class="channel-detail__body__product">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef>ID</th>
+          <td mat-cell *matCellDef="let element">
+            <div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+              <button
+                class="channel-detail__body__product__button-copy"
+                mat-button
+                matTooltip="Click to copy this productId to clipboard"
+                ngxClipboard
+                [cbContent]="element?.productId"
+                (cbOnSuccess)="copied()"
+                (cbOnError)="copyFailed()"
+              >
+                {{ element?.productId | slice: 0:8 }}
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">
+            <div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+                <img
+                  *ngIf="element.isApp"
+                  [src]="element.logo || 'assets/application.svg'"
+                  class="channel-detail__body__product__product-logo"
+                />
+                <div>{{ element?.name }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">{{ element?.type | titlecase }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="selling">
+          <th mat-header-cell *matHeaderCellDef>
+            <div fxLayout fxLayoutAlign="center center">Selling</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div fxLayout fxLayoutAlign="center center">{{ element.getSelling }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="noData">
+          <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div fxLayoutAlign="center center">
+              <span class="mat-body-1">No Data Available</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="loading">
+          <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div fxLayoutAlign="center center">
+              <div *ngIf="loading" class="loading-container">
+                <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource.filteredData.length > 0 || loading"></tr>
+        <tr mat-footer-row *matFooterRowDef="['loading']" [hidden]="!loading"></tr>
+      </table>
+      <mat-paginator hidePageSize="true" pageSize="5" showFirstLastButtons class="mat-elevation-z1"></mat-paginator>
+    </div>
+  </div>
+</div>

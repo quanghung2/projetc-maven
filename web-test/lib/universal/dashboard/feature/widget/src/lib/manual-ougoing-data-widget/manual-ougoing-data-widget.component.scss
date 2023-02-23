@@ -1,0 +1,32 @@
+:host {
+  height: 100%;
+  display: block;
+  overflow: auto;
+
+  table {
+    width: 100%;
+  }
+
+  .metric {
+    &__number {
+      font-size: 2em;
+    }
+
+    &--single &__number {
+      font-size: 4rem;
+    }
+  }
+
+  .datatable-chart {
+    width: 100%;
+  }
+
+  .no-data {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+  }
+}

@@ -1,0 +1,111 @@
+.header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  padding: 12px;
+  z-index: 999;
+}
+
+.connector {
+  position: sticky;
+  top: 43px;
+  padding: 6px 0 6px 12px;
+  z-index: 888;
+  background-color: #efefef;
+  min-height: 52px;
+
+  .mat-icon {
+    font-size: 20px;
+    color: #999;
+    visibility: hidden;
+  }
+
+  &:hover {
+    .mat-icon {
+      visibility: visible;
+      cursor: pointer;
+    }
+  }
+}
+
+.actions-def {
+  .mat-icon {
+    color: #2196f3;
+    visibility: hidden;
+  }
+
+  .group-action {
+    padding-left: 12px;
+
+    label {
+      padding: 10px 0;
+    }
+
+    &:hover {
+      background-color: #daecfb;
+
+      label {
+        cursor: pointer;
+      }
+
+      .mat-icon {
+        visibility: visible;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .click-action-background {
+    background-color: #daecfb;
+  }
+
+  .selected {
+    background-color: #daecfb;
+    border-right: 4px solid #2196f3;
+  }
+}
+
+::ng-deep {
+  .connector-favorite-menu {
+    position: absolute;
+    left: 53px;
+    top: -31px;
+    min-width: 315px !important;
+    max-width: 315px !important;
+    max-height: 540px !important;
+
+    .header {
+      padding: 8px 16px 0 16px;
+
+      .remove-text:hover {
+        cursor: pointer;
+      }
+    }
+
+    .connector-item {
+      padding: 8px 16px;
+
+      &:hover {
+        background-color: #daecfb;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+    }
+
+    .description {
+      font-size: 13px;
+      color: #999;
+    }
+
+    .mat-menu-content:not(:empty) {
+      padding-top: 0px;
+      padding-bottom: 8px;
+    }
+  }
+
+  .information-menu {
+    min-width: 315px !important;
+    max-width: 315px !important;
+    max-height: 540px !important;
+  }
+}

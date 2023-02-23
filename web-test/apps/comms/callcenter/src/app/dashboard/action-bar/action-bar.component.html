@@ -1,0 +1,75 @@
+<div *ngIf="filtering" fxLayout="row" fxLayoutGap="0.4em" fxLayoutAlign="end center">
+  <span class="fill-remaining-space"></span>
+
+  <mat-form-field>
+    <mat-select
+      name="queues"
+      placeholder="Queues"
+      [(ngModel)]="filtering.dashboard.queuesFiltering"
+      [compareWith]="compareUuidFn"
+      multiple
+      #queueSelect="ngModel"
+      class="queue-filter"
+    >
+      <div fxLayout="row" fxLayoutGap="0.4em" fxLayoutAlign="start center">
+        <button mat-button color="primary" (click)="selectAll(queueSelect, queues)">Select All</button>
+        <button mat-button color="primary" (click)="deselectAll(queueSelect)">Deselect All</button>
+        <span class="fill-remaining-space"></span>
+        <button mat-raised-button color="primary" (click)="proceed()">Apply</button>
+      </div>
+      <mat-option *ngFor="let queueItem of queues" [value]="queueItem.uuid"> {{ queueItem.label }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select
+      [(ngModel)]="filtering.dashboard.autoRefreshTime"
+      [compareWith]="compareUuidFn"
+      (selectionChange)="filterChanged()"
+      placeholder="Auto refresh"
+    >
+      <mat-option *ngFor="let refresh of refreshes" [value]="refresh.key"> {{ refresh.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select
+      [(ngModel)]="filtering.dashboard.timeRange"
+      [compareWith]="compareUuidFn"
+      (selectionChange)="timerangeChanged()"
+      placeholder="Filter by date"
+    >
+      <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key"> {{ timeRange.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field
+    *ngIf="filtering.dashboard.timeRange && filtering.dashboard.timeRange === 'specific_date'"
+    (click)="from.open()"
+  >
+    <input
+      matInput
+      readonly
+      [(ngModel)]="filtering.dashboard.dateFiltering"
+      [matDatepicker]="from"
+      [max]="TODAY"
+      placeholder="Filter Date"
+      (dateChange)="filterChanged()"
+    />
+    <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+    <mat-datepicker #from></mat-datepicker>
+  </mat-form-field>
+
+  <button (click)="exportImage()" class="export" mat-icon-button matTooltip="Capture">
+    <mat-icon>photo_camera</mat-icon>
+  </button>
+  <button
+    (click)="exportCsv()"
+    *ngIf="filtering.dashboard.queuesFiltering.length === 1"
+    class="export"
+    mat-icon-button
+    matTooltip="Export"
+  >
+    <mat-icon>cloud_download</mat-icon>
+  </button>
+</div>

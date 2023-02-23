@@ -1,0 +1,179 @@
+@mixin btn-filter {
+  position: relative;
+  cursor: pointer;
+  line-height: 22px;
+  font-size: 11px;
+  min-width: 0;
+  padding: 0 8px;
+  background-color: #e0e0e0; // darkmode #gray
+  color: black; // darkmode #white
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+@mixin size-icon($size: 1.6rem) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  cursor: pointer;
+  user-select: none;
+}
+
+// css for lightmode
+:host {
+  overflow: hidden;
+  .sidebar__container {
+    height: calc(100vh - var(--app__warning--height) - var(--app__toolbar--height));
+    width: 100%;
+    overflow-y: hidden;
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    ::ng-deep .mat-list-item {
+      height: 32px !important;
+      .mat-list-text {
+        padding-left: 5px !important;
+        font-size: 14px;
+        color: #686d72; // darkmode #ffffff80
+      }
+    }
+
+    button {
+      color: #000; // darkmode #fafafa
+    }
+
+    .body {
+      overflow: hidden;
+
+      .sidebar__section {
+        overflow: hidden;
+        background-color: #fafafa;
+        color: #04131f; // darkmode #fafafa
+
+        .sidebar__title {
+          font-size: 14px;
+          font-weight: 550;
+          padding: 0.25rem 8px 0.3rem 12px;
+
+          .icon {
+            font-size: 20px;
+            line-height: 20px;
+            height: 20px;
+            width: 20px;
+            border-radius: 4px;
+            &-expand {
+              font-size: 20px;
+            }
+            &:hover {
+              background-color: rgba(56, 63, 69, 0.1); // darkmode #efefef4d
+            }
+          }
+
+          ::ng-deep mat-form-field.select-filter {
+            .mat-select-value-text {
+              font-size: 12px;
+            }
+            .mat-form-field-wrapper {
+              margin-bottom: -1.25em;
+              .mat-form-field-infix {
+                border-top-width: 0px;
+                padding: 0 0 0.2rem 0 !important;
+              }
+            }
+            .mat-form-field-underline{
+              display: none;
+            }
+          }
+
+          .context-menu {
+            visibility: hidden;
+            position: fixed;
+          }
+
+          .toggle-view {
+            @include btn-filter;
+
+            ::ng-deep {
+              .mat-button-wrapper {
+                line-height: inherit !important;
+              }
+            }
+
+            &.has-icon {
+              padding-right: 2px !important;
+            }
+
+            .mat-icon {
+              @include size-icon;
+            }
+
+            .mat-menu-trigger {
+              position: absolute;
+              top: 0;
+              right: -17px;
+            }
+          }
+        }
+
+        .email {
+          margin-left: -7px;
+        }
+
+        .list-email,
+        .sidebar__content {
+          overflow: overlay;
+        }
+      }
+
+      .sidebar__tab {
+        padding: 10px;
+
+        ::ng-deep {
+          .mat-badge-content {
+            right: 0 !important;
+            bottom: 0 !important;
+          }
+          .mat-button-toggle-group {
+            border: none;
+            .mat-button-toggle {
+              height: 36px;
+              width: 36px;
+              line-height: 36px;
+              font-size: 36px;
+              background: transparent;
+              border: none !important;
+              border-radius: 4px;
+              margin-left: 1.2rem;
+              z-index: 1050;
+              .mat-icon {
+                height: 20px;
+                width: 20px;
+                font-size: 20px;
+                line-height: 20px;
+              }
+              &:first-child {
+                margin-left: 0;
+              }
+              .mat-button-toggle-label-content {
+                line-height: 34px;
+                padding: 0;
+              }
+            }
+            .mat-button-toggle-checked {
+              background: hsla(0, 0%, 60%, 0.3) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

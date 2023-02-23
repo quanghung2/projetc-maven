@@ -1,0 +1,310 @@
+<loader [loading]="isLoading"></loader>
+
+<div class="ui page small content container" *ngIf="portalConfig && sellerConfig">
+  <div class="ui grid">
+    <div class="row actions">
+      <div class="notice">
+        <em>Changes won't be automatically updated if you don't <b>Save</b>.</em>
+      </div>
+      <div class="ui primary button" (click)="save()">Save Changes</div>
+    </div>
+
+    <main class="ui styled fluid accordion">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Show specific menus/ items on the portal
+      </div>
+
+      <div class="content active">
+        <div class="indent">
+          <ng-container *ngIf="customActionsConfig.length">
+            <ng-container *ngFor="let resource of findActionByName('DisplaySidebarFeature')?.groupedResources">
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  [id]="resource.name"
+                  [(ngModel)]="resource.isAllowed"
+                  (ngModelChange)="onResourceAsCheckBoxChange(resource.name, 'DisplaySidebarFeature')"
+                />
+                <label [for]="resource.name">{{ resource.desc }}</label>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <section>
+            <div class="row ui checkbox">
+              <input
+                type="checkbox"
+                id="organization"
+                [(ngModel)]="isOrganizationChecked"
+                (ngModelChange)="showOrgChange()"
+              />
+              <label for="organization">Organization</label>
+            </div>
+
+            <div class="indent">
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="showMember"
+                  [(ngModel)]="portalConfig.showMember"
+                  (ngModelChange)="onShowMemberChange()"
+                  [disabled]="!isOrganizationChecked"
+                />
+                <label for="showMember">Member</label>
+              </div>
+
+              <div class="indent">
+                <div class="row ui checkbox">
+                  <input
+                    type="checkbox"
+                    id="allowMemberImport"
+                    [(ngModel)]="portalConfig.allowMemberImport"
+                    [disabled]="!portalConfig.showMember"
+                  />
+                  <label for="allowMemberImport">Allow to import/export members</label>
+                </div>
+              </div>
+              <ng-container *ngIf="customActionsConfig.length">
+                <app-portal-action
+                  [action]="findActionByName('ShowOrganizationMenu')"
+                  (valueChanges)="updateTagInputConfig($event.selectedItemKeys, $event.groupKey)"
+                  [disabled]="!isOrganizationChecked"
+                  [clearAll]="!isOrganizationChecked"
+                ></app-portal-action>
+              </ng-container>
+            </div>
+          </section>
+
+          <section>
+            <div class="row ui checkbox">
+              <input
+                type="checkbox"
+                id="showPricing"
+                [(ngModel)]="portalConfig.showPricing"
+                (ngModelChange)="showPricingChange()"
+              />
+              <label for="showPricing">Pricing (subscription & usage history) and credits</label>
+            </div>
+
+            <div class="indent">
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="topup"
+                  [(ngModel)]="portalConfig.allowTopup"
+                  [disabled]="!portalConfig.showPricing"
+                />
+                <label for="topup">Allow topup</label>
+              </div>
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="showInvoice"
+                  [(ngModel)]="portalConfig.showInvoice"
+                  [disabled]="!portalConfig.showPricing"
+                />
+                <label for="showInvoice">Invoice</label>
+              </div>
+            </div>
+          </section>
+
+          <section *ngIf="customActionsConfig.length">
+            <div class="row ui checkbox">
+              <input type="checkbox" id="showSubscription" [(ngModel)]="portalConfig.showSubscription" />
+              <label for="showSubscription">Subscription</label>
+            </div>
+
+            <div class="indent">
+              <app-portal-action
+                [action]="findActionByName('ShowSubscriptionColumn')"
+                (valueChanges)="updateTagInputConfig($event.selectedItemKeys, $event.groupKey)"
+                (checkChanges)="isDisabledShowSubscriptionMenu = !portalConfig.showSubscription || !$event"
+                [disabled]="!portalConfig.showSubscription"
+                [clearAll]="!portalConfig.showSubscription"
+              ></app-portal-action>
+              <app-portal-action
+                [action]="findActionByName('ShowSubscriptionMenu')"
+                (valueChanges)="updateTagInputConfig($event.selectedItemKeys, $event.groupKey)"
+                [disabled]="isDisabledShowSubscriptionMenu"
+                [clearAll]="isDisabledShowSubscriptionMenu"
+              ></app-portal-action>
+            </div>
+          </section>
+
+          <section class="row ui checkbox">
+            <input type="checkbox" id="showSettings" [(ngModel)]="portalConfig.showSettings" />
+            <label for="showSettings">Settings</label>
+          </section>
+
+          <section>
+            <div class="row ui checkbox">
+              <input
+                type="checkbox"
+                id="showReports"
+                [(ngModel)]="isReportsChecked"
+                (ngModelChange)="onShowReportsChange()"
+              />
+              <label for="showReport">Reports</label>
+            </div>
+
+            <div class="indent">
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="showUsageHistory"
+                  [(ngModel)]="portalConfig.showUsageHistory"
+                  [disabled]="!isReportsChecked"
+                />
+                <label for="showUsageHistory">Usage history</label>
+              </div>
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="showAudit"
+                  [(ngModel)]="portalConfig.showAudit"
+                  [disabled]="!isReportsChecked"
+                />
+                <label for="showAudit">Audit</label>
+              </div>
+              <div class="row ui checkbox">
+                <input
+                  type="checkbox"
+                  id="showReport"
+                  [(ngModel)]="portalConfig.showReport"
+                  [disabled]="!isReportsChecked"
+                />
+                <label for="showReport">Report</label>
+              </div>
+            </div>
+          </section>
+
+          <div class="row ui checkbox">
+            <div class="column">
+              <input type="checkbox" id="showStore" [(ngModel)]="portalConfig.showStore" />
+              <label for="showStore">Store</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <main class="ui styled fluid accordion" *ngIf="customActionsConfig.length">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Purchase flow
+      </div>
+
+      <div class="content active">
+        <div class="ui grid row">
+          <div class="indent">
+            <app-portal-action
+              [action]="findActionByName('ShowPaymentOption')"
+              (valueChanges)="updateTagInputConfig($event.selectedItemKeys, $event.groupKey)"
+            ></app-portal-action>
+            <app-portal-action
+              [action]="findActionByName('ShowTerminationOption')"
+              (valueChanges)="updateTagInputConfig($event.selectedItemKeys, $event.groupKey)"
+            ></app-portal-action>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <main class="ui styled fluid accordion">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Subscription policy
+      </div>
+
+      <div class="content active">
+        <div class="ui grid row">
+          <div class="indent">
+            <div class="row ui checkbox">
+              <input
+                type="checkbox"
+                id="sendSubscriptionNotificationToCustomer"
+                [(ngModel)]="portalConfig.sendSubscriptionNotificationToCustomer"
+              />
+              <label for="sendSubscriptionNotificationToCustomer">Send subscription notification to customer</label>
+            </div>
+            <div class="row ui checkbox">
+              <input type="checkbox" id="allowRefund" [(ngModel)]="sellerConfig.enableRefund" />
+              <label for="allowRefund">Allow refund</label>
+            </div>
+            <div class="row ui checkbox">
+              <input type="checkbox" id="allowRetrial" [(ngModel)]="sellerConfig.enableTrial" />
+              <label for="allowRetrial">Allow trial</label>
+            </div>
+            <div class="row ui checkbox">
+              <input type="checkbox" id="alignWhenRenewingSubscriptions" [(ngModel)]="sellerConfig.enableAlign" />
+              <label for="alignWhenRenewingSubscriptions">Align when renewing subscriptions</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <main class="ui styled fluid accordion" *ngIf="customActionsConfig.length">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        CpaaS default outbound/ inbound rule
+      </div>
+
+      <div class="content active">
+        <div class="ui grid row">
+          <div class="indent">
+            <b3n-cpaas-default-rule *ngIf="!isLoading"></b3n-cpaas-default-rule>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <main class="ui styled fluid accordion">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Keyword blacklist
+      </div>
+      <div class="content active">
+        <div class="indent">
+          <div class="row ui checkbox">
+            <input
+              type="checkbox"
+              id="toogle-blacklist-keys"
+              [(ngModel)]="isEnabledBlacklist"
+              (change)="onChangeEnableKeyBlacklist()"
+            />
+            <label for="toogle-blacklist-keys">Enable SMS Keyword Blacklist</label>
+          </div>
+          <tag-input
+            *ngIf="isEnabledBlacklist"
+            [(ngModel)]="blacklistKeys"
+            [clearOnBlur]="true"
+            [modelAsStrings]="true"
+            secondaryPlaceholder="Input key"
+            placeholder="Input key"
+            (onAdd)="onAddKeyBlackList()"
+            (onRemove)="onRemoveKeyBlackList($event)"
+          ></tag-input>
+        </div>
+      </div>
+    </main>
+
+    <main class="ui styled fluid accordion">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Billing default tags
+      </div>
+      <div class="content active">
+        <div class="indent">
+          <tag-input
+            [(ngModel)]="defaultKeys"
+            [clearOnBlur]="true"
+            [modelAsStrings]="true"
+            placeholder="key"
+          ></tag-input>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

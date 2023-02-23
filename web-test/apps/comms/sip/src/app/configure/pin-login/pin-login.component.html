@@ -1,0 +1,78 @@
+<div class="pin-login" *ngIf="!loading">
+  <div class="big-title">Pin Login</div>
+  <div class="title uppercase">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="six wide column right aligned">Enable pin login</div>
+        <div class="ten wide column">
+          <div class="switcher">
+            <input class="toggle" type="checkbox" id="toggle1" [checked]="enable" (change)="enablePinLogin($event)" />
+            <label class="switcher label" for="toggle1"></label>
+            <div class="box"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content" *ngIf="enable">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="six wide column right aligned">CallerId</div>
+        <div class="ten wide column">
+          <div class="field">
+            <form autocomplete="off">
+              <input
+                name="pinNumber"
+                autocomplete="none"
+                type="text"
+                onkeypress="return event.charCode >= 48 && 57 >= event.charCode"
+                [(ngModel)]="number"
+                [disabled]="!enable"
+                placeholder="Enter a number"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned">Status</div>
+        <div class="ten wide column">
+          <div class="field">
+            <select class="ui dropdown" [(ngModel)]="status">
+              <option value="enabled">Enabled</option>
+              <option value="disabled">Disabled</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned"></div>
+        <div class="ten wide column">
+          <div class="field">
+            <button class="ui primary button" (click)="add()" [disabled]="!number">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>CallerId</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let config of configs">
+          <td>{{ config['pin_login.did'] }}</td>
+          <td>{{ config['pin_login.status'] }}</td>
+          <td>
+            <i class="ui icon edit" title="Change status" (click)="update(config)"></i>
+            <i class="ui icon delete" title="Delete" (click)="delete(config)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

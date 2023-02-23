@@ -1,0 +1,100 @@
+<iframe class="hiden" id="iframe"></iframe>
+<ng-container *ngIf="data$ | async as data">
+  <mat-toolbar class="header" color="primary">
+    <span class="mr-16">Wallboard</span>
+    <button [class.active]="activeLink?.key === l.key" *ngFor="let l of links" (click)="browseTo(l, data)" mat-button>
+      {{ l.value }}
+    </button>
+
+    <span class="fill-remaining-space"></span>
+    <div class="right-area" fxLayout="row" fxLayoutAlign="end center">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <button mat-button class="select-bound" *ngIf="data.showFeatureSelection">
+          <div fxLayout="row" fxLayoutAlign="center center" class="me">
+            <div fxFlex [matMenuTriggerFor]="dashboardType" class="pointer-region">
+              {{ (isSharedForBoth ? 'All' : data.callFeature) | titlecase }}
+              <i class="material-icons"> arrow_drop_down </i>
+            </div>
+          </div>
+        </button>
+
+        <button *ngIf="me$ | async as me" mat-button class="me">
+          <div fxLayout="row" fxLayoutAlign="space-between center" [matMenuTriggerFor]="agentStatus">
+            <div fxFlex>
+              <ng-container *ngIf="me.status === AgentStatus.available; else away">
+                <mat-icon class="green-fg icon">lens</mat-icon>
+              </ng-container>
+
+              <ng-template #away>
+                <ng-container *ngIf="me.status === AgentStatus.dnd; else busy">
+                  <mat-icon class="orange-fg icon">lens</mat-icon>
+                </ng-container>
+              </ng-template>
+
+              <ng-template #busy>
+                <ng-container *ngIf="me.status === AgentStatus.busy; else offline">
+                  <mat-icon class="red-fg icon">lens</mat-icon>
+                </ng-container>
+              </ng-template>
+              <ng-template #offline>
+                <ng-container *ngIf="me.status === AgentStatus.offline">
+                  <mat-icon class="grey-fg icon">lens</mat-icon>
+                </ng-container>
+              </ng-template>
+            </div>
+            <div fxFlex>
+              <div fxLayout="column" fxLayoutAlign="start start">
+                <div fxFlex>{{ me.displayText }}</div>
+                <div fxFlex>
+                  <small *ngIf="me.status === AgentStatus.busy">{{ me.busyReason }}</small>
+                </div>
+              </div>
+            </div>
+            <div fxFlex><mat-icon>arrow_drop_down</mat-icon></div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <mat-menu #dashboardType="matMenu">
+    <div class="explain-msg" *ngIf="isSharedForBoth">{{ currentNavName }} does not require call feature selection</div>
+    <div class="explain-msg" *ngIf="onlyOutbound !== onlyInbound">
+      {{ currentNavName }} is only shared by {{ data.callFeature | titlecase }}
+    </div>
+    <mat-divider *ngIf="isSharedForBoth || onlyOutbound !== onlyInbound"></mat-divider>
+    <button
+      [disabled]="isSharedForBoth || onlyOutbound"
+      mat-menu-item
+      (click)="changeCallDirection(CallcenterCallFeature.inbound, data)"
+    >
+      Inbound
+    </button>
+    <button
+      [disabled]="isSharedForBoth || onlyInbound"
+      mat-menu-item
+      (click)="changeCallDirection(CallcenterCallFeature.outbound, data)"
+    >
+      Outbound
+    </button>
+  </mat-menu>
+
+  <mat-menu #agentStatus="matMenu" class="status-menu">
+    <button mat-menu-item (click)="changeStatus(AgentStatus.available)">
+      <mat-icon class="icon green-fg">lens</mat-icon>
+      Available
+    </button>
+    <button mat-menu-item (click)="changeStatus(AgentStatus.dnd)">
+      <mat-icon class="icon orange-fg">lens</mat-icon>
+      Away
+    </button>
+    <button mat-menu-item (click)="changeStatus(AgentStatus.busy)">
+      <mat-icon class="icon red-fg">lens</mat-icon>
+      Busy
+    </button>
+    <button mat-menu-item (click)="changeStatus(AgentStatus.offline)">
+      <mat-icon class="icon grey-fg">lens</mat-icon>
+      Offline
+    </button>
+  </mat-menu>
+</ng-container>

@@ -1,0 +1,16 @@
+:host {
+      .ui.modal {
+        height: 450px;
+    
+        .content {
+          height: 350px;
+          overflow-x: auto;
+        }
+      }
+    
+      tag-input {
+        ::ng-deep input {
+          width: 200px !important;
+        }
+      }
+    }

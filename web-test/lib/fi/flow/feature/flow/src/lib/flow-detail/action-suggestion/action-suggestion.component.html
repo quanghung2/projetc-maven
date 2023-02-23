@@ -1,0 +1,66 @@
+<button
+  mat-icon-button
+  [matMenuTriggerFor]="actionSuggestion"
+  class="btn-add-action mat-elevation-z2"
+  (click)="$event.stopPropagation(); setActionSelected()"
+>
+  <mat-icon>add</mat-icon>
+</button>
+<mat-menu #actionSuggestion="matMenu" class="fif-menu action-suggestion">
+  <div fxLayout="column" fxLayoutAlign="start stretch" *ngFor="let connector of connectors; let i = index">
+    <ng-container [ngSwitch]="connector.type">
+      <ng-container *ngSwitchCase="'SUBROUTINE'">
+        <div class="action" mat-menu-item [matMenuTriggerFor]="menuSubroutine" *ngIf="connector.actionDefs.length > 0">
+          Transfer to Other Flow
+        </div>
+        <mat-menu #menuSubroutine="matMenu">
+          <ng-container *ngFor="let actionDef of connector.actionDefs">
+            <div
+              class="action"
+              mat-menu-item
+              (click)="selectedActionDef(connector, actionDef)"
+              *ngIf="actionDef.uuid !== 'SUBROUTINE_RETURN'"
+            >
+              {{ actionDef.name }}
+            </div>
+          </ng-container>
+        </mat-menu>
+
+        <div
+          class="action"
+          mat-menu-item
+          (click)="selectedActionDef(connector, actionDefSubroutineReturn)"
+          *ngIf="!invalidAction(actionDefSubroutineReturn) && flow.type === 'SUBROUTINE'"
+        >
+          Return to Origin Flow
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'MEMORY'">
+        <div class="action" mat-menu-item [matMenuTriggerFor]="menuMemory">{{ connector.name }}</div>
+        <mat-menu #menuMemory="matMenu">
+          <div
+            class="action"
+            mat-menu-item
+            *ngFor="let actionDef of connector.actionDefs"
+            (click)="selectedActionDef(connector, actionDef)"
+          >
+            {{ actionDef.name }}
+          </div>
+        </mat-menu>
+      </ng-container>
+
+      <ng-container *ngSwitchDefault>
+        <div
+          class="action"
+          mat-menu-item
+          *ngFor="let actionDef of connector.actionDefs"
+          (click)="selectedActionDef(connector, actionDef)"
+        >
+          {{ actionDef.name }}
+        </div>
+      </ng-container>
+    </ng-container>
+    <mat-divider *ngIf="connector.actionDefs.length > 0 && i < connectors.length - 1"></mat-divider>
+  </div>
+</mat-menu>

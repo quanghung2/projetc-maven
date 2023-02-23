@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.fresh-desk-content {
+  &__spinner {
+    margin-top: 0.8rem;
+  }
+  .hide {
+    display: none;
+  }
+
+  .nested {
+    padding: 0 2rem;
+    box-sizing: border-box;
+  }
+  mat-form-field {
+    width: 100% !important;
+    margin-bottom: 1.6rem;
+
+    &.w-94 {
+      width: 94% !important;
+      margin-left: 2rem;
+    }
+  }
+
+  .mb-1 {
+    margin-bottom: 1.6rem;
+  }
+  mat-hint {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 13px;
+  }
+
+  .material-icons {
+    font-size: 14px;
+    color: #2196f3;
+  }
+
+  mat-slide-toggle {
+    padding: 1.6rem 0;
+    font-weight: 500;
+  }
+}

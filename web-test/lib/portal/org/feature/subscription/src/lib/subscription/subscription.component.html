@@ -1,0 +1,70 @@
+<mat-drawer-container [hasBackdrop]="true">
+  <mat-drawer
+    #drawer
+    mode="over"
+    position="end"
+    (openedStart)="resetViewDetail()"
+    (closedStart)="listSubscription?.refreshList()"
+  >
+    <pos-subscription-detail #subscriptionDetail (updateSubDetail)="update($event)"> </pos-subscription-detail>
+  </mat-drawer>
+  <mat-drawer-content>
+    <mat-toolbar>
+      <mat-toolbar-row><h1>Subscriptions</h1></mat-toolbar-row>
+      <mat-toolbar-row *ngIf="showFilterToolbar" fxLayoutGap="0.8rem">
+        <mat-form-field>
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="status" (selectionChange)="onStatusChange()">
+            <mat-option [value]="'ACTIVE'">Active</mat-option>
+            <mat-option [value]="'EXPIRED'">Expired</mat-option>
+            <mat-option [value]="'TERMINATED'">Terminated</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="!loadingProduct">
+          <mat-select placeholder="Product" [formControl]="productCtrl" [compareWith]="compareProduct">
+            <mat-option>
+              <ngx-mat-select-search
+                placeholderLabel="Search..."
+                noEntriesFoundLabel="No products found"
+                [formControl]="productFilterCtrl"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let p of filteredProducts" [value]="p">{{ p.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="!loadingMember && status == 'ACTIVE'">
+          <mat-select placeholder="Member" [formControl]="memberCtrl" [compareWith]="compareMember">
+            <mat-option>
+              <ngx-mat-select-search
+                placeholderLabel="Search..."
+                noEntriesFoundLabel="No members found"
+                [formControl]="memberFilterCtrl"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let m of filteredMembers" [value]="m">{{ m.displayName }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span class="spacer"></span>
+        <button
+          mat-icon-button
+          [loading]="listSubscription?.paginatorRef?.isLoading$ | async"
+          [disabled]="loadingProduct || loadingMember"
+          (click)="listSubscription?.refreshList()"
+        >
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="container px-16">
+      <pos-subscription-list
+        #subscriptionList
+        [status]="status"
+        [productId]="productId"
+        [assignee]="memberUuid"
+        (viewSubDetail)="drawer.toggle()"
+        fxFlexFill
+      >
+      </pos-subscription-list>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

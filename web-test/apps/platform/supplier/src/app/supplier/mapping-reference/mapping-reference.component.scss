@@ -1,0 +1,18 @@
+h2,
+strong {
+  font-weight: 500;
+}
+
+.uuid-column {
+  background: #e0e0e0;
+  border-radius: 3px;
+  padding: 3px 6px;
+  width: fit-content;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 16px 16px;
+}

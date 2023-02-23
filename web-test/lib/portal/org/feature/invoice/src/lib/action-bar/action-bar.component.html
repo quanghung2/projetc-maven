@@ -1,0 +1,42 @@
+<mat-toolbar>
+  <mat-toolbar-row><h1>Invoices</h1></mat-toolbar-row>
+  <mat-toolbar-row fxLayoutGap="0.8rem">
+    <ng-container [formGroup]="formGroup">
+      <mat-form-field (click)="picker.open()">
+        <mat-label>Month</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker
+          #picker
+          type="month"
+          startView="year"
+          (yearSelected)="chosenYearHandler($event)"
+          (monthSelected)="chosenMonthHandler($event, picker)"
+        ></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="action-bar__search-filter__filter-by-status">
+        <mat-select (selectionChange)="onChangeStatus($event)" placeholder="Status" formControlName="filterSearch">
+          <mat-option value="">All</mat-option>
+          <mat-option *ngFor="let status of searchStatus" [value]="status.key">
+            {{ status.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+    <span class="spacer"></span>
+    <button
+      *ngIf="selectedInvoiceCount > 0"
+      mat-raised-button
+      [loading]="isDownloading"
+      [disabled]="isDownloading"
+      color="primary"
+      (click)="downloadSelected()"
+    >
+      {{ 'Download ' + selectedInvoiceCount + ' ' + (selectedInvoiceCount > 1 ? 'items' : 'item') }}
+    </button>
+
+    <button mat-icon-button [loading]="isLoading" [disabled]="isLoading" (click)="onRefresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

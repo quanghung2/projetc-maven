@@ -1,0 +1,16 @@
+{
+  "name": "api-booking",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/booking/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/booking/**/*.ts", "libs/api/booking/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

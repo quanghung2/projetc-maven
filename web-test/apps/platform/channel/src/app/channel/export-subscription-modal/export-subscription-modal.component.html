@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>Export subscriptions</h2>
+<form [formGroup]="formGroup">
+  <mat-dialog-content class="mat-typography">
+    <div fxLayout="column">
+      <mat-form-field>
+        <mat-label>Products</mat-label>
+        <mat-select formControlName="product" multiple>
+          <mat-option #allSelected value="All" (click)="selectedAll()">All</mat-option>
+          <mat-option
+            *ngFor="let distributingProduct of distributingProducts"
+            [value]="distributingProduct?.productId"
+            (click)="tosslePerOne()"
+          >
+            <div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+              <img [src]="distributingProduct.logo || 'assets/application.svg'" class="product-logo" />
+              <span>{{ distributingProduct?.name }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Subscription status</mat-label>
+        <mat-select formControlName="statusSubscription">
+          <mat-option value="ALL">ALL</mat-option>
+          <mat-option *ngFor="let st of status" [value]="st.key">{{ st.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <ng-container formArrayName="emails">
+        <div *ngFor="let email of emails.controls; index as idx">
+          <ng-container [formGroupName]="idx">
+            <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="1.6rem">
+              <mat-form-field fxFlex="auto" class="email">
+                <mat-label>Enter email</mat-label>
+                <input matInput placeholder="Enter email" formControlName="email" />
+                <mat-error *ngIf="email?.get('email')?.invalid">{{ getErrorNewEmail(email?.get('email')) }}</mat-error>
+              </mat-form-field>
+              <div fxLayout="row" fxLayoutGap="1.6rem">
+                <a *ngIf="emails.controls.length > 1" class="link-button" (click)="removeEmail(idx)">Remove</a>
+                <a *ngIf="idx === emails.controls.length - 1" class="link-button" (click)="addEmail()">Add</a>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" mat-raised-button color="primary" cdkFocusInitial (click)="exportSubscription()">
+      Export
+    </button>
+  </mat-dialog-actions>
+</form>

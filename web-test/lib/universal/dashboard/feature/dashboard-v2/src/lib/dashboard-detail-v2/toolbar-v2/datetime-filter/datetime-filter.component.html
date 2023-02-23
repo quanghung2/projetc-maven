@@ -1,0 +1,39 @@
+<ng-container [formGroup]="form" *ngIf="hasDateTimeFilterV2">
+  <mat-form-field class="datetime-select__field">
+    <mat-select formControlName="dateTime" placeholder="Time range" #dateTimeSelect>
+      <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key"> {{ timeRange.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="mr-16" (click)="rangePicker.open()" *ngIf="dateTime.value === TimeRangeKey.specific_date">
+    <mat-date-range-input
+      [formGroup]="timeRange"
+      [min]="minDate"
+      [max]="maxDate"
+      [rangePicker]="rangePicker"
+      #timeRangeInput
+    >
+      <input matStartDate formControlName="startDate" placeholder="Start date" />
+      <input matEndDate formControlName="endDate" placeholder="End date" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-button matDateRangePickerCancel>Cancel</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+  </mat-form-field>
+  <mat-form-field class="mr-16" (click)="datePicker.open()" *ngIf="dateTime.value === TimeRangeKey.custom_date">
+    <mat-label>Choose a date</mat-label>
+    <input
+      matInput
+      [matDatepicker]="datePicker"
+      readonly
+      formControlName="customDate"
+      [min]="minDate"
+      [max]="maxDate"
+    />
+    <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+    <mat-datepicker #datePicker></mat-datepicker>
+  </mat-form-field>
+</ng-container>

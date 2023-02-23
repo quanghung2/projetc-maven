@@ -1,0 +1,37 @@
+<div class="ui page content container" *ngIf="!subscriptionInfo?.isChild">
+  <div class="ui form">
+    <div class="field">
+      <label>Link to Organizations</label>
+      <textarea rows="2" placeholder="Enter organization uuid, separated by comma" [(ngModel)]="slaveOrgs"></textarea>
+    </div>
+    <div class="ui submit primary button" (click)="update()">Add</div>
+  </div>
+  <div class="result-container">
+    <div [class.hidden]="entries?.length > 0" class="empty">No record found</div>
+    <table [class.hidden]="entries?.length === 0" class="ui page unstackable table">
+      <thead>
+        <tr>
+          <th>Organization Uuid</th>
+          <th>Organization Name</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let en of entries">
+          <td>{{ en.slaveOrg }}</td>
+          <td>{{ en.slaveOrgName }}</td>
+          <td>
+            <i title="Delete" class="icon link delete" (click)="delete(en.slaveOrg)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="loading" class="ui active inverted dimmer inner-dimmer">
+      <div class="ui text loader"></div>
+    </div>
+  </div>
+</div>
+
+<div class="ui page content container" *ngIf="subscriptionInfo?.isChild">
+  This organization is linked under organization {{ masterOrg.masterOrg }} ({{ masterOrg.masterOrgName }})
+</div>

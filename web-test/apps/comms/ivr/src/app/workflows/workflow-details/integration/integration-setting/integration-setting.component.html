@@ -1,0 +1,76 @@
+<mat-toolbar class="integration-title">
+  <h1 *ngIf="selectedType !== IntegrationType.httpsNotification && selectedType !== IntegrationType.genericTicketing">
+    {{ selectedType | titlecase }} Integration Settings
+  </h1>
+  <h1 *ngIf="selectedType === IntegrationType.httpsNotification">HTTPS Notification Settings</h1>
+  <h1 *ngIf="selectedType === IntegrationType.genericTicketing">Generic Ticketing Integration Settings</h1>
+  <span class="fill-remaining-space"></span>
+  <div fxLayoutGap="0.8rem">
+    <button mat-button (click)="deleteIntegrationSettings()">Remove integration</button>
+    <button color="primary" mat-raised-button (click)="confirmSaveSettings()" [disabled]="saving || form.invalid">
+      <span *ngIf="!saving">Save</span> <span *ngIf="saving">Saving..</span>
+    </button>
+  </div>
+</mat-toolbar>
+<form #form="ngForm">
+  <div class="integration-content" *ngIf="integration">
+    <mat-form-field class="change-integration">
+      <mat-select
+        placeholder="Change Integration"
+        [(value)]="selectedType"
+        (selectionChange)="onchangeIntegrationType($event)"
+      >
+        <mat-option *ngFor="let option of intergrationOptions" [value]="option.key">
+          <div fxLayout="row">{{ option.value }}</div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <b3n-agile-crm
+      *ngIf="selectedType === IntegrationType.agileCrm"
+      [integration]="integration"
+      (integrationChange)="integration = $any($event)"
+    ></b3n-agile-crm>
+    <b3n-fresh-desk
+      *ngIf="selectedType === IntegrationType.freshdesk"
+      [integration]="integration"
+      (integrationChange)="integration = $any($event)"
+    ></b3n-fresh-desk>
+    <!-- <b3n-user-voice *ngIf="selectedType == 'uservoice'"></b3n-user-voice> -->
+    <b3n-zen-desk
+      *ngIf="selectedType === 'zendesk'"
+      [integration]="integration"
+      (integrationChange)="integration = $any($event)"
+    ></b3n-zen-desk>
+    <generic-ticketing-integration
+      *ngIf="selectedType === IntegrationType.genericTicketing"
+      [integration]="integration"
+      (integrationChange)="integration = $any($event)"
+    ></generic-ticketing-integration>
+    <b3n-https-notification
+      *ngIf="selectedType === IntegrationType.httpsNotification"
+      [integration]="integration"
+      (integrationChange)="integration = $any($event)"
+      [workflowUuid]="workflowUuid"
+    ></b3n-https-notification>
+
+    <button
+      class="view-example"
+      color="primary"
+      mat-button
+      (click)="openViewExamples()"
+      *ngIf="selectedType !== IntegrationType.genericTicketing"
+    >
+      View Examples
+    </button>
+    <button
+      class="view-example"
+      color="primary"
+      mat-button
+      (click)="openViewExamples()"
+      *ngIf="selectedType === IntegrationType.genericTicketing"
+    >
+      Guides
+    </button>
+  </div>
+</form>

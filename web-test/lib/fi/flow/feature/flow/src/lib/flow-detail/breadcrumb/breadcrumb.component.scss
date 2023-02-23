@@ -1,0 +1,35 @@
+ul {
+  list-style: none;
+  padding-left: 48px;
+  margin: 0;
+
+  li {
+    border-left: 3px solid transparent;
+    margin-bottom: 8px;
+    padding-left: 8px;
+
+    &:hover:not(.title),
+    &.active {
+      background-color: transparent;
+      border-left: 3px solid #2196f3;
+      color: #2196f3;
+
+      a {
+        color: #2196f3;
+      }
+    }
+
+    &.title {
+      font-size: 16px;
+    }
+
+    &.child {
+      padding-left: 24px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #999;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+<div *ngIf="!isChecking && isExistSurveyTxn">
+  <b3n-post-call-survey-content
+    *ngIf="!feedbackTxnInfo"
+    [txnUuid]="txnUuid"
+    (submitEvent)="feedbackTxnInfo = $event"
+  ></b3n-post-call-survey-content>
+  <b3n-survey-success-page *ngIf="feedbackTxnInfo"></b3n-survey-success-page>
+</div>
+<div *ngIf="!isChecking && !isExistSurveyTxn"><b3n-error-page></b3n-error-page></div>

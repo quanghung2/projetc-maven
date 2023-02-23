@@ -1,0 +1,34 @@
+:host {
+  .number-detail {
+    width: 380px;
+    position: fixed;
+    background: #ffffff;
+    box-shadow: 0 0 20px #ddd;
+    height: 100vh;
+  }
+
+  .compliance-container {
+    .search-action {
+      mat-icon {
+        font-size: 20px;
+      }
+    }
+
+    table {
+      width: 100%;
+      min-width: 800px;
+
+      tr {
+        &.hidden-row {
+          display: none;
+        }
+      }
+
+      ::ng-deep tbody {
+        tr {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

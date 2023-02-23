@@ -1,0 +1,93 @@
+<div class="contact-sales__wrapper">
+  <div class="title">
+    <p>Contact Sales</p>
+  </div>
+  <form #contactForm="ngForm" autocomplete="off">
+    <div *ngIf="data.product" class="header">
+      <img [src]="data.product.logo" />
+      <p>{{ data.product.name }}</p>
+    </div>
+    <div class="row" *ngIf="model">
+      <div [class.error]="customerName.touched && customerName.dirty && customerName.invalid" class="input__wrapper">
+        <label for="customerName">Your name</label>
+        <div>
+          <input
+            type="text"
+            tabindex="0"
+            placeholder="Your name"
+            id="customerName"
+            required
+            [(ngModel)]="model.customer.name"
+            name="customerName"
+            #customerName="ngModel"
+          />
+        </div>
+      </div>
+      <div [class.error]="companyName.touched && companyName.dirty && companyName.invalid" class="input__wrapper">
+        <label for="companyName">Company name</label>
+        <div>
+          <input
+            type="text"
+            tabindex="0"
+            placeholder="Your company"
+            id="companyName"
+            [(ngModel)]="model.customer.company"
+            name="companyName"
+            #companyName="ngModel"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div [class.error]="email.touched && email.dirty && email.invalid" class="input__wrapper">
+        <label for="email">Email</label>
+        <div>
+          <input
+            type="email"
+            tabindex="0"
+            placeholder="Your email"
+            id="email"
+            [(ngModel)]="model.customer.email"
+            name="email"
+            required
+            #email="ngModel"
+          />
+        </div>
+      </div>
+      <div [class.error]="mobileNumber.touched && mobileNumber.dirty && mobileNumber.invalid" class="input__wrapper">
+        <label for="email">Mobile Number</label>
+        <div>
+          <input
+            type="text"
+            tabindex="0"
+            placeholder="Your mobile number"
+            id="mobileNumber"
+            [(ngModel)]="model.customer.mobileNumber"
+            name="mobileNumber"
+            required
+            #mobileNumber="ngModel"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="message">
+      <label for="message">Message</label>
+      <div>
+        <textarea tabindex="0" rows="5" id="message" [(ngModel)]="model.message" name="message"></textarea>
+      </div>
+    </div>
+    <input hidden type="text" [(ngModel)]="honeyPotsCheck" name="testValue" />
+  </form>
+  <div style="margin: 65px 0 45px; margin-left: auto; display: flex; gap: 1.5rem">
+    <button mat-button (click)="dialogRef.close()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!contactForm.form.valid"
+      [loading]="submitting"
+    >
+      Send Message
+    </button>
+  </div>
+</div>

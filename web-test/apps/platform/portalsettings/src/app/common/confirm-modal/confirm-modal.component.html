@@ -1,0 +1,13 @@
+<div class="ui modal">
+  <i *ngIf="hasCloseIcon" class="close icon"></i>
+  <div class="header">
+    {{ header }}
+  </div>
+  <div class="content">
+    <div [innerHTML]="message"></div>
+  </div>
+  <div class="actions">
+    <div class="ui deny button">No</div>
+    <div class="ui approve red button">Yes</div>
+  </div>
+</div>

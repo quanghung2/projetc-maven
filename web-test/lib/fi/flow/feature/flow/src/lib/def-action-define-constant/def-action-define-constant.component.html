@@ -1,0 +1,59 @@
+<form [formGroup]="formConfigs" novalidate>
+  <div formArrayName="constants" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" fxFill>
+    <div
+      [formGroupName]="i"
+      *ngFor="let item of constants.controls; let i = index"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+      fxLayoutGap="4px"
+    >
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex>
+        <mat-form-field hideRequiredMarker="true" fxFlex="40">
+          <input matInput placeholder="Parameter Name" formControlName="title" required />
+          <mat-error *ngIf="item.get('title').invalid">{{ getErrorTitle($any(item.get('title'))) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field hideRequiredMarker="true" fxFlex="20">
+          <mat-select placeholder="Data type" formControlName="dataType" required>
+            <mat-option value="string">String</mat-option>
+            <mat-option value="number">Number</mat-option>
+            <mat-option value="boolean">Boolean</mat-option>
+          </mat-select>
+          <mat-error *ngIf="item.get('dataType').hasError('required')">Data type is required</mat-error>
+        </mat-form-field>
+
+        <ng-container formGroupName="value">
+          <mat-form-field *ngIf="item.get('dataType').value !== 'boolean'" hideRequiredMarker="true" fxFlex="40">
+            <input
+              matInput
+              [attr.type]="item.get('dataType').value === 'number' ? 'number' : null"
+              placeholder="Value"
+              formControlName="value"
+              required
+            />
+            <mat-error *ngIf="item.get('value.value').invalid">{{
+              getErrorValue($any(item.get('value.value')))
+            }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="item.get('dataType').value === 'boolean'" hideRequiredMarker="true" fxFlex="40">
+            <mat-select placeholder="Value" formControlName="value" required>
+              <mat-option [value]="true">True</mat-option>
+              <mat-option [value]="false">False</mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('value.value').invalid">{{
+              getErrorValue($any(item.get('value.value')))
+            }}</mat-error>
+          </mat-form-field>
+        </ng-container>
+      </div>
+
+      <div fxFlex="40px" *ngIf="editable && constants.controls.length > 1">
+        <button mat-icon-button type="button" color="warn" (click)="remove(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <a href="javascript:;" class="link" *ngIf="editable" (click)="add()">+ Add more</a>
+</form>

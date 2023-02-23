@@ -1,0 +1,227 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .history-container {
+    padding-left: 16px;
+    .btn-column {
+      height: 56px;
+      line-height: 56px;
+      width: 56px;
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    .expand-icon {
+      cursor: pointer;
+      background-color: #9d9d9d;
+      border-radius: 50%;
+      color: white;
+    }
+
+    table {
+      width: 100%;
+      min-width: 800px;
+
+      .legs-container {
+        overflow: hidden;
+        display: flex;
+        width: 100%;
+
+        &.showing {
+          margin: 1.6rem 0;
+        }
+      }
+
+      tr {
+        &.row {
+          .btn-metadata {
+            visibility: hidden;
+            .mat-icon {
+              color: #0f7ce1;
+
+              &.active {
+                visibility: visible;
+                background: transparent;
+              }
+              font-size: 20px;
+              height: 20px;
+              width: 20px;
+              margin-bottom: 6px;
+            }
+          }
+
+          &:hover .btn-metadata {
+            visibility: visible;
+          }
+
+          &.not-me {
+            cursor: pointer;
+          }
+
+          &:not(.expanded-row):hover {
+            background: whitesmoke;
+          }
+
+          &:not(.expanded-row):active {
+            background: #efefef;
+          }
+
+          td {
+            border-bottom-width: 0;
+          }
+
+          &.expanded-row {
+            background-color: #e0e0e0;
+          }
+        }
+
+        &.child-row {
+          height: 0;
+        }
+
+        &.no-data-table {
+          &.hidden {
+            display: none;
+          }
+        }
+
+        td,
+        th {
+          padding-right: 1.6rem;
+        }
+
+        .mat-column-callRecordingOrVoiceMail,
+        .mat-column-callRecording,
+        .mat-column-voiceMail {
+          .call-recording-tag {
+            color: #21ba45;
+            padding: 0px 8px;
+          }
+          .voice-mail-tag {
+            color: #f57c00;
+            padding: 0px 8px;
+          }
+          .disabled-tag {
+            opacity: 0.3;
+          }
+          .show-media-download {
+            color: #919191;
+
+            &:hover {
+              color: black;
+            }
+          }
+          .disabled-media-download {
+            color: #919191;
+            opacity: 0.3;
+          }
+          .call-recording-error {
+            cursor: auto;
+            color: #f44336;
+          }
+        }
+
+        .footer-table {
+          margin-right: 1.6rem;
+
+          button {
+            cursor: pointer;
+          }
+        }
+
+        .small-icon {
+          font-size: 16px !important;
+          width: 16px !important;
+          height: 16px !important;
+          margin-right: 4px !important;
+        }
+      }
+    }
+
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      background: #e6e6e6;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #424242;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .history-type,
+    .history-status {
+      &.failed,
+      &.blocked,
+      &.cancel,
+      &.unanswered {
+        color: #ff5630;
+      }
+
+      &.forwarding,
+      &.busy {
+        color: #ff991f;
+      }
+
+      &.answered {
+        color: #36b37e;
+      }
+
+      &.incoming {
+        color: #36b37e;
+      }
+
+      &.outgoing {
+        color: #00b8d9;
+      }
+
+      &.internal {
+        color: #36b37e;
+      }
+    }
+
+    .fit-content {
+      width: fit-content;
+    }
+
+    .calltype {
+      width: 75px;
+    }
+  }
+
+  .icon-help {
+    font-size: 18px;
+    color: #424242;
+    cursor: pointer;
+  }
+
+  mat-drawer {
+    width: 385px;
+    position: fixed;
+  }
+}
+
+::ng-deep .cdk-overlay-container {
+  .callrecording-audio {
+    min-width: 300px;
+    max-width: none;
+    pointer-events: none;
+
+    audio {
+      pointer-events: auto;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+::ng-deep .blocked-tooltip {
+  white-space: pre-line;
+  text-align: center;
+}

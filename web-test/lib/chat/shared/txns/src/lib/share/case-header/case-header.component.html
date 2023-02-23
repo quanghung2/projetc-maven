@@ -1,0 +1,28 @@
+<div class="container flex column justify-content-start align-items-none" fxFill>
+  <div class="spacer flex justify-content-space-between align-items-center">
+    <div class="flex justify-content-start align-items-center">
+      <csh-menu-toggle></csh-menu-toggle>
+      <div class="title flex justify-content-start align-items-center">
+        <div class="display-name">{{ contact?.displayName || 'Unknown Contact' }}</div>
+      </div>
+    </div>
+    <div class="flex justify-content-end align-items-center gap-10">
+      <ng-container *ngIf="(!txns?.[0]?.inboxUuid) || isMember">
+        <ng-container *ngIf="txns?.length > 0">
+          <button matTooltip="Assign" class="icon-info" mat-icon-button (click)="joinConvoWhatsapp()">
+            <mat-icon> group_add </mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="txns?.length > 0 && hasPermissionTagCase">
+          <button matTooltip="Close Transactions" class="icon-info" mat-icon-button (click)="closeTransaction()">
+            <mat-icon> done </mat-icon>
+          </button>
+        </ng-container>
+      </ng-container>
+
+      <button class="icon-info" [class.active]="toggleInfoBtn$ | async" mat-icon-button (click)="toggleRightSidebar()">
+        <mat-icon fontSet="material-icons-outlined">vertical_split</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

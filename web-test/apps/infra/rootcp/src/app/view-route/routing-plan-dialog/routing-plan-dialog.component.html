@@ -1,0 +1,11 @@
+<div mat-dialog-title>Routing Plan</div>
+<div mat-dialog-content>
+  <ul>
+    <li *ngFor="let i of data">
+      {{ i.source }} -> {{ i.destination }} : {{ i.primary_route }} & {{ i.secondary_route }} load {{ i.load }}
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+</div>

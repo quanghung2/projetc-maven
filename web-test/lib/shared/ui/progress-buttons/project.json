@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-progress-buttons",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/progress-buttons/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/progress-buttons/**/*.ts", "libs/shared/ui/progress-buttons/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

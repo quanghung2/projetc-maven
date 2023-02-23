@@ -1,0 +1,95 @@
+<mat-card class="message">
+  <mat-card-header>
+    <div mat-card-avatar class="message-header-image">
+      <mat-icon svgIcon="call"> </mat-icon>
+    </div>
+    <mat-card-title>{{ message.body.text }}</mat-card-title>
+    <span class="fill-remaining-space"></span>
+    <div class="status-column flex column justify-content-center align-items-end">
+      <span *ngIf="convo.type === ConvoType.call">{{ convo.info.callStatus | camel2title }}</span>
+
+      <!-- <span class="mat-caption">{{ convo.createdAt | timeAgo }}</span> -->
+      <span class="mat-caption">TODO</span>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="message-body">
+      <div class="message-row">
+        <label class="label">From</label>
+        <div class="description">{{ message.body.data.fromNumber }}</div>
+      </div>
+      <div class="message-row">
+        <label class="label">Date</label>
+        <div class="description">{{ message.body.data.startAtMillis | date: 'mediumDate' }}</div>
+      </div>
+      <div class="message-row">
+        <label class="label">Placed</label>
+        <div class="description">{{ message.body.data.startAtMillis | date: 'mediumTime' }}</div>
+      </div>
+      <div class="message-row">
+        <label class="label">Answered</label>
+        <div class="description">
+          {{ message.body.data.answerAtMillis ? (message.body.data.answerAtMillis | date: 'mediumTime') : '-' }}
+        </div>
+      </div>
+      <div class="message-row">
+        <label class="label">Ended</label>
+        <div class="description">{{ message.body.data.endedAtMillis | date: 'mediumTime' }}</div>
+      </div>
+      <div class="message-row">
+        <label class="label">Time to answer</label>
+        <div class="description">
+          {{ message.body.data.time2AnswerInSecond ? (message.body.data.time2AnswerInSecond | duration) : '-' }}
+        </div>
+      </div>
+      <div class="message-row">
+        <label class="label">Duration</label>
+        <div class="description">
+          {{ message.body.data.talkingDurationInSecond ? (message.body.data.talkingDurationInSecond | duration) : '-' }}
+        </div>
+      </div>
+
+      <div class="message-row">
+        <label class="label">Queue</label>
+        <div class="description">{{ message.body.data.queueName }}</div>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions>
+    <ng-container *ngIf="ccMe$ | async as ccMe">
+      <ng-container
+        *ngIf="ccMe.assignedTxn && convo.type === ConvoType.call && ccMe.assignedTxn.txnUuid === convo.info.txn"
+      >
+        <mat-tab-group disabled="true" fxFlex="1 1 auto">
+          <mat-tab label="Note">
+            <div class="flex column justify-content-start align-items-none">
+              <div class="warning-message">Need complete this action after call end 30s</div>
+              <form class="note-form flex column justify-content-start align-items-none gap-16">
+                <mat-form-field>
+                  <mat-select placeholder="Disposition Code" [(ngModel)]="acwReq.code" name="callCode">
+                    <mat-option
+                      [value]="code"
+                      *ngFor="let code of ccMe.assignedTxn.queue.agentWorkflowConfig.codeOptions"
+                    >
+                      {{ code }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field>
+                  <textarea matInput [(ngModel)]="acwReq.note" name="callNote" placeholder="Take note..."></textarea>
+                </mat-form-field>
+
+                <div class="actions flex justify-content-end align-items-center">
+                  <button (click)="takeCallNote()" mat-raised-button color="primary" [disabled]="!ccMe.isWrapupTime">
+                    Take note
+                  </button>
+                </div>
+              </form>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+    </ng-container>
+  </mat-card-actions>
+</mat-card>

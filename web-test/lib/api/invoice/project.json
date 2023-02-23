@@ -1,0 +1,16 @@
+{
+  "name": "api-invoice",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/invoice/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/invoice/**/*.ts", "libs/api/invoice/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

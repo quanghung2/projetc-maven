@@ -1,0 +1,317 @@
+<ng-container *ngIf="data$ | async as data">
+  <div class="nav-group pt-0" *ngIf="data.profile" fxLayout="column" fxLayoutGap="0.8rem ">
+    <div class="user-profile py-8" matRipple [matMenuTriggerFor]="userProfileMenu" matTooltip="Profile">
+      <div class="user-avatar">
+        <img *ngIf="data.profile.hasPhoto" class="avatar" [attr.src]="data.profile.photoUrl" />
+
+        <mat-icon *ngIf="!data.profile.hasPhoto" svgIcon="user"></mat-icon>
+      </div>
+    </div>
+
+    <mat-button-toggle-group vertical class="app-toolbar">
+      <mat-button-toggle
+        *ngIf="(hasPhoneSystemLicense$ | async) === false"
+        matRipple
+        matBadgePosition="below after"
+        matBadgeSize="small"
+        matBadgeColor="warn"
+        [routerLink]="[this.currentOrgUuid, 'home']"
+        routerLinkActive="active"
+      >
+        <mat-icon>home</mat-icon>
+      </mat-button-toggle>
+
+      <mat-button-toggle
+        *ngFor="let app of featuredApps$ | async; trackBy: trackApp"
+        matRipple
+        [matBadge]="app.notificationCount > 0 ? (app.notificationCount > 9 ? '9+' : app.notificationCount) : ''"
+        matBadgePosition="below after"
+        matBadgeSize="small"
+        matBadgeColor="warn"
+        [routerLink]="
+          !!app?.lastNavigate
+            ? [this.currentOrgUuid, app.portalAppPath].concat(app?.pathIframe)
+            : [this.currentOrgUuid, app.portalAppPath]
+        "
+        [routerLinkActive]="'active'"
+        [class.opening]="app.opening"
+        [matTooltip]="app.name"
+        [matTooltipPosition]="'right'"
+      >
+        <!-- (contextmenu)="openContextMenu($event, app)" -->
+
+        <mat-icon *ngIf="app.monoType === 'svg'" [svgIcon]="app.monoIcon"></mat-icon>
+
+        <mat-icon *ngIf="app.monoType === 'font'">{{ app.monoIcon }}</mat-icon>
+      </mat-button-toggle>
+
+      <mat-button-toggle
+        *ngIf="hasApplication"
+        matRipple
+        [matMenuTriggerFor]="appMenu"
+        matTooltip="Apps & Features"
+        [matTooltipPosition]="'right'"
+        (click)="openAppMenu($event)"
+      >
+        <mat-icon>apps</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <ng-container *ngIf="applications$ | async as applications">
+      <mat-divider *ngIf="hasPinnedOrOpeningApp"></mat-divider>
+
+      <section class="apps-group">
+        <mat-button-toggle-group vertical class="app-toolbar">
+          <ng-container *ngFor="let app of applications; trackBy: trackApp">
+            <mat-button-toggle
+              *ngIf="(app.pinned || app.opening) && app.shouldOpenNewTab"
+              matRipple
+              (click)="openApp(app, $event)"
+              [class.opening]="app.opening"
+              [matTooltip]="app.name"
+              [matTooltipPosition]="'right'"
+              (contextmenu)="openContextMenu($event, app)"
+            >
+              <img *ngIf="app.iconUrl" [src]="app.iconUrl" />
+
+              <mat-icon *ngIf="!app.iconUrl" svgIcon="application"></mat-icon>
+            </mat-button-toggle>
+
+            <mat-button-toggle
+              *ngIf="(app.pinned || app.opening) && !app.shouldOpenNewTab"
+              matRipple
+              [matBadge]="app.notificationCount > 0 ? (app.notificationCount > 9 ? '9+' : app.notificationCount) : ''"
+              matBadgePosition="below after"
+              matBadgeSize="small"
+              matBadgeColor="warn"
+              [routerLink]="[this.currentOrgUuid, app.portalAppPath]"
+              [routerLinkActive]="'active'"
+              [class.opening]="app.opening"
+              [matTooltip]="app.name"
+              [matTooltipPosition]="'right'"
+              (contextmenu)="openContextMenu($event, app)"
+            >
+              <img *ngIf="app.iconUrl" [src]="app.iconUrl" />
+
+              <mat-icon *ngIf="!app.iconUrl" svgIcon="application"></mat-icon>
+            </mat-button-toggle>
+          </ng-container>
+        </mat-button-toggle-group>
+
+        <div
+          #clickHoverMenuTrigger="matMenuTrigger"
+          class="trigger-context-menu"
+          [style.left]="contextMenuPosition.x"
+          [style.top]="contextMenuPosition.y"
+          [matMenuTriggerFor]="contextMenu"
+        ></div>
+      </section>
+    </ng-container>
+
+    <ng-container *ngIf="hasReleaseNote$ | async">
+      <section class="help-center-group">
+        <mat-button-toggle-group vertical>
+          <mat-button-toggle
+            matRipple
+            matBadgePosition="below after"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+            matTooltip="Releases"
+            [routerLink]="[this.currentOrgUuid, 'Releases']"
+            routerLinkActive="active"
+          >
+            <mat-icon svgIcon="podcasts"></mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </section>
+    </ng-container>
+
+    <ng-container *ngIf="hasSupportCenter$ | async">
+      <section class="help-center-group">
+        <mat-button-toggle-group vertical>
+          <mat-button-toggle
+            matRipple
+            *ngIf="{ appSupportCenter: appSupportCenter$ | async } as data"
+            matBadgePosition="below after"
+            matBadgeSize="small"
+            matBadgeColor="warn"
+            matTooltip="Support Center"
+            [matBadge]="
+              data?.appSupportCenter?.notificationCount > 0
+                ? data?.appSupportCenter?.notificationCount > 9
+                  ? '9+'
+                  : data?.appSupportCenter?.notificationCount
+                : ''
+            "
+            [routerLink]="
+              !!data.appSupportCenter?.lastNavigate
+                ? [this.currentOrgUuid, 'SupportCenter'].concat(data.appSupportCenter?.pathIframe)
+                : [this.currentOrgUuid, 'SupportCenter']
+            "
+            routerLinkActive="active"
+          >
+            <mat-icon>help</mat-icon>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </section>
+    </ng-container>
+  </div>
+
+  <mat-menu #userProfileMenu="matMenu" xPosition="after" [overlapTrigger]="false" class="user-profile-menu">
+    <ng-container *ngIf="data.profile">
+      <div
+        mat-menu-item
+        (click)="stopPropagation($event)"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        class="user-info"
+      >
+        <div class="user-avatar" [class.default]="data.profile.photoUrl && data.profile.photoUrl.indexOf('http') <= -1">
+          <img *ngIf="data.profile.hasPhoto" class="avatar" [attr.src]="data.profile.photoUrl" />
+
+          <mat-icon *ngIf="!data.profile.hasPhoto" svgIcon="user"></mat-icon>
+        </div>
+
+        <div class="info">
+          <div class="row name">{{ data.profile.displayName }}</div>
+
+          <div class="row">{{ data.currentOrg?.orgName }}</div>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="gotoManageProfile()" color="primary">Manage Account</button>
+
+      <button mat-menu-item *ngIf="getIsShowOrgChartButton()" (click)="gotoOrganizationChart()" color="primary">
+        Organization Chart
+      </button>
+
+      <button
+        *ngIf="data.currentOrg && (data.currentOrg.isUpperAdmin || !data.currentOrg.licenseEnabled)"
+        mat-menu-item
+        [routerLink]="[this.currentOrgUuid, 'manage-organization']"
+      >
+        Manage Organization
+      </button>
+
+      <button
+        *ngIf="
+          data.profile.shouldHasSwitchOrg ||
+          data.servicedOrgs.length > 1 ||
+          (data.profile.organizations?.length === 1 && data.servicedOrgs.length === 1)
+        "
+        mat-menu-item
+        (click)="showSwitchOrganizationDialog()"
+      >
+        Switch Organization
+      </button>
+
+      <ng-container *ngIf="hasStore$ | async">
+        <ng-container *ngIf="portalConfig$ | async as portalConfig">
+          <button
+            mat-menu-item
+            *ngIf="portalConfig?.showStore && data.currentOrg?.isUpperAdmin"
+            [routerLink]="[this.currentOrgUuid, 'Store']"
+          >
+            Store
+          </button>
+        </ng-container>
+      </ng-container>
+
+      <mat-divider></mat-divider>
+
+      <a mat-menu-item (click)="toggleDarkMode(data.darkMode, $event)">
+        <mat-slide-toggle class="example-margin" [checked]="data.darkMode" labelPosition="before">
+          Dark mode
+        </mat-slide-toggle>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="openLogoutDialog()">Log out</button>
+    </ng-container>
+  </mat-menu>
+
+  <mat-menu #appMenu="matMenu" xPosition="after" [overlapTrigger]="false" class="app-menu">
+    <div #appMenuElement [style.height.px]="appMenuHeight">
+      <div class="header" (click)="stopPropagation($event)">
+        <mat-form-field>
+          <input #searchAppInput matInput placeholder="Search App & Features" [formControl]="searchAppCtrl" autofocus />
+
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <ng-container *ngIf="filteredApplications$ | async as applications">
+        <ng-container *ngFor="let app of applications; trackBy: trackApp">
+          <a mat-menu-item *ngIf="app.shouldOpenNewTab" (click)="openApp(app)">
+            <img class="ui small app image" [src]="app.iconUrl" fill="#ccc" *ngIf="app.iconUrl" />
+
+            <mat-icon *ngIf="!app.iconUrl" class="default-app-icon" svgIcon="application"></mat-icon>
+
+            <div class="content">{{ app.name }}</div>
+
+            <span class="fill-remaining-space"></span>
+
+            <button
+              (click)="togglePinnedApp(app, $event); (false)"
+              [matTooltip]="app.pinned ? 'Unpin' : 'Pin'"
+              matTooltipPosition="right"
+              mat-icon-button
+              class="pin-action"
+            >
+              <mat-icon svgIcon="{{ app.pinned ? 'unpin' : 'pin' }}" class="pin-icon"></mat-icon>
+            </button>
+          </a>
+
+          <a
+            mat-menu-item
+            *ngIf="!app.shouldOpenNewTab"
+            [routerLink]="[this.currentOrgUuid, app.portalAppPath]"
+            routerLinkActive="active"
+          >
+            <img class="ui small app image" [src]="app.iconUrl" fill="#ccc" *ngIf="app.iconUrl" />
+
+            <mat-icon *ngIf="!app.iconUrl" class="default-app-icon" svgIcon="application"></mat-icon>
+
+            <div class="content">{{ app.name }}</div>
+
+            <span class="fill-remaining-space"></span>
+
+            <button
+              (click)="togglePinnedApp(app, $event); (false)"
+              [matTooltip]="app.pinned ? 'Unpin' : 'Pin'"
+              matTooltipPosition="right"
+              mat-icon-button
+              class="pin-action"
+            >
+              <mat-icon svgIcon="{{ app.pinned ? 'unpin' : 'pin' }}" class="pin-icon"></mat-icon>
+            </button>
+          </a>
+        </ng-container>
+
+        <div *ngIf="!applications.length" class="px-16 py-8 text-center secondary-text">No applications found</div>
+      </ng-container>
+    </div>
+  </mat-menu>
+
+  <mat-menu #contextMenu="matMenu" direction="down" yPosition="below" class="single-app-menu">
+    <ng-template matMenuContent let-item="item">
+      <button *ngIf="!item.pinned" mat-menu-item (click)="togglePinnedApp(item)">
+        <mat-icon svgIcon="pin"></mat-icon>
+        Pin to sidebar
+      </button>
+
+      <button *ngIf="item.pinned" mat-menu-item (click)="togglePinnedApp(item)">
+        <mat-icon svgIcon="unpin"></mat-icon>
+        Unpin from sidebar
+      </button>
+
+      <button *ngIf="item.opening" mat-menu-item (click)="closeApp(item)">
+        <mat-icon>close</mat-icon>
+        Close application
+      </button>
+    </ng-template>
+  </mat-menu>
+</ng-container>

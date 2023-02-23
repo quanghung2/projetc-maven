@@ -1,0 +1,193 @@
+<ng-container *ngIf="conversationGroup && conversationGroup.id; else noContent">
+  <section class="convo__header">
+    <div class="convo__header--left text-truncate">
+      <span class="pr-4" [matTooltip]="conversationGroup.description">{{ conversationGroup.description }}</span>
+      <mat-chip [style.color]="conversationInbox.colorMark" *ngIf="conversationInbox">
+        {{ conversationInbox.name }}
+      </mat-chip>
+      <mat-chip *ngFor="let tag of conversationTags; let i = index" [style.color]="tag.colorMark">
+        {{ tag.name }} <mat-icon (click)="deleteTag(tag, i)" *ngIf="conversationGroup.isOpen">clear</mat-icon>
+      </mat-chip>
+    </div>
+    <div class="convo__header--right">
+      <div class="convo__header--right__follow" *ngIf="conversationGroup.isOpen">
+        <button mat-stroked-button *ngIf="!isFollowed" (click)="follow()" class="follow">
+          <mat-icon svgIcon="follow"></mat-icon>
+          <span>Follow</span>
+        </button>
+        <button mat-stroked-button *ngIf="isFollowed" (click)="unfollow()" class="following">
+          <mat-icon svgIcon="checked"></mat-icon>
+          <span>Following</span>
+        </button>
+      </div>
+      <div class="convo__header--right__snooze" *ngIf="conversationGroup.isOpen">
+        <button
+          mat-icon-button
+          [matMenuTriggerFor]="snoozeMenu"
+          [color]="isSnooze() ? 'warn' : 'primary'"
+          #snoozeMenuTrigger="matMenuTrigger"
+          matTooltip="Snooze"
+        >
+          <mat-icon>access_time</mat-icon>
+        </button>
+        <mat-menu #snoozeMenu="matMenu" class="snooze-menu" xPosition="before">
+          <button mat-menu-item (click)="snooze($event, '1h')">
+            <span>For 1 hour</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '2h')">
+            <span>For 2 hours</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '4h')">
+            <span>For 4 hours</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '1d')">
+            <span>For 1 day</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '2d')">
+            <span>For 2 days</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '1w')">
+            <span>For 1 week</span>
+          </button>
+          <button mat-menu-item (click)="snooze($event, '')">
+            <span>Custom</span>
+          </button>
+          <div class="snoozeCalendar" [class.hidden]="!showCustomSnooze">
+            <form class="group" [formGroup]="snoozeForm">
+              <mat-form-field appearance="fill">
+                <mat-label>Choose a datetime</mat-label>
+                <input matInput [matDatepicker]="pdt" formControlName="datetime" [min]="minDate" />
+                <mat-datepicker-toggle matSuffix [for]="pdt"></mat-datepicker-toggle>
+                <mat-datepicker #pdt type="datetime">
+                  <mat-datepicker-actions>
+                    <button mat-raised-button matDatepickerApply (click)="datesUpdated()">Apply</button>
+                  </mat-datepicker-actions>
+                </mat-datepicker>
+              </mat-form-field>
+            </form>
+          </div>
+          <div class="unsnooze" *ngIf="isSnooze()">
+            <button mat-menu-item (click)="unSnooze()">Unsnooze</button>
+          </div>
+        </mat-menu>
+      </div>
+      <div class="convo__header--right__tags" *ngIf="conversationGroup.isOpen">
+        <button mat-icon-button [matMenuTriggerFor]="tagMenu" color="primary" matTooltip="Tag">
+          <mat-icon>local_offer</mat-icon>
+        </button>
+        <mat-menu #tagMenu="matMenu" class="tag-menu" xPosition="before">
+          <div class="group pb-0">
+            <div class="title">Create</div>
+            <button mat-menu-item (click)="createNewTag()">
+              <mat-icon svgIcon="tag"></mat-icon>
+              <span>New tag</span>
+            </button>
+          </div>
+          <div class="group">
+            <div class="title">All tags</div>
+            <button mat-menu-item *ngFor="let tag of allTags" (click)="selectTag(tag)">
+              <mat-icon svgIcon="tag" [style.color]="tag.colorMark"></mat-icon>
+              <span>{{ tag.name }}</span>
+            </button>
+          </div>
+        </mat-menu>
+      </div>
+      <div class="convo__header--right__settings">
+        <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+          <mat-icon>settings</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" class="customer-conversation-menu" xPosition="before">
+          <ng-container *ngIf="conversationGroup.status === 'archived'">
+            <button mat-menu-item (click)="unArchivedChannel()">
+              <mat-icon color="primary">restore_from_trash</mat-icon>
+              <span>Reopen conversation</span>
+            </button>
+          </ng-container>
+          <ng-container *ngIf="conversationGroup.isOpen">
+            <button mat-menu-item (click)="copyLink()">
+              <mat-icon color="primary">link</mat-icon>
+              <span>Copy link</span>
+            </button>
+            <button mat-menu-item (click)="moveToInbox()">
+              <mat-icon color="primary">move_to_inbox</mat-icon>
+              <span>Move to inbox</span>
+            </button>
+            <button mat-menu-item (click)="assign()">
+              <mat-icon color="primary">group_add</mat-icon>
+              <span>Assign to members</span>
+            </button>
+            <button mat-menu-item (click)="leave()" *ngIf="isMemberOfConversation()">
+              <mat-icon color="primary">assignment_return</mat-icon>
+              <span>Leave conversation</span>
+            </button>
+            <button mat-menu-item (click)="archivedChannel()" *ngIf="conversationGroup.status !== 'archived'">
+              <mat-icon color="primary">cancel</mat-icon>
+              <span>Archive conversation</span>
+            </button>
+          </ng-container>
+        </mat-menu>
+      </div>
+    </div>
+  </section>
+
+  <div #chatContainer id="chat-container" class="chat" [style.height]="isSearch ? '100%' : ''">
+    <div class="hovered-scrollbar--content" #viewport [style.height]="isSearch ? '90%' : ''">
+      <ng-container *ngIf="!isSearch; else search">
+        <div *ngFor="let msg of messages; let i = index; trackBy: trackByFn">
+          <ng-container *ngIf="msg.mt === MsgType.email; else chatMessage">
+            <b3n-email-message
+              [message]="msg"
+              [users]="users"
+              [convo]="conversationGroup"
+              (reload)="getHistoryMessage()"
+            ></b3n-email-message>
+          </ng-container>
+          <ng-template #chatMessage>
+            <csh-chat-message
+              [previousMessage]="i > 0 ? messages[i - 1] : null"
+              [message]="msg"
+              [parentElr]="msg.mt === MsgType.attachment ? chatContainer : null"
+              [editingMessageId]="editingMessageId"
+            >
+            </csh-chat-message>
+          </ng-template>
+        </div>
+      </ng-container>
+      <ng-template #search>
+        <ng-container *ngIf="historyMessagesObservable$ | async as historyMessagesObservable">
+          <div *ngFor="let msg of historyMessagesObservable; let i = index; trackBy: trackByFn">
+            <ng-container *ngIf="msg.mt === MsgType.email; else chatMessage">
+              <b3n-email-message
+                [message]="msg"
+                [users]="users"
+                [convo]="conversationGroup"
+                (reload)="getHistoryMessage()"
+              ></b3n-email-message>
+            </ng-container>
+            <ng-template #chatMessage>
+              <csh-chat-message
+                [message]="msg"
+                [previousMessage]="i > 0 ? historyMessagesObservable[i - 1] : null"
+                [parentElr]="msg.mt === MsgType.attachment ? chatContainer : null"
+                [editingMessageId]="editingMessageId"
+              ></csh-chat-message>
+            </ng-template>
+          </div>
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="footer" [hidden]="isSearch">
+    <b3n-email-conversation-footer
+      [conversationGroup]="conversationGroup"
+      (uploadedFiles)="uploadFile($event, 0)"
+    ></b3n-email-conversation-footer>
+  </div>
+</ng-container>
+
+<ng-template #noContent>
+  <div class="empty__container">
+    <mat-icon>inbox</mat-icon>
+  </div>
+</ng-template>

@@ -1,0 +1,56 @@
+.configure-content {
+      padding-right: 15px;
+      padding-left: 15px;
+      border-radius: 4px;
+      line-height: 37px;
+      .big-title {
+        font-size: 20px;
+      }
+      .title {
+        padding: 15px 15px 0px 0px;
+        line-height: 1.778;
+      }
+      .row {
+        padding-bottom: 0px;
+      }
+      .content {
+        margin-bottom: 30px;
+      }
+      .empty-content {
+        padding-top: 50px;
+        color: #999999;
+      }
+      .drive.icon {
+        font-size: 90px;
+        margin-top: 35px;
+      }
+      .empty-dial-plan {
+        font-size: 20px;
+      }
+      .ui.grid {
+        margin: 0;
+      }
+      .ui.table {
+        border: none;
+        margin-top: 50px;
+      }
+      .ui.table thead th {
+        padding: 5px 20px;
+        line-height: 30px;
+      }
+      .ui.table td {
+        padding: 5px 20px;
+        line-height: 30px;
+      }
+      .ui.table tr {
+        .icon {
+          visibility: hidden;
+        }
+        &:hover {
+          .icon {
+            visibility: visible;
+            cursor: pointer;
+          }
+        }
+      }
+    }

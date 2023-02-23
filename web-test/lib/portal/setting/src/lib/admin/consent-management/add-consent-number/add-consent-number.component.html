@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>{{ isEdit ? 'Update ' + consent?.number : 'Create Consent' }}</h1>
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="flex-start" fxLayoutGap="0.8rem" #form="ngForm">
+    <mat-form-field *ngIf="!isEdit">
+      <input matInput [(ngModel)]="req.number" required type="text" placeholder="Number" name="displayNameInput" />
+      <mat-error>Number is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Voice</mat-label>
+      <mat-select [(ngModel)]="req.voice" name="voice">
+        <mat-option *ngFor="let s of status" [value]="s.key">
+          {{ s.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Fax</mat-label>
+      <mat-select [(ngModel)]="req.fax" name="fax">
+        <mat-option *ngFor="let s of status" [value]="s.key">
+          {{ s.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>SMS</mat-label>
+      <mat-select [(ngModel)]="req.sms" name="sms">
+        <mat-option *ngFor="let s of status" [value]="s.key">
+          {{ s.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-flat-button [disabled]="form.invalid || progressing" color="primary" (click)="create()" *ngIf="!isEdit">
+    Create
+  </button>
+  <button mat-flat-button [disabled]="form.invalid || progressing" color="primary" (click)="update()" *ngIf="isEdit">
+    Update
+  </button>
+</div>

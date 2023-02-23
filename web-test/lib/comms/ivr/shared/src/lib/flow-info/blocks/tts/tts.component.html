@@ -1,0 +1,216 @@
+<div ngModelGroup="text2Speech" class="tts-section">
+  <mat-radio-group
+    (ngModelChange)="selectedRadioButtonChange($event)"
+    [(ngModel)]="text2Speech.entries[0].type"
+    fxLayout="row"
+    name="radio"
+  >
+    <mat-radio-button *ngFor="let option of radioOptions" [value]="option.key" fxFlex="50">
+      {{ option.value }}
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <section *ngIf="text2Speech.entries[0].type === TTSType.speech">
+    <mat-card
+      *ngFor="let tts of text2Speech.entries; let index = index; trackBy: trackByFn"
+      class="tts-block tts-section__card"
+    >
+      <mat-card-content>
+        <ng-container>
+          <div *ngIf="!tts.showAdvance" fxLayout="column">
+            <mat-form-field class="mt-15">
+              <mat-select
+                #ttsLanguage="ngModel"
+                (selectionChange)="ttsLanguageChange(tts)"
+                [(ngModel)]="text2Speech.entries[index].language"
+                name="ttsLanguage{{ index }}"
+                placeholder="Language"
+                required
+              >
+                <mat-option *ngFor="let code of languageCodes" [value]="code"> {{ languages[code] }} </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="ttsLanguage.invalid && (ttsLanguage.dirty || ttsLanguage.touched)">
+                Language is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <textarea
+                rows="5"
+                matInput
+                placeholder="Message"
+                [(ngModel)]="text2Speech.entries[index].message"
+                #message="ngModel"
+                name="message{{ index }}"
+                [required]="isPlayBlock || isGatherBlock"
+                maxInputLength
+                [maxLength]="2000"
+              >
+                 {{ tts.message }}>
+              </textarea>
+              <mat-error *ngIf="message.hasError('required')">Message is required</mat-error>
+              <mat-error *ngIf="message.hasError('maxLength')">Maximum 2000 characters </mat-error>
+
+              <mat-hint>
+                Use
+                <a (click)="openPlaceHolderDialog()" color="primary" href="javascript:void(0)">Wildcard</a>
+                on the message field
+              </mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="tts.showAdvance" class="tts-speech-advance-block" fxLayout="column">
+            <div class="advance-block-one" fxLayout="row" fxLayoutAlign="space-between" fxLayoutGap="0.8rem">
+              <mat-form-field class="mt-15" floatLabel="always">
+                <mat-select
+                  #ttsLanguage="ngModel"
+                  (selectionChange)="ttsLanguageChange(tts)"
+                  [(ngModel)]="text2Speech.entries[index].language"
+                  name="ttsLanguage{{ index }}"
+                  placeholder="Language"
+                  required
+                >
+                  <mat-option *ngFor="let code of languageCodes" [value]="code"> {{ languages[code] }} </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="ttsLanguage.invalid && (ttsLanguage.dirty || ttsLanguage.touched)">
+                  Language is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="mt-15" floatLabel="always">
+                <mat-select
+                  [(ngModel)]="text2Speech.entries[index].pitch"
+                  name="ttsPitch{{ index }}"
+                  placeholder="Pitch"
+                >
+                  <mat-option *ngFor="let pitch of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="pitch">
+                    {{ pitch }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="mt-15" floatLabel="always">
+                <mat-select [(ngModel)]="text2Speech.entries[index].rate" name="ttsRate{{ index }}" placeholder="Rate">
+                  <mat-option *ngFor="let rate of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" [value]="rate">
+                    {{ rate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="advance-block-two">
+              <mat-form-field floatLabel="always">
+                <mat-label>Gender - Voice name</mat-label>
+
+                <mat-select
+                  placeholder="Select Gender - Voice name"
+                  value="{{ tts.selectedVendor?.gender }}-{{ tts.selectedVendor?.voiceName }}"
+                >
+                  <mat-option
+                    (click)="selectVendor(tts, ttsVendor)"
+                    *ngFor="let ttsVendor of tts.ttsVendors"
+                    [ngClass]="{
+                      'active selected': ttsVendor.voiceCode === tts.voiceCode
+                    }"
+                    value="{{ ttsVendor.gender }}-{{ ttsVendor.voiceName }}"
+                  >
+                    {{ ttsVendor.gender }}-{{ ttsVendor.voiceName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field id="example-full-width">
+                <textarea
+                  [(ngModel)]="text2Speech.entries[index].message"
+                  #message="ngModel"
+                  [required]="isPlayBlock || isGatherBlock"
+                  maxInputLength
+                  [maxLength]="2000"
+                  matInput
+                  name="ttsMessage{{ index }}"
+                  placeholder="Message"
+                  rows="5"
+                >
+                   {{ tts.message }}>
+                </textarea>
+                <mat-error *ngIf="message.hasError('required')">Message is required</mat-error>
+                <mat-error *ngIf="message.hasError('maxLength')">Maximum 2000 characters </mat-error>
+
+                <mat-hint>
+                  Use
+                  <a (click)="openPlaceHolderDialog()" color="primary" href="javascript:void(0)">Wildcard</a>
+                  on the message field
+                </mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
+      </mat-card-content>
+
+      <mat-card-actions
+        *ngIf="text2Speech.entries.length > 1 || tts.isSpeech"
+        fxLayout="row"
+        fxLayoutAlign="end center"
+      >
+        <button (click)="removeTts(tts)" *ngIf="text2Speech.entries.length > 1" color="warn" mat-button type="button">
+          Remove
+        </button>
+
+        <button *ngIf="tts.isSpeech" mat-button>
+          <div (click)="tts.showAdvance = !tts.showAdvance" fxLayout="row" fxLayoutAlign="left center">
+            Advance
+            <i *ngIf="tts.showAdvance" class="material-icons">expand_less</i>
+
+            <i *ngIf="!tts.showAdvance" class="material-icons">expand_more</i>
+          </div>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </section>
+
+  <section *ngIf="text2Speech.entries[0].type === TTSType.mp3">
+    <mat-card *ngIf="blockUuid" class="tts-section__card">
+      <div class="mt-15" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+        <div class="upload-button">
+          <label for="tts_0_{{ blockUuid }}">Choose MP3 file</label>
+
+          <input
+            (change)="selectMP3File($event, text2Speech.entries[0])"
+            accept=".mp3,.mpeg/*"
+            hidden
+            id="tts_0_{{ blockUuid }}"
+            type="file"
+          />
+        </div>
+
+        <mat-form-field *ngIf="text2Speech.entries[0].url" class="hidden">
+          <input #mp3Url="ngModel" [(ngModel)]="text2Speech.entries[0].url" hidden matInput name="mp3Url" required />
+        </mat-form-field>
+
+        <mat-progress-bar
+          *ngIf="text2Speech.entries[0].uploadIndicator"
+          [ngStyle]="{
+            opacity:
+              text2Speech.entries[0].uploadIndicator && text2Speech.entries[0].uploadEvent?.percentage <= 100 ? 1 : 0
+          }"
+          [value]="text2Speech.entries[0].uploadEvent?.percentage"
+          mode="determinate"
+        >
+        </mat-progress-bar>
+
+        <audio *ngIf="text2Speech.entries[0].url" controls id="myAudio" style="width: 100%">
+          <source [src]="text2Speech.entries[0].url | safe: 'resourceUrl'" type="audio/mp3" />
+        </audio>
+      </div>
+    </mat-card>
+  </section>
+
+  <div *ngIf="text2Speech.entries[0].type === TTSType.speech" class="add-more">
+    <button (click)="addMoreTTS()" [disabled]="text2Speech?.entries?.length >= 5" color="primary" mat-button>
+      Add more
+    </button>
+    if you want to play many messages.
+  </div>
+</div>

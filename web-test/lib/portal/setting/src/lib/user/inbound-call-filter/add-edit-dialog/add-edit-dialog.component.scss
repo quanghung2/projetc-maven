@@ -1,0 +1,45 @@
+@mixin d-flex($gap) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+.dialog__wrapper {
+  width: 450px;
+  overflow: hidden;
+  @include d-flex(1rem);
+
+  h3 {
+    font-size: 18px;
+    font-weight: 450;
+    margin-bottom: 16px;
+  }
+
+  .dropdowns {
+    font-size: 14px;
+    @include d-flex(0);
+
+    ::ng-deep.mat-form-field:not(:first-child) {
+      margin-top: -5px;
+    }
+
+    ::ng-deep.mat-form-field-underline {
+      opacity: 0.5;
+    }
+
+    mat-error {
+      font-size: 12px;
+      font-style: italic;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  ::ng-deep mat-dialog-actions {
+    margin: 0 !important;
+  }
+}

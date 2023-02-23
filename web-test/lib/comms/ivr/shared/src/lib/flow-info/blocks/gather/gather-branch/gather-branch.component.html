@@ -1,0 +1,111 @@
+<div
+  class="gather-section"
+  [ngClass]="branch && branch.type == GatherBranchType.multiple ? 'gather-section-multiple' : 'gather-section'"
+  style="display: initial !important"
+  fxLayout="row"
+  fxLayoutGap="1.6rem"
+  fxLayoutAlign="center center"
+  ngModelGroup="branch"
+>
+  <!-- <div> -->
+  <mat-form-field *ngIf="branch">
+    <mat-select
+      placeholder="Gather type"
+      [(ngModel)]="branch.type"
+      (selectionChange)="branchTypeChange($event)"
+      required
+      name="gatherType"
+    >
+      <mat-option *ngFor="let option of gatherBranchOptions" [value]="option.key"> {{ option.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- </div> -->
+
+  <mat-form-field *ngIf="branch && branch.type == GatherBranchType.one">
+    <input
+      required
+      matInput
+      placeholder="Digit"
+      [(ngModel)]="branch.digit"
+      #branchDigit="ngModel"
+      maxInputLength
+      [maxLength]="50"
+      (ngModelChange)="constructBranchLabel()"
+      type="number"
+      name="branchDigit"
+    />
+    <mat-error *ngIf="branchDigit.hasError('required')">Digit is required</mat-error>
+    <mat-error *ngIf="branchDigit.hasError('maxLength')">Maximum 50 digits </mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="branch && branch.type == GatherBranchType.regex">
+    <input
+      matInput
+      [(ngModel)]="branch.digit"
+      #branchRegex="ngModel"
+      (ngModelChange)="constructBranchLabel()"
+      placeholder="Regex"
+      name="branchRegex"
+    />
+    <mat-error *ngIf="branchRegex.invalid && (branchRegex.dirty || branchRegex.touched)">Regex is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="branch && [GatherBranchType.any, GatherBranchType.regex].includes(branch.type)">
+    <mat-label>Max digit</mat-label>
+    <input
+      required
+      matInput
+      type="number"
+      placeholder="#"
+      [(ngModel)]="branch.maxDigit"
+      (ngModelChange)="constructBranchLabel()"
+      permissibleLimits
+      [allowedMin]="1"
+      [allowedMax]="50"
+      maxlength="4"
+      name="branchMaxDigit"
+      #maxDigit="ngModel"
+    />
+    <mat-error *ngIf="maxDigit.hasError('required')">Max digit is required</mat-error>
+    <mat-error *ngIf="maxDigit.hasError('unacceptable')">Accept value from 1 to 50 </mat-error>
+  </mat-form-field>
+
+  <div *ngIf="branch && branch.type == GatherBranchType.multiple" class="upload">
+    <mat-progress-bar
+      *ngIf="branch.uploadIndicator && branch.uploadEvent?.percentage <= 100"
+      mode="determinate"
+      [value]="branch.uploadEvent?.percentage"
+    >
+    </mat-progress-bar>
+
+    <mat-card class="gather-section__upload__card" fxLayout="row" fxLayoutAlign="left center" fxLayoutGap="0.8rem">
+      <div fxFlex="33"><button (click)="downloadSample()" mat-button type="button">Download sample</button></div>
+      <div class="upload-button" fxFlex="33">
+        <label for="multiple_{{ branch.nextBlockUuid }}">
+          <span *ngIf="!branch.uploadIndicator">Choose csv file</span>
+          <span *ngIf="branch.uploadIndicator">Uploading...</span>
+        </label>
+        <input
+          type="file"
+          (change)="selectCSVFile($event)"
+          accept=".csv"
+          hidden
+          id="multiple_{{ branch.nextBlockUuid }}"
+        />
+        <div *ngIf="fileName" class="filename">{{ fileName }}</div>
+      </div>
+      <div fxflex="">
+        <button
+          type="button"
+          mat-button
+          *ngIf="branch && branch.type == GatherBranchType.multiple && branch.s3Key"
+          [disabled]="downloading"
+          (click)="downloadFile()"
+        >
+          <span *ngIf="!downloading">Download file</span>
+          <span *ngIf="downloading">Downloading...</span>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>

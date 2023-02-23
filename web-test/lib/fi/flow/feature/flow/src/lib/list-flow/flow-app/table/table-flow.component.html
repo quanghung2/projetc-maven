@@ -1,0 +1,69 @@
+<table mat-table [dataSource]="dataSource" fxFlexFill>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let e">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <span>{{ e.name }}</span>
+          <label *ngIf="e.type === 'SUBROUTINE'" class="label-status warning">Subroutine</label>
+        </div>
+        <div class="btn-action">
+          <button
+            *ngIf="e.isActive"
+            mat-icon-button
+            (click)="$event.stopPropagation()"
+            [routerLink]="[e.uuid, e.version, 'logs']"
+          >
+            <mat-icon matTooltip="View logs" matTooltipPosition="above">event_note</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            [cdkCopyToClipboard]="e.uuid"
+            (click)="$event.stopPropagation()"
+            (cdkCopyToClipboardCopied)="copied()"
+          >
+            <mat-icon matTooltip="Copy UUID" matTooltipPosition="above">content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="version">
+    <th mat-header-cell *matHeaderCellDef>Version</th>
+    <td mat-cell *matCellDef="let e">{{ e.version }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastUpdated">
+    <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+    <td mat-cell *matCellDef="let e">{{ e.lastUpdatedAt | date: 'dd MMM yyyy HH:mm' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="deprecated">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let e">
+      <button
+        *ngIf="e.totalWarnings > 0"
+        mat-icon-button
+        matTooltip="This flow has issues. Click to resolve now!"
+        (click)="$event.stopPropagation(); onNavigateToResoleDeprecate(e)"
+      >
+        <mat-icon color="warn">error</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="groupHeader">
+    <td colspan="999" mat-cell *matCellDef="let e">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="32px">
+        <label>{{ e.groupName | uppercase }}</label>
+        <span (click)="collapse(e)">{{ e.title }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row class="flow" *matRowDef="let row; columns: displayedColumns" (click)="viewFlow(row)"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
+</table>
+<mat-paginator *ngIf="paging" hidePageSize="true" pageSize="10" showFirstLastButtons></mat-paginator>

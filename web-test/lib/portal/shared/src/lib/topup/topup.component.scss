@@ -1,0 +1,367 @@
+// @use 'sass:math';
+
+$width: 600px;
+:host {
+  .topup {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    .topup-payment {
+      min-width: $width;
+      max-width: $width;
+
+      .full-width {
+        width: 100%;
+      }
+
+      .content {
+        .sub-title {
+          font-size: 1rem;
+          margin-bottom: 1rem;
+          color: #666;
+        }
+        .auto-topup-option,
+        .payment-method {
+          margin-top: 8px;
+        }
+        .help-icon {
+          color: #2badd4;
+        }
+        .radio {
+          border-left: 1px solid #dddddd;
+          border-top: 1px solid #dddddd;
+          border-bottom: 1px solid #dddddd;
+          width: calc($width / 2);
+          padding: 14px;
+        }
+
+        .radio:last-child {
+          border-right: 1px solid #dddddd;
+        }
+
+        .topup-amount {
+          input::-webkit-outer-spin-button,
+          input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+
+          /* Firefox */
+          input[type='number'] {
+            -moz-appearance: textfield;
+          }
+        }
+
+        .payment-auto-topup,
+        .topup-warning {
+          border: 1px solid #dddddd;
+          padding: 1rem;
+        }
+        .topup-warning {
+          color: #e88631;
+          .top-up-link {
+            color: #007be0;
+            text-decoration: none;
+          }
+        }
+        .word-break {
+          word-break: normal;
+        }
+
+        .card {
+          min-height: 200px;
+          width: 100%;
+          .card-option-border {
+            border: 1px solid #dddddd;
+            padding: 1rem;
+
+            &.checked {
+              border: 1px solid #1976d2;
+            }
+          }
+          .grid-card {
+            display: flex;
+          }
+          .card-item {
+            padding: 1px;
+            width: 287px;
+            position: relative;
+            margin-top: 1rem;
+            .card-background {
+              width: 0;
+              height: 0;
+              background-color: #ffffff;
+              border: 0;
+              border-radius: 0 !important;
+              border-left: 287px solid #f9f9f9;
+              border-bottom: 170px solid #ffffff;
+              .card-background-content {
+                width: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                .card-content {
+                  padding: 1rem;
+                  text-align: right;
+
+                  .number {
+                    font-size: 19px;
+                    font-weight: 300;
+                    letter-spacing: 1px;
+                    padding: 0.5925925926em 0;
+                    .hidden_no {
+                      letter-spacing: 2px;
+                    }
+                  }
+                  .brand {
+                    font-size: 23px;
+                    text-transform: uppercase;
+                    font-style: italic;
+                    font-weight: 600;
+                    letter-spacing: 1px;
+                  }
+                }
+                .card-date {
+                  padding: 0 0 1rem 1rem;
+                  text-align: right;
+                  width: auto;
+                  min-width: auto;
+                  .title {
+                    text-transform: uppercase;
+                    font-size: 9px;
+                    font-weight: 300;
+                  }
+                }
+              }
+            }
+            &:hover {
+              cursor: pointer;
+            }
+            &.active {
+              cursor: default;
+            }
+            &:hover,
+            &.active {
+              background-color: #188ceb;
+              border-color: #007be0;
+              .card-background {
+                border-bottom-color: #007be0;
+                border-left-color: #188ceb;
+                color: #ffffff;
+              }
+            }
+          }
+
+          //Striper Form
+          .stripeForm {
+            background-color: #fff;
+            .row {
+              margin: 0 5px 10px;
+            }
+            .field {
+              position: relative;
+              width: 100%;
+              height: 50px;
+              margin: 10px 0px;
+              .half-width {
+                width: 48%;
+              }
+
+              .quarter-width {
+                width: calc(25% - 10px);
+              }
+            }
+            .baseline {
+              position: absolute;
+              width: 100%;
+              height: 1px;
+              left: 0;
+              bottom: 0;
+              background-color: #cfd7df;
+              transition: background-color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            label {
+              position: absolute;
+              width: 100%;
+              left: 0;
+              bottom: 8px;
+              color: #cfd7df;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              transform-origin: 0 50%;
+              cursor: text;
+              transition-property: color, transform;
+              transition-duration: 0.3s;
+              transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            .input {
+              position: absolute;
+              width: 100%;
+              left: 0;
+              bottom: 0;
+              padding: 1px 0px 7px;
+              color: #32325d;
+              background-color: transparent;
+              &::-webkit-input-placeholder {
+                color: transparent;
+                transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+              }
+              &::-moz-placeholder {
+                color: transparent;
+                transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+              }
+              &:-ms-input-placeholder {
+                color: transparent;
+                transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+              }
+              &.StripeElement {
+                opacity: 0;
+                transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+                will-change: opacity;
+              }
+              &.focused,
+              &:not(.empty) {
+                opacity: 1;
+                &::-webkit-input-placeholder {
+                  color: #cfd7df;
+                }
+                &::-moz-placeholder {
+                  color: #cfd7df;
+                }
+                &:-ms-input-placeholder {
+                  color: #cfd7df;
+                }
+                + label {
+                  color: #aab7c4;
+                  transform: scale(0.85) translateY(-25px);
+                  cursor: default;
+                }
+              }
+              &.focused + label {
+                color: #24b47e;
+                + .baseline {
+                  background-color: #24b47e;
+                }
+              }
+              &.invalid + label {
+                color: #ffa27b;
+              }
+              &.focused.invalid + label + .baseline {
+                background-color: #e25950;
+              }
+            }
+            input,
+            button {
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              appearance: none;
+              outline: none;
+              border-style: none;
+              -webkit-animation: 1ms void-animation-out;
+            }
+            input:-webkit-autofill {
+              -webkit-text-fill-color: #e39f48;
+              transition: background-color 100000000s;
+              -webkit-animation: 1ms void-animation-out;
+            }
+            .StripeElement--webkit-autofill {
+              background: transparent !important;
+            }
+            .error {
+              opacity: 0;
+              &.visible {
+                opacity: 1;
+              }
+              svg {
+                margin-top: 0 !important;
+                -ms-flex-negative: 0;
+                flex-shrink: 0;
+                margin-right: 10px;
+                .base {
+                  fill: #e25950;
+                }
+                .glyph {
+                  fill: #fff;
+                }
+              }
+              .message {
+                color: #e25950;
+              }
+            }
+          }
+
+          .credit-stored-card {
+            .sub-title {
+              font-size: 1rem;
+              margin-bottom: 0px;
+              color: #666;
+            }
+            .header {
+              margin-bottom: 10px;
+            }
+          }
+
+          .pay-new-card {
+            .sub-title {
+              font-size: 1rem;
+              margin-bottom: 0px;
+              color: #666;
+            }
+            .header {
+              margin-bottom: 10px;
+            }
+          }
+        }
+
+        .credit-cheque {
+          .header {
+            padding: 8px 0px;
+          }
+          .error {
+            color: red;
+          }
+        }
+      }
+    }
+    .topup-loading {
+      width: 100%;
+      min-height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: white;
+      opacity: 0.8;
+      z-index: 999;
+      mat-spinner {
+        margin: 20px auto;
+      }
+    }
+
+    .strip-authenticate {
+      width: 100%;
+      height: 600px;
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        &.pdfLoader {
+          margin-bottom: 20px;
+        }
+      }
+      .loading-container {
+        mat-spinner {
+          margin: 20px auto;
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .top-up-snack-bar-error {
+  background-color: #ffe082;
+  color: #795548;
+}

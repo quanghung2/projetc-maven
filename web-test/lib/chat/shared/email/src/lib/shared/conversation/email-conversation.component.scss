@@ -1,0 +1,81 @@
+.conversation-container {
+  display: flex;
+
+  .convoCheckbox {
+    display: flex;
+    align-items: center;
+    margin-right: 6px;
+
+    mat-checkbox {
+      ::ng-deep .mat-checkbox-inner-container {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    ::ng-deep .mat-checkbox-checked.mat-warn {
+      .mat-checkbox-background {
+        background-color: #65676b;
+      }
+    }
+  }
+
+  .convoContent {
+    flex: 1 1 auto;
+    display: flex;
+    font-weight: 400;
+
+    .message {
+      color: var(--empty-color);
+    }
+
+    .statusIcon {
+      margin-right: 6px;
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 18px;
+
+      .unseenIcon,
+      .replyIcon {
+        height: 100%;
+        width: 100%;
+        font-size: 18px;
+      }
+
+      .unseenIcon {
+        color: var(--primary-background);
+      }
+
+      .replyIcon {
+        color: var(--general-border);
+      }
+    }
+    .description {
+      flex: 1 1 auto;
+      width: 70%;
+      .subject,
+      .lastMsg {
+        max-width: 250px;
+      }
+    }
+
+    .mentionCount {
+      background: red;
+      font-size: 12px;
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      align-self: center;
+      -webkit-box-pack: center;
+      justify-content: center;
+      color: #fff;
+      margin: 0 5px;
+    }
+  }
+}

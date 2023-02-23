@@ -1,0 +1,61 @@
+.action-bar {
+  padding: 0.8rem 1.6rem;
+}
+
+.icon {
+  zoom: 0.7;
+}
+
+.fetching-icon {
+  width: 40px;
+  > * {
+    float: right;
+  }
+}
+
+.queues-filtering {
+  min-width: 90px;
+  max-width: 250px;
+}
+
+::ng-deep .queues__all {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  mat-checkbox {
+    font-size: 14px;
+    padding: 0 16px;
+    width: 100%;
+  }
+
+  .mat-checkbox-ripple {
+    display: none !important;
+  }
+
+  .mat-checkbox-layout {
+    width: 100%;
+  }
+
+  .mat-checkbox-inner-container {
+    margin-left: 0;
+    display: none;
+  }
+}
+
+.queue-select__all {
+  color: #3f51b5;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.info-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+}

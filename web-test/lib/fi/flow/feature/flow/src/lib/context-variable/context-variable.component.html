@@ -1,0 +1,45 @@
+<ng-container *ngIf="!myRenderDir">
+  <b3n-select-context-var
+    *ngIf="
+      !isMultiple ||
+      optionForControl.dataType === 'number' ||
+      optionForControl.arrayItemDataType === 'number' ||
+      optionForControl.dataType === 'boolean' ||
+      optionForControl.arrayItemDataType === 'boolean' ||
+      (optionForControl.dataType === 'array' && !optionForControl.arrayItemDataType) ||
+      optionForControl.dataType === 'all'
+    "
+    [optionForControl]="optionForControl"
+    [contextVariables]="contextVariables"
+    [keyForContextVar]="keyForContextVar"
+    [isShowContextVar]="isShowContextVar"
+    [isShowInputControl]="
+      optionForControl.dataType === 'array' && !optionForControl.arrayItemDataType ? false : isShowInputControl
+    "
+    [typeBooleanCheckbox]="typeBooleanCheckbox"
+    [reqValidate]="myReqValidate"
+    (expressionTree)="selectValue($event)"
+    (property)="selectedProp.emit($event)"
+  ></b3n-select-context-var>
+
+  <b3n-context-var-mixed
+    *ngIf="isMultiple && (optionForControl.dataType === 'string' || optionForControl.arrayItemDataType === 'string')"
+    [optionForControl]="optionForControl"
+    [contextVariables]="contextVariables"
+    [keyForContextVar]="keyForContextVar"
+    [isShowContextVar]="isShowContextVar"
+    [reqValidate]="myReqValidate"
+    [textErrorOutside]="textErrorOutside"
+    (expressionTree)="selectValue($event)"
+  ></b3n-context-var-mixed>
+</ng-container>
+
+<b3n-render-directive
+  *ngIf="myRenderDir"
+  [optionForControl]="optionForControl"
+  [contextVariables]="contextVariables"
+  [renderDirective]="myRenderDir"
+  [typeBooleanCheckbox]="typeBooleanCheckbox"
+  [reqValidate]="myReqValidate"
+  (expressionTree)="selectValue($event)"
+></b3n-render-directive>

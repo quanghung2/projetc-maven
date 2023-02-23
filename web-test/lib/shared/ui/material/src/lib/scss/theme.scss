@@ -1,0 +1,15 @@
+// -----------------------------------------------------------------------------------------------------
+@use '@angular/material' as mat;
+@use '@matheo/datepicker/theming' as datepicker;
+
+mat.$theme-ignore-duplication-warnings: true;
+
+@mixin b3n-core-theme($theme) {
+  // Theming for Fuse core styles
+  @include colors-theme($theme);
+  @include cards-theme($theme);
+  @include material-theme($theme);
+  @include page-layouts-theme($theme);
+  @include typography-theme($theme);
+  @include datepicker.theme($theme);
+}

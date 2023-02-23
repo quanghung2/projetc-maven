@@ -1,0 +1,19 @@
+<div *ngIf="case" class="flex column align-items-end gap-16">
+  <b3n-editor
+    [content]=""
+    [accessControlId]="case.accessControlId"
+    [ownerOrgUuid]="case.ownerOrgUuid"
+    class="editor"
+  ></b3n-editor>
+  <div class="flex gap-16">
+    <button mat-button *ngIf="case.status === 'closed'" [loading]="closing" [disabled]="closing" (click)="reopenCase()">
+      Reopen case
+    </button>
+    <button mat-button *ngIf="case.status === 'open'" [loading]="closing" [disabled]="closing" (click)="closeCase()">
+      Close case
+    </button>
+    <button [loading]="commenting" [disabled]="commenting" mat-stroked-button color="primary" (click)="comment()">
+      Comment
+    </button>
+  </div>
+</div>

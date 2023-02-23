@@ -1,0 +1,157 @@
+<mat-toolbar><h1>General Settings</h1></mat-toolbar>
+<div class="system-settings__container">
+  <div *ngIf="loading" class="system-settings__loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+  <ng-container *ngIf="!loading">
+    <div class="agent-configuration" fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="column">
+        <h3 class="fw-500">Agent configuration</h3>
+        <div class="secondary-text">Agent configuration settings</div>
+      </div>
+      <button (click)="updateAgentConfiguration()" color="primary" mat-stroked-button>Edit</button>
+    </div>
+    <div class="call-pickup__container">
+      <mat-card class="call-pickup__card mat-elevation-z0">
+        <mat-card-title>
+          <h3 class="fw-500">Call pickup</h3>
+          <button mat-stroked-button color="primary" (click)="updatePickupPrefix()">Edit</button>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              To directly pick up the call of any user, press
+              <i [matTooltip]="hintMsg">*{{ pickupPrefix }} + user key + #</i>
+            </p>
+          </div>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              To pick up the call of another user in the same group, press
+              <i>*{{ pickupPrefix }}#</i>
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="call-parking__container">
+      <mat-card class="call-parking__card mat-elevation-z0">
+        <mat-card-title>
+          <h3 class="fw-500">Call parking</h3>
+          <button mat-stroked-button color="primary" (click)="openCallParkingConfig()">Edit</button>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              To park call, press
+              <i><strong>##2</strong> + {{ orgConfig.callParkingConfig.prefix }} + channel number + #</i>
+            </p>
+          </div>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              To retrieve call, press <i>{{ orgConfig.callParkingConfig.prefix }} + channel number + call</i>
+            </p>
+          </div>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              Parking time is <i>{{ transferParkingTime(orgConfig.callParkingConfig.parkingtime) }}</i>
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="default-rules__container">
+      <h3 class="fw-500">Default rules</h3>
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let rule; let i = index">
+            {{ i === 0 ? 'Outbound' : 'Inbound' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let rule">{{ rule.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let rule; let i = index">
+            <div class="actions__wrapper">
+              <mat-icon matTooltip="Edit" (click)="i === 0 ? openOutboundRuleDetail(rule) : openCallerIdPlan(rule)"
+                >edit</mat-icon
+              >
+              <button
+                mat-button
+                (click)="i === 0 ? editOutboundRule(rule) : editInboundRule(rule)"
+                [loading]="savingRule"
+                [color]="rule.status === RULE_STATUS.ACTIVE ? 'warn' : 'primary'"
+              >
+                {{ rule.status === RULE_STATUS.ACTIVE ? 'Disable' : 'Enable' }}
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="drDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: drDisplayedColumns"></tr>
+      </table>
+    </div>
+    <div class="public-holiday__container">
+      <mat-card class="public-holiday__card mat-elevation-z0">
+        <div fxLayout="row" fxLayoutAlign="space-between start" class="mb-16">
+          <div>
+            <h3 class="fw-500">Public holiday</h3>
+            <p class="secondary-text">Default public holiday for organization</p>
+          </div>
+          <button mat-stroked-button color="primary" (click)="openPublicHolidayConfig()">Edit</button>
+        </div>
+        <mat-card-content>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p *ngIf="scheduleOrg.phCountryCode" class="information">
+              This organization is using Public holiday of
+              <strong>{{ getCountryName(scheduleOrg.phCountryCode) }}</strong> for default settings.
+            </p>
+            <p *ngIf="!scheduleOrg.phCountryCode" class="information">
+              This organization did not configuration any default Public holiday.
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="public-holiday__container">
+      <mat-card class="public-holiday__card mat-elevation-z0">
+        <div fxLayout="row" fxLayoutAlign="space-between start" class="mb-16">
+          <div>
+            <h3 class="fw-500">Custom holiday</h3>
+            <p class="secondary-text">Default custom holiday for organization</p>
+          </div>
+          <button mat-stroked-button color="primary" (click)="openCustomHolidayConfig()">Edit</button>
+        </div>
+        <mat-card-content>
+          <div class="content__row">
+            <mat-icon class="material-icons-outlined">info</mat-icon>
+            <p class="information">
+              {{ scheduleOrg?.groupHolidayUuid ? 'Enable' : 'No set' }}
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="remarks" fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="column">
+        <h3 class="fw-500">Remarks</h3>
+        <div class="secondary-text">Busy remark settings</div>
+      </div>
+      <button (click)="openRemarksDialog()" color="primary" mat-stroked-button>Edit</button>
+    </div>
+  </ng-container>
+</div>

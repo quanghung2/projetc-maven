@@ -1,0 +1,38 @@
+<div class="test-call-info">
+  <div class="test-call-info__title" mat-dialog-title><h1>Test flow</h1></div>
+  <div class="test-call-info__content" mat-dialog-content>
+    <form #form="ngForm">
+      <mat-form-field class="test-call-info__content__number">
+        <input #testNumber="ngModel" [(ngModel)]="number" matInput name="number" placeholder="Number" required />
+        <mat-hint>Example: +6512345678</mat-hint>
+        <mat-error *ngIf="testNumber.invalid && (testNumber.dirty || testNumber.touched)">Number is required</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Rule type</mat-label>
+        <mat-select [(ngModel)]="selectedType" name="type">
+          <mat-option *ngFor="let officeHour of officeHourTypes" [value]="officeHour.key">
+            {{ officeHour.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Caller ID</mat-label>
+        <mat-select [(ngModel)]="selectedNumber" name="callerID">
+          <mat-option *ngFor="let number of numbers" [value]="number"> {{ number }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button [mat-dialog-close]="true" mat-button>Close</button>
+    <button
+      (click)="assignNumberToTestCall()"
+      [disabled]="form.invalid || progressing"
+      color="primary"
+      mat-raised-button
+    >
+      <span *ngIf="!progressing">Call</span> <span *ngIf="progressing">Calling..</span>
+    </button>
+  </div>
+</div>

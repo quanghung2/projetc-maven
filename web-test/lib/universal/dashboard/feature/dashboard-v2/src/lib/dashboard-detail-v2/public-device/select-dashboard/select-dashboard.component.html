@@ -1,0 +1,67 @@
+<div class="error__wrapper" *ngIf="invalid">
+  <mat-icon color="warn">error_outline</mat-icon>
+  <p>
+    You have reached {{ dashboardV2Service.globalConfig.maxAccessDevice }} access device(s), please remove at lease 1
+    device
+  </p>
+</div>
+<form class="dashboard__container" *ngIf="!invalid" autocomplete="off" [formGroup]="form">
+  <div class="toolbar__wrapper">
+    <mat-form-field class="toolbar__search">
+      <mat-label>Search</mat-label>
+      <input matInput formControlName="search" />
+    </mat-form-field>
+    <mat-form-field class="toolbar__type" *ngIf="hasCustom">
+      <mat-select placeholder="Type" formControlName="type">
+        <mat-option *ngFor="let type of DASHBOARD_TYPE" [value]="type.key"> {{ type.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>{{ dashboardOptionLeft }} dashboard(s) left</p>
+    <button
+      mat-button
+      color="primary"
+      class="ml-auto"
+      (click)="clearDashboardOptions.emit()"
+      [disabled]="!dashboardUuids.value.length"
+    >
+      Clear
+    </button>
+  </div>
+  <div class="dashboard__wrapper">
+    <ng-container *ngFor="let dashboard of dashboard2sFilter">
+      <div
+        *ngIf="dashboard2Map[dashboard.uuid]; let dashboardMap"
+        [ngClass]="{
+          disabled: disableDashboardOptions && !dashboardMap.selected,
+          selected: dashboardMap.selected
+        }"
+        (click)="dashboardOptionClick.emit(dashboard.uuid)"
+        class="dashboard__item"
+      >
+        <div class="content__wrapper">
+          <div class="label">
+            <input type="checkbox" [checked]="dashboardMap.selected" />
+            {{ dashboard.name }}
+          </div>
+        </div>
+        <div class="details__wrapper">
+          <div class="tag__wrapper" *ngIf="dashboard.isDefault">
+            <div class="tag__item">DEFAULT</div>
+          </div>
+          <div class="template__wrapper slide__active" *ngIf="dashboard.template; let template">
+            <div [class]="template.class + '__wrapper'" class="preview__template active">
+              <div
+                *ngFor="let _ of [].constructor(template.item); let i = index"
+                [class]="template.class + '__item'"
+                class="active"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="action__wrapper">
+    <button mat-raised-button matStepperNext type="button" color="primary" [disabled]="form.invalid">Next</button>
+  </div>
+</form>

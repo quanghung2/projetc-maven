@@ -1,0 +1,116 @@
+mat-drawer-content {
+  height: 100vh;
+  overflow: hidden !important;
+
+  mat-toolbar {
+    .btn-search {
+      font-size: 20px !important;
+      height: 20px !important;
+      width: 20px !important;
+    }
+  }
+}
+
+mat-drawer {
+  position: fixed;
+  width: 400px;
+  height: 100vh;
+  box-shadow: 0 0 20px #ddd;
+  background: #ffffff;
+}
+
+.table-container {
+  max-width: 100%;
+  overflow: auto;
+
+  table {
+    width: 100%;
+
+    mat-footer-row {
+      justify-content: center;
+    }
+
+    td.mat-cell,
+    th.mat-header-cell {
+      min-width: 120px;
+    }
+
+    .done-icon {
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      margin-top: 5px;
+    }
+
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      background: #e6e6e6 !important;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #424242 !important;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+  }
+
+  .actions {
+    visibility: hidden;
+  }
+
+  .mat-row:hover {
+    background-color: #fafafa;
+
+    .actions {
+      visibility: visible;
+    }
+  }
+}
+
+mat-paginator {
+  padding-left: 16px;
+}
+
+.mat-header-cell {
+  font-size: 13px !important;
+}
+
+.info-tooltip {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+  margin-left: 8px;
+  color: #000000de;
+}
+
+.information {
+  font-size: 14px;
+  position: relative;
+  margin: 0;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.information {
+  font-size: 14px;
+  position: relative;
+
+  i {
+    font-size: 14px;
+  }
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 450;
+}

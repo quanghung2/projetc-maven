@@ -1,0 +1,30 @@
+<div class="upload-div">
+  <div fxLayout="row" fxLayoutAlign="end start" class="cursor-pointer">
+    <label
+      [class.disabled-color]="isDisableUploader"
+      for="file-csv"
+      matTooltip="{{ disableUploaderReason }}"
+      class="mat-stroked-button"
+    >
+      {{ !backgroundUploading ? 'Upload' : 'Uploading...' }}
+    </label>
+    <div [matMenuTriggerFor]="uploadOption" class="dropdown-toggle b b-l-0">
+      <mat-icon> keyboard_arrow_down </mat-icon>
+    </div>
+
+    <form id="uploadMoh" hidden>
+      <input
+        type="file"
+        id="file-csv"
+        hidden
+        [disabled]="isDisableUploader"
+        (change)="onBackgroundFileChange($event)"
+        accept=".csv"
+      />
+    </form>
+  </div>
+</div>
+
+<mat-menu #uploadOption="matMenu">
+  <button mat-menu-item (click)="downloadSampleFileService()">Download sample</button>
+</mat-menu>

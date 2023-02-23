@@ -1,0 +1,23 @@
+<h1 mat-dialog-title>
+  <span *ngIf="type === StoreType.create">Create question</span>
+  <span *ngIf="type === StoreType.update">Update question</span>
+</h1>
+<div mat-dialog-content>
+  <form #form="ngForm" fxLayout="column" fxLayoutGap="1rem">
+    <mat-form-field>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="question.name"
+        placeholder="Question name"
+        name="questionName"
+        required
+        (keyup.enter)="progress()"
+      />
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Close</button>
+  <button mat-stroked-button [disabled]="progressing || form.invalid" (click)="progress()" color="primary">Save</button>
+</div>

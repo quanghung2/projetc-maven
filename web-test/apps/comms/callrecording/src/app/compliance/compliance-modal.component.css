@@ -1,0 +1,51 @@
+:host .ui.menu {
+  box-shadow: none;
+  border: 0;
+  margin-top: 0;
+}
+
+:host .ui > .item {
+  padding: 15px 10px !important;
+  cursor: pointer;
+}
+
+:host .item.selected {
+  background: #eee;
+}
+
+:host .item .button {
+  float: right;
+}
+
+:host .ui.list {
+  height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+:host .centered.column {
+  display: inherit !important;
+}
+
+:host .column > title,
+:host .column > .title {
+  display: block;
+  padding: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+
+:host .three.column.row > .column {
+  border: 1px solid #ddd;
+}
+
+:host .ui.add.user {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+:host .loadmore {
+  text-align: center;
+}

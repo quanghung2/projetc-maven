@@ -1,0 +1,42 @@
+:host {
+  mat-icon {
+    cursor: pointer;
+  }
+  .title-bar {
+    padding: 0.8rem 1.6rem;
+  }
+
+  .title-bar-expension {
+    padding: 0.8rem calc(1.6rem + 23px);
+  }
+  .filter-group {
+    .filter-selection {
+      width: 100px;
+    }
+  }
+
+  .additional-search-title {
+    width: 100%;
+    text-align: right;
+  }
+
+  mat-expansion-panel {
+    background: transparent;
+    border: 0;
+    box-shadow: 0 0 0;
+  }
+
+  mat-expansion-panel-header {
+    height: 0;
+  }
+
+  .advanced-search-trigger {
+    margin-right: 2rem !important;
+    font-weight: initial;
+    width: auto !important;
+    cursor: pointer;
+    span {
+      vertical-align: super;
+    }
+  }
+}

@@ -1,0 +1,27 @@
+// Custom Theming for Angular Material
+
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+body {
+  height: 100%;
+  width: 100%;
+}
+
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
+  background: rgba(0, 0, 0, 0.32);
+  opacity: 1 !important;
+}
+
+.drag-scroll-content {
+  padding-left: 26px;
+}
+
+.button-link.active {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+  border-radius: 0;
+}
+
+i {
+  cursor: pointer;
+}

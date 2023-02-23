@@ -1,0 +1,15 @@
+<div mat-dialog-title>Call mapping tool</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Txn UUID" [formControl]="txnCtrl" (keyup.enter)="view()" required />
+    <mat-error *ngIf="txnCtrl.invalid">Txn UUID is required</mat-error>
+  </mat-form-field>
+  <iframe *ngIf="source" [src]="source" width="100%" height="500px" frameborder="0" allowfullscreen></iframe>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-stroked-button color="primary" [disabled]="!stringBlob" (click)="viewFull()">View in new tab</button>
+  <button mat-raised-button color="primary" [loading]="loading" [disabled]="txnCtrl.invalid" (click)="view()">
+    View
+  </button>
+</div>

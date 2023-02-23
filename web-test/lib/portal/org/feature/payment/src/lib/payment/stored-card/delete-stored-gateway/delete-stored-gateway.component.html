@@ -1,0 +1,28 @@
+<div class="delete-stored-card">
+  <div class="header" fxLayout="row" fxLayoutAlign="space-between">
+    <h2>Delete Stored Card</h2>
+    <mat-icon class="close-delete-stored" (click)="close()">clear</mat-icon>
+  </div>
+  <div class="content">
+    <div *ngIf="!isDefault && !isLasted">
+      <p>
+        Are you sure you want to delete <strong>{{ gateWayName | titlecase }}</strong> card?
+      </p>
+    </div>
+    <p>
+      <strong>Waning.</strong> You are deleting the <span *ngIf="!isLasted">default</span>
+      <span *ngIf="isLasted">last</span> stored credit card.
+      <span *ngIf="isLasted">Subscription renewal and the auto top-up feature</span>
+      <span *ngIf="!isLasted">The auto top-up feature</span> will cease to function. Are you sure?
+    </p>
+    <div class="error" *ngIf="error">
+      <p>{{ error }}</p>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+    <button mat-button (click)="close()">Go back</button>
+    <button mat-raised-button [loading]="isLoading" [disabled]="isLoading" color="primary" (click)="onRemoveDefault()">
+      Yes, I'm sure
+    </button>
+  </div>
+</div>

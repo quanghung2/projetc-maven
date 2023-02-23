@@ -1,0 +1,7 @@
+<ng-container *ngIf="identityProfile$ | async as profileOrg">
+  <div class="top-bar" *ngIf="organization$ | async as organization">
+    <h1 class="top-bar__name" fxLayout="row" fxLayoutAlign="start center">
+      {{ organization.name }} <span class="top-bar__role">{{ profileOrg.organizations[0].role }}</span>
+    </h1>
+  </div>
+</ng-container>

@@ -1,0 +1,56 @@
+<div mat-dialog-title fxLayout>
+  <h1 *ngIf="data.type !== IntegrationType.genericTicketing">Example</h1>
+  <h1 *ngIf="data.type === IntegrationType.genericTicketing">Guides</h1>
+  <span class="fill-remaining-space"></span>
+  <button mat-icon-button [matDialogClose]="true"><mat-icon>close</mat-icon></button>
+</div>
+
+<div mat-dialog-content class="view-example">
+  <div class="freshdesk-view" *ngIf="data.type == 'freshdesk'"><img [src]="data.freshDeskURL" /></div>
+
+  <div class="zendesk-view" *ngIf="data.type == 'zendesk'"><img [src]="data.zenDeskURL" /></div>
+
+  <div class="agileCrm-view" *ngIf="data.type == 'agileCrm'">
+    <img [src]="data.agileCrmURL2" /> <img [src]="data.agileCrmURL1" />
+  </div>
+
+  <div class="generic-ticketing" *ngIf="data.type == IntegrationType.genericTicketing">
+    <div class="generic-ticketing__start">
+      When there is an incoming call, the ticket will be created with the following info (using POST)
+    </div>
+    <ul>
+      <li>Virtual Line</li>
+      <li>Incoming number</li>
+      <li>Access number</li>
+    </ul>
+    <div class="generic-ticketing__end">
+      When the call finishes, the same ticket will be updated with the following info (using PUT)
+    </div>
+    <ul>
+      <li>Virtual Line</li>
+      <li>Incoming number</li>
+      <li>Access number</li>
+      <li>Working hour type</li>
+      <li>Date & time</li>
+      <li>Pressed digits</li>
+      <li>Endpoint</li>
+      <li>Call recording link</li>
+    </ul>
+    <div class="generic-ticketing__note">
+      Please take note that in order to receive the ticket update, the ticket ID or reference has to be returned in the
+      first HTTP Post.
+    </div>
+  </div>
+
+  <div class="https-notification-view" *ngIf="data.type === IntegrationType.httpsNotification">
+    <div class="view-example__title">{{ data.httpsNotificationIncomingCall.title }}</div>
+    <mat-card>
+      <pre>{{ data.httpsNotificationIncomingCall.data }}</pre>
+    </mat-card>
+
+    <div class="view-example__title">{{ data.httpsNotificationEndedCall.title }}</div>
+    <mat-card>
+      <pre>{{ data.httpsNotificationEndedCall.data }}</pre>
+    </mat-card>
+  </div>
+</div>

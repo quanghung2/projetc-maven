@@ -1,0 +1,15 @@
+<div mat-dialog-title>Add a IP whitelist address</div>
+
+<div fxLayout="column">
+  <mat-form-field>
+    <mat-label>IP whitelist address</mat-label>
+    <input (keyup.enter)="add()" [(ngModel)]="ipAddress" matInput />
+  </mat-form-field>
+</div>
+
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="add()" [disabled]="!ipAddress" [loading]="progressing" color="primary" mat-flat-button type="button">
+    Add
+  </button>
+</div>

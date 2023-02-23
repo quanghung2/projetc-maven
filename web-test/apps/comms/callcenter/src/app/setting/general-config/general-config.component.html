@@ -1,0 +1,186 @@
+<form #form="ngForm" fxLayout="column" fxLayoutGap="1.6rem">
+  <ng-container *ngIf="popupConfig">
+    <h2>Agent configuration</h2>
+    <mat-form-field class="short-line">
+      <mat-label>Minimum ring time per agent (in second)</mat-label>
+      <input
+        [(ngModel)]="minimumRingTimeInSeconds"
+        matInput
+        name="minimumRingTimePerAgent"
+        #minimumRingTimePerAgent="ngModel"
+        type="number"
+        required
+      />
+      <mat-error
+        class="sms-warning"
+        *ngIf="minimumRingTimePerAgent.invalid && (minimumRingTimePerAgent.dirty || minimumRingTimePerAgent.touched)"
+      >
+        Minimum ring time per agent is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="enable-toggle" fxLayout="row">
+      <h3 class="m-0 pr-8">Away detection</h3>
+      <mat-icon
+        class="material-icons-outlined s-16"
+        matTooltip="An agent becomes Away when his consecutive unanswered calls reach this threshold."
+        [matTooltipPosition]="'right'"
+      >
+        info
+      </mat-icon>
+      <span class="fill-remaining-space"></span>
+      <mat-slide-toggle
+        [checked]="isAwayDetectionUnansweredThreshold"
+        (change)="isAwayDetectionUnansweredThreshold = $event.checked"
+      ></mat-slide-toggle>
+    </div>
+    <mat-form-field *ngIf="isAwayDetectionUnansweredThreshold" class="short-line">
+      <mat-label>Unanswered threshold</mat-label>
+      <input
+        [(ngModel)]="awayDetectionUnansweredThreshold"
+        placeholder="Consecutive unanswered calls (from 3 to 30)"
+        matInput
+        name="maximumConsecutiveUnansweredCalls"
+        #maximumConsecutiveUnansweredCalls="ngModel"
+        type="number"
+        min="3"
+        max="30"
+        required
+      />
+      <mat-error
+        class="sms-warning"
+        *ngIf="
+          maximumConsecutiveUnansweredCalls.invalid &&
+          (maximumConsecutiveUnansweredCalls.dirty || maximumConsecutiveUnansweredCalls.touched)
+        "
+      >
+        Unanswered threshold is required
+      </mat-error>
+      <mat-hint
+        align="start"
+        *ngIf="awayDetectionUnansweredThreshold > 30 || awayDetectionUnansweredThreshold < 3"
+        style="color: red"
+        >* Range from 3 to 30</mat-hint
+      >
+    </mat-form-field>
+
+    <div class="enable-toggle" fxLayout="row">
+      <h3 class="m-0 pr-8">Unreachable detection</h3>
+      <mat-icon
+        class="material-icons-outlined s-16"
+        matTooltip="An Agent become Offline when his consecutive unreachable call reach this threshold."
+        [matTooltipPosition]="'right'"
+      >
+        info
+      </mat-icon>
+      <span class="fill-remaining-space"></span>
+      <mat-slide-toggle
+        [checked]="isUnreachableThreshold"
+        (change)="toggleValue((isUnreachableThreshold = $event.checked))"
+      ></mat-slide-toggle>
+    </div>
+
+    <mat-form-field *ngIf="isUnreachableThreshold" class="short-line">
+      <mat-label>Unanswered threshold</mat-label>
+      <input
+        [(ngModel)]="unreachableThreshold"
+        placeholder="Consecutive unanswered calls (from 3 to 30)"
+        matInput
+        name="maximum"
+        #maximum="ngModel"
+        type="number"
+        min="3"
+        max="30"
+        required
+      />
+      <mat-error class="sms-warning" *ngIf="maximum.invalid && (maximum.dirty || maximum.touched)">
+        Unanswered threshold is required
+      </mat-error>
+      <mat-hint align="start" *ngIf="unreachableThreshold > 30 || unreachableThreshold < 3" style="color: red"
+        >* Range from 3 to 30</mat-hint
+      >
+    </mat-form-field>
+
+    <h2>Post-call survey</h2>
+    <mat-form-field class="short-line">
+      <mat-label>Maximum SMS to each caller per day</mat-label>
+      <input [(ngModel)]="smsPerCallerInDay" matInput name="smsPerCallerInDay" type="number" />
+    </mat-form-field>
+
+    <h2>Notification</h2>
+    <mat-form-field class="short-line">
+      <mat-label>Popup show on</mat-label>
+      <mat-select [(value)]="popupConfig.defaultPopupShowedOn">
+        <mat-option *ngFor="let popup of popups" [value]="popup.key"> {{ popup.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngIf="popupConfig.defaultPopupShowedOn !== PopupShowedOn.none">
+      <mat-form-field class="short-line">
+        <mat-label>Call Types</mat-label>
+        <mat-select [(value)]="popupConfig.callTypeToShowPopup" multiple disableOptionCentering>
+          <mat-option *ngFor="let type of types" [value]="type.key">{{ type.value }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <mat-form-field class="short-line">
+      <mat-label>Default Wrap Up Time (seconds)</mat-label>
+      <input [(ngModel)]="wrapupTime" matInput name="wrapupTime" type="number" />
+    </mat-form-field>
+
+    <section class="crm-fields">
+      <h3>Addon fields</h3>
+      <div
+        *ngFor="let field of popupConfig.popupFields; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="0.8rem"
+      >
+        <mat-form-field fxFlex="">
+          <mat-label>Name</mat-label>
+          <input
+            [(ngModel)]="popupConfig.popupFields[i].fieldName"
+            matInput
+            matInput
+            name="fieldName{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <mat-form-field fxFlex="70">
+          <mat-label>Value</mat-label>
+          <input
+            [(ngModel)]="popupConfig.popupFields[i].fieldValue"
+            matInput
+            matInput
+            name="fieldValue{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <button (click)="popupConfig.popupFields.splice(i, 1)" mat-icon-button tabindex="-1">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <a (click)="addMoreField()" class="add-more-button" href="javascript:void(0)">Add more</a>
+    </section>
+
+    <div align="end" class="actions-bar">
+      <button
+        (click)="update()"
+        [disabled]="
+          ((unreachableThreshold > 30 || unreachableThreshold < 3) && isUnreachableThreshold) ||
+          ((awayDetectionUnansweredThreshold > 30 || awayDetectionUnansweredThreshold < 3) &&
+            isAwayDetectionUnansweredThreshold) ||
+          progressing ||
+          form.invalid
+        "
+        color="primary"
+        mat-raised-button
+      >
+        <span *ngIf="!progressing">Update</span> <span *ngIf="progressing">Updating...</span>
+      </button>
+    </div>
+  </ng-container>
+</form>

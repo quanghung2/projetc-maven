@@ -1,0 +1,48 @@
+<div class="flex column gap-16 justify-content-stretch">
+  <div class="flex justify-content-space-between align-items-center">
+    <h3 class="m-0 secondary-text">Related cases</h3>
+    <div class="">
+      <button mat-icon-button (click)="isAddingRelatedCase = true"><mat-icon>add</mat-icon></button>
+    </div>
+  </div>
+
+  <div *ngIf="relatedCases$ | async as relatedCases" [class.yellow-200]="!relatedCases.length" class="border-radius-4">
+    <div *ngIf="!relatedCases?.length" class="px-16 py-8 secondary-text">
+      Link issue together to show that they're related.
+    </div>
+    <div class="flex column related-cases">
+      <div
+        *ngFor="let relatedCase of relatedCases"
+        class="related-case px-16 py-10 flex justify-content-space-between align-items-center"
+      >
+        <a href="javascript:void(0)" (click)="goToCase($event, relatedCase)"
+          >#{{ relatedCase.sid }} {{ relatedCase.title }}</a
+        >
+        <mat-icon (click)="unlinkCase(relatedCase)" class="button material-icons-outlined">close</mat-icon>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isAddingRelatedCase" class="flex column justify-content-stretch">
+    <mat-form-field class="fluid">
+      <!-- [formControl]="selectedCasesFG"  -->
+      <mat-select placeholder="Related case" (selectionChange)="linkCase($event.value)">
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search for case"
+            noEntriesFoundLabel="No case found"
+            [formControl]="searchCaseFC"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let m of filteringCase$ | async" [value]="m">
+          <div fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <span> {{ m.sid }} {{ m.title }}</span>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="flex gap-16 justify-content-end">
+      <button mat-button (click)="isAddingRelatedCase = false">Cancel</button>
+      <button mat-stroked-button>Link</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'" *ngIf="extension" class="container">
+  <b3n-settings-navigate class="w-100" title="Call Forwarding"></b3n-settings-navigate>
+  <div class="body w-100 px-16 pt-10" fxLayout="column" fxLayoutAlign="start none">
+    <div class="w-100" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+      <mat-form-field>
+        <mat-label>Add user or phone number</mat-label>
+        <input
+          #extensionInput
+          (keyup.enter)="selected(extensionCtrl.value)"
+          [formControl]="extensionCtrl"
+          [matAutocomplete]="auto"
+          matInput
+          placeholder="Enter new user or phone number..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event.option.value)">
+          <mat-option *ngFor="let extension of extensions$ | async" [value]="extension.extKey">
+            {{ extension.displayText }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button (click)="selected(extensionCtrl.value)" mat-raised-button>Add</button>
+    </div>
+    <mat-list class="m-0 p-0">
+      <h3 mat-subheader class="p-0" [style.color]="'#5f5f5f'">
+        Forwarding list (maximum {{ MAX_NUMBER_ADDED }} users)
+      </h3>
+    </mat-list>
+    <ng-container *ngIf="extensionSelected.length === 0; else loadList">
+      <mat-hint fxLayoutAlign="center"> No user & phone number</mat-hint>
+    </ng-container>
+    <ng-template #loadList>
+      <ng-container
+        *ngIf="
+          extension.cfConfig.ringMode === RingMode.sequential || extension.ringConfig.ringMode === RingMode.ringAll;
+          else viewList
+        "
+      >
+        <div (cdkDropListDropped)="dropDispositionCodes($event)" cdkDropList class="item__rows" fxFlexAlign="stretch">
+          <div
+            *ngFor="let option of extensionSelected; let i = index"
+            cdkDrag
+            class="sortable-box"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div class="item" fxLayout="row">
+              <ng-container *ngIf="option?.length <= 5; else numberPhone">
+                <span class="spacer">{{ i + 1 }}. {{ (option | selectExtension | async)?.displayText }}</span>
+              </ng-container>
+              <ng-template #numberPhone>
+                <span class="spacer">{{ i + 1 }}. {{ option }}</span>
+              </ng-template>
+              <mat-icon (click)="deleteCodeOption(option)" class="code-option__btn-delete" matTooltip="Delele">
+                delete
+              </mat-icon>
+            </div>
+            <mat-divider *ngIf="i < extensionSelected.length - 1"></mat-divider>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #viewList>
+        <div class="item__rows" fxFlexAlign="stretch">
+          <div
+            *ngFor="let option of extensionSelected; let i = index"
+            class="unsortable-box"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div class="item" fxLayout="row">
+              <ng-container *ngIf="option?.length <= 5; else numberPhone">
+                <span class="spacer"> {{ (option | selectExtension | async)?.displayText }}</span>
+              </ng-container>
+              <ng-template #numberPhone>
+                <span class="spacer">+{{ option }}</span>
+              </ng-template>
+              <mat-icon (click)="deleteCodeOption(option)" class="code-option__btn-delete" matTooltip="Delele">
+                delete
+              </mat-icon>
+            </div>
+            <mat-divider *ngIf="i < extensionSelected.length - 1"></mat-divider>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>

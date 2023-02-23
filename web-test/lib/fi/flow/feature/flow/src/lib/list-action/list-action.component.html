@@ -1,0 +1,112 @@
+<ng-container *ngIf="flow$ | async as flow">
+  <ng-container *ngFor="let action of flow.ui.actions; let i = index; trackBy: trackByUuid">
+    <div
+      [id]="action?.actionUuid"
+      class="panel mat-elevation-z2"
+      [class.highlight]="flow.ui.treeNodeSelected?.actionUuid === action?.actionUuid"
+      fxLayout="column"
+      fxLayoutAlign="start stretch"
+    >
+      <div class="panel__header" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+          <img [src]="getIcon(action)" fxFlex="40px" />
+          <h3 class="mb-0" fxFlex>
+            <strong>{{ action.number }}. {{ action.actionName }}</strong>
+          </h3>
+        </div>
+
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon
+            *ngIf="action.type === ActionType.API && showWarning(action.actionDef?.connectorUuid)"
+            matTooltip="Licenses not found! Your action might not work as expected!"
+            color="warn"
+            style="cursor: default"
+          >
+            error
+          </mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+      </div>
+      <mat-menu #actionMenu="matMenu">
+        <button mat-menu-item (click)="editAction(flow, action)">{{ flow.editable ? 'Edit' : 'View' }}</button>
+        <button mat-menu-item (click)="viewOutput(action)">Output</button>
+        <button mat-menu-item (click)="goToFlow(action)" *ngIf="action.type === ActionType.SUBROUTINE_CALL">
+          Go to flow
+        </button>
+        <button
+          mat-menu-item
+          (click)="showReplaceDialog(flow, action)"
+          *ngIf="flow.editable && action.type !== ActionType.SUBROUTINE_RETURN"
+        >
+          Replace
+        </button>
+        <button mat-menu-item (click)="confirmDeleteDialog(flow, action)" *ngIf="flow.editable">Delete</button>
+      </mat-menu>
+      <div class="panel__body" *ngIf="action.type === ActionType.SWITCHING">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+          <div
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            *ngFor="let path of action.branchingPaths"
+            class="block-path"
+            (click)="actionOfPath(flow, action, path)"
+          >
+            <mat-icon fxFlex="32px">call_split</mat-icon>
+            <h4 class="mb-0" fxFlex>
+              <strong>{{ path.number }}. {{ path.pathName }}</strong>
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="
+        action.type !== ActionType.SWITCHING &&
+        action.type !== ActionType.SUBROUTINE_RETURN &&
+        (flow.editable || (!flow.editable && i !== flow.ui.actions.length - 1))
+      "
+      fxLayout="column"
+      fxLayoutAlign="start center"
+    >
+      <div class="vertical-line"></div>
+      <div class="vertical-line-temp" *ngIf="!isShowAddActionNode(flow, action, i)"></div>
+
+      <section *ngIf="isShowAddActionNode(flow, action, i)" class="parent-circle">
+        <button
+          *ngIf="showForApp === AppName.FLOW || showForApp === AppName.BUSINESS_ACTION_CREATOR"
+          mat-icon-button
+          class="btn-add-action mat-elevation-z2"
+          (click)="$event.stopPropagation(); addAction(flow, action)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <b3n-action-suggestion
+          *ngIf="showForApp === AppName.PROGRAMMABLE_FLOW"
+          [action]="action"
+          (connectorSelected)="selectConnector($event)"
+        ></b3n-action-suggestion>
+        <div
+          class="circle"
+          [style.opacity]="flow.ui.actionSelected?.actionUuid === action.actionUuid || connectorSelected ? '1' : '0'"
+        ></div>
+        <div
+          class="add-action-message mat-elevation-z2"
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          *ngIf="
+            (showForApp === AppName.FLOW || showForApp === AppName.BUSINESS_ACTION_CREATOR) &&
+            flow.ui.actionSelected?.actionUuid === action.actionUuid &&
+            !connectorSelected
+          "
+        >
+          Please choose an action from the sidebar or add a&nbsp;
+          <a href="javascript:;" class="link" (click)="selectCustomAction()">external action</a>
+        </div>
+      </section>
+
+      <mat-icon class="down">keyboard_arrow_down</mat-icon>
+    </div>
+  </ng-container>
+</ng-container>

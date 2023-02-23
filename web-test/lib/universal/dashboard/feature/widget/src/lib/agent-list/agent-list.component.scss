@@ -1,0 +1,37 @@
+table {
+  width: 100%;
+  border-spacing: revert;
+}
+.green {
+  color: #5cb85c !important;
+}
+
+.red {
+  color: #fd0808 !important;
+}
+
+.orange {
+  color: #f0ad4e !important;
+}
+
+.blue {
+  color: #269abc !important;
+}
+
+.gray {
+  color: lightgray !important;
+}
+
+.agents-table {
+  &__filter {
+    visibility: hidden;
+    width: 100px !important;
+    &__btn-container {
+      position: sticky;
+      z-index: 2;
+      background-color: #fff !important;
+      top: 0;
+      box-shadow: 0 0 1px;
+    }
+  }
+}

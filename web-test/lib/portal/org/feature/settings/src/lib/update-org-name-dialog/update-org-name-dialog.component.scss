@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  .update-org-name {
+    &__update-btn {
+      margin-left: 0.8rem;
+    }
+    .org-name {
+      width: 100%;
+    }
+  }
+}

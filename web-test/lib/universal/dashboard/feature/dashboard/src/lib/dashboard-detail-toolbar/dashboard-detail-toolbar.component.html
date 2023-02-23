@@ -1,0 +1,94 @@
+<mat-toolbar class="dashboard__header" fxLayoutGap="0.5rem">
+  <ng-container *ngIf="dashboard">
+    <h1 class="mat-h1">{{ dashboard.name }}</h1>
+  </ng-container>
+  <span class="fill-remaining-space"></span>
+  <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
+  <ng-container *ngIf="settings$ | async as settings">
+    <ng-container>
+      <button
+        (click)="toggleAutoRefresh(settings)"
+        [matTooltip]="settings.autoRefresh ? 'Stop auto refresh' : 'Start auto refresh'"
+        mat-icon-button
+      >
+        <mat-icon *ngIf="settings.autoRefresh">pause </mat-icon>
+        <mat-icon *ngIf="!settings.autoRefresh">play_arrow</mat-icon>
+      </button>
+      <mat-form-field *ngIf="settings.autoRefresh">
+        <mat-select
+          [(ngModel)]="settings.autoRefreshTime"
+          (selectionChange)="onSettingChange(settings)"
+          floatLabel="never"
+          placeholder="Auto refresh"
+        >
+          <mat-option *ngFor="let refresh of refreshIntervals" [value]="refresh.key"> {{ refresh.value }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="dashboard && dashboard.config && dashboard.config.filters.length > 0">
+      <ng-container *ngFor="let filter of dashboard.config.filters">
+        <mat-form-field *ngIf="filter.id == 'filterByQueue' || editing">
+          <ng-container *ngIf="filter.type === FilterType.selection">
+            <mat-select
+              (selectionChange)="onSettingChange(settings)"
+              *ngIf="filter.multi"
+              [(ngModel)]="settings.addon[filter.dataType]"
+              [placeholder]="filter.label"
+              multiple
+            >
+              <ng-container *ngIf="addonFilterDatas && addonFilterDatas.key === filter.id">
+                <mat-option *ngFor="let value of addonFilterDatas.value" [value]="value.key">{{
+                  value.value
+                }}</mat-option>
+              </ng-container>
+            </mat-select>
+            <mat-select
+              (selectionChange)="onSettingChange(settings)"
+              *ngIf="!filter.multi"
+              [(ngModel)]="filter.selectedValue"
+              [placeholder]="filter.label"
+            >
+              <mat-option>None</mat-option>
+              <ng-container *ngIf="addonFilterDatas && addonFilterDatas.key === filter.id">
+                <mat-option *ngFor="let value of addonFilterDatas.value" [value]="value.key">{{
+                  value.value
+                }}</mat-option>
+              </ng-container>
+            </mat-select>
+          </ng-container>
+        </mat-form-field>
+      </ng-container>
+    </ng-container>
+
+    <mat-form-field>
+      <mat-select
+        (selectionChange)="timeRangeChanged(settings)"
+        [(ngModel)]="settings.timeRange"
+        [compareWith]="compareCodeFn"
+        placeholder="Time range"
+      >
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key"> {{ timeRange.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field (click)="rangePicker.open()" *ngIf="settings.timeRange && settings.timeRange === 'specific_date'">
+      <mat-date-range-input [formGroup]="timeRangeForm" [min]="minDate" [max]="maxDate" [rangePicker]="rangePicker">
+        <input matStartDate formControlName="startDate" placeholder="Start date" />
+        <input matEndDate formControlName="endDate" placeholder="End date" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button mat-button matDateRangePickerCancel>Cancel</button>
+          <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </mat-form-field>
+  </ng-container>
+
+  <button (click)="addChart()" *ngIf="editing" color="primary" mat-stroked-button>Add chart</button>
+
+  <button *ngIf="!publicAccess && hasEditPermission" (click)="toggleEditable()" mat-stroked-button>
+    <span *ngIf="editing">Close</span> <span *ngIf="!editing">Edit</span>
+  </button>
+</mat-toolbar>

@@ -1,0 +1,106 @@
+<div class="compliance-detail-container">
+  <div class="header" fxLayout="column" fxLayoutAlign="start none">
+    <div fxLayout="column" fxLayoutAlign="start center">
+      <div class="header__title">Mobile Number</div>
+      <div class="mat-caption">{{ number?.number }}</div>
+    </div>
+    <button mat-icon-button class="close-btn" (click)="closeSidenav()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <mat-accordion class="flat-mat-accordion">
+    <mat-expansion-panel
+      *ngIf="canConfigCompliant"
+      [disabled]="!allowEdit.dnc"
+      [formGroup]="compliantFG"
+      (opened)="compliantPanelState = true"
+      (closed)="compliantPanelState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> DNC Configuration </mat-panel-title>
+        <mat-panel-description [class.hidden]="compliantPanelState">
+          {{ number.dncAction || number.consentAction | replaceSpecialCharacter | titlecase }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div fxLayout="column">
+          <mat-form-field>
+            <mat-label>DNC Action</mat-label>
+            <mat-select formControlName="dncAction">
+              <mat-option *ngFor="let action of complianceActions" [value]="action.key">{{ action.value }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Consent Action</mat-label>
+            <mat-select formControlName="consentAction">
+              <mat-option *ngFor="let action of complianceActions" [value]="action.key">{{ action.value }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div align="end" fxLayoutGap="0.8rem">
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="progressing || compliantFG.invalid"
+              (click)="updateCompliant()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      *ngIf="canConfigCr && crConfigFG"
+      [disabled]="!allowEdit.cr"
+      [formGroup]="crConfigFG"
+      (opened)="crPanelState = true"
+      (closed)="crPanelState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title> Call Recording Configuration </mat-panel-title>
+        <mat-panel-description [class.hidden]="crPanelState">
+          {{ number.crConfig.isEnableIncoming || number.crConfig.isEnableOutgoing ? 'Enabled' : 'Disabled' }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+          <section fxLayout="column" fxLayoutGap="1.6rem">
+            <mat-checkbox formControlName="isEnableIncoming" labelPosition="after"> Record incoming call </mat-checkbox>
+            <div *ngIf="crConfigFG.get('isEnableIncoming').value == true" fxLayout="column" fxLayoutGap="0.8rem">
+              <h4>Message to be played to the caller</h4>
+              <cos-tts-config [text2Speech]="incomingTtsEntry" (changed)="incomingTtsChanged($event)"></cos-tts-config>
+            </div>
+          </section>
+
+          <section fxLayout="column" fxLayoutGap="1.6rem">
+            <mat-checkbox formControlName="isEnableOutgoing" labelPosition="after"> Record outgoing call </mat-checkbox>
+
+            <div *ngIf="crConfigFG.get('isEnableOutgoing').value == true" fxLayout="column" fxLayoutGap="0.8rem">
+              <h4>Message to be played to the caller</h4>
+              <cos-tts-config [text2Speech]="outgoingTtsEntry" (changed)="outgoingTtsChanged($event)"></cos-tts-config>
+            </div>
+          </section>
+          <div align="end" fxLayoutGap="0.8rem">
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="progressing || crConfigFG.invalid"
+              (click)="updateCrConfig()"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-divider></mat-divider>
+
+  <div class="status-form" fxLayout="row" fxLayoutAlign="space-between center">
+    <label>Configurable by the user</label>
+    <mat-slide-toggle [formControl]="statusFC" (change)="updateStatusConfig()"></mat-slide-toggle>
+  </div>
+</div>

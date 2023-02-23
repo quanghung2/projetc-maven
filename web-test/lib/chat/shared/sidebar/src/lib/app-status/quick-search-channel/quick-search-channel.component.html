@@ -1,0 +1,186 @@
+<div class="inbox-view" (click)="menuTrigger.openMenu()">
+  <button class="search_button" matTooltip="Search" mat-icon-button color="normal">
+    <mat-icon class="material-icons-outlined">add</mat-icon>
+  </button>
+  <div
+    class="menu-teamchat"
+    [matMenuTriggerFor]="menu"
+    #menuTrigger="matMenuTrigger"
+    (menuClosed)="menuClosed()"
+    (menuOpened)="menuOpened()"
+  ></div>
+</div>
+
+<mat-menu #menu="matMenu" class="menu-quick-search-1" overlapTrigger="false">
+  <div class="container flex column justify-content-start align-items-none" (click)="$event.stopPropagation()">
+    <section class="action">
+      <div class="create-session flex justify-content-start align-items-center gap-11" (click)="openCreateChannel()">
+        <mat-icon>group_add</mat-icon>
+        <span> Create Channel</span>
+      </div>
+
+      <div
+        *ngIf="checkIamMeeting"
+        class="create-session flex justify-content-start align-items-center gap-11"
+        (click)="openConferenceRoom()"
+      >
+        <mat-icon>groups</mat-icon>
+        <span>Meetings</span>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <mat-form-field class="input-search" appearance="outline">
+        <input
+          #inputSearch
+          matInput
+          autocomplete="off"
+          placeholder="Find @ for people, # for channels"
+          [formControl]="searchCtr"
+          keyDownEvent
+          [currentSelect]="currentSelect"
+          [totalRow]="totalRow"
+          (changeSelect)="onChangeSelect($event)"
+          (enterSelect)="onEnterSelect($event)"
+        />
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+    <section class="result scroller-firefox spacer">
+      <mat-selection-list
+        [multiple]="false"
+        [formControl]="valueSelectedCtr"
+        (selectionChange)="onSelect($event)"
+        #selectionList
+      >
+        <ng-container *ngIf="filtered$ | async as filtered">
+          <ng-container *ngFor="let item of filtered; let i = index; trackBy: trackByFiltered">
+            <ng-container [ngSwitch]="item.type">
+              <ng-container *ngSwitchCase="TypeQuickSearch.USER">
+                <mat-list-option [value]="item.user" [class.current-select]="currentSelect === i">
+                  <div class="flex justify-content-start align-items-center gap-16">
+                    <csh-render-member
+                      [user]="item.user"
+                      [showDisplayName]="false"
+                      [isSmall]="true"
+                    ></csh-render-member>
+                    <div class="text-channel spacer">
+                      <span
+                        [innerHTML]="item.user.displayName || 'Unknown user' | highlight: this.searchCtr.value"
+                      ></span>
+                      <span *ngIf="item.user.requestLeaveNow">
+                        is on <span class="leave">{{ item.user.requestLeaveNow?.displayText }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </mat-list-option>
+              </ng-container>
+              <ng-container *ngSwitchCase="TypeQuickSearch.INTEGRATION">
+                <mat-list-option [value]="item.integration" [class.current-select]="currentSelect === i">
+                  <div class="flex justify-content-start align-items-center gap-16">
+                    <mat-icon class="icon-channel"> smart_toy </mat-icon>
+                    <div
+                      class="text-channel spacer"
+                      [innerHTML]="item.integration.displayName | highlight: this.searchCtr.value"
+                    ></div>
+                  </div>
+                </mat-list-option>
+              </ng-container>
+              <ng-container *ngSwitchCase="TypeQuickSearch.CHANNEL">
+                <mat-list-option [value]="item.channel" [class.current-select]="currentSelect === i">
+                  <div class="flex justify-content-start align-items-center gap-16">
+                    <ng-container
+                      *ngIf="
+                        item.channel?.type === ChannelType.gc || item.channel?.type === ChannelType.PERSONAL;
+                        else directChat
+                      "
+                    >
+                      <mat-icon class="icon-channel"> {{ item.channel?.icon }} </mat-icon>
+
+                      <ng-container *ngIf="item.channel?.type === ChannelType.PERSONAL; else normalChannel">
+                        <div
+                          class="text-channel spacer"
+                          [innerHTML]="
+                            item.channel?.displayName || 'Unknown channel' | titlecase | highlight: this.searchCtr.value
+                          "
+                        ></div>
+                      </ng-container>
+                      <ng-template #normalChannel>
+                        <div
+                          class="text-channel spacer"
+                          [innerHTML]="item.channel?.displayName || 'Unknown channel' | highlight: this.searchCtr.value"
+                        ></div>
+                      </ng-template>
+                    </ng-container>
+
+                    <ng-template #directChat>
+                      <ng-container *ngIf="item.channel?.userDirectChat$ | async as directChatUsers">
+                        <ng-container *ngIf="item.channel?.isBot; else userAvatar">
+                          <mat-icon class="icon-channel"> smart_toy </mat-icon>
+                          <div
+                            class="text-channel spacer"
+                            [innerHTML]="directChatUsers.integration.displayName | highlight: this.searchCtr.value"
+                          ></div>
+                        </ng-container>
+
+                        <ng-template #userAvatar>
+                          <csh-render-member
+                            [user]="directChatUsers.user"
+                            [showDisplayName]="false"
+                            [isSmall]="true"
+                          ></csh-render-member>
+
+                          <div class="text-channel spacer">
+                            <span
+                              [innerHTML]="
+                                directChatUsers?.user.displayName || directChatUsers?.integration.displayName
+                                  | highlight: this.searchCtr.value
+                              "
+                            ></span>
+                            <span *ngIf="directChatUsers?.user.requestLeaveNow">
+                              is on <span class="leave">{{ directChatUsers.user.requestLeaveNow?.displayText }}</span>
+                            </span>
+                          </div>
+                        </ng-template>
+                      </ng-container>
+
+                      <ng-container *ngIf="item.channel?.userHyperspaceDirectChat$ | async as userHyperspaceDirectChat">
+                        <csh-render-member
+                          [user]="userHyperspaceDirectChat"
+                          [showDisplayName]="false"
+                          [isSmall]="true"
+                        ></csh-render-member>
+
+                        <div class="text-channel spacer">
+                          <span
+                            [innerHTML]="
+                              userHyperspaceDirectChat.displayName || 'Unknown user' | highlight: this.searchCtr.value
+                            "
+                          ></span>
+                          <span *ngIf="userHyperspaceDirectChat.requestLeaveNow"
+                            >is on <span class="leave">{{ userHyperspaceDirectChat.requestLeaveNow.displayText }}</span>
+                          </span>
+                        </div>
+                      </ng-container>
+                    </ng-template>
+                  </div>
+                </mat-list-option>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="!filtered?.length">
+            <ng-container *ngTemplateOutlet="noResult"></ng-container>
+          </ng-container>
+        </ng-container>
+      </mat-selection-list>
+    </section>
+  </div>
+</mat-menu>
+
+<ng-template #noResult>
+  <ng-container *ngIf="!!searchCtr.value">
+    <span class="secondary-text flex justify-content-center align-items-none" style="padding: 1rem">No results</span>
+  </ng-container>
+</ng-template>

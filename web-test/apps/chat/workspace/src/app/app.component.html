@@ -1,0 +1,52 @@
+<ng-container *ngIf="socketStatus$ | async as socketStatus">
+  <ng-container
+    *ngIf="socketStatus !== SocketStatus.opened && socketStatus !== SocketStatus.none && warningBlockHeight > 0"
+  >
+    <div fxLayout="row" fxLayoutAlign="center center" class="alert alert-warning network-warning">
+      <ng-container *ngIf="socketStatus === SocketStatus.connecting">
+        Your computer seems to be offline. We'll keep trying to reconnect.
+      </ng-container>
+      <ng-container *ngIf="socketStatus === SocketStatus.closed">
+        Your computer already offline. Please check your network and click
+        <span> <button mat-button color="primary" (click)="manualConnect()">Reconnect</button> </span> manually.
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-container>
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    fixedInViewport="true"
+    [fixedTopGap]="offsetTop"
+    [attr.role]="'navigation'"
+    [mode]="modeLeftSidebar$ | async"
+    [opened]="showLeftSidebar$ | async"
+    [disableClose]="disableCloseLeftSidebar"
+    (closed)="closedLeftSidebar($event)"
+    class="main-sidebar"
+  >
+    <b3n-sidebar [isDone]="isLoading === false"></b3n-sidebar>
+  </mat-sidenav>
+  <mat-sidenav
+    [mode]="modeRightSidebar$ | async"
+    [opened]="showRightSidebar$ | async"
+    position="end"
+    (closed)="closedRightSidebar($event)"
+    class="right-sidebar"
+  >
+    <div [attr.id]="RIGHT_SIDEBAR_ID"></div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<ng-container *ngIf="{ memberMenu: memberMenu$ | async } as data">
+  <span class="trigger-mention-menu" style="display: none" [matMenuTriggerFor]="panel.menu" (menuClosed)="menuClosed()"></span>
+  <csh-render-member-menu
+    #panel
+    [member]="data?.memberMenu?.member"
+    [convo]="data?.memberMenu?.convo"
+  ></csh-render-member-menu>
+</ng-container>

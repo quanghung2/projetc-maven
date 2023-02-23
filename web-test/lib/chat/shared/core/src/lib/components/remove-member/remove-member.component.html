@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Remove @{{ data.member?.displayName || UNKNOWN_USER }}</h1>
+<div mat-dialog-content>
+  <div class="flex flex-wrap gap-025">
+    <span>Are you sure you wish to remove </span>
+    <b>@{{ data.member?.displayName || UNKNOWN_USER }}</b>
+    <span>from</span>
+    <csh-convo-name [channel]="data.convo"></csh-convo-name>
+    <span>?</span>
+  </div>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" color="primary" (click)="submit()">{{ ctaButton }}</button>
+</div>

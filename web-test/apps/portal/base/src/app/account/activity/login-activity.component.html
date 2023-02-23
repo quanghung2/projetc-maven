@@ -1,0 +1,73 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<mat-toolbar class="p-0">
+  <h1>Activity</h1>
+</mat-toolbar>
+
+<div class="detail" *ngIf="!loading" fxLayout="column" fxLayoutGap="0.8rem">
+  <div fxLayout="row" fxLayoutAlign="start center" class="title" *ngIf="hasOtherSessions">
+    <div fxFlex="auto" fxLayout="column" class="title__header">
+      <h2>Recent Login</h2>
+
+      <div *ngIf="!signoutSuccessful" fxFlex="auto" class="mat-small">
+        There may be sessions that have not been signed out.
+      </div>
+
+      <div *ngIf="signoutSuccessful" class="mat-small">
+        <strong>Note:</strong> Users can log in again if they know your password or have it saved on their computer. If
+        you are concerned about someone using your account without your permission, please.
+        <a href="javascript:void(0)" (click)="gotoPasswordSettings()">change your password</a>.
+      </div>
+    </div>
+
+    <button *ngIf="!signoutSuccessful" mat-stroked-button [loading]="signingOut" (click)="signOutOtherLoginSession()">
+      Sign out all other web sessions
+    </button>
+  </div>
+  <table mat-table [dataSource]="dataSource" class="p-16">
+    <ng-container matColumnDef="device">
+      <th mat-header-cell *matHeaderCellDef>Device</th>
+      <td mat-cell *matCellDef="let item">{{ item.deviceType }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>Location (IP Address)</th>
+      <td mat-cell *matCellDef="let item">
+        <b *ngIf="currentIpAddress == item.ipAddress">*</b> {{ item.country }} ({{ item.ipAddress }})
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let item">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <span>{{ item.status }}</span>
+          <button
+            class="btn-status"
+            *ngIf="!item.successful"
+            mat-icon-button
+            [matTooltip]="item?.failureCause | sentenceCase: '_' | titlecase"
+          >
+            <mat-icon mat-icon-button class="material-icons-outlined">info</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Completion Time</th>
+      <td mat-cell *matCellDef="let item">{{ item.duration | duration }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="datetime">
+      <th mat-header-cell *matHeaderCellDef>Date/Time</th>
+      <td mat-cell *matCellDef="let item">{{ item.time | timeAgo }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator showFirstLastButtons hidePageSize="true" pageSize="10"></mat-paginator>
+  <div class="reminder" *ngIf="currentIpAddress">
+    * indicates login from the current IP address {{ currentIpAddress }}. ({{ currentCountry }})
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div fxLayout="row" fxLayoutAlign="end start" style="margin: 1.6rem 0">
+  <button mat-raised-button color="primary" (click)="showCreateHeaderRelay()">New profile</button>
+</div>
+<div style="padding: 0.2rem">
+  <table mat-table [dataSource]="headerRelayProfile" class="original mat-elevation-z1">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="headerRelay">
+      <th mat-header-cell *matHeaderCellDef>Header Relays</th>
+      <td mat-cell *matCellDef="let element">
+        <mat-chip-list aria-label="Fish selection">
+          <mat-chip *ngFor="let header of element.headers">{{ header }}</mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <button mat-icon-button class="action-button" (click)="editHeaderRelay(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="action-button" (click)="confirmDeleteHeaderRelay(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div fxLayoutAlign="center center">
+          <span class="mat-body-1">No Data Available</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div *ngIf="isLoading" fxLayoutAlign="center center">
+          <mat-spinner diameter="20"></mat-spinner>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr
+      mat-footer-row
+      *matFooterRowDef="['noData']"
+      [hidden]="headerRelayProfile?.filteredData?.length > 0 || isLoading"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="['loading']" [hidden]="!isLoading"></tr>
+  </table>
+  <mat-paginator hidePageSize="true" pageSize="10" class="mat-elevation-z1" showFirstLastButtons></mat-paginator>
+</div>

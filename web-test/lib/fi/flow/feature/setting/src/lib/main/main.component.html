@@ -1,0 +1,16 @@
+<div class="container py-16">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="32px" class="mb-8">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <mat-icon style="cursor: pointer" (click)="goToHome()">arrow_back</mat-icon>
+      <h2 class="ml-8 mb-0"><strong>Settings</strong></h2>
+    </div>
+
+    <ul class="nav-tab mt-8" fxLayoutGap="4px">
+      <li (click)="tabChange(0)" [class.active]="showConnector">Your Connectors</li>
+    </ul>
+  </div>
+
+  <ng-container *ngIf="showConnector">
+    <b3n-list-connector></b3n-list-connector>
+  </ng-container>
+</div>

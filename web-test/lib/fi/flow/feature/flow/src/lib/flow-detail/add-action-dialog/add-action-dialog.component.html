@@ -1,0 +1,132 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Add Action</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<div mat-dialog-content>
+  <div [formGroup]="formCreateAction" fxLayout="column" fxLayoutAlign="start stretch" *ngIf="contextVariables">
+    <p style="color: red" *ngIf="selectedConnector && showWarning(selectedConnector.uuid)">
+      Licenses not found! Your action might not work as expected!
+    </p>
+
+    <mat-form-field hideRequiredMarker="true">
+      <input matInput placeholder="Action name" formControlName="name" required />
+      <mat-error *ngIf="name.invalid">{{ getErrorName() }}</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" *ngIf="selectedActionDef">
+      <ng-container [ngSwitch]="typeOfAction">
+        <b3n-def-action-api
+          *ngSwitchCase="ActionType.API"
+          [contextVariables]="contextVariables"
+          [selectedActionDef]="selectedActionDef"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-api>
+
+        <b3n-def-action-subroutine-call
+          *ngSwitchCase="ActionType.SUBROUTINE_CALL"
+          [contextVariables]="contextVariables"
+          [selectedActionDef]="selectedActionDef"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-subroutine-call>
+
+        <b3n-def-action-subroutine-return
+          *ngSwitchCase="ActionType.SUBROUTINE_RETURN"
+          [contextVariables]="contextVariables"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-subroutine-return>
+
+        <b3n-def-action-switching
+          *ngSwitchCase="ActionType.SWITCHING"
+          [contextVariables]="contextVariables"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-switching>
+
+        <b3n-def-action-transform
+          *ngSwitchCase="ActionType.TRANSFORM"
+          [contextVariables]="contextVariables"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-transform>
+
+        <b3n-def-action-define-constant
+          *ngSwitchCase="ActionType.DEFINE_CONSTANTS"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-define-constant>
+
+        <b3n-def-action-external
+          *ngSwitchCase="ActionType.EXTERNAL"
+          [contextVariables]="contextVariables"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-external>
+
+        <b3n-def-action-shared-variable
+          *ngSwitchCase="ActionType.SET_SHARED_VARIABLE"
+          [contextVariables]="contextVariables"
+          [sharedVariableType]="ActionType.SET_SHARED_VARIABLE"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-shared-variable>
+
+        <b3n-def-action-shared-variable
+          *ngSwitchCase="ActionType.GET_SHARED_VARIABLE"
+          [contextVariables]="contextVariables"
+          [sharedVariableType]="ActionType.GET_SHARED_VARIABLE"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-shared-variable>
+
+        <b3n-def-action-shared-variable
+          *ngSwitchCase="ActionType.PUSH_SHARED_VARIABLE"
+          [contextVariables]="contextVariables"
+          [sharedVariableType]="ActionType.PUSH_SHARED_VARIABLE"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-shared-variable>
+
+        <b3n-def-action-shared-variable
+          *ngSwitchCase="ActionType.POP_SHARED_VARIABLE"
+          [contextVariables]="contextVariables"
+          [sharedVariableType]="ActionType.POP_SHARED_VARIABLE"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-shared-variable>
+
+        <b3n-def-action-shared-variable
+          *ngSwitchCase="ActionType.INCREMENT_SHARED_VARIABLE"
+          [contextVariables]="contextVariables"
+          [sharedVariableType]="ActionType.INCREMENT_SHARED_VARIABLE"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-shared-variable>
+
+        <b3n-def-action-looping
+          *ngSwitchCase="ActionType.LOOPING_ACTION"
+          [contextVariables]="contextVariables"
+          (changeActionDef)="setActionDef($event)"
+          (changeConfigs)="setConfigsAction($event)"
+          (invalid)="invalidForm = $event"
+        ></b3n-def-action-looping>
+      </ng-container>
+    </div>
+  </div>
+
+  <div dir="rtl" class="mt-16 mb-2">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [loading]="adding"
+      [disabled]="name.invalid || invalidForm"
+      (click)="add()"
+    >
+      Add
+    </button>
+  </div>
+</div>

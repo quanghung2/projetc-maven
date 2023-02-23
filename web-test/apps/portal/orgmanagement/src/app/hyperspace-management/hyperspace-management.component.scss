@@ -1,0 +1,93 @@
+:host {
+  .drawer-group {
+    width: 590px;
+    position: fixed;
+    height: 100vh;
+  }
+
+  .container {
+    height: 100vh;
+
+    .body {
+      padding: 1.6rem;
+
+      table {
+        width: 100%;
+        min-width: 800px;
+
+        td,
+        th {
+          padding-right: 1.6rem;
+          button.label {
+            padding: 0;
+            line-height: 25px;
+          }
+        }
+
+        td {
+          .column-action {
+            visibility: hidden;
+            min-width: 48px;
+          }
+        }
+
+        tr {
+          &.no-data-table {
+            &.hidden {
+              display: none;
+            }
+          }
+
+          &.row {
+            cursor: pointer;
+
+            &:hover {
+              background: whitesmoke;
+              .column-action {
+                visibility: visible;
+              }
+            }
+
+            .box {
+              background: #e6e6e6;
+              border-radius: 4px;
+              font-size: 12px;
+              color: #424242;
+              height: 25px;
+              padding: 0 8px;
+              white-space: nowrap;
+            }
+
+            .hyper-status {
+              padding: 2px 12px;
+              border-radius: 17px;
+              font-size: 13px;
+              width: fit-content;
+              background: #c8e6c9;
+              color: #1b5e20;
+
+              &.active {
+                background: #c8e6c9;
+                color: #1b5e20;
+              }
+              &.pending {
+                background: #ffcdd2;
+                color: #b71c1c;
+              }
+              &.waiting {
+                background: #ffc863;
+                color: #3a2500;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  ::ng-deep {
+    .mat-card-title {
+      color: red;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "shared-notification",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/notification/src",
+  "prefix": "shn",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/notification/**/*.ts", "libs/shared/notification/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

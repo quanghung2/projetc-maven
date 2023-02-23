@@ -1,0 +1,24 @@
+<h1 mat-dialog-title>{{ signature.id ? 'Update' : 'Create' }} agents</h1>
+<div mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field>
+      <input type="text" placeholder="Name" matInput name="signature" required [(ngModel)]="signature.name" />
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" placeholder="Sender Name" name="sender" matInput [(ngModel)]="signature.senderInfo" />
+    </mat-form-field>
+    <div class="hint">
+      <strong>Optional:</strong>
+      <span> will appear in the <strong>From</strong>: header of emails you send.</span>
+    </div>
+    <div class="signature-content">
+      <quill-editor [style]="{ height: '200px' }" [(ngModel)]="signature.content"></quill-editor>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="doUpdate()">
+    {{ signature.id ? 'Update' : 'Create' }}
+  </button>
+</div>

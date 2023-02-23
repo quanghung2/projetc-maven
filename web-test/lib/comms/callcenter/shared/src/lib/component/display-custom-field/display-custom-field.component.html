@@ -1,0 +1,39 @@
+<div fxLayout="column" fxLayoutAlign="start none">
+  <ng-container [ngSwitch]="detailField.type">
+    <ng-container *ngSwitchCase="TypeCustomField.textField">
+      <mat-form-field>
+        <mat-label>{{ detailField.key }}</mat-label>
+        <input type="text" matInput [(ngModel)]="detailField.value" [placeholder]="detailField.key" />
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="TypeCustomField.numberField">
+      <mat-form-field>
+        <mat-label>{{ detailField.key }}</mat-label>
+        <input type="number" matInput [(ngModel)]="detailField.value" [placeholder]="detailField.key" />
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="TypeCustomField.singleChoiceField">
+      <mat-form-field>
+        <mat-label>{{ detailField.key }}</mat-label>
+        <mat-select [(ngModel)]="detailField.value">
+          <mat-option *ngIf="detailField.options.length === 0">No option</mat-option>
+          <mat-option *ngFor="let option of detailField.options" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="TypeCustomField.multipleChoiceField">
+      <mat-form-field>
+        <mat-label>{{ detailField.key }}</mat-label>
+        <mat-select [(ngModel)]="detailField.value" multiple *ngIf="detailField.options.length > 0">
+          <mat-option *ngFor="let option of detailField.options" [value]="option">{{ option }}</mat-option>
+        </mat-select>
+        <mat-select [(ngModel)]="detailField.value" *ngIf="detailField.options.length === 0">
+          <mat-option>No option</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </ng-container>
+</div>

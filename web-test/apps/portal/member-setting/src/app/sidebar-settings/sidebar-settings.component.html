@@ -1,0 +1,61 @@
+<div *ngIf="data$ | async as data" class="sidebar">
+  <mat-toolbar [formGroup]="filterFG" class="view__wrapper">
+    <h1 class="title">Settings</h1>
+
+    <ng-container *ngIf="data.profileOrg?.isUpperAdmin; else member">
+      <mat-form-field>
+        <mat-select formControlName="teamUuid" placeholder="View" floatLabel="never">
+          <mat-option value="me" *ngIf="data.me != null">Me</mat-option>
+
+          <mat-option value="system">System</mat-option>
+
+          <ng-container *ngIf="orgHasPhoneSystem$ | async">
+            <mat-option *ngIf="isManagedWholeOrg$ | async" value="everyone">Everyone</mat-option>
+            <mat-option *ngFor="let team of managedTeams$ | async" [value]="team.uuid">
+              {{ team.name | titlecase }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+
+      <ng-container *ngIf="isMeView" [ngTemplateOutlet]="member"> </ng-container>
+
+      <div [hidden]="isSystem || isMeView">
+        <mat-form-field class="full-width" floatLabel="never">
+          <mat-label>Members</mat-label>
+          <input formControlName="searchMember" [matAutocomplete]="auto" matInput />
+          <div class="mat-select-arrow select__arrow"></div>
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="memberDisplayFn">
+            <ng-container *ngIf="members$ | async as fMembers">
+              <mat-option *ngFor="let member of fMembers" [value]="member">
+                <span [innerHTML]="member.directoryText | highlight: searchKey"></span>
+              </mat-option>
+              <mat-option *ngIf="!fMembers.length">No Member found</mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <ng-template #member>
+      <div *ngIf="data.me != null" class="member__wrapper">
+        <p>{{ data.me.displayText }}</p>
+      </div>
+    </ng-template>
+  </mat-toolbar>
+
+  <mat-divider></mat-divider>
+
+  <div class="sidebar__group pt-8">
+    <ng-container *ngFor="let menu of menus">
+      <div
+        *ngIf="isAgentView ? menu.isAgentView : !menu.isAgentView"
+        class="link"
+        [routerLink]="[menu.urlPath]"
+        routerLinkActive="active"
+      >
+        {{ menu.displayText }}
+      </div>
+    </ng-container>
+  </div>
+</div>

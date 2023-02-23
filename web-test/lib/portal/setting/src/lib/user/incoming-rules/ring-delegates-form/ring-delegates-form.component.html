@@ -1,0 +1,12 @@
+<div *ngIf="extension" fxLayout="column" fxLayoutGap="1.6rem">
+  <div fxLayout="row">
+    <mat-form-field fxFlex="100%">
+      <mat-label>Elapsed time(seconds)</mat-label>
+      <mat-select [(ngModel)]="extension.mailBox.elapsedTime">
+        <mat-option *ngFor="let time of elapsedTimeOptions" [value]="time.key">
+          {{ time.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

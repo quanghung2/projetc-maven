@@ -1,0 +1,132 @@
+<div class="item-field" fxFill fxLayout="column" fxLayoutAlign="start none">
+  <ng-container [ngSwitch]="detailField.type">
+    <ng-container *ngSwitchCase="TypeCustomField.textField">
+      <ng-container *ngTemplateOutlet="normalField"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="TypeCustomField.numberField">
+      <ng-container *ngTemplateOutlet="normalField"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="TypeCustomField.singleChoiceField">
+      <ng-container *ngTemplateOutlet="specialField"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="TypeCustomField.multipleChoiceField">
+      <ng-container *ngTemplateOutlet="specialField"></ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+<mat-divider *ngIf="!last"></mat-divider>
+
+<ng-template #normalField>
+  <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.8rem">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <span>
+        {{ index + 1 }}. {{ detailField.type | customField }}
+        {{ isPositionMode ? ': ' + detailField.key || ': Not Set' : '' }}
+      </span>
+      <mat-icon (click)="deleteField()" class="icon-action icon-delete" matTooltip="Delele">delete</mat-icon>
+    </div>
+
+    <ng-container *ngIf="!isPositionMode">
+      <span class="mat-caption text">Question</span>
+      <section fxLayout="row" fxLayoutAlign="space-between center">
+        <span *ngIf="!editing" class="mat-subheading-1 text">{{ detailField.key || 'Not Set' }}</span>
+        <ng-container *ngIf="editing">
+          <ng-container *ngTemplateOutlet="editKeyForm"></ng-container>
+        </ng-container>
+
+        <mat-icon *ngIf="!editing" class="icon-action" (click)="switchEditMode()" matTooltip="Edit"> edit </mat-icon>
+      </section>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #specialField>
+  <div fxLayout="column" fxLayoutAlign="start none">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <span>
+        {{ index + 1 }}. {{ detailField.type | customField }}
+        {{ isPositionMode ? ': ' + detailField.key || ': Not Set' : '' }}
+      </span>
+      <mat-icon (click)="deleteField()" class="icon-action icon-delete" matTooltip="Delele">delete</mat-icon>
+    </div>
+
+    <ng-container *ngIf="!isPositionMode">
+      <span class="mat-caption text">Question</span>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span *ngIf="!editing" class="mat-subheading-1 text">{{ detailField.key || 'Not Set' }}</span>
+        <ng-container *ngIf="editing">
+          <ng-container *ngTemplateOutlet="editKeyForm"></ng-container>
+        </ng-container>
+        <mat-icon *ngIf="!editing" class="icon-action" (click)="switchEditMode()" matTooltip="Edit"> edit </mat-icon>
+      </div>
+
+      <div fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+        <mat-form-field fxFlex>
+          <mat-label>Options</mat-label>
+          <input
+            type="text"
+            matInput
+            #codeOption
+            (keyup.enter)="addOption(codeOption.value); codeOption.value = ''"
+            placeholder="Enter options"
+          />
+          <mat-icon *ngIf="codeOption.value" (click)="codeOption.value = ''" matSuffix>clear</mat-icon>
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="addOption(codeOption.value); codeOption.value = ''">
+          <mat-icon>done</mat-icon>
+        </button>
+      </div>
+
+      <ng-container *ngIf="detailField.options.length === 0; else loadListView">
+        <mat-hint fxLayoutAlign="center"> No option </mat-hint>
+      </ng-container>
+      <ng-template #loadListView>
+        <div
+          cdkDropList
+          class="item__rows"
+          *ngIf="detailField.options.length > 0"
+          (cdkDropListDropped)="dropFieldOptions($event)"
+        >
+          <div class="sortable-box" *ngFor="let option of detailField.options; let i = index" cdkDrag>
+            <span>{{ i + 1 }}. {{ option }}</span> <span class="fill-remaining-space"></span>
+            <mat-icon
+              *ngIf="detailField.options.length > 1"
+              (click)="removeOption(i)"
+              class="code-option__btn-delete"
+              matTooltip="Delele"
+            >
+              delete
+            </mat-icon>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #editKeyForm>
+  <section fxFill fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5rem">
+    <mat-form-field fxFlex>
+      <mat-label>Question</mat-label>
+      <input
+        type="text"
+        matInput
+        #editForm
+        [formControl]="controlEdit"
+        (keyup.enter)="changeField(editForm.value)"
+        [value]="detailField.key"
+        placeholder="Enter Question"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-icon *ngIf="editForm.value" (click)="editForm.value = ''" matSuffix>clear</mat-icon>
+      <mat-error *ngIf="controlEdit?.hasError('duplicate')"> Question has existed </mat-error>
+      <mat-error *ngIf="controlEdit?.hasError('required')"> Question is required </mat-error>
+    </mat-form-field>
+    <div>
+      <button mat-flat-button color="primary" [disabled]="controlEdit.invalid" (click)="changeField(editForm.value)">
+        Add
+      </button>
+      <button mat-flat-button (click)="editing = false">Cancel</button>
+    </div>
+  </section>
+</ng-template>

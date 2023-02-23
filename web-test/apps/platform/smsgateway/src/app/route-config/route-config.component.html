@@ -1,0 +1,94 @@
+<div class="loading" *ngIf="loading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+<div class="sms-data__wrapper" *ngIf="!loading">
+  <form class="sms-data__flex" autocomplete="off" [formGroup]="form">
+    <div class="sms-data__tools">
+      <mat-form-field class="search">
+        <mat-label>Search</mat-label>
+        <input type="text" matInput formControlName="search" placeholder="Search by vendor" />
+      </mat-form-field>
+      <div class="refresh-create__wrapper">
+        <button mat-button (click)="refresh()">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openDialog('Create', null)"
+          [disabled]="byoiRoutes?.length >= 1000"
+        >
+          Create
+        </button>
+      </div>
+    </div>
+
+    <table mat-table [dataSource]="byoiRoutesPaging" class="mat-elevation-z8">
+      <ng-container matColumnDef="vendor">
+        <th mat-header-cell *matHeaderCellDef>Vendor</th>
+        <td mat-cell *matCellDef="let byoiRoute">
+          <ng-container *ngIf="byoiRoute.enableMnpCheck; else noMnp"
+            >MNP: {{ byoiRoute.vendorLabel }}, FallBack: {{ byoiRoute.fallbackVendorLabel }}</ng-container
+          >
+          <ng-template #noMnp>
+            {{ byoiRoute.vendorLabel }}
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="srcPrefix">
+        <th mat-header-cell *matHeaderCellDef>Src Prefix</th>
+        <td mat-cell *matCellDef="let byoiRoute">{{ byoiRoute.srcPrefix }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="destPrefix">
+        <th mat-header-cell *matHeaderCellDef>Dest Prefix</th>
+        <td mat-cell *matCellDef="let byoiRoute">{{ byoiRoute.destPrefix }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="orgName">
+        <th mat-header-cell *matHeaderCellDef>Customer Name</th>
+        <td mat-cell *matCellDef="let byoiRoute">
+          {{ byoiRoute.orgUuid === '*' ? '*' : byoiRoute.orgName }}
+          <span *ngIf="byoiRoute.orgUuid === '*' && byoiRoute.srcPrefix === '*' && byoiRoute.destPrefix === '*'"
+            >Default</span
+          >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="skuName">
+        <th mat-header-cell *matHeaderCellDef>SKU Name</th>
+        <td mat-cell *matCellDef="let byoiRoute">
+          {{ byoiRoute.skuName ? byoiRoute.skuName : '*' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="function">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let byoiRoute; let i = index">
+          <button mat-icon-button matTooltip="Edit" (click)="editOrDel('Edit', byoiRoute)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Delete" (click)="editOrDel('Delete', byoiRoute)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      #paginator
+      [showFirstLastButtons]="true"
+      [pageSize]="pageSize"
+      [length]="byoiRoutesFilter.length"
+      (page)="page($event)"
+      hidePageSize="false"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </form>
+</div>

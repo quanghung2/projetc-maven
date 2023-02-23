@@ -1,0 +1,16 @@
+{
+  "name": "api-billing",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/billing/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/billing/**/*.ts", "libs/api/billing/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

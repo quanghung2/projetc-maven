@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-voice",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/voice/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/voice/**/*.ts", "libs/chat/shared/voice/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

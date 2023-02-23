@@ -1,0 +1,146 @@
+<loader [loading]="isLoading"></loader>
+<div class="ui page small content container" *ngIf="!isLoading">
+  <div class="ui grid">
+    <div class="row actions">
+      <div class="column left floated">
+        <div class="notice">
+          <em>Changes won't be automatically updated if you don't <b>Save</b>.</em>
+        </div>
+      </div>
+      <div class="column right aligned right floated">
+        <div class="ui outlined button" (click)="reset()">Reset</div>
+        <div
+          class="ui primary button"
+          (click)="save()"
+          [class.disabled]="!hasChanges() || isUpdating || settingForm.invalid"
+          [class.loading]="isUpdating"
+        >
+          Save Changes
+        </div>
+      </div>
+    </div>
+
+    <div class="seven wide column">
+      <form class="ui form" #settingForm="ngForm">
+        <h3 class="ui dividing header">Browser</h3>
+        <div class="required field" [class.error]="titleInp.invalid">
+          <label for="title">Title</label>
+          <div class="ui input">
+            <input type="text" name="title" [(ngModel)]="portalConfig.title" #titleInp="ngModel" required />
+          </div>
+          <div class="ui message small error">
+            <p>Required field.</p>
+          </div>
+        </div>
+        <div class="field favicon">
+          <label>Favicon (.ico; size 16x16, 32x32)</label>
+          <div
+            class="ui fluid outlined large button upload"
+            *ngIf="!faviconUrl"
+            (click)="faviconFileInp.click()"
+            [ngClass]="{ 'loading disabled': isFaviconUploading }"
+          >
+            <i class="cloud upload icon"></i>
+            <p>File: .png, .jpg, .bmp</p>
+          </div>
+          <div class="ui segment center aligned" *ngIf="!!faviconUrl">
+            <div class="">
+              <img [src]="faviconUrl | safe" style="max-height: 32px" alt="No Favicon" />
+              <img style="max-height: 32px" id="preview-favicon" />
+            </div>
+            <div class="">
+              <div
+                class="ui small default button"
+                (click)="faviconFileInp.click()"
+                [ngClass]="{ 'loading disabled': isFaviconUploading }"
+              >
+                Change
+              </div>
+            </div>
+          </div>
+          <input type="file" (change)="onFaviconFileChange($event)" accept=".ico" #faviconFileInp />
+        </div>
+
+        <h3 class="ui dividing header">Login View</h3>
+        <div class="required field" [class.error]="headerColorInp.invalid">
+          <label for="background">Background Color</label>
+          <div class="ui input">
+            <input
+              [(colorPicker)]="portalConfig.loginHeaderBackground"
+              name="headerBackgroundColor"
+              [(ngModel)]="portalConfig.loginHeaderBackground"
+              required
+              #headerColorInp="ngModel"
+              pattern="^#([A-Fa-f0-9]{6})$"
+            />
+          </div>
+          <div class="ui message small error" *ngIf="headerColorInp.errors?.['required']">
+            <p>Required field.</p>
+          </div>
+          <div class="ui message small error" *ngIf="headerColorInp.errors?.['pattern']">
+            <p>Invalid format (e.g. #222fff)</p>
+          </div>
+        </div>
+        <div class="required field" [class.error]="buttonColorInp.invalid">
+          <label for="button">Button Color</label>
+          <div class="ui input">
+            <input
+              [(colorPicker)]="portalConfig.loginButtonBackground"
+              name="buttonBackgroundColor"
+              [(ngModel)]="portalConfig.loginButtonBackground"
+              required
+              #buttonColorInp="ngModel"
+              pattern="^#([A-Fa-f0-9]{6})$"
+            />
+          </div>
+          <div class="ui message small error" *ngIf="buttonColorInp.errors?.['required']">
+            <p>Required field.</p>
+          </div>
+          <div class="ui message small error" *ngIf="buttonColorInp.errors?.['pattern']">
+            <p>Invalid format (e.g. #222fff)</p>
+          </div>
+        </div>
+
+        <h3 class="ui dividing header">Portal Settings</h3>
+        <div class="field logo">
+          <label>Logo</label>
+          <div class="ui segment center aligned" *ngIf="!!logoUrl">
+            <div class="grey background">
+              <img [src]="logoUrl | safe" style="max-height: 48px; max-width: 300px" alt="No Logo" *ngIf="!!logoUrl" />
+              <!-- <img style="max-height: 48px;" id="preview-logo"/> -->
+            </div>
+            <div class="">
+              <div
+                class="ui small default button"
+                (click)="logoFileInp.click()"
+                [ngClass]="{ 'loading disabled': isLogoUploading }"
+              >
+                Change
+              </div>
+            </div>
+          </div>
+          <div
+            class="ui fluid outlined large button upload"
+            *ngIf="!logoUrl"
+            (click)="logoFileInp.click()"
+            [ngClass]="{ 'loading disabled': isLogoUploading }"
+          >
+            <i class="cloud upload icon"></i>
+            <p>File: .png, .jpg, .bmp</p>
+          </div>
+          <input type="file" (change)="onLogoFileChange($event)" accept="image/*" #logoFileInp />
+        </div>
+      </form>
+    </div>
+    <div class="nine wide column">
+      <app-login-preview
+        [faviconUrl]="$any(faviconUrl)"
+        [title]="portalConfig.title"
+        [headerBackgroundColor]="portalConfig.loginHeaderBackground"
+        [logoUrl]="$any(logoUrl)"
+        [buttonBackgroundColor]="portalConfig.loginButtonBackground"
+      >
+      </app-login-preview>
+    </div>
+  </div>
+</div>

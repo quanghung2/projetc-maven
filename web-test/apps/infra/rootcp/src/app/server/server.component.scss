@@ -1,0 +1,26 @@
+:host {
+  .container {
+    padding: 1.6rem;
+  }
+}
+
+.mat-list-item {
+  height: auto !important;
+}
+
+label {
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+
+  &.ip {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+  }
+  &.version {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+  }
+}

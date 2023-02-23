@@ -1,0 +1,169 @@
+<b3n-header-flow fromPage="resolve-deprecated"></b3n-header-flow>
+
+<div class="flow-container block-container" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+  <section *ngIf="isHasTriggerDep">
+    <h3 color="primary" class="mb-8"><strong>Event Deprecation</strong></h3>
+    <mat-card class="mat-elevation-z0" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+        <img [src]="flowWarnings[indexTriggerDep].triggerDef?.iconUrl" />
+        <h3 class="mb-0" fxLayoutGap="16px">
+          <strong>{{ flowWarnings[indexTriggerDep].triggerDef?.name }}</strong>
+          <label *ngIf="!flowWarnings[indexTriggerDep]?.latestTriggerDef" class="label-status failed">
+            Event Deprecate
+          </label>
+        </h3>
+      </div>
+
+      <label *ngIf="isResolveDeprecatedTrigger" class="resolve-deprecate-done">Resolved</label>
+      <mat-menu #resolveTrgMenu="matMenu">
+        <button
+          mat-menu-item
+          *ngIf="
+            flowWarnings[indexTriggerDep].triggerDef.uuid !== flowWarnings[indexTriggerDep]?.latestTriggerDef?.uuid &&
+            !!flowWarnings[indexTriggerDep]?.latestTriggerDef
+          "
+          (click)="openConfirmResolveTrigger('UPGRADE', flowWarnings[indexTriggerDep])"
+        >
+          Upgrade event
+        </button>
+        <button mat-menu-item (click)="openConfirmResolveTrigger('CHANGE', flowWarnings[indexTriggerDep])">
+          Change event
+        </button>
+      </mat-menu>
+      <button *ngIf="!isResolveDeprecatedTrigger" mat-stroked-button [matMenuTriggerFor]="resolveTrgMenu">
+        Resolve <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+    </mat-card>
+  </section>
+
+  <section *ngIf="isHasTriggerInc">
+    <h3 color="primary" class="mb-8"><strong>Event Incomplete</strong></h3>
+    <mat-card class="mat-elevation-z0" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+        <img [src]="trigger.def.iconUrl" />
+        <h3 class="mb-0">
+          <strong>{{ trigger.def.triggerDefName }}</strong>
+        </h3>
+      </div>
+      <label *ngIf="isResolveIncompleteTrigger" class="resolve-deprecate-done">Completed</label>
+      <button *ngIf="!isResolveIncompleteTrigger" mat-stroked-button (click)="completeTrigger()">
+        Complete &nbsp;
+      </button>
+    </mat-card>
+  </section>
+
+  <section *ngIf="isHasActionDep">
+    <h3 color="primary" class="mb-8"><strong>Action Deprecation</strong></h3>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="24px">
+      <ng-container *ngFor="let flowWarning of flowWarnings">
+        <section *ngIf="flowWarning.code === codeWarning.ACTION_DEF_DEPRECATION">
+          <h4 class="mb-8" fxLayoutGap="16px">
+            <strong>{{
+              flowWarning.latestActionDef ? flowWarning.latestActionDef.name : flowWarning.actionDef.name
+            }}</strong>
+            <label class="label-status success">
+              {{
+                'Version ' +
+                  (flowWarning.latestActionDef ? flowWarning.latestActionDef.version : flowWarning.actionDef.version)
+              }}
+            </label>
+          </h4>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+            <mat-card
+              class="mat-elevation-z0"
+              fxLayout="row"
+              fxLayoutAlign="space-between center"
+              fxLayoutGap="8px"
+              *ngFor="let action of flowWarning.actions"
+            >
+              <ng-container
+                *ngIf="action.type !== actionType.SUBROUTINE_RETURN && action.type !== actionType.SWITCHING"
+              >
+                <div fxLayout="column" fxLayoutAlign="start start">
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+                    <img [src]="flowWarning.actionDef.iconUrl" />
+                    <div fxLayout="column" fxLayoutAlign="start start">
+                      <h4 class="mb-0" fxLayoutGap="16px">
+                        <strong>{{ action.actionName }}</strong>
+                        <label class="label-status failed">
+                          {{
+                            !flowWarning.latestActionDef
+                              ? 'Action Deprecate'
+                              : 'Version ' + flowWarning.actionDef.version
+                          }}
+                        </label>
+                      </h4>
+                      <span>{{ action?.fullPath }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <label *ngIf="action?.isResolvedDeprecate" class="resolve-deprecate-done">Resolved</label>
+                <mat-menu #resolveActMenu="matMenu">
+                  <button
+                    mat-menu-item
+                    *ngIf="
+                      flowWarning.actionDef.uuid !== flowWarning?.latestActionDef?.uuid &&
+                      !!flowWarning?.latestActionDef
+                    "
+                    (click)="openConfirmResolveAction('UPGRADE', action, flowWarning)"
+                  >
+                    Upgrade action
+                  </button>
+                  <button mat-menu-item (click)="openConfirmResolveAction('DELETE', action, flowWarning)">
+                    Delete action
+                  </button>
+                  <button mat-menu-item (click)="openConfirmResolveAction('CHANGE', action, flowWarning)">
+                    Change action
+                  </button>
+                </mat-menu>
+                <button mat-stroked-button *ngIf="!action?.isResolvedDeprecate" [matMenuTriggerFor]="resolveActMenu">
+                  Resolve <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+              </ng-container>
+            </mat-card>
+          </div>
+        </section>
+      </ng-container>
+    </div>
+  </section>
+
+  <section *ngIf="isHasActionInc">
+    <h3 color="primary" class="mb-8"><strong>Action Incomplete</strong></h3>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="24px">
+      <ng-container *ngFor="let flowWarning of flowWarnings">
+        <div
+          *ngIf="flowWarning.code === codeWarning.INCOMPLETE_ACTION"
+          fxLayout="column"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap="8px"
+        >
+          <mat-card
+            class="mat-elevation-z0"
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+            fxLayoutGap="8px"
+            *ngFor="let action of flowWarning.actions"
+          >
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+                <img [src]="getIcon(action)" />
+                <div fxLayout="column" fxLayoutAlign="start start">
+                  <h4 class="mb-0">
+                    <strong>{{ action.actionName }}</strong>
+                  </h4>
+                  <span>{{ action.fullPath }}</span>
+                </div>
+              </div>
+            </div>
+            <label *ngIf="action.isResolvedIncomplete" class="resolve-deprecate-done">Completed</label>
+            <button mat-stroked-button *ngIf="!action.isResolvedIncomplete" (click)="editAction(action)">
+              Complete &nbsp;
+            </button>
+          </mat-card>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>Download CDR Report</h2>
+<div mat-dialog-body>
+  <mat-form-field>
+    <input
+      matInput
+      readonly
+      [matDatepicker]="pickerStart"
+      placeholder="Start time"
+      [formControl]="fromTimeCtrl"
+      [max]="maxStart"
+      (dateChange)="fromDateChange()"
+    />
+    <button mat-icon-button type="button" *ngIf="fromTimeCtrl.value" (click)="fromTimeCtrl.setValue('')" matSuffix>
+      <mat-icon>clear</mat-icon>
+    </button>
+    <mat-datepicker-toggle matSuffix [for]="pickerStart"> </mat-datepicker-toggle>
+    <mat-datepicker #pickerStart type="datetime"> </mat-datepicker>
+    <mat-error *ngIf="fromTimeCtrl.invalid">Start time is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input
+      matInput
+      readonly
+      placeholder="End time"
+      [matDatepicker]="pickerEnd"
+      [formControl]="toTimeCtrl"
+      [min]="minEnd"
+      [max]="maxEnd"
+      (dateChange)="toDateChange()"
+    />
+    <button mat-icon-button type="button" *ngIf="toTimeCtrl.value" (click)="toTimeCtrl.setValue('')" matSuffix>
+      <mat-icon>clear</mat-icon>
+    </button>
+    <mat-datepicker-toggle matSuffix [for]="pickerEnd"> </mat-datepicker-toggle>
+    <mat-datepicker #pickerEnd type="datetime"> </mat-datepicker>
+    <mat-error *ngIf="toTimeCtrl.invalid">End time is required</mat-error>
+  </mat-form-field>
+
+  <mat-progress-bar color="warn" mode="determinate" [value]="percentage" *ngIf="downloading"></mat-progress-bar>
+  <label *ngIf="downloading">
+    <small>{{ percentage }}%</small>
+  </label>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button color="primary" (click)="download()" [loading]="downloading">Download</button>
+</div>

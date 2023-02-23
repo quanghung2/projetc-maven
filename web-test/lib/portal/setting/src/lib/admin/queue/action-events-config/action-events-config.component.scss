@@ -1,0 +1,21 @@
+:host {
+  display: block;
+
+  .dialog-content-container {
+    padding: 0 1.6rem;
+    min-height: 100px;
+  }
+
+  .actions-config {
+    &__header {
+      margin-bottom: 0;
+    }
+
+    &__content {
+      // margin-top: 1.6rem;
+    }
+  }
+  .spinner-container {
+    height: 150px;
+  }
+}

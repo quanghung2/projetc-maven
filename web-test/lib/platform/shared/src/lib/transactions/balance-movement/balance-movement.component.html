@@ -1,0 +1,111 @@
+<div class="balance-movement" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="1.5rem">
+  <div class="balance-movement__balance" fxLayout="column" fxLayoutAlign="none center">
+    <table mat-table [dataSource]="balances" class="mat-elevation-z1">
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="changes">
+        <th mat-header-cell *matHeaderCellDef>Changes ({{ currency }})</th>
+        <td mat-cell *matCellDef="let element">{{ element.changes }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="closeBalance">
+        <th mat-header-cell *matHeaderCellDef>Closing Balance ({{ currency }})</th>
+        <td mat-cell *matCellDef="let element">{{ element.closing }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="balanceNoData">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="balanceColumns.length">
+          <div fxLayoutAlign="center center">
+            <span class="mat-body-1">No Transactions Found.</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="balanceLoading">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="balanceColumns.length">
+          <div fxLayoutAlign="center center">
+            <div *ngIf="balancesLoading" class="loading-container">
+              <mat-spinner diameter="20"></mat-spinner>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="balanceColumns"></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['balanceNoData']"
+        [hidden]="balances?.filteredData.length > 0 || balancesLoading"
+      ></tr>
+      <tr mat-footer-row *matFooterRowDef="['balanceLoading']" [hidden]="balancesLoading"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: balanceColumns"
+        [class.balance-movement__balance__active]="selectedRow === row"
+        (click)="getGroupTransactionsForEachRow(row)"
+      ></tr>
+    </table>
+    <mat-paginator hidePageSize="true" pageSize="10" class="mat-elevation-z1" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <div class="balance-movement__balance-detail" fxLayout="column" fxLayoutAlign="none center" fxLayoutGap="1.6rem">
+    <div fxlLayout="row" fxLayoutAlign="center center" fxLayoutGap="0.8rem" class="balance-detail__header">
+      <span>Grouped transactions on {{ selectedRow?.date | date: 'dd MMM yyyy' }}</span>
+      <span class="spacer"></span>
+      <button mat-raised-button color="primary" (click)="export()">Export</button>
+    </div>
+
+    <table mat-table [dataSource]="balancesDetail" class="balance-shadow">
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element">{{ element?.Description.replace('\n', ' > ') }}</td>
+        <td class="balance-movement__balance-detail__total" mat-footer-cell *matFooterCellDef>Total</td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let element">{{ element?.Amount }}</td>
+        <td class="balance-movement__balance-detail__total" mat-footer-cell *matFooterCellDef>
+          {{ selectedRow?.changes }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">{{ element?.Type }}</td>
+        <td class="balance-movement__balance-detail__total" mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="noData">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="balanceDetailColumns.length">
+          <div fxLayoutAlign="center center">
+            <span class="no-balance">There are no transactions on this date.</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="loading">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="balanceDetailColumns.length">
+          <div fxLayoutAlign="center center">
+            <div *ngIf="balancesDetailLoading" class="loading-container">
+              <mat-spinner diameter="20"></mat-spinner>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="balanceDetailColumns" hidden="true"></tr>
+      <tr mat-row *matRowDef="let row; columns: balanceDetailColumns"></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['noData']"
+        [hidden]="balancesDetail.length > 0 || balancesDetailLoading"
+      ></tr>
+      <tr mat-footer-row *matFooterRowDef="['loading']" [hidden]="!balancesDetailLoading"></tr>
+      <tr mat-footer-row *matFooterRowDef="balanceDetailColumns" [hidden]="!balancesDetail.length"></tr>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+:host {
+  position: relative;
+
+  .loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+
+  .messages-viewport {
+    display: block;
+    height: 100%;
+    width: 100%;
+    overflow-y: overlay;
+    overflow-x: hidden;
+
+    &:focus {
+      outline: none;
+    }
+
+    .message-item {
+      margin-bottom: 0.3rem;
+    }
+
+    .group-by-date {
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      line-height: 0.1em;
+      margin: 20px 0 20px 5px;
+      color: #666;
+      font-size: 14px;
+      span {
+        background: #fff;
+        border-radius: 7.5px;
+        padding: 5px 12px 6px;
+        text-align: center;
+        user-select: none;
+      }
+    }
+  }
+}

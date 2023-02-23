@@ -1,0 +1,114 @@
+.store-device__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.store-device__title {
+  font-weight: 500;
+  margin: 0;
+  font-size: 16px;
+}
+
+.store-device__toolbar {
+  display: flex;
+  gap: 16px;
+
+  .toolbar__search {
+    width: 300px;
+  }
+
+  .toolbar__user {
+    width: 180px;
+  }
+
+  .total {
+    margin: 0;
+    font-weight: 500;
+    font-size: 12px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    color: var(--dashboard2-primary);
+  }
+}
+
+::ng-deep .store-device__table {
+  overflow: scroll;
+
+  .mat-header-cell {
+    padding: 10px !important;
+  }
+
+  .mat-cell {
+    padding: 10px !important;
+  }
+
+  .mat-row {
+    &:hover {
+      .mat-column-actions {
+        .actions__wrapper {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .mat-column-extLabel {
+    width: 20%;
+  }
+
+  .mat-column-deviceName {
+    width: 20%;
+  }
+
+  .mat-column-dashboardNames {
+    width: 20%;
+  }
+
+  .mat-column-isActive {
+    width: 10%;
+    text-align: center;
+
+    mat-spinner {
+      margin: auto !important;
+    }
+  }
+
+  .mat-column-actions {
+    width: 20%;
+
+    .actions__wrapper {
+      opacity: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .mat-column-noData {
+    text-align: center;
+  }
+}
+
+mat-paginator {
+  margin-top: -16px;
+}
+
+.store-device__actions {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.hidden {
+  display: none;
+}
+
+::ng-deep .sub-title {
+  font-size: 12px;
+  opacity: 0.7;
+}

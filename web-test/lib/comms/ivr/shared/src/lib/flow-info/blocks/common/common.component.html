@@ -1,0 +1,63 @@
+<div class="context-variables">
+  <button (click)="toggleBlockContext()" color="primary" mat-button type="button">
+    Advance settings <i *ngIf="showBlockContext" class="material-icons">keyboard_arrow_up</i>
+    <i *ngIf="!showBlockContext" class="material-icons">keyboard_arrow_down</i>
+  </button>
+
+  <div *ngIf="!!block" class="block-context" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+    <section *ngIf="showBlockContext" class="block-context__content" style="">
+      <h3>Context variables</h3>
+      <div class="block-context__input" fxLayout="row" fxLayoutGap="1.6rem">
+        <mat-form-field fxFlex="50">
+          <span matPrefix>$.</span>
+          <input #nameInput="matInput" [(ngModel)]="name" matInput placeholder="Variable name" />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50">
+          <input (keydown.enter)="addParams()" [(ngModel)]="value" matInput placeholder="Variable value" />
+          <span matSuffix>
+            <button
+              (click)="addParams()"
+              [disabled]="!name || !value"
+              class="suffix-icon"
+              color="primary"
+              mat-button
+              type="button"
+            >
+              Enter
+            </button>
+          </span>
+        </mat-form-field>
+      </div>
+
+      <table *ngIf="lengthOfVariables > 0">
+        <thead>
+          <tr>
+            <td>Variables</td>
+            <td></td>
+            <td class="text-align-right">Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let variable of block.variables | keyvalue">
+            <td class="variable-name">
+              <div fxLayout="row">$.{{ variable.key }} <span class="fill-remaining-space"></span> =</div>
+            </td>
+            <td class="variable-value">{{ variable.value }}</td>
+            <td class="text-align-right">
+              <button
+                (click)="removeVariable(variable.key)"
+                class="block-context__delete-button"
+                mat-icon-button
+                matTooltip="Delete this variable"
+                type="button"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</div>

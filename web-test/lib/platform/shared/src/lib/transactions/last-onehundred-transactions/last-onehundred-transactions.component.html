@@ -1,0 +1,85 @@
+<div class="last-onehundred-transaction">
+  <table mat-table [dataSource]="transactions" multiTemplateDataRows class="mat-elevation-z1">
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let element">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon *ngIf="element?.items.length > 1">
+            {{ element.key === expandedElement ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon
+          >
+          <span>{{ element.description }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef>Quantity</th>
+      <td mat-cell *matCellDef="let element">{{ element?.items.length > 1 ? '' : element.quantity }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let element">{{ element?.items.length > 1 ? element.totalAmount : element.amount }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="closingBalance">
+      <th mat-header-cell *matHeaderCellDef>Closing Balance</th>
+      <td mat-cell *matCellDef="let element">{{ element?.closingBalance }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let element">{{ element?.type }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>Created At ({{ timezone }})</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element?.createAt | date: 'medium':timezone.substr(0, 8) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+        <div
+          class="transaction-table-detail mat-elevation-z1"
+          [@detailExpand]="element.key == expandedElement ? 'expanded' : 'collapsed'"
+          [class.showing]="element.key === expandedElement"
+        >
+          <b3n-transaction-details [items]="element.items"></b3n-transaction-details>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div fxLayoutAlign="center center">
+          <span class="mat-body-1">No Data Available</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loading">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div fxLayoutAlign="center center">
+          <div *ngIf="isLoading" class="loading-container">
+            <mat-spinner diameter="20"></mat-spinner>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      class="transaction-element-row"
+      *matRowDef="let element; columns: displayedColumns"
+      [class.example-expanded-row]="expandedElement === element.key"
+      (click)="onShowTransactionDetail(element)"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="transactions?.filteredData.length > 0 || isLoading"></tr>
+    <tr mat-footer-row *matFooterRowDef="['loading']" [hidden]="!isLoading"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="transaction-detail-row"></tr>
+  </table>
+  <mat-paginator hidePageSize="true" pageSize="10" class="mat-elevation-z1" showFirstLastButtons></mat-paginator>
+</div>

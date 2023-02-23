@@ -1,0 +1,54 @@
+<form [formGroup]="memberForm" (ngSubmit)="submit($event)">
+  <h2 mat-dialog-title>Create Member</h2>
+  <div mat-dialog-content>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Enter name" />
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Please enter your member name</mat-error>
+      </mat-form-field>
+      <mat-checkbox tabindex="-1" formControlName="portalAccess" class="example-margin">Portal Access</mat-checkbox>
+      <div *ngIf="portalAccess.value === true" fxLayout="row wrap" fxLayoutGap="1rem">
+        <mat-form-field>
+          <mat-select placeholder="Role" formControlName="role">
+            <mat-option *ngFor="let role of roles" [value]="role">{{ role | titlecase }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select placeholder="Login by" [formControl]="typeLoginCtrl">
+            <mat-option *ngFor="let type of typesLogin" [value]="type">{{ type | titlecase }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="typeLoginCtrl.value === TypeLogin.EMAIL" fxFlex="auto">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput formControlName="email" placeholder="Enter email" />
+          <mat-error *ngIf="email.invalid">Please enter your member email</mat-error>
+        </mat-form-field>
+        <mat-form-field *ngIf="typeLoginCtrl.value === TypeLogin.USERNAME" fxFlex="auto">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" placeholder="Enter username" />
+          <mat-error *ngIf="username.invalid">{{ getErrorUsername() }}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-form-field *ngIf="teams.length">
+        <mat-label>Assign team </mat-label>
+        <mat-select placeholder="Select team for this member" formControlName="teamUuid">
+          <mat-option *ngIf="!isManagedTeam" value=""> No Team</mat-option>
+          <mat-option *ngFor="let team of teams" [value]="team.uuid"> {{ team.name }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="loading"
+      [disabled]="loading || memberForm.invalid"
+      color="primary"
+      type="submit"
+    >
+      Create
+    </button>
+  </div>
+</form>

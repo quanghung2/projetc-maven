@@ -1,0 +1,99 @@
+<mat-toolbar><h1>Overview</h1></mat-toolbar>
+
+<div *ngIf="data$ | async as data" fxLayout="column" class="project-settings" fxLayoutGap="20px">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Project Name</div>
+    <div class="item-right" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+      <mat-icon
+        *ngIf="editable"
+        (click)="rename(data?.project)"
+        matTooltip="Click to rename"
+        class="material-icons-outlined btn-edit"
+      >
+        edit
+      </mat-icon>
+      <span>{{ data?.project?.name }}</span>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Project UUID</div>
+    <div
+      [cdkCopyToClipboard]="data?.project?.uuid"
+      (cdkCopyToClipboardCopied)="copied()"
+      matTooltip="Click to copy"
+      class="item-right uuid"
+    >
+      {{ data?.project?.uuid.substr(0, 8) }}
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Subscription UUID</div>
+    <div
+      [cdkCopyToClipboard]="data?.project?.subscriptionUuid"
+      (cdkCopyToClipboardCopied)="copied()"
+      matTooltip="Click to copy"
+      class="item-right uuid"
+    >
+      {{ data?.project?.subscriptionUuid.substr(0, 8) }}
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Capabilities</div>
+    <div class="item-right" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+      <mat-icon
+        *ngIf="editable"
+        (click)="editCapabilities(data?.project)"
+        matTooltip="Click to edit"
+        class="material-icons-outlined btn-edit"
+      >
+        edit
+      </mat-icon>
+      <span>{{ data?.project?.capabilities.join(', ') }}</span>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Members</div>
+    <div class="item-right" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+      <mat-icon
+        *ngIf="editable"
+        (click)="assignMember(data?.project)"
+        matTooltip="Click to assign"
+        class="material-icons-outlined btn-edit"
+      >
+        edit
+      </mat-icon>
+      <span *ngIf="data?.project?.assignedMembers">{{ data.project.assignedMembers.length }} member(s)</span>
+      <span *ngIf="!data?.project?.assignedMembers">No member</span>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+    <div class="item-left">Concurrent Call</div>
+    <div class="item-right">{{ data?.concurrentCall }}</div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div fxLayout="row" fxLayoutAlign="space-between top" fxLayoutGap="4px">
+    <div fxFlex="150px" class="item-left">Assigned Numbers</div>
+    <ng-container *ngIf="data?.assignedNumbers?.length; else noAssignedNumbers">
+      <mat-chip-list>
+        <mat-chip *ngFor="let number of data?.assignedNumbers" color="primary">
+          <span class="number">{{ number }}</span>
+        </mat-chip>
+      </mat-chip-list>
+    </ng-container>
+    <ng-template #noAssignedNumbers>
+      <div class="item-right">No numbers assigned</div>
+    </ng-template>
+  </div>
+  <mat-divider></mat-divider>
+</div>

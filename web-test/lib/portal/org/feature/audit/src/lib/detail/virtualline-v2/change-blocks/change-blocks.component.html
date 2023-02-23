@@ -1,0 +1,64 @@
+<table mat-table [dataSource]="[0, 1, 2]" class="mat-elevation-z2 change-block">
+  <ng-container matColumnDef="ipaddress">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let child">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="icon-item-change"></div>
+        <span class="text-bold" *ngIf="child === 0">Flow type</span>
+        <span class="text-bold" *ngIf="child === 1">Block</span>
+        <span class="text-bold" *ngIf="child === 2">Action</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ipaddressValue">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let child">
+      <span *ngIf="child === 0">{{ audit?.officeHour }}</span>
+      <span *ngIf="child === 1">{{ audit?.blockType }}</span>
+      <span *ngIf="child === 2">{{ audit?.action }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="change">
+    <th mat-header-cell *matHeaderCellDef>Changes</th>
+    <td mat-cell *matCellDef="let child">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="icon-item-change" *ngIf="(audit?.fieldChanges)[child]?.name"></div>
+        <span>{{ (audit?.fieldChanges)[child]?.name || '-' }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="valueChange" class="">
+    <th mat-header-cell *matHeaderCellDef>
+      <span *ngIf="!audit?.fieldChanges.length"> No changes</span>
+      <div *ngIf="audit?.fieldChanges.length > 0">
+        <span>{{ audit.fieldChanges.length }}</span>
+        <span *ngIf="audit.fieldChanges.length > 1"> changes</span>
+        <span *ngIf="audit.fieldChanges.length === 1"> change</span>
+      </div>
+      <a *ngIf="audit?.fieldChanges.length > 3" (click)="showModelDetail()">(Show all)</a>
+    </th>
+    <td mat-cell *matCellDef="let child">
+      <div *ngIf="audit?.action === mapAction.edit" fxLayout="row" fxLayoutAlign="start center">
+        <span>
+          {{ !(audit?.fieldChanges)[child]?.oldValue ? '-' : (audit?.fieldChanges)[child]?.oldValue }}
+        </span>
+        <mat-icon class="audit-icon-arrow-forward">arrow_forward</mat-icon>
+        <span>
+          {{ !(audit?.fieldChanges)[child]?.newValue ? '-' : (audit?.fieldChanges)[child]?.newValue }}
+        </span>
+      </div>
+      <div *ngIf="audit?.action === mapAction.add">
+        {{ !(audit?.fieldChanges)[child]?.newValue ? '-' : (audit?.fieldChanges)[child]?.newValue }}
+      </div>
+      <div *ngIf="audit?.action === mapAction.delete">
+        {{ !(audit?.fieldChanges)[child]?.oldValue ? '-' : (audit?.fieldChanges)[child]?.oldValue }}
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>

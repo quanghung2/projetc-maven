@@ -1,0 +1,42 @@
+// -----------------------------------------------------------------------------------------------------
+@use '@angular/material' as mat;
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
+
+// Define a mixin for easier access
+@mixin components-theme($theme) {
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define the default theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$default-primary-palette: mat.define-palette(mat.$deep-purple-palette);
+$default-accent-palette: mat.define-palette(mat.$deep-purple-palette, A400, A200, A700);
+$default-warn-palette: mat.define-palette(mat.$red-palette);
+
+// Create the Material theme object
+$theme: mat.define-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+
+// Add ".theme-default" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-default {
+  // Create an Angular Material theme from the $theme map
+  @include mat.all-component-themes($theme);
+
+  // Apply the theme to the b3n Core
+  @include b3n-core-theme($theme);
+
+  // Apply the theme to the user components
+  @include components-theme($theme);
+
+  // Generate b3n color classes for primary, accent and warn colors
+  $palettes: (
+    primary: $default-primary-palette,
+    accent: $default-accent-palette,
+    warn: $default-warn-palette
+  );
+
+  @include b3n-color-classes($palettes);
+}

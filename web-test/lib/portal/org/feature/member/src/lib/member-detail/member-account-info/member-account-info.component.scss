@@ -1,0 +1,65 @@
+:host {
+  display: block;
+  .content {
+    padding: 0 2rem;
+    &:first-of-type {
+      margin-top: 0.5em;
+    }
+    &.report-access,
+    &.pin {
+      .item {
+        display: flex;
+        justify-content: space-between;
+        .view {
+          text-decoration: underline;
+          &:hover {
+            cursor: pointer;
+            color: #007be0;
+          }
+        }
+      }
+    }
+    .item {
+      padding: 12px 0;
+      &.permissions {
+        .header {
+          margin-bottom: 0.8rem;
+          height: 36px;
+          margin-bottom: 0.8rem !important;
+          .view-only {
+            font-style: italic;
+          }
+        }
+        .no-permissions {
+          background: var(--gray-200);
+          padding: 1.6rem;
+          border-radius: 5px;
+        }
+      }
+      .header {
+        color: var(--gray-700);
+        font-weight: 450;
+      }
+      .email,
+      .phone {
+        padding: 10px 0 0 10px;
+      }
+    }
+  }
+  .btnCreateNew {
+    text-align: center;
+    margin-top: 0.8rem;
+
+    i {
+      font-size: 20px !important;
+    }
+  }
+  .pin-detail {
+    padding: 0.25rem 0;
+    &__status {
+      background: var(--gray-200);
+      padding: 1.6rem;
+      border-radius: 5px;
+    }
+  }
+}

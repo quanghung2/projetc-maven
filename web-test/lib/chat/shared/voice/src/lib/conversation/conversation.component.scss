@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  height: 100%;
+}
+.convo {
+  height: 100%;
+  &__header {
+    padding: 1.6rem;
+    &__name {
+      color: #172b4d;
+      letter-spacing: 0.33px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    &__buttons {
+      display: -webkit-box;
+      display: flex;
+      -webkit-box-align: center;
+      align-items: center;
+      position: absolute;
+      right: 1em;
+    }
+  }
+  &__body {
+    .messages-viewport {
+      display: block;
+      height: calc(100vh - 201px);
+      padding: 1.6rem;
+      width: calc(100% - 2rem);
+      overflow: auto;
+      overflow-x: hidden;
+
+      ::ng-deep {
+        .cdk-virtual-scroll-content-wrapper {
+          min-width: calc(100% - 2rem) !important;
+          padding: 0 1.6rem;
+        }
+      }
+
+      .message-item {
+        min-height: 30px;
+        margin-bottom: 0.3rem;
+      }
+    }
+  }
+  &__footer {
+    // position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}

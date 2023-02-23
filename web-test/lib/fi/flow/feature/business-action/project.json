@@ -1,0 +1,19 @@
+{
+  "name": "fi-flow-feature-business-action",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/fi/flow/feature/business-action/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/fi/flow/feature/business-action/**/*.ts",
+          "libs/fi/flow/feature/business-action/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,36 @@
+:host {
+  .label {
+    font-weight: 300;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: baseline;
+    margin: 0 0.14285714em;
+    background-color: #e8e8e8;
+    background-image: none;
+    padding: 4px 6px;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: none;
+    font-weight: 600;
+    border: 0 solid transparent;
+    border-radius: 0.28571429rem;
+  }
+
+  .link {
+    color: blue;
+    cursor: pointer;
+  }
+  .paginator {
+    text-align: right;
+    background: #ffffff;
+    padding: 0.8rem 2rem;
+    i {
+      font-size: 1.6rem;
+      width: 0.8rem;
+    }
+  }
+  .no-record {
+    padding: 1.5rem;
+  }
+}

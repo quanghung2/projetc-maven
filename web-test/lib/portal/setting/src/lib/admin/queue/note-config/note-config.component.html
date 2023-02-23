@@ -1,0 +1,67 @@
+<form class="note-config__container" autocomplete="off" [formGroup]="form">
+  <div class="note-config__header">
+    <h1 mat-dialog-title>{{ showNoteTemplateForm ? 'Create New Template' : 'Popup Configuration' }}</h1>
+  </div>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <ng-container *ngIf="!loading && !showNoteTemplateForm">
+    <h4 class="flex justify-content-end secondary-text" style="margin-bottom: 1.6rem">
+      Queue -&nbsp;<strong>{{ data.label }}</strong>
+    </h4>
+    <div class="title" fxLayout="row">
+      <div>Enable Screen Popup</div>
+      <span class="fill-remaining-space"></span>
+      <mat-slide-toggle formControlName="disableNotes" color="primary"></mat-slide-toggle>
+    </div>
+
+    <mat-form-field>
+      <textarea
+        formControlName="script"
+        matInput
+        placeholder="Answer script"
+        rows="5"
+        [errorStateMatcher]="matcher"
+      ></textarea>
+      <mat-error *ngIf="script.invalid"> Maximum 2000 characters </mat-error>
+    </mat-form-field>
+
+    <div class="tool-bar__wrapper" *ngIf="!showNoteTemplateForm">
+      <mat-form-field>
+        <mat-label>Note Template</mat-label>
+        <mat-select formControlName="noteTemplate">
+          <mat-option *ngFor="let noteTemplate of noteTemplates" [value]="noteTemplate.templateUuid">
+            {{ noteTemplate.title }}
+          </mat-option>
+        </mat-select>
+        <mat-error>* No data available</mat-error>
+      </mat-form-field>
+      <!-- !DISABLE REMOVE FUNCTION (ENABLE IN FUTURE) -->
+      <!-- <button
+        mat-button
+        color="warn"
+        type="button"
+        (click)="removeTemplate()"
+        [loading]="removing"
+        *ngIf="noteTemplates.length"
+      >
+        Remove
+      </button> -->
+    </div>
+  </ng-container>
+  <b3n-store-note-template
+    *ngIf="showNoteTemplateForm"
+    (resetScreen)="reset()"
+    (toggleNoteTemplateForm)="toggleNoteTemplateForm()"
+    [isMaxTemplate]="noteTemplates.length >= 100"
+  ></b3n-store-note-template>
+  <b3n-store-note-template
+    *ngIf="!showNoteTemplateForm && noteTemplate"
+    [noteTemplate]="noteTemplate"
+  ></b3n-store-note-template>
+  <div class="note-config__action" *ngIf="!showNoteTemplateForm">
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-stroked-button type="button" (click)="toggleNoteTemplateForm()">Create new template</button>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()" [loading]="saving">
+      Save
+    </button>
+  </div>
+</form>

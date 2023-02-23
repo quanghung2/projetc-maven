@@ -1,0 +1,49 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Abandoned rate</mat-card-title>
+    <span class="fill-remaining-space"></span>
+    <div *ngIf="loading">
+      <mat-progress-spinner strokeWidth="2" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <div class="container">
+      <div
+        fxLayout="column"
+        fxLayoutAlign="space-around stretch"
+        class="container__one"
+        *ngIf="abds && abds.length === 1"
+      >
+        <div fxFlex="10" class="item"></div>
+        <div fxFlex="60" class="item">
+          <span class="number">{{ abds[0].rate > -1 ? (abds[0].rate | percent: '1.2-2') : '-' }}</span>
+        </div>
+        <div fxFlex="30">
+          <div fxLayout="row" fxLayoutAlign="space-around stretch">
+            <div fxFlex="37.5">
+              <p>Long abandoned: {{ abds[0].longAbandoned }}</p>
+            </div>
+            <div fxFlex="37.5">
+              <p>Short abandoned: {{ abds[0].shortAbandoned }}</p>
+              <p>Unanswered callback: {{ abds[0].unansweredCallback }}</p>
+            </div>
+            <div fxFlex="25">
+              <p>Voicemails: {{ abds[0].voicemail }}</p>
+              <p>Total calls: {{ abds[0].totalCall }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-list *ngIf="abds && abds.length > 1">
+        <mat-list-item *ngFor="let abd of abds">
+          <div class="mat-list-text">
+            <h3 matLine>{{ abd.queueLabel }}</h3>
+          </div>
+          <div class="mat-list-appended">{{ abd.rate > -1 ? (abd.rate | percent: '1.2-2') : '-' }}</div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>

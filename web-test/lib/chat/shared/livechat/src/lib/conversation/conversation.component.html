@@ -1,0 +1,12 @@
+<ng-container *ngIf="ticket">
+  <div class="convo-container flex column justify-content-end align-items-none">
+    <div fxFlex="64px" class="header">
+      <csl-conversation-header [ticket]="ticket"></csl-conversation-header>
+      <mat-divider></mat-divider>
+    </div>
+    <csl-conversation-content fxFlex="auto" class="body" [ticket]="ticket"></csl-conversation-content>
+    <div class="footer">
+      <csl-conversation-footer [ticket]="ticket" (uploadedFiles)="uploadFile($event, 0)"></csl-conversation-footer>
+    </div>
+  </div>
+</ng-container>

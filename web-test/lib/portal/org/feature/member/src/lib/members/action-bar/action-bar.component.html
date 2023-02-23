@@ -1,0 +1,82 @@
+<mat-toolbar [formGroup]="filterFG" fxLayoutGap="0.8rem">
+  <mat-form-field>
+    <mat-select formControlName="status" placeholder="Status">
+      <mat-option *ngFor="let status of statuses" [value]="status"> {{ status | titlecase }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="managedTeams?.length && filterFG.value.status === Status.ACTIVE">
+    <mat-select formControlName="teamUuid" placeholder="Team">
+      <mat-option *ngIf="isManagedEveryone" value="">Everyone</mat-option>
+      <mat-option *ngFor="let team of managedTeams" [value]="team.uuid"> {{ team.name | titlecase }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select formControlName="sort" placeholder="Sort by">
+      <mat-option value="identity.displayName">Name</mat-option>
+      <mat-option *ngIf="filterFG.value.status === Status.ACTIVE && isLicenseOrg" value="i.email">Email</mat-option>
+      <mat-option *ngIf="filterFG.value.status === Status.ACTIVE && isLicenseOrg" value="e.extKey"
+        >Extension</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="filterFG.value.status === Status.ACTIVE" fxFlex="120px">
+    <mat-label>Filter by roles</mat-label>
+    <mat-select multiple formControlName="filterByRoles">
+      <mat-option *ngFor="let role of roleOptions" [value]="role.key">{{ role.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input
+      matInput
+      formControlName="keyword"
+      placeholder="{{ filterFG.value.status !== Status.PENDING ? 'Search by name' : 'Search by email' }}"
+    />
+    <button mat-icon-button matSuffix>
+      <mat-icon class="btn-search">search</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <span class="spacer"></span>
+  <ng-container>
+    <button
+      *ngIf="filterFG.value.status !== Status.PENDING"
+      mat-stroked-button
+      class="action-bar__action-btn"
+      (click)="import()"
+    >
+      Import
+    </button>
+    <button
+      *ngIf="filterFG.value.status !== Status.DISABLED"
+      mat-stroked-button
+      (click)="export()"
+      class="action-bar__action-btn"
+    >
+      Export
+    </button>
+    <button
+      *ngIf="filterFG.value.status !== Status.PENDING"
+      mat-raised-button
+      color="primary"
+      (click)="addMember()"
+      class="action-bar__action-btn"
+    >
+      Create
+    </button>
+  </ng-container>
+  <ng-container *ngIf="filterFG.value.status === Status.PENDING">
+    <button
+      *ngIf="hasPendingMembers$ | async"
+      (click)="confirmAndSendActivationEmails()"
+      mat-raised-button
+      color="primary"
+    >
+      Send Activation Emails
+    </button>
+  </ng-container>
+</mat-toolbar>

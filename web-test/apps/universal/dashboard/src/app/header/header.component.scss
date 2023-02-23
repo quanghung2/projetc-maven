@@ -1,0 +1,17 @@
+:host {
+  display: block;
+
+  mat-toolbar {
+    height: 54px;
+
+    .app-title {
+      color: white;
+      text-decoration: none;
+      padding-right: 1.6rem;
+    }
+
+    .active {
+      background-color: #00776b;
+    }
+  }
+}

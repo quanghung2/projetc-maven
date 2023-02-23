@@ -1,0 +1,96 @@
+@mixin position {
+  position: absolute;
+  left: 0;
+  border-radius: 10px 10px 0 0;
+  width: 100%;
+}
+
+@mixin status-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    visibility: hidden;
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+::ng-deep.animate__slideOutDown {
+  animation-name: slideOutDown;
+}
+
+.status__container {
+  @include position;
+  box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%), 0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
+  background-color: #f2f3f5;
+  height: 100%;
+
+  mat-list {
+    @include position;
+    top: 0;
+    background: #e3e4e8;
+
+    h3 {
+      padding-bottom: 7px !important;
+      color: black;
+    }
+  }
+
+  .select__wrapper {
+    height: calc(100% - 72px);
+    margin-top: 56px !important;
+    margin: 16px;
+    background-color: white;
+    border-radius: 5px;
+
+    .option {
+      height: 40px;
+      width: 100%;
+      padding: 0 16px;
+      gap: 16px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      &:not(:first-of-type) {
+        border-top: 1px solid #f2f3f5;
+      }
+
+      .available {
+        @include status-dot;
+        background-color: #5cb85c !important;
+      }
+
+      .busy {
+        @include status-dot;
+        background-color: red !important;
+      }
+
+      .offline {
+        @include status-dot;
+        background-color: #bbb9b9 !important;
+      }
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+        color: red;
+      }
+
+      p {
+        margin: 0;
+        font-weight: 500;
+        line-height: 15px;
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+:host {
+  p {
+    margin: 0;
+  }
+
+  max-height: 70vh;
+  overflow: scroll;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+td {
+  height: 70px;
+}

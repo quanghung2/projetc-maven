@@ -1,0 +1,189 @@
+.pending-container {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+.ui.page.content.container {
+  padding-bottom: 0px;
+}
+.fullwidth {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.control-container {
+  margin-bottom: 35px !important;
+}
+.pending-invitation {
+  height: 30px;
+  .title {
+    color: #333333;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 24px;
+    float: left;
+    margin-right: 10px;
+  }
+  .count {
+    color: #919191;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 24px;
+    float: left;
+    margin-right: 15px;
+  }
+  .button {
+    float: left;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 12px;
+    text-align: center;
+    padding: 5px 10px;
+    margin-right: 5px;
+  }
+}
+.pending-item {
+  height: 56px;
+  width: 32.44%;
+  border: 1px solid #dddddd;
+  border-radius: 2px;
+  background-color: #ffffff;
+  float: left;
+  margin-right: 15px;
+  &.last {
+    margin-right: 0px;
+  }
+  .email {
+    float: left;
+    line-height: 54px;
+    margin-left: 14px;
+  }
+  .icon {
+    float: right;
+  }
+  .info {
+    float: right;
+    padding: 12px 20px 14px 8px;
+    margin: 14px 0px;
+    line-height: 2px;
+  }
+  .delete {
+    margin-right: 14px !important;
+  }
+  .delete,
+  .send {
+    float: right;
+    padding: 12px 20px 14px 8px;
+    margin: 13px 0px;
+    border-radius: 2px;
+    border: 1px solid #dddddd;
+    line-height: 2px;
+  }
+  .send {
+    border-right: 0px;
+    border-radius: 2px 0px 0px 2px;
+  }
+  .delete {
+    border-radius: 0px 2px 2px 0px;
+  }
+}
+.management-container {
+  .list-container {
+    padding: 0px 5px;
+    .title {
+      color: #333333;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 30px;
+      float: left;
+      margin-right: 10px;
+    }
+    .count {
+      color: #919191;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 30px;
+      float: left;
+      margin-right: 15px;
+    }
+    .ui.primary.button {
+      margin-top: -5px;
+    }
+    .column-1 {
+      float: left;
+      width: 78%;
+    }
+    .column-2 {
+      float: left;
+      width: 22%;
+    }
+    .column-11 {
+      float: left;
+      width: 41%;
+    }
+    .column-12 {
+      float: left;
+      width: 37%;
+    }
+    .column-13 {
+      float: left;
+      width: 22%;
+    }
+    .ui.inline.dropdown {
+      width: 20px;
+      .dropdown.icon {
+        top: 0px;
+        margin: 0px;
+      }
+      .menu {
+        left: inherit;
+        right: 0;
+      }
+    }
+    .ui.calendar {
+      right: 15px;
+      position: absolute;
+      .ui.bottom.left.popup:before {
+        left: 145px;
+      }
+    }
+    .header {
+      color: #666666;
+      font-size: 13px;
+      font-weight: bold;
+      line-height: 22px;
+      padding-left: 5px;
+      padding-right: 12px;
+      margin-top: 20px;
+      border-bottom: 0.5px solid #dddddd;
+    }
+    .row {
+      font-size: 14px;
+      line-height: 22px;
+      padding: 17px 5px;
+      border-bottom: 0.5px solid #dddddd;
+    }
+    .list {
+      overflow-y: scroll;
+      height: 500px;
+    }
+    .status {
+      text-transform: uppercase;
+      font-size: 5px;
+      font-weight: bold;
+      line-height: 16px;
+      &.expired {
+        color: #ffffff;
+        background-color: #ef4036;
+        border-radius: 2px;
+        padding: 0px 10px;
+      }
+    }
+    .delete {
+      float: right;
+      padding: 12px 20px 14px 8px;
+      margin: -3px 0px;
+      border: 1px solid #dddddd;
+      line-height: 2px;
+      border-radius: 2px;
+    }
+  }
+}

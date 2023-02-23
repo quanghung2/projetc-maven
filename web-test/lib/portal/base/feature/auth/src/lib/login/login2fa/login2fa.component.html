@@ -1,0 +1,92 @@
+<form [formGroup]="login2FAForm" (submit)="verifyLogin2FA()" novalidate>
+  <div class="frame-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
+    <div class="title">2-Step Verification</div>
+
+    <ng-container *ngIf="typeLogin2FA == 'totp'">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
+        <img fxFlexAlign="start" width="36px" src="https://ui.b3networks.com/external/icon/authenticator.jpg" />
+        <div>Get code from Authenticator to sign in to your account.</div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="typeLogin2FA == 'system_generated'">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
+        <img fxFlexAlign="start" src="https://ui.b3networks.com/icons/icon_email.png" />
+        <div>An email message with your code has been sent to {{ sensitiveEmail() }}</div>
+      </div>
+      <a href="javascript:;" *ngIf="!reLoginIndicator" (click)="relogin()"> Didn't receive the message? </a>
+      <mat-spinner *ngIf="reLoginIndicator" color="primary" diameter="20" fxFlexAlign="center"></mat-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="typeLogin2FA != 'recovery_key'">
+      <mat-form-field fxFlexFill>
+        <span class="font-weight-bold" *ngIf="typeLogin2FA == 'system_generated'" matPrefix>
+          {{ loginResponse.sanitizedCode }} -&nbsp;
+        </span>
+        <input
+          matInput
+          formControlName="otpCodeView"
+          placeholder="Verification code"
+          (input)="showErrorSummary = false"
+          required
+        />
+        <mat-error *ngIf="typeLogin2FA != 'recovery_key' && otpCode.invalid">
+          {{ getErrorOtpCode() }}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="typeLogin2FA == 'recovery_key'">
+      <div fxFlexFill>
+        <span class="font-weight-bold" fxFlexAlign="start">Enter Your Recovery Key</span><br />
+        <span [class.text-error]="recoveryKey.invalid && recoveryKey.dirty">
+          You should change recovery key after sign in to keep it safe.
+        </span>
+      </div>
+
+      <mat-form-field fxFlexFill>
+        <input
+          matInput
+          formControlName="recoveryKey"
+          placeholder="Recovery key"
+          (input)="showErrorSummary = false"
+          required
+        />
+        <mat-error *ngIf="typeLogin2FA == 'recovery_key' && recoveryKey.invalid">
+          {{ getErrorRecoveryKey() }}
+        </mat-error>
+      </mat-form-field>
+    </ng-container>
+
+    <mat-checkbox color="primary" formControlName="trustBrowser" fxFlexAlign="start">
+      Trust this computer for 30 days
+    </mat-checkbox>
+
+    <div class="noti-summary error" *ngIf="showErrorSummary">{{ error }}</div>
+
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [loading]="indicator"
+      [style.backgroundColor]="
+        ((typeLogin2FA == 'recovery_key' && recoveryKey.valid) || (typeLogin2FA != 'recovery_key' && otpCode.valid)) &&
+        !indicator
+          ? config.loginButtonBackground
+          : ''
+      "
+      [disabled]="
+        (typeLogin2FA == 'recovery_key' && recoveryKey.invalid) ||
+        (typeLogin2FA != 'recovery_key' && otpCode.invalid) ||
+        indicator
+      "
+      fxFlexFill
+    >
+      Verify
+    </button>
+
+    <a href="javascript:;" (click)="switchTypeSignIn()">
+      {{ typeLogin2FA == 'recovery_key' ? 'Sign in using verification code' : 'Sign in using recovery key' }}
+    </a>
+  </div>
+</form>

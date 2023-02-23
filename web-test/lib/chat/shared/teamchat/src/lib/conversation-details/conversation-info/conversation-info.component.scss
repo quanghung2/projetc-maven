@@ -1,0 +1,39 @@
+.whitebox {
+  background-color: rgba(29, 28, 29, 0.04);
+  border-radius: 4px;
+  padding: 0.8rem 1.6rem;
+}
+
+.description_info,
+.owner_info {
+  @extend .whitebox;
+}
+.description_info {
+  label {
+    opacity: 0.7;
+  }
+}
+.owner_info {
+  margin-top: 2px;
+  img {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+  }
+  &__description {
+    opacity: 0.7;
+  }
+}
+
+.user_info {
+  .info_row {
+    display: flex;
+    flex-direction: column;
+    &__label {
+      margin-bottom: 0.3rem;
+    }
+    &:not(:first-child) {
+      margin-top: 1.6rem;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+<section
+  fxLayout="column"
+  fxLayoutAlign="start start"
+  fxLayoutGap="16px"
+  (click)="$event.stopPropagation(); $event.preventDefault()"
+  class="px-16 py-8"
+>
+  <span fxFlexAlign="center"
+    ><strong>{{ actionDefWhenHover?.name }}</strong></span
+  >
+
+  <div *ngIf="actionDefWhenHover?.description" fxLayout="column" fxLayoutAlign="start start">
+    <span class="title">ABOUT</span>
+    <span class="item">{{ actionDefWhenHover?.description }}</span>
+  </div>
+
+  <div
+    *ngIf="
+      actionDefWhenHover?.urlParameters?.length ||
+      actionDefWhenHover?.headersParameters?.length ||
+      actionDefWhenHover?.bodyParameters?.length ||
+      actionDefWhenHover?.parameters?.length
+    "
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    fxLayoutGap="4px"
+  >
+    <span class="title">INPUTS</span>
+    <!-- url -->
+    <ng-container *ngFor="let key of keyActionDefs">
+      <ng-container *ngIf="actionDefWhenHover && actionDefWhenHover[key] && actionDefWhenHover[key]?.length">
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+          <div *ngFor="let data of actionDefWhenHover[key]" fxLayout="column" fxLayoutAlign="start start">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <span class="item">
+                {{ data?.title }}
+              </span>
+              <span class="description">
+                {{ data?.description }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div
+    *ngIf="actionDefWhenHover?.outputs?.length"
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    fxLayoutGap="4px"
+  >
+    <span class="title">OUTPUTS</span>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+      <div *ngFor="let output of actionDefWhenHover.outputs" fxLayout="column" fxLayoutAlign="start start">
+        <div fxLayout="column" fxLayoutAlign="start start">
+          <span class="item">
+            {{ output?.title }}
+          </span>
+          <span class="description">
+            {{ output?.description }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

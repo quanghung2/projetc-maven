@@ -1,0 +1,25 @@
+<div class="ui page content container" *ngIf="service.infoCompliant">
+  <div class="ui grid">
+    <div class="compliant-flag-container">
+      <div class="header">Compliant flag</div>
+      <div class="body ui one column grid">
+        <div class="column">All calls will enforce to check against DNC regardless of the DNC settings.</div>
+      </div>
+      <div class="header-container">Exceptions</div>
+      <div class="body ui one column grid">
+        <div class="column text-exception">These exception caller ID to be excluded from above enforcement.</div>
+        <div class="column">
+          <tag-input
+            name="phone"
+            [(ngModel)]="service.infoCompliant.callerIdExceptionRule"
+            [errorMessages]="errorMessages"
+            [validators]="$any(validators)"
+            placeholder="+ Phone number"
+            (onAdd)="onAddPhone($event)"
+            (onRemove)="onRemovePhone($event)"
+          ></tag-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

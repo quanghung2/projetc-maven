@@ -1,0 +1,40 @@
+:host {
+  ::ng-deep {
+    .mat-horizontal-content-container {
+      padding: 0 24px !important;
+    }
+  }
+  .resource-table {
+    ::ng-deep {
+      .mat-form-field-wrapper {
+        padding: 0 !important;
+      }
+      .mat-form-field-infix {
+        border-top: 0.4375em solid transparent;
+      }
+      .mat-horizontal-content-container {
+        padding: 0 24px !important;
+      }
+    }
+  }
+
+  .mat-table {
+    .mat-column-actions {
+      width: 40px;
+      > * {
+        visibility: hidden;
+      }
+    }
+
+    .mat-row {
+      &:hover {
+        .mat-column-actions > * {
+          visibility: visible;
+        }
+      }
+    }
+  }
+  .form-actions {
+    margin: 0 -24px;
+  }
+}

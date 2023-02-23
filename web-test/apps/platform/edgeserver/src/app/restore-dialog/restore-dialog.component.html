@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Restore</h2>
+<div mat-dialog-body>
+  <mat-form-field floatLabel="always">
+    <mat-select placeholder="Cluster" [formControl]="clusterCtrl">
+      <mat-option *ngFor="let cluster of clusters$ | async as clusters" [value]="cluster.cluster">
+        {{ cluster.cluster }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p style="color: red">*WARNING: All ongoing calls will be dropped for the configuration restore.</p>
+  <button mat-stroked-button color="primary" (click)="fileInput.click()" [disabled]="importing">Choose file</button>
+  <input #fileInput type="file" (change)="chooseFile($event)" accept="application/json" hidden />
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button color="warn" (click)="restore()" [disabled]="importing">Restore</button>
+</div>

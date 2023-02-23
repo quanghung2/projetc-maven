@@ -1,0 +1,50 @@
+<div class="store-dashboard2__container">
+  <mat-icon class="close" matDialogClose>close</mat-icon>
+  <mat-horizontal-stepper [@.disabled]="true" linear #stepper *ngIf="!loading && form" (ngSubmit)="save()">
+    <mat-step [stepControl]="selectTemplateForm" #first_step>
+      <ng-template matStepLabel>Select Template</ng-template>
+      <ng-container *ngIf="stepper.selected == null || stepper.selected == first_step">
+        <b3n-select-template
+          [remainNameChar]="remainNameChar"
+          [selectTemplateForm]="selectTemplateForm"
+          [activeSlide]="activeSlide"
+          [activeTemplate]="activeTemplate"
+          (templateChange)="templateChange($event)"
+          (slideChange)="slideChange($event)"
+        ></b3n-select-template>
+      </ng-container>
+    </mat-step>
+    <mat-step #second_step>
+      <ng-template matStepLabel>Select Widgets</ng-template>
+      <ng-container *ngIf="stepper.selected == second_step">
+        <b3n-select-question
+          [form]="form"
+          [questions]="questions"
+          [questionsFilter]="questionsFilter"
+          [questionsMap]="questionsMap"
+          [saving]="saving"
+          [template]="template"
+          (save)="save()"
+          (optionClick)="optionClick($event)"
+          (clearQuestions)="clearQuestions()"
+        ></b3n-select-question>
+      </ng-container>
+    </mat-step>
+    <mat-step #third_step>
+      <ng-template matStepLabel>Preview</ng-template>
+      <ng-container *ngIf="stepper.selected == third_step">
+        <b3n-preview
+          [form]="form"
+          [questions]="questions"
+          [questionsFilter]="questionsFilter"
+          [questionsMap]="questionsMap"
+          [template]="template"
+          [saveContent]="saveContent"
+          [saving]="saving"
+          (save)="save()"
+          (optionClick)="optionClick($event)"
+        ></b3n-preview>
+      </ng-container>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

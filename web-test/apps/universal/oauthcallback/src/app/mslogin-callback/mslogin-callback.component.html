@@ -1,0 +1,16 @@
+<div fxFill fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1rem">
+  <ng-container *ngIf="loading; else loadView">
+    <mat-spinner [strokeWidth]="2" [diameter]="40"></mat-spinner>
+    <div>Please do not refresh this page.</div>
+  </ng-container>
+  <ng-template #loadView>
+    <ng-container *ngIf="!hasData; else redirectUrl">
+      <i class="material-icons not-found"> clear </i>
+      <div class="text-center">Unexpected error occurred. Please contact support for more information.</div>
+    </ng-container>
+    <ng-template #redirectUrl>
+      <i class="material-icons icon-done"> done </i>
+      <div class="text-center">You have successfully signed in. Please wait.</div>
+    </ng-template>
+  </ng-template>
+</div>

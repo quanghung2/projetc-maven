@@ -1,0 +1,51 @@
+<mat-toolbar *ngIf="form" [formGroup]="form" class="filter__wrapper" #toolbar>
+  <ng-container [ngTemplateOutlet]="filters" [ngTemplateOutletContext]="{ hidden: !showFilters }"></ng-container>
+  <div>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      *ngIf="!showFilters"
+      (menuOpened)="isMenuOpened(true)"
+      (menuClosed)="isMenuOpened(false)"
+      matTooltip="Filter"
+    >
+      <mat-icon>tune</mat-icon>
+    </button>
+    <ng-container
+      *ngIf="(currentOrg?.isOwner || canManage) && !dashboard?.isDefault && !(dashboardV2Service.isTV$ | async)"
+    >
+      <button mat-icon-button (click)="storeDashboardV2()" matTooltip="Edit">
+        <mat-icon>dashboard_customize</mat-icon>
+      </button>
+      <button mat-icon-button (click)="deleteDashboard()" matTooltip="Delete">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </ng-container>
+  </div>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu" class="filter__menu" xPosition="before">
+  <div class="filter-menu__wrapper" (click)="$event.stopPropagation()">
+    <p>Filters</p>
+    <ng-container [ngTemplateOutlet]="filters"></ng-container>
+  </div>
+</mat-menu>
+
+<ng-template #filters let-hidden="hidden">
+  <div *ngIf="form" [class.hidden]="hidden" class="filters">
+    <b3n-include-non-queue-filter
+      [form]="form"
+      [storedFilter]="storedFilter"
+      [selectAllQueue]="selectAllQueue"
+    ></b3n-include-non-queue-filter>
+    <b3n-queue-filter
+      [form]="form"
+      [selectAllQueue]="selectAllQueue"
+      [storedFilter]="storedFilter"
+      (setSelectAllQueue)="setSelectAllQueue($event)"
+    ></b3n-queue-filter>
+    <b3n-extension-filter [form]="form" [storedFilter]="storedFilter"></b3n-extension-filter>
+    <b3n-state-filter [form]="form" [storedFilter]="storedFilter"></b3n-state-filter>
+    <b3n-datetime-filter [form]="form" [storedFilter]="storedFilter"></b3n-datetime-filter>
+  </div>
+</ng-template>

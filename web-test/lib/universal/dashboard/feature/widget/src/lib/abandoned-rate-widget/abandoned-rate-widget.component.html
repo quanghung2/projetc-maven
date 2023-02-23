@@ -1,0 +1,45 @@
+<ng-container *ngIf="records">
+  <table *ngIf="records.length > 0" [dataSource]="records" mat-table>
+    <ng-container matColumnDef="queue">
+      <th *matHeaderCellDef mat-header-cell>Queue</th>
+      <td *matCellDef="let row" mat-cell>{{ row.queue }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th *matHeaderCellDef mat-header-cell>Total</th>
+      <td *matCellDef="let row" mat-cell>{{ row.total }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="shortAbandoned">
+      <th *matHeaderCellDef mat-header-cell>Short abandoned</th>
+      <td *matCellDef="let row" mat-cell>{{ row.shortAbandoned | number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="longAbandoned">
+      <th *matHeaderCellDef mat-header-cell>Long abandoned</th>
+      <td *matCellDef="let row" mat-cell>{{ row.longAbandoned }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="unansweredCallback">
+      <th *matHeaderCellDef mat-header-cell>Unanswered callback</th>
+      <td *matCellDef="let row" mat-cell>{{ row.unansweredCallback }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="voicemail">
+      <th *matHeaderCellDef mat-header-cell>Voicemail</th>
+      <td *matCellDef="let row" mat-cell>{{ row.voicemail }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="rate">
+      <th *matHeaderCellDef mat-header-cell>Rate</th>
+      <td *matCellDef="let row" mat-cell>
+        <strong>{{ row.rate | percent: '1.2-2' }}</strong>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayColumns" mat-row></tr>
+  </table>
+
+  <div *ngIf="records.length == 0" class="no-data white-box">No data</div>
+</ng-container>

@@ -1,0 +1,107 @@
+<div *ngIf="!checkedElementIsObject" mat-dialog-title>Add new job</div>
+<div *ngIf="checkedElementIsObject" mat-dialog-title>Update job</div>
+<div mat-dialog-content [formGroup]="formJob" class="content">
+  <div class="text-size" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15px" style="margin-top: 10px">
+    <mat-form-field fxFlex="38%">
+      <mat-label>Job Name</mat-label>
+      <input matInput formControlName="name" (keydown.space)="convertSpace()" />
+    </mat-form-field>
+    <span>Job Type:</span>
+    <mat-radio-group (change)="changeValue()">
+      <mat-radio-button value="true" [checked]="checked" style="margin-right: 10px">Standalone</mat-radio-button>
+      <mat-radio-button value="false" [checked]="!checked">Dependant</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div *ngIf="checked" class="text-size" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 10px">
+    <mat-form-field fxFlex="30%">
+      <mat-label>First time run (UTC)</mat-label>
+      <input matInput [matDatepicker]="picker" placeholder="Choose a datetime" formControlName="firstRun" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker type="datetime" [clockStep]="5" #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field fxFlex="15%">
+      <mat-label>Interval</mat-label>
+      <input type="number" matInput formControlName="interval" />
+    </mat-form-field>
+    <mat-form-field fxFlex="15%">
+      <mat-select *ngIf="selected" name="time" [(value)]="selected" formControlName="time">
+        <mat-option value="h">hours</mat-option>
+        <mat-option value="m">minutes</mat-option>
+        <mat-option value="s">seconds</mat-option>
+        <mat-option value="d">days</mat-option>
+        <mat-option value="w">weeks</mat-option>
+        <mat-option value="M">months</mat-option>
+      </mat-select>
+      <mat-select *ngIf="!selected" name="time" formControlName="time">
+        <mat-option value="h">hours</mat-option>
+        <mat-option value="m">minutes</mat-option>
+        <mat-option value="s">seconds</mat-option>
+        <mat-option value="d">days</mat-option>
+        <mat-option value="w">weeks</mat-option>
+        <mat-option value="M">months</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlex="30%">
+      <mat-label>Epsilon (minutes)</mat-label>
+      <input matInput type="text" value="30" formControlName="epsilon" maxlength="5" />
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="!checked" class="text-size" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 10px">
+    <mat-form-field fxFlex="45%">
+      <mat-label>Parent</mat-label>
+      <input matInput value="job-name" />
+    </mat-form-field>
+    <mat-form-field fxFlex="45%">
+      <mat-label>Epsilon (minutes)</mat-label>
+      <input matInput type="text" value="30" maxlength="5" />
+    </mat-form-field>
+  </div>
+
+  <div class="text-size" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 10px">
+    <mat-form-field fxFlex="30%">
+      <mat-label>Command</mat-label>
+      <input matInput formControlName="command" />
+    </mat-form-field>
+    <mat-form-field fxFlex="30%">
+      <mat-label>Remote URL</mat-label>
+      <input matInput formControlName="uris" />
+    </mat-form-field>
+    <mat-form-field fxFlex="30%">
+      <mat-label>Param string</mat-label>
+      <input matInput formControlName="params" />
+    </mat-form-field>
+  </div>
+  <div class="text-size" fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 15px">
+    <p>Environment variables (leave key blank means remove variable)</p>
+    <button mat-stroked-button (click)="addVariable()">Add new variables</button>
+  </div>
+  <div formArrayName="environmentVariables">
+    <ng-container
+      *ngFor="let val of this.formJob.controls['environmentVariables']['controls']; let i = index"
+      [formGroupName]="i"
+    >
+      <div>
+        <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 10px">
+          <mat-form-field fxFlex="45%">
+            <mat-label>Default_key</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
+          <mat-form-field fxFlex="45%">
+            <input matInput formControlName="value" />
+          </mat-form-field>
+          <button mat-icon-button color="warn" style="cursor: pointer" (click)="deleteVariable(i)">
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="submitting" (click)="submit()" [disabled]="formJob.invalid">
+    Save Changes
+  </button>
+</mat-dialog-actions>

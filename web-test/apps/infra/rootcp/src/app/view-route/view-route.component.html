@@ -1,0 +1,65 @@
+<mat-toolbar><h1>View Route</h1></mat-toolbar>
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="15px" class="container">
+  <form [formGroup]="formViewRoute" (submit)="mockRouting()" novalidate>
+    <div fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
+      <mat-form-field fxFlex="300px">
+        <input matInput placeholder="Domain" formControlName="domain" required />
+        <mat-error *ngIf="domain.invalid">{{ getErrorDomain() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="340px">
+        <input matInput placeholder="Org UUID" formControlName="orgUuid" required />
+        <mat-error *ngIf="orgUuid.invalid">{{ getErrorOrgUuid() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="175px">
+        <input matInput type="tel" placeholder="Source" formControlName="source" required />
+        <mat-error *ngIf="source.invalid">{{ getErrorSource() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="175px">
+        <input matInput type="tel" placeholder="Destination" formControlName="dest" required />
+        <mat-error *ngIf="dest.invalid">{{ getErrorDest() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="150px">
+        <mat-select placeholder="Type" formControlName="type" required>
+          <mat-option value="call_incoming">Call Incoming</mat-option>
+          <mat-option value="call_outgoing">Call Outgoing</mat-option>
+          <mat-option value="fax_incoming">Fax Incoming</mat-option>
+          <mat-option value="fax_outgoing">Fax Outgoing</mat-option>
+        </mat-select>
+        <mat-error *ngIf="type.invalid">{{ getErrorType() }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button type="submit" color="primary" [loading]="testing" [disabled]="formViewRoute.invalid">
+      Test
+    </button>
+  </form>
+
+  <div fxLayout="row" fxLayoutAlign="start center" *ngIf="responseDetect && !testing">
+    <div class="block">{{ sourceNumber }}</div>
+    <mat-icon>arrow_right_alt</mat-icon>
+    <div class="block">In Inventory</div>
+    <mat-icon>arrow_right_alt</mat-icon>
+    <div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="15px">
+      <div class="block {{ responseDetect.isdnInventory.clid }}">
+        Source number: {{ responseDetect.isdnInventory.clid }}
+      </div>
+      <div class="block {{ responseDetect.isdnInventory.dnis }}">
+        Dest number: {{ responseDetect.isdnInventory.dnis }}
+      </div>
+    </div>
+    <mat-icon>arrow_right_alt</mat-icon>
+    <div class="block">Supplier: {{ responseDetect.supplier }}</div>
+    <mat-icon>arrow_right_alt</mat-icon>
+    <div class="block can-hover" (click)="viewRoutingPlan(responseDetect.routingPlan)">
+      Routing plan: {{ responseDetect.routingPlan }}
+    </div>
+    <mat-icon>arrow_right_alt</mat-icon>
+    <!-- <div class="block">Peer: IDT</div>
+      <mat-icon>arrow_right_alt</mat-icon> -->
+    <div class="block">{{ destNumber }}</div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+:host {
+  display: initial !important;
+  $title-color: #36434e;
+
+  mat-icon {
+    cursor: pointer;
+  }
+
+  .status {
+    padding: 7px;
+  }
+
+  .number {
+    float: left;
+  }
+
+  .fetching-icon {
+    top: 33%;
+    left: 7rem;
+    width: 30px;
+    padding-right: 10px !important;
+  }
+
+  .action-bar {
+    padding: 0.8rem 1.6rem;
+    position: relative;
+
+    &__back {
+      color: $title-color;
+    }
+  }
+}
+
+.callcenter {
+  .mat-column-status {
+    .status__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

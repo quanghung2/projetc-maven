@@ -1,0 +1,57 @@
+.mat-row {
+  height: 40px;
+
+  .label-status {
+    cursor: pointer;
+  }
+
+  &.flow {
+    height: 48px;
+
+    &:hover {
+      background-color: #f2f7fd;
+      cursor: pointer;
+
+      .mat-column-name .btn-action {
+        display: block;
+      }
+    }
+  }
+}
+
+.mat-column-groupHeader {
+  font-size: 13.6px;
+  font-weight: 500;
+  color: #0366d6 !important;
+  padding-top: 16px;
+
+  span {
+    cursor: pointer;
+    font-weight: normal;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.mat-column-name {
+  .btn-action {
+    display: none;
+    padding-right: 32px;
+
+    mat-icon {
+      color: #999;
+      font-size: 20px;
+    }
+  }
+}
+.mat-column-version {
+  width: 112px;
+}
+.mat-column-lastUpdated {
+  width: 144px;
+}
+.mat-column-deprecated {
+  width: 32px;
+}

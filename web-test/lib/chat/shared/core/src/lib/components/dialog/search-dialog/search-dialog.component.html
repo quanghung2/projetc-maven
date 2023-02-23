@@ -1,0 +1,75 @@
+<div fxFill class="container flex column justify-content-start align-items-none">
+  <mat-form-field class="search">
+    <input
+      #inputSearch
+      matInput
+      autocomplete="off"
+      [placeholder]="placeholder"
+      [formControl]="textSearch"
+      (keyup.enter)="key.setValue(inputSearch.value)"
+    />
+    <button
+      mat-button
+      *ngIf="!!inputSearch.value"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="inputSearch.value = ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <div class="body scroller-firefox spacer flex justify-content-start align-items-none gap-5">
+    <div class="spacer flex column justify-content-start align-items-none">
+      <ng-container *ngIf="loading === true">
+        <div fxFill fxLayoutAlign="center center">
+          <mat-spinner [diameter]="35"></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="loading === false">
+        <div *ngIf="groupResult?.length > 0; else noResult">
+          <div class="flex column justify-content-start align-items-none gap-10" style="margin-top: 0.1rem">
+            <mat-selection-list [multiple]="false" [formControl]="selectedCtr" [compareWith]="compareObjects">
+              <ng-container *ngFor="let group of groupResult; trackBy: trackByGroup">
+                <mat-list-option *ngFor="let message of group; trackBy: trackByMessage" [value]="message">
+                  <csh-chat-message
+                    [message]="message"
+                    [previousMessage]="null"
+                    [configMessageOption]="configMessageOption"
+                    (showProfile)="onShowProfile($event)"
+                  ></csh-chat-message>
+                </mat-list-option>
+              </ng-container>
+            </mat-selection-list>
+
+            <div fxLayoutAlign="center center" *ngIf="lastFrom && hasRange">
+              The search keyword from {{ lastFrom | date: 'dd-MM-YYYY' }}
+            </div>
+          </div>
+        </div>
+        <ng-template #noResult>
+          <div fxLayoutAlign="center center" style="padding-bottom: 1.6rem">
+            <span class="text-secondary" *ngIf="hasRange">
+              No message with the search keyword from {{ lastFrom | date: 'dd-MM-YYYY' }}
+            </span>
+            <span class="text-secondary" *ngIf="!hasRange"> No results </span>
+          </div>
+        </ng-template>
+
+        <ng-container *ngIf="hasRange">
+          <ng-container *ngIf="!fetching; else loadingMore">
+            <div class="btn-load-more" fxLayoutAlign="center" fxLayoutAlign="center">
+              <a color="primary" (click)="onLoadContinue()">Search older messages</a>
+            </div>
+          </ng-container>
+          <ng-template #loadingMore>
+            <div fxLayoutAlign="center center">
+              <mat-spinner diameter="35"></mat-spinner>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Add blacklist number</h1>
+<div class="black-list-content" mat-dialog-content>
+  <form #form="ngForm">
+    <mat-form-field class="add-number-input">
+      <mat-label>Enter Number</mat-label>
+      <input
+        matInput
+        required
+        placeholder="Number Format: Country Code + Area Code + Phone Number"
+        [(ngModel)]="blockNumber"
+        name="addNumber"
+        #name="ngModel"
+        [disabled]="blockAnonymous"
+        maxInputLength
+        [maxLength]="15"
+        type="number"
+      />
+      <mat-error *ngIf="name.hasError('required')">Number is required</mat-error>
+      <mat-error *ngIf="name.hasError('maxLength')">Maximum 15 digits</mat-error>
+    </mat-form-field>
+    <!-- <mat-checkbox (click)="toggleBlockAnonymous()">Block anonymous number</mat-checkbox> -->
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [disabled]="progressing || form.invalid" (click)="add()">
+    <span *ngIf="!progressing">Add</span> <span *ngIf="progressing">Adding...</span>
+  </button>
+</div>

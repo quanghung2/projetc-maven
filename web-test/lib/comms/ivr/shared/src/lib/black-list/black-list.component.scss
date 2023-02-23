@@ -1,0 +1,60 @@
+.toolbar-content {
+  width: 800px;
+  margin: 0 auto;
+}
+.black-list-content {
+  margin: 0 auto;
+  width: 800px;
+
+  mat-slide-toggle {
+    padding: 1.6rem 0;
+  }
+
+  .center {
+    text-align: center;
+  }
+  .table-header {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  table {
+    width: 100%;
+
+    tr:hover {
+      background: rgba(0, 0, 0, 0.1);
+
+      .gray {
+        display: inline-table;
+      }
+    }
+
+    td {
+      i {
+        cursor: pointer;
+        color: #757575;
+        margin-right: 8px;
+        padding: 4px;
+      }
+
+      .gray {
+        color: gray;
+        display: none;
+        .material-icons {
+          margin-top: -5px;
+        }
+      }
+    }
+
+    td:nth-child(1) {
+      width: 50%;
+    }
+
+    td:nth-child(2) {
+      width: 23%;
+    }
+  }
+}
+
+.no-subscription {
+  text-align: center;
+  padding-top: 15%;
+}

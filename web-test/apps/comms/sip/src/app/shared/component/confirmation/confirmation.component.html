@@ -1,0 +1,30 @@
+<div sm-component modal-id="confirmation-modal" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">{{ title }}</div>
+  <div class="content">
+    <div [innerHTML]="message"></div>
+    <div *ngIf="showTextbox" class="ui labeled input" style="width: 100%">
+      <div class="ui label">{{ label | uppercase }}</div>
+      <input type="text" [(ngModel)]="data" />
+    </div>
+  </div>
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block">
+        <div class="left"></div>
+      </div>
+      <div class="block">
+        <div class="right" *ngIf="type == 'yesno'">
+          <div class="ui large basic button" (click)="cancel()">No</div>
+          <div *ngIf="!processing" class="ui large primary button" (click)="ok()">Yes</div>
+          <div *ngIf="processing" class="ui large primary button loading">Yes</div>
+        </div>
+        <div class="right" *ngIf="type == 'okcancel'">
+          <div class="ui cancel link button" (click)="cancel()">Cancel</div>
+          <div *ngIf="!processing" class="ui approve large primary button" (click)="ok()">Ok</div>
+          <div *ngIf="processing" class="ui large primary button loading">Ok</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

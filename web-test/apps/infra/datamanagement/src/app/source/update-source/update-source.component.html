@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Source</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <div class="header" fxLayout="row">
+        <input
+          [disabled]="ctaActionName == 'Update'"
+          [(ngModel)]="newSource.descriptor"
+          matInput
+          placeholder="Descriptor Code"
+          maxlength="30"
+          autocomplete="off"
+          required
+        />
+        <mat-icon
+          matTooltip="For easier management and searching, please consider following this naming convention: <partner/customer short name>.<service name>.<feature name>.<sub feature name / affected object name>"
+          matTooltipClass="blocked-tooltip"
+          >help_outline</mat-icon
+        >
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select [(ngModel)]="queryType" placeholder="Query Type">
+        <mat-option value="mySQL">MySQL</mat-option>
+        <mat-option value="elasticsearch">Elasticsearch</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="queryType === 'elasticsearch'">
+      <div class="header" fxLayout="row">
+        <input [(ngModel)]="newSource.esIndex" matInput placeholder="Elasticsearch Index" />
+        <mat-icon
+          matTooltip="No need to type in full Elasticsearch index here, just Elasticsearch distinct index prefix is enough, for example: sms-seller, billing_dnc, etc..."
+          matTooltipClass="blocked-tooltip"
+          >help_outline</mat-icon
+        >
+      </div>
+    </mat-form-field>
+    <div class="iam" fxLayoutAlign="space-between center">
+      <span>IAM Enable: </span> <mat-slide-toggle [(ngModel)]="newSource.iam" color="primary"> </mat-slide-toggle>
+    </div>
+
+    <textarea
+      [(ngModel)]="newSource.statement"
+      matInput
+      placeholder="Query Statment"
+      class="config-raw"
+      rows="10"
+    ></textarea>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="updateSource()">
+    {{ ctaActionName }}
+  </button>
+</div>

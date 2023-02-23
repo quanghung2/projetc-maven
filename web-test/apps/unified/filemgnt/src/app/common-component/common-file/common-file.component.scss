@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .common-container {
+    padding: 0 10px;
+
+    .table-container {
+      height: calc(100vh - 144px);
+      overflow: auto;
+
+      table {
+        width: 100%;
+
+        th,
+        td {
+          padding: 0 15px;
+        }
+
+        tr {
+          .footer-table {
+            margin-right: 1.6rem;
+          }
+        }
+      }
+
+      .mat-column-size {
+        min-width: 100px !important;
+      }
+
+      .mat-column-last_modified {
+        min-width: 160px !important;
+      }
+
+      .mat-column-footer-table {
+        border-bottom-style: none !important;
+      }
+    }
+  }
+
+  ::ng-deep .mat-paginator-range-label {
+    display: none !important;
+  }
+}

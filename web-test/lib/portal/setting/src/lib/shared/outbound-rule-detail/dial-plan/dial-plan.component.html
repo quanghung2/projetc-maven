@@ -1,0 +1,66 @@
+<section class="dial-plan">
+  <div fxLayout="row" fxLayoutAlign="space-between baseline" class="action-bar mb-8">
+    <!--    <h2 class="action-bar__title" fxFlex="1 1 auto">Dial Plans</h2>-->
+    <span fxFlex="1 1 auto"></span>
+    <div fxLayout="row" fxLayoutGap="0.75rem">
+      <button *ngIf="isAdmin" (click)="addPlan()" mat-stroked-button color="primary">Add</button>
+      <button *ngIf="isAdmin" (click)="importDefaultPlans()" mat-stroked-button>Import</button>
+    </div>
+  </div>
+  <div>
+    <table mat-table [dataSource]="dialPlanDataSource">
+      <ng-container matColumnDef="pattern">
+        <th mat-header-cell *matHeaderCellDef>Matching pattern</th>
+        <td mat-cell *matCellDef="let element">
+          Start with
+          <span class="border border-radius-4 py-2 px-8">{{
+            element.planDetail.startWith.length > 0 ? element.planDetail.startWith : '-'
+          }}</span>
+          and has length of
+          <span class="border border-radius-4 py-2 px-8">{{
+            element.planDetail.numberLength.length > 0 ? element.planDetail.numberLength : '-'
+          }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="replacement">
+        <th mat-header-cell *matHeaderCellDef>Replacement</th>
+        <td mat-cell *matCellDef="let element">
+          Remove
+          <span class="border border-radius-4 py-2 px-8">{{ element.planDetail.removePrefix || '-' }}</span> leading
+          digits and prepend
+          <span class="border border-radius-4 py-2 px-8">{{ element.planDetail.appendPrefix || '-' }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="isAdmin" class="actions-column">
+            <button (click)="updateDialPlan(element)" mat-icon-button matTooltip="Update">
+              <mat-icon class="actions-icon">edit</mat-icon>
+            </button>
+            <button (click)="removeDialPlan(element)" mat-icon-button matTooltip="Remove">
+              <mat-icon class="actions-icon">delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="dialPlanDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let rule; columns: dialPlanDisplayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3">
+          <div fxLayout="column" fxLayoutAlign="center center">No dial plan found</div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      #dialPlansPaginator
+      [pageSizeOptions]="[10, 15, 20]"
+      showFirstLastButtons
+      hidePageSize
+    ></mat-paginator>
+  </div>
+</section>

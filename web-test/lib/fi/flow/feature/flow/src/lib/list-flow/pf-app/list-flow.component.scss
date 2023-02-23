@@ -1,0 +1,64 @@
+.mat-header-cell {
+  font-size: 12px;
+}
+
+mat-row,
+td.mat-cell {
+  border-bottom-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-row {
+  .uuid-column {
+    background: var(--gray-300);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 3px 6px;
+    width: fit-content;
+    font-family: monospace;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .label-status {
+    cursor: pointer;
+  }
+
+  &:hover {
+    background-color: #fafafa;
+
+    .mat-column-actions button {
+      visibility: visible;
+    }
+  }
+}
+
+.mat-column-uuid {
+  width: 150px;
+}
+
+.mat-column-name {
+  div {
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.mat-column-activeLastUpdatedAt {
+  width: 180px;
+}
+
+.mat-column-deprecated {
+  width: 40px;
+  text-align: center;
+}
+
+.mat-column-actions {
+  width: 220px;
+
+  button {
+    visibility: hidden;
+  }
+}

@@ -1,0 +1,88 @@
+@mixin img {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+.event {
+  &__avatar,
+  &__actions {
+    height: 26px;
+  }
+  &__triggerby {
+    font-weight: bold;
+  }
+
+  &__avatar {
+    .no-avatar {
+      @include img;
+      line-height: 32px;
+      background: #cecece;
+      border: 1px solid #cecece;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+      display: inline-block;
+      height: 32px !important;
+      width: 32px !important;
+      font-size: 15px !important;
+    }
+
+    .avatar {
+      @include img;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+  &__icon {
+    height: 26px !important;
+    width: 26px !important;
+    position: relative;
+    border-radius: 50%;
+    line-height: 26px;
+    background: white;
+    color: #cecece !important;
+    border: 1px solid #cecece;
+    text-align: center;
+    place-content: center;
+    align-items: center;
+    flex-direction: row;
+    box-sizing: border-box;
+    display: flex;
+
+    & > .mat-icon {
+      width: 16px;
+      height: 16px;
+      font-size: 16px;
+    }
+  }
+
+  &__content {
+    flex: 1 1 auto;
+    .note-headline-light {
+      color: #666;
+    }
+    .box {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      background: #e6e6e6;
+      color: #424242;
+      &.open,
+      &.reopen {
+        background-color: #36b37e;
+        color: white;
+      }
+      &.close {
+        background-color: #1f75cb;
+        color: white;
+      }
+    }
+  }
+}
+
+.comment-activity {
+  background-color: white;
+}

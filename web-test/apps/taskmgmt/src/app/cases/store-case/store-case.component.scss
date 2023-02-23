@@ -1,0 +1,71 @@
+/*
+ * Remove template code below
+ */
+:host {
+  .main-section {
+    background-color: white;
+    .form {
+      @media (min-width: 800px) {
+        flex-direction: row;
+      }
+    }
+  }
+  .left-section {
+    flex: auto;
+  }
+  .right-section {
+    width: 280px;
+  }
+
+  mat-select {
+    mat-option {
+      &:last-child {
+        color: red;
+      }
+    }
+  }
+
+  .test2 {
+    width: 45%;
+  }
+}
+
+.status-menu {
+  min-width: 250px;
+}
+
+.case-detail {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.style-radio {
+  mat-radio-button {
+    height: 40px;
+  }
+}
+.severity-logo {
+  width: 16px;
+  height: 16px;
+  display: inline-grid;
+}
+.severity-content {
+  margin-left: 3px;
+}
+.case-detail-content {
+  width: 100%;
+}
+.uuid {
+  width: 46%;
+}
+.check {
+  color: green;
+}
+.cancel {
+  color: red;
+}
+.case-org {
+  height: 90px;
+}
+.group {
+  width: 45%;
+}

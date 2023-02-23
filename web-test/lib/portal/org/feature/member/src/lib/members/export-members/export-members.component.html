@@ -1,0 +1,25 @@
+<div class="export-members">
+  <h2 mat-dialog-title>Export members</h2>
+
+  <div *ngIf="!fetchingError" fxLayout="column" fxLayoutAlign="center center">
+    <ng-container *ngIf="!fileUrl; else download">
+      <div class="export-members__message">The file download will begin shortly. Please wait...</div>
+      <mat-icon><mat-spinner color="accent" diameter="30" strokeWidth="2"> </mat-spinner></mat-icon>
+    </ng-container>
+
+    <ng-template #download>
+      <div class="export-members__message">The file is ready to download</div>
+      <a mat-stroked-button class="export-members__download-btn" [href]="fileUrl" color="primary" target="_blank"
+        >Download file</a
+      >
+    </ng-template>
+  </div>
+
+  <div *ngIf="fetchingError" class="export-members__error-message">
+    {{ message | camel2title }}
+  </div>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+  </mat-dialog-actions>
+</div>

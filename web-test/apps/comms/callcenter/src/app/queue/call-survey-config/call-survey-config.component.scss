@@ -1,0 +1,42 @@
+:host {
+  mat-form-field {
+    width: 100%;
+  }
+
+  .msg-counter {
+    text-align: right;
+  }
+
+  .mat-dialog-actions {
+    width: 100%;
+  }
+
+  .sms-area {
+    width: 100%;
+  }
+
+  .sms-counter {
+    float: right;
+
+    div {
+      margin-left: 1.3rem;
+      float: right;
+    }
+  }
+
+  .sms-warning {
+    float: left;
+  }
+
+  .warning {
+    color: red;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .post-call-survey-info {
+    width: 100%;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-material",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/material/src",
+  "prefix": "shm",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/material/**/*.ts", "libs/shared/ui/material/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

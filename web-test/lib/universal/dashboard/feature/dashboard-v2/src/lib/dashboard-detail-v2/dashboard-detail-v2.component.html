@@ -1,0 +1,55 @@
+<b3n-toolbar-v2
+  *ngIf="appSettings"
+  [dashboardV2AppSettings]="dashboardV2AppSettings"
+  [dashboard]="dashboard"
+  [cards]="cards"
+  [canManage]="canManage"
+  (filtersChanged)="filtersChanged($event)"
+></b3n-toolbar-v2>
+<div class="dashboard__content" #dashboardContent>
+  <ng-container *ngFor="let gridster of gridsters; let i = index">
+    <gridster
+      [options]="dashboardOption"
+      *ngIf="activeIndex === i"
+      class="animate__animated"
+      [ngClass]="gridsters.length > 1 && (slideForward ? 'animate__slideInRight' : 'animate__slideInLeft')"
+    >
+      <ng-container *ngFor="let card of gridster; trackBy: trackByCard">
+        <gridster-item *ngIf="card" [item]="$any(card.config)" class="mat-elevation-z0 gridster-item-v2">
+          <b3n-card-v2 class="dashboard__card" [card]="card"></b3n-card-v2>
+        </gridster-item>
+      </ng-container>
+    </gridster>
+  </ng-container>
+</div>
+<div class="dot__wrapper">
+  <div
+    class="dot"
+    *ngFor="let gridster of gridsters; let i = index"
+    [class.active]="activeIndex === i"
+    [hidden]="gridsters.length === 1"
+    (click)="slide(i)"
+  ></div>
+  <div class="auto-scroll__wrapper" *ngIf="!(dashboardV2Service.isTV$ | async)">
+    <mat-slide-toggle
+      [hidden]="gridsters.length <= 1"
+      [(ngModel)]="autoScroll"
+      (change)="autoScrollChanged($event.checked)"
+      >Auto scroll ({{ autoScrollThreshold }}s)</mat-slide-toggle
+    >
+    <ng-container *ngIf="gridsters.length > 1">
+      <mat-icon *ngIf="!showAutoScrollStore" matTooltip="Edit" (click)="showAutoScrollStore = true">edit</mat-icon>
+      <div class="auto-scroll__store" *ngIf="showAutoScrollStore">
+        <mat-form-field>
+          <mat-label>Threshold</mat-label>
+          <mat-select (selectionChange)="autoScrollChange($event)" [value]="autoScrollThreshold">
+            <mat-option *ngFor="let threshold of autoScrollThresholds" [value]="threshold">
+              {{ threshold }}s
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-icon matTooltip="Cancel" (click)="showAutoScrollStore = false">cancel</mat-icon>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div mat-dialog-title>{{ enable ? 'Enable' : 'Disable' }} B3Works app</div>
+<div mat-dialog-content>
+  <form [formGroup]="formConfig" novalidate>
+    <mat-form-field>
+      <input matInput placeholder="Org UUID" formControlName="orgUuid" (keyup.enter)="setConfig()" required />
+      <mat-error>Org UUID is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Identity UUID" formControlName="identityUuid" (keyup.enter)="setConfig()" required />
+      <mat-error>Identity UUID is required</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="setting" [disabled]="formConfig.invalid" (click)="setConfig()">
+    Set
+  </button>
+</div>

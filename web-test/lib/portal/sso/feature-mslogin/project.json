@@ -1,0 +1,16 @@
+{
+  "name": "portal-sso-feature-mslogin",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/sso/feature-mslogin/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/sso/feature-mslogin/**/*.ts", "libs/portal/sso/feature-mslogin/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

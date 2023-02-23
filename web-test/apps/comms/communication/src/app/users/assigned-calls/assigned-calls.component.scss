@@ -1,0 +1,49 @@
+:host {
+  display: block;
+
+  button.label {
+    padding: 0;
+    line-height: 25px;
+  }
+
+  .box {
+    background: #e6e6e6 !important;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #424242 !important;
+    height: 25px;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+
+  .assigned-call-type,
+  .assigned-call-result {
+    &.Unrachable,
+    &.Unanswered {
+      color: #ff5630;
+    }
+
+    &.dropped,
+    &.Dropped By Caller,
+    &.By Caller Dropped {
+      color: rgba(0, 0, 0, 0.54);
+    }
+
+    &.forwarding,
+    &.busy {
+      color: #ff991f;
+    }
+
+    &.Answered {
+      color: #36b37e;
+    }
+
+    &.Incoming {
+      color: #36b37e;
+    }
+
+    &.Callback {
+      color: #00b8d9;
+    }
+  }
+}

@@ -1,0 +1,155 @@
+<h1 mat-dialog-title>Incoming call</h1>
+
+<div mat-dialog-content>
+  <div
+    *ngIf="me && me.assignedTxn"
+    class="container"
+    fxLayout.gt-sm="row"
+    fxLayout="column"
+    fxLayoutAlign=" stretch"
+    fxLayoutGap="1.6rem"
+  >
+    <div
+      [style.width.px]="isCRM ? defaultWidth : null"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      *ngIf="isCRM && isLoading"
+    >
+      <mat-spinner [diameter]="35"></mat-spinner>
+    </div>
+
+    <div
+      [style.width.px]="isCRM ? defaultWidth : null"
+      *ngIf="isCRM && !isLoading && arrCRM && arrCRM.length > 0"
+      fxLayout="column"
+      fxLayoutAlign="start none"
+      fxLayoutGap="1.5rem"
+    >
+      <ng-container *ngFor="let crm of arrCRM; let i = index">
+        <ng-container *ngIf="crm.code === enumTypeAction.Display || crm.code === enumTypeAction.DisplayTicket">
+          <b3n-contact-display
+            [contact]="$any(crm.action)"
+            [phoneNumber]="me.assignedTxn.customerNumber"
+          ></b3n-contact-display>
+        </ng-container>
+
+        <ng-container *ngIf="crm.code === enumTypeAction.Create || crm.code === enumTypeAction.CreateTicket">
+          <b3n-contact-create
+            (contactDisplay)="onLoadDisplayContact($event)"
+            [phoneNumber]="me.assignedTxn.customerNumber"
+            [txnUuid]="me.assignedTxn.txnUuid"
+            [contact]="$any(crm.action)"
+          ></b3n-contact-create>
+        </ng-container>
+      </ng-container>
+    </div>
+
+    <div fxFlex.gt-sm="2px" class="division" *ngIf="isCRM"></div>
+
+    <div [style.width.px]="defaultWidth">
+      <div>
+        <strong>UUID:</strong>
+        {{ me.assignedTxn.txnUuid }}
+      </div>
+
+      <div>
+        <strong>Queue:</strong>
+        {{ me.assignedTxn.queue.label }}
+      </div>
+
+      <div>
+        <strong>Status:</strong>
+        {{
+          me.assignedTxn.status === 'talking' && me.systemStatus === SystemStatusCode.acw
+            ? 'wrapping'
+            : me.assignedTxn.status
+        }}
+      </div>
+
+      <div class="customer-info info">
+        <div><strong>Customer Info</strong></div>
+
+        <ul>
+          <li>Number: {{ me.assignedTxn.customerNumber }}</li>
+        </ul>
+      </div>
+
+      <div
+        *ngIf="me.assignedTxn.displayData && ObjectKeys(me.assignedTxn.displayData).length > 0"
+        class="customer-info info"
+      >
+        <div><strong>Other Info</strong></div>
+
+        <ul>
+          <li *ngFor="let key of ObjectKeys(me.assignedTxn.displayData)">
+            {{ key }}: {{ me.assignedTxn.displayData[key] }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="full-width">
+        <strong>Answer script:</strong>
+
+        <textarea
+          matInput
+          cdkTextareaAutosize
+          [cdkAutosizeMinRows]="2"
+          [cdkAutosizeMaxRows]="6"
+          class="script-text-color"
+          [value]="me.assignedTxn.queue.agentWorkflowConfig.script"
+          disabled
+        ></textarea>
+      </div>
+
+      <ng-container *ngIf="hasCustomField; else loadDespositionCode">
+        <div class="full-width">
+          <div *ngFor="let field of customFields; let i = index">
+            <b3n-display-custom-field [detailField]="field"></b3n-display-custom-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #loadDespositionCode>
+        <mat-form-field>
+          <mat-select
+            placeholder="Disposition Code"
+            [(value)]="request.code"
+            [disabled]="me.assignedTxn.status === 'transfering' || me.assignedTxn.status === 'waiting'"
+            (selectionChange)="update()"
+          >
+            <mat-option [value]="code" *ngFor="let code of me.assignedTxn.queue.agentWorkflowConfig.codeOptions">
+              {{ code }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-template>
+
+      <mat-form-field *ngIf="!me.assignedTxn.queue.agentWorkflowConfig.disableNotes">
+        <textarea
+          matInput
+          placeholder="Note"
+          cdkTextareaAutosize
+          [cdkAutosizeMinRows]="2"
+          [cdkAutosizeMaxRows]="6"
+          [(ngModel)]="request.note"
+          (ngModelChange)="update()"
+          [disabled]="me.assignedTxn.status === 'transfering' || me.assignedTxn.status === 'waiting'"
+          name="note"
+        ></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <span class="fill-remaining-space"></span>
+
+  <button
+    [disabled]="!endedStatuses.includes(me.assignedTxn.status) && me.systemStatus !== SystemStatusCode.acw"
+    mat-raised-button
+    color="primary"
+    (click)="finishAcw()"
+  >
+    Finish call
+  </button>
+</div>

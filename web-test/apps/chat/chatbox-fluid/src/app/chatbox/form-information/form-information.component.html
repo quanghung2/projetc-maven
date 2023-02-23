@@ -1,0 +1,35 @@
+<ng-container *ngIf="authState$ | async as authState; else initView">
+  <div fxFill class="auth-google" fxLayout="column" fxLayoutAlign="start none">
+    <div fxFlex="auto" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem">
+      <img class="avarta" [src]="authState.photoUrl" />
+      <span class="title">{{ authState.name }}</span>
+      <div class="email" fxLayoutGap="1rem" fxLayoutAlign="center center">
+        <mat-icon>mail</mat-icon>
+        <span>{{ authState.email }}</span>
+      </div>
+      <button fxFlexAlign="none" mat-raised-button color="primary" [loading]="isLoading" (click)="startChat()">
+        Book Meeting
+      </button>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="">
+      <a mat-button color="warn" (click)="loginWithGoogle()">Switch Google account</a>
+      <a mat-button color="primary" (click)="logOut()">Use another account</a>
+    </div>
+  </div>
+</ng-container>
+<ng-template #initView>
+  <div
+    class="container"
+    fxFill
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="1.6rem"
+    [formGroup]="formGroup"
+  >
+    <div class="title">Let's talk!</div>
+    <div style="text-align: center">Before we start, we'd like to know a few details about you.</div>
+
+    <button type="button" (click)="loginWithGoogle()" class="login-with-google-btn">Sign in with Google</button>
+  </div>
+</ng-template>

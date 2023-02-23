@@ -1,0 +1,56 @@
+<div id="assign-modal" class="ui custom-modal modal" style="margin-bottom: 50px">
+  <div class="header" style="text-transform: capitalize">Assign Subscription</div>
+  <div class="content">
+    <div *ngIf="assignees === undefined || isLoading">
+      <div class="ui active centered inline loader app-loader"></div>
+    </div>
+    <div class="ui form" [ngClass]="{ hidden: assignees === undefined || isLoading }">
+      <!-- subscription assigned -->
+      <div class="field" *ngIf="subscription.assignedTo !== undefined">
+        <div class="ui right labeled inside input">
+          <input readonly type="text" value="{{ subscription.assignedDisplay }} - {{ subscription.appName }}" />
+          <div class="ui blue label" (click)="onUnassign()">Unassign</div>
+        </div>
+      </div>
+
+      <!--subscription is not assign-->
+      <div class="field" [ngClass]="{ hidden: subscription.assignedTo !== undefined }">
+        <div id="assign-dropdown" class="ui fluid selection search dropdown">
+          <input type="hidden" name="subscription" />
+          <i class="dropdown icon"></i>
+          <div class="default text"></div>
+          <div class="menu">
+            <ng-template ngFor let-assign [ngForOf]="assignees" *ngIf="assignees !== undefined">
+              <div class="item" [attr.data-value]="$any(assign).assignTo">
+                <img class="ui tiny app image" [src]="$any(assign).appLogo" />{{ $any(assign).assignDisplay }} -
+                {{ $any(assign).appPlan }}
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-details" *ngIf="subscription.assignedTo !== undefined && subscription.assignedConfig">
+        <label>Assign to numbers:</label>
+        <div class="numbers-space">
+          <ul>
+            <li *ngFor="let n of subscription.assignedConfig.numbers">
+              {{ n }}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block"></div>
+      <div class="block">
+        <div class="right">
+          <div class="ui cancel link button">Cancel</div>
+          <div class="ui large primary button" (click)="onSave()">Save</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

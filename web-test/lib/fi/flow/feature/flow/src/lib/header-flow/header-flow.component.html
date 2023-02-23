@@ -1,0 +1,154 @@
+<div class="header-toolbar" *ngIf="flow$ | async as flow" fxLayout="row" fxLayoutAlign="space-between center">
+  <ul fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <li>
+      <mat-icon
+        class="pt-2"
+        (click)="
+          showConfiguration
+            ? goToHome(flow)
+            : showLogDetail
+            ? goToLogs(flow)
+            : showConfigEvent
+            ? goToMappedEvents(flow)
+            : goBack(flow)
+        "
+      >
+        arrow_back
+      </mat-icon>
+    </li>
+    <li *ngIf="showConfiguration">
+      <ng-container *ngIf="showForApp === AppName.FLOW">
+        {{ flow.name }}
+      </ng-container>
+      <span *ngIf="showForApp !== AppName.FLOW" fxLayout="row" fxLayoutAlign="start center">
+        <ng-container *ngIf="flow.isActive">{{ flow.draftName ? flow.draftName : flow.name }}</ng-container>
+        <ng-container *ngIf="!flow.isActive">{{ flow.name }}</ng-container>
+        <i *ngIf="flow.presentName">&nbsp;({{ flow.presentName }})</i>
+        <mat-icon class="ml-4" *ngIf="!flow.isActive" (click)="rename(flow)">edit</mat-icon>
+      </span>
+    </li>
+    <li *ngIf="!showConfiguration">
+      <a href="javascript:;" (click)="goBack(flow)">{{ flow.name }}</a>
+    </li>
+    <li *ngIf="showLog">Execution Logs</li>
+    <ng-container *ngIf="showLogDetail">
+      <li>
+        <a href="javascript:;" (click)="goToLogs(flow)">Execution Logs</a>
+      </li>
+      <li>{{ logId }}</li>
+    </ng-container>
+    <li *ngIf="showResolveDeprecated">Resolution Center</li>
+    <li *ngIf="showFlowTesting">Flow Testing</li>
+    <li *ngIf="showMappedEvents">Mapped Events</li>
+    <ng-container *ngIf="showConfigEvent">
+      <li>
+        <a href="javascript:;" (click)="goToMappedEvents(flow)">Mapped Events</a>
+      </li>
+      <li>{{ eventName }}</li>
+    </ng-container>
+  </ul>
+
+  <div fxLayout="row" fxLayoutAlign="end center" *ngIf="showConfiguration" fxLayoutGap="8px">
+    <button
+      mat-stroked-button
+      *ngIf="showForApp === AppName.BUSINESS_ACTION_CREATOR && flow.type === 'BUSINESS_ACTION' && !flow.editable"
+      (click)="goToMappedEvents(flow)"
+    >
+      Mapped Events
+    </button>
+
+    <ng-container *ngIf="showForApp !== AppName.FLOW">
+      <button mat-stroked-button *ngIf="flow.type === 'NORMAL'" (click)="export(flow)">Export</button>
+      <button mat-stroked-button *ngIf="!flow.editable" (click)="goToLogs(flow)">Logs</button>
+
+      <button
+        mat-stroked-button
+        *ngIf="!flow.isActive && flow.activeVersion"
+        (click)="goToVersion(flow, flow.activeVersion)"
+      >
+        View Active
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="flow.isActive"
+        (click)="flow.draftVersion ? goToVersion(flow, flow.draftVersion) : createNewVersion(flow)"
+      >
+        Edit
+      </button>
+    </ng-container>
+
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="showForApp === AppName.FLOW && !flow.editable && showConfiguration"
+      (click)="goToLogs(flow)"
+    >
+      Logs
+    </button>
+
+    <button
+      mat-stroked-button
+      *ngIf="showForApp !== AppName.FLOW && flow.editable && allowDeployFlow"
+      (click)="goToFlowTesting(flow)"
+    >
+      Test
+    </button>
+
+    <button
+      mat-raised-button
+      *ngIf="flow.editable && allowDeployFlow"
+      color="primary"
+      [loading]="deploying"
+      (click)="deploy(flow)"
+    >
+      Deploy
+    </button>
+
+    <button
+      mat-stroked-button
+      [matMenuTriggerFor]="actionFlowMenu"
+      class="pr-8 pl-16"
+      *ngIf="showForApp === AppName.FLOW"
+    >
+      <span>Actions</span>
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <mat-menu #actionFlowMenu="matMenu">
+      <button mat-menu-item *ngIf="flow.editable" (click)="rename(flow)">Rename</button>
+      <button mat-menu-item *ngIf="!flow.editable" (click)="createNewVersion(flow)">
+        <ng-container *ngIf="!flow.isArchived">Edit</ng-container>
+        <ng-container *ngIf="flow.isArchived">Unarchive</ng-container>
+      </button>
+      <button mat-menu-item *ngIf="!flow.isArchived" (click)="archive(flow)">Archive</button>
+      <button mat-menu-item *ngIf="flow.editable && allowDeployFlow" (click)="goToFlowTesting(flow)">Test</button>
+      <button mat-menu-item *ngIf="flow.type === 'NORMAL'" (click)="export(flow)">Export</button>
+      <button mat-menu-item [cdkCopyToClipboard]="flow.uuid" (cdkCopyToClipboardCopied)="copied()">Copy UUID</button>
+    </mat-menu>
+
+    <button
+      mat-stroked-button
+      *ngIf="showConfiguration && allowDeployFlow"
+      (click)="toggleSidebar()"
+      class="p-0"
+      style="min-width: 48px"
+    >
+      <mat-icon>subject</mat-icon>
+    </button>
+  </div>
+
+  <div
+    *ngIf="
+      showForApp === AppName.BUSINESS_ACTION_CREATOR &&
+      flow.type === 'BUSINESS_ACTION' &&
+      !flow.editable &&
+      showMappedEvents
+    "
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="8px"
+  >
+    <button mat-raised-button color="primary" (click)="goToConfigEvent(flow)">Map New Event</button>
+  </div>
+</div>

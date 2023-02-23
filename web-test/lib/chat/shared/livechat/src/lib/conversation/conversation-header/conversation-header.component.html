@@ -1,0 +1,19 @@
+<div class="container flex column justify-content-start align-items-none">
+  <div class="convo_header flex justify-content-start align-items-center gap-8">
+    <div class="convo_header__text flex column justify-content-center align-items-start">
+      <div class="convo_header__title flex justify-content-center align-items-center gap-3">
+        <div class="convo_header__name">
+          {{ ticket.customerInfo?.name || UNKNOWN_USER }}
+        </div>
+      </div>
+    </div>
+
+    <div
+      fxFlex="1px"
+      class="viewing-date flex justify-content-center align-items-center"
+      *ngIf="viewDate$ | async as viewDate"
+    >
+      <span>{{ viewDate | viewDate }}</span>
+    </div>
+  </div>
+</div>

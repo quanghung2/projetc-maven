@@ -1,0 +1,15 @@
+.edit-tag {
+  &__link-button {
+    color: #2196f3;
+    cursor: pointer;
+    margin-left: 5px;
+  }
+
+  &__divider {
+    margin: 10px 0px;
+    border-bottom: 1px solid #dddddd;
+    &--not-border {
+      border-bottom: 0px;
+    }
+  }
+}

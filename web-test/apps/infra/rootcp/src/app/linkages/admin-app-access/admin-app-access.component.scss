@@ -1,0 +1,93 @@
+.action__wrapper {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+
+  mat-form-field {
+    width: 300px;
+  }
+}
+
+table {
+  margin-bottom: 10px;
+
+  .mat-row {
+    &:hover {
+      background-color: #fafafa;
+
+      .mat-column-actions {
+        .icons {
+          opacity: 1;
+          pointer-events: unset;
+        }
+      }
+    }
+  }
+
+  .mat-cell {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .mat-column-name {
+    width: 300px;
+    max-width: 300px;
+  }
+
+  .mat-column-actions {
+    width: 100px;
+    max-width: 100px;
+  }
+
+  .mat-column-visibilityType {
+    width: 130px;
+    max-width: 130px;
+  }
+
+  .mat-column-visibilityExceptions {
+    .wrapper {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .exception {
+        width: fit-content;
+        color: #2196f3;
+        border: 1px solid #2196f3;
+        padding: 1px 5px;
+        font-size: 12px;
+        text-align: center;
+        border-radius: 2px;
+      }
+
+      .expand {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: 500;
+        color: gray;
+      }
+    }
+  }
+
+  .mat-column-actions {
+    position: relative;
+
+    .icons {
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      justify-content: flex-start;
+      gap: 16px;
+      position: absolute;
+      top: 50%;
+      right: 24px;
+      transform: translate(0, -50%);
+      cursor: pointer;
+    }
+  }
+}

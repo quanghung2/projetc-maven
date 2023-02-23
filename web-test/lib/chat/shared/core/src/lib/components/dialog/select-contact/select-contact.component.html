@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Select number to call</h1>
+<div mat-dialog-content>
+  <div class="flex column justify-content-space-around align-items-none">
+    <mat-list>
+      <ng-container *ngIf="!data.ext && listPhone.length === 0; else loadListContact">
+        <mat-list-item>
+          No data
+          <mat-divider> </mat-divider>
+        </mat-list-item>
+      </ng-container>
+      <ng-template #loadListContact>
+        <mat-list-item class="number" *ngFor="let number of listPhone" (click)="submit(number)">
+          {{ number }}
+          <mat-divider> </mat-divider>
+        </mat-list-item>
+        <mat-list-item class="number" *ngIf="type === 'member' && !!data.ext" (click)="submit(CallWebRTC)">
+          {{ data.ext ? data.ext.displayText : data.contact.displayName }}
+          <mat-divider> </mat-divider>
+        </mat-list-item>
+      </ng-template>
+    </mat-list>
+  </div>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

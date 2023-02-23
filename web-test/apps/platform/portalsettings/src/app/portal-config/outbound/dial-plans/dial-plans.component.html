@@ -1,0 +1,70 @@
+<div class="dial-plans__container">
+  <div class="action__wrapper">
+    <div class="ui primary button" *ngIf="isAdmin" (click)="openStoreDialPlansModal()">Add</div>
+    <div class="ui button" *ngIf="isAdmin" (click)="openImportDialPLanModal()">Import</div>
+  </div>
+  <table class="ui basic table">
+    <thead>
+      <tr *ngIf="lstDialPlanPagin.length; else empty">
+        <th>Matching pattern</th>
+        <th>Replacement</th>
+        <th></th>
+      </tr>
+      <ng-template #empty>
+        <tr>
+          <th></th>
+        </tr>
+      </ng-template>
+    </thead>
+    <tbody>
+      <tr class="row" *ngFor="let dialPlan of lstDialPlanPagin">
+        <td class="matching-pattern">
+          <p class="dial-plans__info">
+            Start with
+            <span>{{ dialPlan.planDetail.startWith.length ? dialPlan.planDetail.startWith.join(', ') : '-' }}</span>
+            and has length of
+            <span>{{
+              dialPlan.planDetail.numberLength.length ? dialPlan.planDetail.numberLength.join(', ') : '-'
+            }}</span>
+          </p>
+        </td>
+        <td class="replacement">
+          <p class="dial-plans__info">
+            Remove
+            <span>{{ dialPlan.planDetail.removePrefix ? dialPlan.planDetail.removePrefix : '-' }}</span>
+            leading digits and prepend
+            <span>{{ dialPlan.planDetail.appendPrefix ? dialPlan.planDetail.appendPrefix : '-' }}</span>
+          </p>
+        </td>
+        <td class="actions">
+          <div class="icon__wrapper" *ngIf="isAdmin">
+            <div data-tooltip="Update" data-position="bottom center" (click)="openStoreDialPlansModal(dialPlan)">
+              <i class="edit icon"></i>
+            </div>
+            <div data-tooltip="Remove" data-position="bottom center" (click)="removeDialPlan(dialPlan)">
+              <i class="delete icon"></i>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="row" *ngIf="!lstDialPlanPagin.length">
+        <td class="dial-plans__empty" colspan="3">No dial plan available</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="3">
+          <pagination
+            [totalCount]="lstDialPlan.length"
+            [perPage]="pagin.pageSize"
+            [currentPage]="pagin.pageStart + 1"
+            (pageChange)="page($event)"
+          ></pagination>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <b3n-store-dial-plans [rule]="oRule"></b3n-store-dial-plans>
+  <b3n-import-dial-plans [rule]="oRule"></b3n-import-dial-plans>
+  <app-confirm-modal [hasCloseIcon]="false" [allowMultiple]="true"></app-confirm-modal>
+</div>

@@ -1,0 +1,16 @@
+{
+  "name": "api-bizphone",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/bizphone/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/bizphone/**/*.ts", "libs/api/bizphone/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

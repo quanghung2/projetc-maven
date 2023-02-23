@@ -1,0 +1,75 @@
+<div *ngIf="loaded" class="settings">
+  <h1 class="title">Settings</h1>
+  <div fxlayout="row" class="worktime">
+    <form [formGroup]="workingSchedule" class="working-schedule-form">
+      <section>
+        <table class="working-time-table">
+          <tbody>
+            <tr
+              formArrayName="shifts"
+              *ngFor="let shift of this.workingSchedule.controls['shifts']['controls']; let i = index"
+            >
+              <ng-container [formGroupName]="i">
+                <td>
+                  <mat-slide-toggle formControlName="enabled" (change)="shiftChanged(shift)">{{
+                    shift.controls.dayOfWeek.value | titlecase
+                  }}</mat-slide-toggle>
+                </td>
+                <ng-container
+                  formArrayName="timeRanges"
+                  *ngFor="let timeRange of shift.controls.timeRanges.controls; let timeIndex = index"
+                >
+                  <td [formGroupName]="timeIndex">
+                    <div fxLayout="row" fxLayoutGap="1.6rem" class="time-range">
+                      <mat-form-field class="working-time-table__from">
+                        <input
+                          matInput
+                          readonly
+                          [matDatepicker]="pickerTimeStart"
+                          placeholder="From"
+                          formControlName="from"
+                          (click)="pickerTimeStart.open()"
+                          required
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTimeStart type="time" [twelveHour]="false"></mat-datepicker>
+                      </mat-form-field>
+                      <mat-form-field class="working-time-table__to">
+                        <input
+                          matInput
+                          readonly
+                          [matDatepicker]="pickerTimeEnd"
+                          placeholder="To"
+                          formControlName="to"
+                          (click)="pickerTimeEnd.open()"
+                          required
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="pickerTimeEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTimeEnd type="time" [twelveHour]="false"></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </td>
+                </ng-container>
+                <td>
+                  <button
+                    mat-icon-button
+                    (click)="applyWorkTimetoAll(shift)"
+                    matTooltip="Apply this time to all work schedule"
+                    [disabled]="!shift.controls.enabled.value"
+                  >
+                    <mat-icon [style.color]="shift.value.enabled ? '' : '#d9d9d9'">sync</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </form>
+  </div>
+  <div fxLayoutAlign="end start" fxLayoutGap="0.8rem">
+    <button mat-stroked-button color="primary" [disabled]="progressing || workingSchedule.invalid" (click)="progress()">
+      <span *ngIf="!progressing">Save</span> <span *ngIf="progressing">Saving...</span>
+    </button>
+  </div>
+</div>

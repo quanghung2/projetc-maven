@@ -1,0 +1,12 @@
+<h1 mat-title-dialog>Duplicate Number List from {{ infoData.numberListInfo.name }}</h1>
+<mat-form-field class="width-full">
+  <input matInput placeholder="Name" type="text" [(ngModel)]="req.name" #name="ngModel" required />
+  <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Name is required</mat-error>
+</mat-form-field>
+<mat-checkbox [(ngModel)]="req.includeCampaignNumbers">Include numbers</mat-checkbox>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!name.value || isCreating" (click)="create()">
+    <span *ngIf="!isCreating"> Create </span> <span *ngIf="isCreating">Creating...</span>
+  </button>
+</div>

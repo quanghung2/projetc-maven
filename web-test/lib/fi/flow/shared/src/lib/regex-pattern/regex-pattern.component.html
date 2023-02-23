@@ -1,0 +1,24 @@
+<div [formGroup]="customRegexValidation" class="option-param">
+  <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="configRegexPattern.toggle()">
+    <span>Config input validation regex</span>
+    <mat-icon>{{ configRegexPattern?.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </a>
+
+  <mat-expansion-panel #configRegexPattern class="mat-elevation-z0">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <mat-form-field>
+        <input matInput placeholder="Regex pattern" formControlName="pattern" />
+        <mat-error *ngIf="customRegexValidation.get('pattern').invalid">
+          {{ getErrorInput(customRegexValidation.get('pattern')) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput placeholder="Description for regex" formControlName="description" />
+        <mat-error *ngIf="customRegexValidation.get('description').invalid">
+          {{ getErrorInput(customRegexValidation.get('description')) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-expansion-panel>
+</div>

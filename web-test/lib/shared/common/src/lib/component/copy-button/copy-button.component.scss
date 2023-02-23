@@ -1,0 +1,13 @@
+.button-copy {
+  background: var(--gray-300);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  padding: 3px 6px;
+  width: fit-content;
+  font-size: 12px;
+  text-align: center;
+  &:hover {
+    cursor: pointer;
+  }
+}

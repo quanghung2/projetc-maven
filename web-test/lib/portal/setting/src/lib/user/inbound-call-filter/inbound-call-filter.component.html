@@ -1,0 +1,76 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Inbound Call Filter</h1>
+</sui-template-portal>
+
+<div class="call-filter__wrapper">
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <div class="first-rules" [class.disabled]="loading">
+    <h3>First rules</h3>
+    <div>
+      <mat-slide-toggle (change)="toggleChange($event, RuleType.internal)" [checked]="internalChecked"
+        >Allow internal call to directly Ring Devices</mat-slide-toggle
+      >
+    </div>
+    <div>
+      <mat-slide-toggle (change)="toggleChange($event, RuleType.anonymous)" [checked]="anonymousChecked"
+        >Block Call with Private Caller ID</mat-slide-toggle
+      >
+    </div>
+  </div>
+  <div class="customer-inbound" [class.disabled]="loading">
+    <h3>Custom inbound call filter</h3>
+    <button class="button" color="primary" mat-stroked-button (click)="openDialog('Add')">Add</button>
+
+    <div *ngIf="customRules?.length; else empty">
+      <mat-table [dataSource]="pagingCustomRules" class="mat-elevation-z0">
+        <ng-container matColumnDef="index">
+          <mat-header-cell *matHeaderCellDef>No.</mat-header-cell>
+          <mat-cell *matCellDef="let rule; let i = index">{{ pageStart + i + 1 }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="matchingPattern">
+          <mat-header-cell *matHeaderCellDef>Matching pattern</mat-header-cell>
+          <mat-cell *matCellDef="let rule"
+            ><span class="text">{{ displayMatchPattern(rule) }}</span></mat-cell
+          >
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+          <mat-cell *matCellDef="let rule"
+            ><span class="text">{{ actionMap[rule.action] }}</span></mat-cell
+          >
+        </ng-container>
+
+        <ng-container matColumnDef="function">
+          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          <mat-cell *matCellDef="let rule; let i = index">
+            <button mat-icon-button matTooltip="Edit" (click)="editOrDel(ActionType.edit, pageStart + i)">
+              <mat-icon class="materials-icon-outlined">edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Delete" (click)="editOrDel(ActionType.delete, pageStart + i)">
+              <mat-icon class="materials-icon-outlined">delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+      <mat-paginator
+        #paginator
+        [showFirstLastButtons]="true"
+        [pageSize]="pageSize"
+        [length]="customRules.length"
+        (page)="page($event)"
+        hidePageSize="true"
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+
+    <ng-template #empty>
+      <p class="secondary-text m-auto">No custom rules</p>
+    </ng-template>
+  </div>
+</div>

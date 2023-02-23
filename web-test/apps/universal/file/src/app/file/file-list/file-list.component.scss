@@ -1,0 +1,146 @@
+.spinner-container {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-list-container {
+  padding: 20px;
+  position: relative;
+  max-height: 90vh;
+  overflow: auto;
+  .folders-section {
+    .folders-container {
+      display: flex;
+      margin: 0 -15px;
+      .folder-item {
+        text-decoration: none;
+        display: inline-block;
+        margin: 15px;
+        vertical-align: top;
+        width: 260px;
+        .mat-card {
+          padding: 15px;
+        }
+        .mat-card-avatar {
+          height: 20px;
+          width: 20px;
+          .material-icons {
+            font-size: 20px;
+          }
+        }
+        .mat-card-title {
+          font-size: 14px;
+          line-height: 1.5;
+          margin: 0;
+          width: 185px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+  .files-section {
+    .mat-toolbar {
+      margin-bottom: 1.6rem;
+      .fill-remaining-space {
+        flex: 1 1 auto;
+      }
+    }
+    .file-name {
+      display: flex;
+      flex-direction: row;
+      span,
+      a {
+        line-height: 1.8;
+        padding-left: 5px;
+      }
+      a {
+        text-decoration: none;
+        &:hover,
+        &:active {
+        }
+      }
+    }
+  }
+}
+
+table {
+  width: 100%;
+  .mat-checkbox-checked {
+    visibility: visible !important;
+  }
+  .mat-row {
+    .visibility-on-mouse-hover {
+      visibility: hidden;
+    }
+    &:hover {
+      opacity: 0.7;
+      .visibility-on-mouse-hover {
+        visibility: visible;
+      }
+    }
+  }
+  .mat-column-selection {
+    width: 25px;
+  }
+  .mat-column-number,
+  .mat-column-state {
+    max-width: 64px;
+  }
+  .mat-column-created {
+    max-width: 124px;
+  }
+}
+
+/* Column Widths */
+
+.pull-right {
+  float: right;
+}
+
+.no-file-section {
+  text-align: center;
+  margin: 15em auto 0;
+  color: grey;
+  i {
+    font-size: 16rem;
+  }
+  .mat-headline {
+    font-size: 30px;
+    margin: 0.296296em 0;
+  }
+}
+
+::ng-deep button {
+  .mat-button-wrapper {
+    .mat-spinner {
+      position: absolute;
+      opacity: 0;
+    }
+  }
+}
+
+::ng-deep button.progressing {
+  cursor: none;
+  pointer-events: none;
+  .mat-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .mat-spinner {
+      opacity: 1;
+    }
+    span {
+      opacity: 0;
+    }
+  }
+}

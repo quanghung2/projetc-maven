@@ -1,0 +1,32 @@
+:host {
+  display: block;
+
+  .webhook-block {
+    mat-form-field {
+      width: 100%;
+    }
+
+    a {
+      cursor: pointer;
+    }
+
+    .material-icons {
+      font-size: 1.6rem;
+      color: gray;
+    }
+
+    .data-list__header {
+      border-bottom: solid 1px rgba(0, 0, 0, 0.12);
+      padding-bottom: 0.8rem;
+    }
+
+    &__added-header-params,
+    &__added-parameter-params {
+      padding-top: 0.8rem;
+
+      &__content {
+        overflow-wrap: break-word;
+      }
+    }
+  }
+}

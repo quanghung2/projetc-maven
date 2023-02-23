@@ -1,0 +1,12 @@
+.arrow-icon {
+  color: #2196f3;
+}
+
+.mat-list-item:hover,
+.mat-list-item:focus,
+.mat-list-single-selected-option,
+.mat-list-single-selected-option:hover,
+.mat-list-single-selected-option:focus {
+  background: rgb(243, 248, 255);
+  cursor: pointer;
+}

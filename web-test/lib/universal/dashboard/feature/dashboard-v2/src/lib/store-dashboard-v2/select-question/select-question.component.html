@@ -1,0 +1,58 @@
+<form [formGroup]="selectQuestionForm" class="question__container" autocomplete="off">
+  <div class="toolbar__wrapper">
+    <mat-form-field class="toolbar__search">
+      <mat-label>Search</mat-label>
+      <input matInput formControlName="search" />
+    </mat-form-field>
+    <mat-form-field class="toolbar__type" *ngIf="hasCustom">
+      <mat-select formControlName="type" placeholder="Type">
+        <mat-option *ngFor="let type of QUESTION_TYPE" [value]="type.key"> {{ type.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <p>{{ dashboardV2Service.globalConfig.maxWidget - questionsFC.value?.length }} widget(s) left</p>
+    <button mat-button color="primary" class="ml-auto" (click)="clearQuestions.emit()">Clear</button>
+  </div>
+  <div class="question__wrapper">
+    <div
+      *ngFor="let question of questionsFilter"
+      [attr.value]="question.uuid"
+      [ngClass]="{
+        'has-filter': question.question.hasFilter,
+        disabled: questionsMap[question.uuid].disabled,
+        selected: questionsMap[question.uuid].selected
+      }"
+      (click)="!questionsMap[question.uuid].disabled && optionClick.emit(question.uuid)"
+      class="question__item"
+    >
+      <div class="content__wrapper">
+        <div class="label">
+          <input type="checkbox" [checked]="questionsMap[question.uuid].selected" />
+          {{ question.name }}
+        </div>
+        <div>
+          <mat-icon class="info mr-10" *ngIf="question.question.icon; let icon" [matTooltip]="icon.toolTip">{{
+            icon.name
+          }}</mat-icon>
+          <mat-icon
+            class="material-icons-outlined info"
+            *ngIf="question.question.description"
+            [matTooltip]="question.question.description"
+            >info</mat-icon
+          >
+        </div>
+      </div>
+      <ng-container *ngIf="question.question; let questionInfo">
+        <p class="tag__title">{{ questionInfo.hasFilter ? 'Filtered by' : 'No filter' }}</p>
+        <div class="tag__wrapper">
+          <div class="tag__item" *ngFor="let filter of questionInfo.filtersMap">{{ filter | uppercase }}</div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="action__wrapper">
+    <button mat-button matStepperPrevious>Back</button>
+    <button mat-raised-button matStepperNext type="button" color="primary" [disabled]="selectQuestionForm.invalid">
+      Next
+    </button>
+  </div>
+</form>

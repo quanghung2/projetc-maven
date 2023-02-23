@@ -1,0 +1,36 @@
+export enum LicenseFeatureCode {
+  // base code
+  license_base = 'license_base',
+  developer = 'license_base_developer',
+  call_group = 'license_extension_group',
+  extension = 'extension',
+  auto_attendant = 'license_ivr_enabled',
+  license_sip = 'license_sip',
+  license_byoc = 'license_byoc',
+
+  //add-ons code
+  team_chat = 'team_chat',
+  license_livechat = 'license_livechat',
+  microsoft_team = 'device_ms_team',
+  license_business_actions = 'license_business_actions',
+  ms_team = 'device_ms_team',
+  ms_team_operator_connect = 'ms_teams_operator_connect',
+  ip_phone = 'device_ip_phone',
+  dnc = 'license_dnc_checking_enabled',
+  number = 'license_number',
+  cr = 'call_recording',
+  cr_unlimited = 'license_call_recording_unlimited_enabled',
+  phone_desktop = 'phone_desktop',
+  browser_device = 'device_web_rtc',
+  license_center_supervisor = 'license_center_supervisor',
+  license_call_center_enabled = 'license_call_center_enabled',
+  license_center_agent = 'license_center_agent',
+  license_campaign = 'license_campaign',
+  sim = 'device_sim',
+  license_sms_campaign = 'license_sms_campaign',
+  license_bulk_filter = 'license_bulk_filter',
+  license_dpo = 'license_dpo',
+  license_smpp = 'license_smpp',
+  license_sip_ip_authen = 'license_sip_ip_authen',
+  license_sip_ha = 'license_sip_ha'
+}

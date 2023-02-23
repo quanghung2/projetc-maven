@@ -1,0 +1,34 @@
+<div fxFlex="1 1 auto" fxLayoutGap="0.8rem" matLine>
+  <div fxFlex="1 0 30" class="contact__title">
+    <div class="text-ellipsis flex justify-content-start align-items-center">
+      <div *ngIf="member">
+        <csh-render-member [user]="member" [key]="key"></csh-render-member>
+      </div>
+      <div *ngIf="contact">
+        <span class="no-avatar">{{ contact.displayName | firstWord }}</span>
+        <span [innerHTML]="contact.displayName | highlight: key"></span>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="1 0 30" class="contact__email">
+    <span [innerHTML]="member.email | highlight: key" *ngIf="member"></span>
+    <span
+      [innerHTML]="contact.emailString | highlight: key"
+      *ngIf="contact"
+      [matTooltip]="contact.emails?.length > 1 ? contact.emailList : ''"
+    ></span>
+  </div>
+  <div fxFlex="1 0 auto" class="contact__number">
+    <span [innerHTML]="member.mobileNumber | highlight: key" *ngIf="member"></span>
+    <span
+      [innerHTML]="contact.numberString | highlight: key"
+      *ngIf="contact"
+      [matTooltip]="contact.numbers?.length > 1 ? contact.numberList : ''"
+    ></span>
+    <div *ngIf="(member && member.mobileNumber) || (contact && contact.numbers)">
+      <div (click)="makeCallTo()" class="phone_button">
+        <mat-icon>call</mat-icon>
+      </div>
+    </div>
+  </div>
+</div>

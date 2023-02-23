@@ -1,0 +1,95 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Overview</h1>
+</sui-template-portal>
+
+<div *ngIf="!isLoading" fxLayout="column" class="overview">
+  <div fxLayout="column" fxLayoutGap="2rem">
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Directory name</div>
+      <div class="item-right">{{ data?.extension?.extLabel }}</div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Extension number</div>
+      <div class="item-right">{{ data?.extension?.extKey }}</div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between top">
+      <div fxFlex="150px" class="item-left">Assigned numbers</div>
+      <ng-container *ngIf="data?.assignedNumbers.length; else noAssignedNumbers">
+        <mat-chip-list>
+          <mat-chip
+            [selected]="callerId.number === data?.extension?.callerId"
+            *ngFor="let callerId of data?.assignedNumbers"
+            color="primary"
+          >
+            <span class="number">{{ callerId.number }}</span>
+            <mat-icon
+              matTooltip="Not link to SIM device"
+              *ngIf="callerId.status === AssignedNumberStatus.INACTIVE"
+              matChipRemove
+              >info</mat-icon
+            >
+          </mat-chip>
+        </mat-chip-list>
+      </ng-container>
+      <ng-template #noAssignedNumbers>
+        <div class="item-right">No numbers assigned</div>
+      </ng-template>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Current user status</div>
+      <ng-container [ngSwitch]="data?.agent.status">
+        <div *ngSwitchCase="AgentStatus.available" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+          <mat-icon class="available">lens</mat-icon>
+          <div class="available">Available</div>
+        </div>
+
+        <div *ngSwitchCase="AgentStatus.busy" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+          <mat-icon class="busy">lens</mat-icon>
+          <div class="busy">Busy</div>
+        </div>
+
+        <div *ngSwitchCase="AgentStatus.offline" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+          <mat-icon class="offline">lens</mat-icon>
+          <div class="offline">Offline</div>
+        </div>
+
+        <div *ngSwitchCase="AgentStatus.dnd" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+          <mat-icon class="dnd">do_not_disturb_on_total_silence</mat-icon>
+          <div class="dnd">Do Not Disturb</div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="!data?.agent" class="item-right">No agent found</div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Current work status</div>
+      <ng-container [ngSwitch]="data?.status">
+        <div *ngSwitchCase="'publicHoliday'" class="item-right">Public holiday</div>
+        <div *ngSwitchCase="'officeHour'" class="item-right">Working hour</div>
+        <div *ngSwitchCase="'nonOfficeHour'" class="item-right">Non-working</div>
+        <div *ngSwitchDefault>-</div>
+      </ng-container>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Current inbound call actions</div>
+      <div *ngIf="data?.incomingCallAction" class="item-right">
+        {{ data?.incomingCallAction | incomingAction }}
+      </div>
+      <div *ngIf="!data?.incomingCallAction" class="item-right">No configuration</div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" class="progress-bar"></mat-progress-bar>
+</ng-container>

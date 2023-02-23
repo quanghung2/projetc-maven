@@ -1,0 +1,30 @@
+:host {
+  .container {
+    &:hover {
+      .icon-download {
+        visibility: visible;
+      }
+    }
+
+    .icon-download {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      visibility: hidden;
+      mat-icon {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 22px;
+        color: #7a7a7a;
+      }
+    }
+
+    .video-js {
+      width: 444px;
+      height: 250px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  }
+}

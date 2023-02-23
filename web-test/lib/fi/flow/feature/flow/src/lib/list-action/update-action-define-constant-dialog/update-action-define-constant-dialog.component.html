@@ -1,0 +1,39 @@
+<div class="mb-24" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="16px">
+  <b3n-edit-action-name
+    fxFlex
+    [icon]="'assets/flow-shared/icons/library_add.svg'"
+    [number]="action.number"
+    [name]="actionName"
+    [allowEdit]="flow.editable && !showResolveDependency"
+    (setName)="actionName = $event"
+    (editing)="editingName = $event"
+  ></b3n-edit-action-name>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</div>
+<div mat-dialog-content fxLayout="column">
+  <b3n-def-action-define-constant
+    *ngIf="!showResolveDependency && actionDefineConstant"
+    [actionDetail]="actionDefineConstant"
+    (changeConfigs)="configs = $event"
+    (invalid)="invalidConfig = $event"
+  ></b3n-def-action-define-constant>
+
+  <b3n-resolve-dependency
+    *ngIf="showResolveDependency"
+    [resolveDependencyInput]="dataOfResolve"
+    (resultResolve)="resultResolve($event)"
+  ></b3n-resolve-dependency>
+</div>
+<div mat-dialog-actions *ngIf="!showResolveDependency" align="end">
+  <button
+    mat-raised-button
+    *ngIf="flow.editable"
+    type="button"
+    color="primary"
+    [loading]="updating"
+    [disabled]="editingName || invalidConfig"
+    (click)="update()"
+  >
+    Update
+  </button>
+</div>

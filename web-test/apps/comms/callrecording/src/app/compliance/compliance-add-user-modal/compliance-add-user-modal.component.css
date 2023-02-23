@@ -1,0 +1,17 @@
+:host .ui.message {
+  margin-bottom: 15px !important;
+}
+
+:host .ui.list {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+:host .item.agent {
+  padding: 10px;
+}
+
+:host .item.agent:hover {
+  background: #eee;
+  cursor: pointer;
+}

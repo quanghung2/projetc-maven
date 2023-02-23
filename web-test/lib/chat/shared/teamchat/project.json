@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-teamchat",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/teamchat/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/teamchat/**/*.ts", "libs/chat/shared/teamchat/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,95 @@
+.container {
+  background-color: #0c223d !important;
+  color: white;
+  padding: 4rem 24px 16px;
+  height: 100%;
+}
+
+::ng-deep {
+  .cdk-overlay-pane.manage-call {
+    .mat-dialog-container {
+      padding: 0;
+    }
+  }
+}
+
+::ng-deep.mat-dialog-container {
+  position: relative;
+  .manage-phone {
+    height: 100%;
+    .actions {
+      width: 80%;
+      .action {
+        width: 100%;
+      }
+      .accept {
+        width: 100%;
+        padding: 15px 10px;
+      }
+    }
+    .room {
+      .time-call {
+        color: #afa9a9;
+        font-size: 12px;
+      }
+      .room-name {
+        font-family: Google Sans, Roboto, Arial, sans-serif;
+        font-weight: 400;
+        font-size: 19px;
+        margin-top: 12px;
+      }
+    }
+
+    .zoom-out {
+      font-size: 20px;
+      position: absolute;
+      top: 11px;
+      right: 7px;
+      text-align: right;
+      opacity: 0.6;
+    }
+
+    ::ng-deep .btn-fab {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      .mat-button-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .mat-icon {
+          font-size: 25px;
+          line-height: 25px;
+          color: rgb(104, 109, 114);
+        }
+      }
+
+      &__call,
+      &__dialpad {
+        background-color: #29d0a4 !important;
+        .mat-button-wrapper {
+          .mat-icon {
+            color: white;
+          }
+        }
+      }
+      &__group {
+        background-color: white !important;
+        margin-left: 12px;
+      }
+
+      &__call_end {
+        background-color: red !important;
+        .mat-button-wrapper {
+          .mat-icon {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

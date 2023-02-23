@@ -1,0 +1,29 @@
+<div class="container" fxFill fxLayout="column" fxLayoutAlign="start stretch">
+  <ng-container *ngIf="!profileAgent?.photoUrl; else hasAvatar">
+    <div class="no-avatar" fxLayoutAlign="center center">
+      <div class="circle" fxLayoutAlign="center center">
+        {{ profileAgent.iname | firstWord }}
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #hasAvatar>
+    <img class="avatar" [src]="profileAgent.photoUrl" />
+  </ng-template>
+
+  <div class="body" fxFlex="auto">
+    <h1>{{ profileAgent.iname }}</h1>
+    <span *ngIf="profileAgent.description"> {{ profileAgent.description }}</span>
+    <small *ngIf="!profileAgent.description">No description</small>
+  </div>
+
+  <button
+    *ngIf="viewing === Viewing.profile && ui.isMobile"
+    class="btn-footer"
+    fxFlex="50px"
+    mat-raised-button
+    color="primary"
+    (click)="nextView()"
+  >
+    Chat with Me
+  </button>
+</div>

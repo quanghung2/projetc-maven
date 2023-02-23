@@ -1,0 +1,206 @@
+.bulk-filtering-container {
+  width: 100%;
+  margin-top: 60px;
+  .header {
+    color: #333333;
+    font-size: 24px;
+    font-weight: 500;
+    float: left;
+  }
+  .csv-template,
+  .user-manual {
+    float: right;
+    font-size: 14px;
+    padding-left: 20px;
+    .label {
+      border-bottom: 1px solid #333333;
+      float: right;
+      color: #000;
+    }
+    .icon {
+      line-height: 27px;
+      font-size: 15px;
+    }
+  }
+  .upload-container {
+    padding-top: 57px;
+    padding-bottom: 58px;
+    text-align: center;
+    background-color: #f1f1f1;
+    margin-top: 30px;
+    &.havefile {
+      padding-top: 40px;
+      padding-bottom: 39px;
+    }
+    .down-csv-template {
+      font-size: 14px;
+      width: 180px;
+      margin: auto;
+      .label {
+        border-bottom: 1px solid #333333;
+        color: #000;
+      }
+      .icon {
+        line-height: 27px;
+        font-size: 15px;
+      }
+    }
+    .file-container {
+      display: flex;
+      align-items: center;
+      height: 80px;
+      width: 440px;
+      border-radius: 2px;
+      margin: auto;
+      background-color: #ffffff;
+      box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+      padding: 20px 15px;
+      position: relative;
+      .icon.file {
+        float: left;
+        font-size: 20px;
+        margin-right: 10px;
+      }
+      .file {
+        float: left;
+        .file-name {
+          font-weight: bold;
+          float: left;
+        }
+        .ui.progress {
+          margin: 0px;
+          height: 6px;
+          overflow: hidden;
+          margin-top: 10px;
+          width: 335px;
+        }
+        .count-number {
+          float: left;
+          color: #666666;
+          font-size: 12px;
+        }
+      }
+      .icon.close {
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 5px;
+        z-index: 1;
+        opacity: 0.8;
+        font-size: 1.6rem;
+        color: #666;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0.625rem 0 0 0;
+      }
+    }
+    .ui.button.primary {
+      padding: 15px 41px;
+      margin: 0px;
+    }
+  }
+  .pricing-container {
+    margin-top: 25px;
+  }
+  .cal-container {
+    border: 1px solid #dddddd;
+    margin-top: 15px;
+    padding: 25px 50px 15px 50px;
+    position: relative;
+    .total-number,
+    .x,
+    .rate,
+    .equal,
+    .result {
+      float: left;
+      width: 20%;
+      .value {
+        color: #666666;
+        font-size: 32px;
+        font-weight: 500;
+        text-align: center;
+      }
+      .description {
+        color: #666666;
+        font-size: 12px;
+        text-align: center;
+        width: 130px;
+        margin: auto;
+      }
+    }
+  }
+  .result-info {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #333333;
+    .label {
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .description {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .note {
+      font-size: 13px;
+      width: 480px;
+    }
+    .floating.blocks > .block {
+      vertical-align: top;
+      > .right.proceed-container {
+        margin-right: -4%;
+      }
+    }
+  }
+  .ui.input {
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .info {
+    color: #666666;
+    font-size: 13px;
+    line-height: 20px;
+  }
+  .extra-info {
+    padding-left: 25px;
+    margin-top: 70px;
+    line-height: 25px;
+    border-left: 2px solid #40b5d8;
+  }
+}
+.log-container {
+  width: 100%;
+  margin-top: 60px;
+  .header {
+    color: #333333;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .ui.page.menu {
+    margin-top: 45px;
+    margin-bottom: 30px;
+  }
+  .ui.calendar {
+    width: 200px;
+  }
+  .item.calendar.vertical.filter > label {
+    top: -20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .item.calendar.vertical.filter input {
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+  .log-result-container {
+    position: relative;
+    margin-top: 30px;
+  }
+  .empty {
+    color: #919191;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+}

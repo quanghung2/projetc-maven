@@ -1,0 +1,89 @@
+<mat-toolbar>
+  <mat-toolbar-row><h1>Usage History</h1></mat-toolbar-row>
+  <mat-toolbar-row fxLayoutGap="0.8rem">
+    <mat-form-field>
+      <mat-select [(ngModel)]="selectedType">
+        <mat-option *ngFor="let type of usageHistoryType" [value]="type.key">
+          {{ type.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="selectedType !== 'payment'" monthFormat>
+      <input
+        [min]="minDate"
+        [max]="maxDate"
+        (click)="dp.open()"
+        readonly
+        matInput
+        [matDatepicker]="dp"
+        [formControl]="date"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp type="month"></mat-datepicker>
+    </mat-form-field>
+
+    <ng-container *ngIf="selectedType === 'payment'">
+      <mat-form-field>
+        <mat-select [(ngModel)]="selectedStatus">
+          <mat-option *ngFor="let status of status" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field dateFormat>
+        <mat-label>From</mat-label>
+        <input
+          readonly
+          (click)="from.open()"
+          matInput
+          [matDatepicker]="from"
+          [(ngModel)]="fromDate"
+          [min]="minDatePayment"
+          [max]="maxDate"
+          name="from"
+          #fromInput="ngModel"
+          required
+        />
+        <mat-error *ngIf="fromInput.invalid && (fromInput.touched || fromInput.dirty)">From is required</mat-error>
+        <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+        <mat-datepicker startView="month" type="date" #from></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field dateFormat>
+        <mat-label>To</mat-label>
+        <input
+          readonly
+          (click)="pickerTo.open()"
+          matInput
+          [matDatepicker]="pickerTo"
+          [(ngModel)]="toDate"
+          [min]="minDatePayment"
+          [max]="maxDate"
+          name="to"
+          #toInput="ngModel"
+          required
+        />
+        <mat-error *ngIf="toInput.invalid && (toInput.touched || toInput.dirty)">To is required</mat-error>
+        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+        <mat-datepicker type="date" #pickerTo></mat-datepicker>
+      </mat-form-field>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div class="usage-hitory px-16" *ngIf="profileOrg">
+  <pou-general-report
+    [monthChanged]="monthChanged"
+    [filterDate]="filterDate"
+    [type]="selectedType"
+    [domain]="profileOrg.domain"
+    *ngIf="selectedType !== 'payment'"
+  ></pou-general-report>
+  <pou-payment-transaction
+    [from]="fromDate"
+    [to]="toDate"
+    [status]="selectedStatus"
+    *ngIf="selectedType === 'payment'"
+  ></pou-payment-transaction>
+</div>

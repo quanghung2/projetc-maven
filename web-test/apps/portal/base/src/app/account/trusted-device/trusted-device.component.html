@@ -1,0 +1,61 @@
+<div class="device">
+  <div *ngIf="loading" class="loading-container"><mat-spinner [diameter]="40">Loading...</mat-spinner></div>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    fxLayoutGap="1.6rem"
+    fxLayoutGap="1.6rem"
+    class="detail"
+    [style.visibility]="loading ? 'hidden' : 'visible'"
+  >
+    <mat-toolbar class="p-0">
+      <h1>Trusted Browsers</h1>
+    </mat-toolbar>
+    <div class="note mat-small">
+      *Browsers that do not require Two Factor Authentication (2FA) to complete sign-in flow. You should only trust
+      browsers installed on your own computer.
+    </div>
+
+    <div class="device-list">
+      <table mat-table [dataSource]="pagedDataSource" class="disablePagination" *ngIf="trustedDevices.length > 0">
+        <ng-container matColumnDef="browser">
+          <th mat-header-cell *matHeaderCellDef>Browser</th>
+          <td mat-cell *matCellDef="let item">{{ item.device.data.browser }} ({{ item.device.data.os }})</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ipAddress">
+          <th mat-header-cell *matHeaderCellDef>IP Address</th>
+          <td mat-cell *matCellDef="let item">{{ item.device.data.ipAddress }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="datetime">
+          <th mat-header-cell *matHeaderCellDef>Date/Time</th>
+          <td mat-cell *matCellDef="let item">{{ item.device.createdDateTime | timeAgo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let item" class="action">
+            <a href="javascript:void(0)" (click)="revoke(item)" class="icon" *ngIf="!item.revoke && !item.processing"
+              ><mat-icon>delete_outline</mat-icon></a
+            >
+            <mat-spinner [diameter]="18" color="warn" *ngIf="!item.revoke && item.processing"></mat-spinner>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        (page)="pageChanged($event)"
+        [length]="dataSource.data.length"
+        [pageIndex]="pageStart - 1"
+        [pageSize]="pageOffset"
+        hidePageSize
+        showFirstLastButtons
+        *ngIf="trustedDevices.length"
+      ></mat-paginator>
+      <div class="empty" *ngIf="trustedDevices.length == 0"><p>There is no trusted browser</p></div>
+    </div>
+  </div>
+</div>

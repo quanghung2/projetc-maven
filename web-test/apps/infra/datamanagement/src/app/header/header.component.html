@@ -1,0 +1,8 @@
+<ng-container>
+  <mat-toolbar class="header" color="primary">
+    <span class="title-name">Data Management </span>
+    <button mat-button [class.active]="activeLink?.key === l.key" *ngFor="let l of links" (click)="browseTo(l)">
+      {{ l.value }}
+    </button>
+  </mat-toolbar>
+</ng-container>

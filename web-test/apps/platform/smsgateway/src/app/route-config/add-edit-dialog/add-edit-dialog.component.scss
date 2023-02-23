@@ -1,0 +1,74 @@
+@mixin d-flex($gap) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+.dialog__wrapper {
+  width: 450px;
+  @include d-flex(2rem);
+
+  ::ng-deep.mat-dialog-content {
+    overflow: hidden !important;
+  }
+
+  ::ng-deep.mat-checkbox-ripple {
+    display: none !important;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 450;
+    margin: 0;
+  }
+
+  .dropdowns {
+    overflow: auto;
+    font-size: 14px;
+    @include d-flex(0);
+
+    ::ng-deep.mat-form-field:not(:first-child) {
+      margin-top: -5px;
+    }
+
+    ::ng-deep.mat-form-field-underline {
+      opacity: 0.5;
+    }
+
+    mat-error {
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: flex-end;
+
+      mat-form-field:nth-child(1) {
+        width: 30%;
+      }
+
+      mat-form-field:nth-child(2) {
+        width: 70%;
+      }
+    }
+
+    mat-checkbox {
+      font-size: 14px;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

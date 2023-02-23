@@ -1,0 +1,15 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Create flow</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <mat-form-field hideRequiredMarker="true">
+    <input matInput placeholder="Name" [formControl]="nameCtrl" required />
+    <mat-error *ngIf="nameCtrl.invalid">{{ getErrorName() }}</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" [loading]="loading" [disabled]="nameCtrl.invalid" (click)="createFlow()">
+    Create
+  </button>
+</div>

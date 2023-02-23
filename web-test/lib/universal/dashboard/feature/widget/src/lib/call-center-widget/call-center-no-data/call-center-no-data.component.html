@@ -1,0 +1,11 @@
+<div class="noData">
+  <span *ngIf="questionErrorHash$$ | async as questionErrorHash; else rawMsg">
+    <ng-container *ngIf="questionErrorHash[questionV2.uuid]; else rawMsg">
+      {{ questionErrorHash[questionV2.uuid] }}
+    </ng-container>
+  </span>
+</div>
+
+<ng-template #rawMsg>
+  <span>{{ questionV2.question?.messages?.noData }}</span>
+</ng-template>

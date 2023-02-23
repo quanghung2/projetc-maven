@@ -1,0 +1,63 @@
+<form class="store-access__container" autocomplete="off" [formGroup]="form">
+  <p class="store-access__title">{{ data.management.extLabel }}</p>
+  <div class="toolbar__wrapper">
+    <mat-form-field class="toolbar__search">
+      <mat-label>Search</mat-label>
+      <input matInput formControlName="search" />
+    </mat-form-field>
+    <mat-form-field class="toolbar__type" *ngIf="hasCustom">
+      <mat-select placeholder="Type" formControlName="type">
+        <mat-option *ngFor="let type of DASHBOARD_TYPE" [value]="type.key"> {{ type.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-button [color]="selectAll ? 'warn' : 'primary'" class="ml-auto" (click)="toggleSelectAll()">
+      {{ selectAll ? 'Unselect All' : 'Select All' }}
+    </button>
+  </div>
+  <div class="store-access__wrapper">
+    <ng-container *ngFor="let dashboard of dashboard2sFilter">
+      <div
+        *ngIf="dashboard2Map[dashboard.uuid]; let dashboardMap"
+        [ngClass]="{
+          selected: dashboardMap.selected
+        }"
+        (click)="dashboardOptionClick(dashboard.uuid)"
+        class="store-access__item"
+      >
+        <div class="content__wrapper">
+          <div class="label">
+            <input type="checkbox" [checked]="dashboardMap.selected" />
+            <span>{{ dashboard.name }}</span>
+          </div>
+        </div>
+        <div class="details__wrapper">
+          <div class="tag__wrapper" *ngIf="dashboard.isDefault">
+            <div class="tag__item">DEFAULT</div>
+          </div>
+          <div class="template__wrapper slide__active" *ngIf="dashboard.template; let template">
+            <div [class]="template.class + '__wrapper'" class="preview__template active">
+              <div
+                *ngFor="let _ of [].constructor(template.item); let i = index"
+                [class]="template.class + '__item'"
+                class="active"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="action__wrapper">
+    <button mat-button type="button" matDialogClose>Cancel</button>
+    <button
+      mat-raised-button
+      type="button"
+      color="primary"
+      [disabled]="form.invalid"
+      [loading]="loading"
+      (click)="save()"
+    >
+      Save
+    </button>
+  </div>
+</form>

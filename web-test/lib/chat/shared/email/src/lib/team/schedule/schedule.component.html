@@ -1,0 +1,50 @@
+<ng-container *ngIf="scheduleLoading; else list">
+  <ngx-skeleton-loader
+    [theme]="{
+      width: '100%',
+      height: '60px'
+    }"
+  ></ngx-skeleton-loader>
+</ng-container>
+
+<ng-template #list>
+  <b3n-email-conversation-list
+    [customHeaderTemplate]="schedule"
+    [customDisplayConvoTemplate]="customDisplayConvo"
+  ></b3n-email-conversation-list>
+  <ng-template #schedule>
+    <div *ngIf="isOverModeLeftSidebar$ | async" class="action__header flex justify-content-start align-items-center">
+      <csh-menu-toggle></csh-menu-toggle>
+    </div>
+    <button mat-raised-button class="mt-10 ml-10" (click)="refresh()" color="primary">
+      <mat-icon>refresh</mat-icon> Refresh
+    </button>
+  </ng-template>
+
+  <ng-template #customDisplayConvo>
+    <ng-container *ngIf="displayMessages.length; else noEmails">
+      <section class="m-10">
+        <mat-card
+          *ngFor="let msg of displayMessages"
+          class="d-flex justify-content-between mb-10 convo__item"
+          (click)="onSelectMessage(msg.convoUuid, msg)"
+          [class.active]="selectedConversationGroup?.publicConversationId === msg.convoUuid"
+        >
+          <div>
+            <b3n-email-sender-address [fromAddresses]="msg.data.fromAddresses[0]"></b3n-email-sender-address>
+            <b3n-email-address [addresses]="msg.data.toAddresses" [label]="'To'"></b3n-email-address>
+            <div>{{ msg.data.subject }}</div>
+            <div class="danger">
+              <span> Schedule at {{ msg.ts | date: 'MMM dd yyyy HH:mm:ss' }} </span>
+              <mat-icon matTooltip="Remove" (click)="removeSchedule($event, msg.id)">delete_outline</mat-icon>
+            </div>
+          </div>
+          <b3n-email-timeago [ts]="msg.ts"></b3n-email-timeago>
+        </mat-card>
+      </section>
+    </ng-container>
+    <ng-template #noEmails>
+      <p class="text-center">No emails</p>
+    </ng-template>
+  </ng-template>
+</ng-template>

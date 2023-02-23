@@ -1,0 +1,15 @@
+<header [class.hidden]="loading"></header>
+
+<router-outlet></router-outlet>
+
+<contact-us></contact-us>
+<sip-account-list></sip-account-list>
+<sip-number-list></sip-number-list>
+<call-recording-custom-storage></call-recording-custom-storage>
+<app-add-rounting></app-add-rounting>
+<app-create-plan></app-create-plan>
+<confirmation></confirmation>
+
+<div *ngIf="loading || switchingAccount" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

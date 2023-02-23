@@ -1,0 +1,12 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Music on Hold</h1>
+</sui-template-portal>
+
+<div [style.width.px]="600" class="m-auto" fxLayout="column">
+  <mat-progress-bar *ngIf="loading; else moh" mode="indeterminate"></mat-progress-bar>
+  <ng-template #moh>
+    <p class="title">Replace default music on hold with your own</p>
+    <cos-tts-config ttsOptions="mp3" [text2Speech]="text2speech" (changed)="ttsChange($event)"></cos-tts-config>
+    <button type="button" class="ml-auto" mat-stroked-button color="primary" (click)="save()">Save</button>
+  </ng-template>
+</div>

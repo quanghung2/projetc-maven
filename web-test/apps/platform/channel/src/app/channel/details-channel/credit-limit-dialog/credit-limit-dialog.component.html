@@ -1,0 +1,30 @@
+<div class="credit-limit-dialog">
+  <h2 mat-dialog-title>Set credit limit</h2>
+  <form [formGroup]="creditLimitForm" fxLayout="column" fxLayoutGap="1.6rem">
+    <mat-form-field class="credit-limit-dialog__input">
+      <mat-label>Credit limit</mat-label>
+      <input matInput required formControlName="creditLimit" />
+      <div matSuffix>{{ data.buyerWallet.currency }}</div>
+    </mat-form-field>
+    <mat-slide-toggle formControlName="temporaryIncreaseToogle" (change)="toggleChanged($event)"
+      >Temporary increase</mat-slide-toggle
+    >
+    <mat-form-field *ngIf="temporaryIncreaseToogle">
+      <mat-label>Temporary increase days</mat-label>
+      <input type="number" matInput required formControlName="temporaryIncreaseDays" />
+      <mat-error>Temporary days must be greater than zero</mat-error>
+    </mat-form-field>
+  </form>
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      [loading]="updating"
+      [disabled]="creditLimitForm.invalid || updating"
+      mat-raised-button
+      color="primary"
+      (click)="update()"
+    >
+      Save change
+    </button>
+  </div>
+</div>

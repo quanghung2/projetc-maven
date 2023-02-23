@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>{{ response.id ? 'Update' : 'Create' }} canned response</h1>
+<div mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field>
+      <input type="text" placeholder="Name" matInput name="signature" required [(ngModel)]="response.name" />
+    </mat-form-field>
+    <mat-form-field>
+      <input type="text" placeholder="Subject" name="subject" matInput [(ngModel)]="response.subject" />
+    </mat-form-field>
+    <div class="hint">
+      <strong>Optional:</strong>
+      <span> will replace the subject when the canned response is used in an email.</span>
+    </div>
+    <div>
+      <mat-form-field class="inbox__selection">
+        <input type="text" placeholder="Choose inbox" matInput [formControl]="inboxControl" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let inbox of teamInboxes" [value]="inbox">
+            {{ inbox.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button mat-stroked-button (click)="addInbox()">Add</button>
+    </div>
+    <div>
+      <mat-chip-list>
+        <mat-chip *ngFor="let item of addedInboxes">
+          <span>{{ item.name }}</span>
+          <mat-icon (click)="deleteInbox(item)" class="removeInbox">close</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="signature-content">
+      <quill-editor [style]="{ height: '200px' }" [(ngModel)]="response.content"></quill-editor>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="doUpdate()">
+    {{ response.id ? 'Update' : 'Create' }}
+  </button>
+</div>

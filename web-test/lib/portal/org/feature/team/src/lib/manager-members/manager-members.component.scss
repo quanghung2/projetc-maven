@@ -1,0 +1,67 @@
+.member {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    .action-bar {
+      h2 {
+        color: rgba(0, 0, 0, 0.67);
+      }
+      .back-icon {
+        cursor: pointer;
+        outline: none;
+        color: rgba(0, 0, 0, 0.67);
+      }
+      &__search-filter {
+        &__search {
+          mat-icon {
+            font-size: 20px !important;
+            color: rgba(0, 0, 0, 0.67);
+          }
+        }
+      }
+    }
+
+    table {
+      width: 100%;
+      .action-visibility {
+        visibility: hidden;
+      }
+
+      tr {
+        &.mat-row {
+          &:hover {
+            background-color: #f0f0f0;
+            .action-visibility {
+              visibility: visible !important;
+            }
+          }
+        }
+      }
+
+      tr th:last-child {
+        width: 10%;
+      }
+
+      tr td:last-child {
+        width: 10%;
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        box-sizing: border-box;
+
+        &--gray {
+          padding: 3px;
+          background: var(--gray-300);
+        }
+      }
+      .team-setting-action-button {
+        &__remove {
+          color: var(--gray-700);
+        }
+      }
+    }
+  }
+}

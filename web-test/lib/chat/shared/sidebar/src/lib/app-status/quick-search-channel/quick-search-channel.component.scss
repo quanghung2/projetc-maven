@@ -1,0 +1,139 @@
+@mixin btn-filter {
+  position: relative;
+  cursor: pointer;
+  line-height: 22px;
+  font-size: 11px;
+  min-width: 0;
+  padding: 0 8px;
+  background-color: #e0e0e0; // darkmode #gray
+  color: black; // darkmode #white
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+:host {
+  .inbox-view {
+    .search_button {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
+      color: black; // darkmode #white
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      mat-icon {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 22px;
+        color: #7a7a7a;
+      }
+    }
+
+    .mat-menu-trigger {
+      position: absolute;
+      top: 10px;
+      right: -10px;
+    }
+  }
+}
+
+::ng-deep {
+  // overlay menu
+  .menu-quick-search-1 {
+    height: 500px;
+    width: 300px;
+    min-width: none;
+    max-width: none;
+
+    .mat-menu-content,
+    .container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .action {
+        mat-form-field.input-search {
+          width: 100%;
+          font-size: 14px;
+          .mat-form-field-outline,
+          .mat-form-field-outline-thick {
+            color: transparent !important;
+          }
+
+          .mat-form-field-wrapper {
+            padding-bottom: 0;
+          }
+
+          input {
+            line-height: initial;
+          }
+        }
+
+        .create-session {
+          padding: 1rem 1rem;
+          cursor: pointer;
+          &:hover {
+            background: rgba(0, 0, 0, 0.04);
+          }
+        }
+
+        .filter {
+          padding: 1rem 1.1rem;
+          .toggle-view {
+            @include btn-filter;
+          }
+        }
+      }
+
+      .result {
+        overflow: overlay;
+
+        .mat-selection-list {
+          padding-top: 0 !important;
+          .current-select {
+            background-color: #f1f1f1;
+          }
+
+          .mat-list-text {
+            padding: 0 !important;
+            .item-contact {
+              display: flex;
+              place-content: center space-between;
+              align-items: center;
+              justify-content: space-between;
+            }
+          }
+        }
+
+        .icon-channel {
+          width: 18px;
+          height: 18px;
+          font-size: 18px;
+        }
+
+        .text-channel {
+          font-size: 14px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+
+          .leave {
+            color: red;
+          }
+        }
+
+        .no-avatar-contact {
+          width: 32px;
+          height: 32px;
+          margin-right: 10px;
+          background: #cecece;
+          border: 1px solid #cecece;
+          border-radius: 50%;
+          text-align: center;
+          text-transform: uppercase;
+          line-height: 32px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

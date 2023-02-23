@@ -1,0 +1,320 @@
+<div mat-dialog-title>{{ ctaTitle }}</div>
+<div fxFlex="1 1 auto" mat-dialog-content fxLayout="row" fxLayoutGap="2.4rem">
+  <section fxFlex="1 1 auto" class="form-section">
+    <form #formEle fxLayout="column" [formGroup]="orderFG" fxLayoutGap="1.6rem" class="form">
+      <mat-form-field>
+        <mat-label>Organization</mat-label>
+        <input
+          #searchOrgInput
+          type="text"
+          matInput
+          [formControl]="searchOrgFC"
+          [matAutocomplete]="orgsAuto"
+          placeholder="Enter organization name or UUID"
+        />
+        <mat-autocomplete #orgsAuto="matAutocomplete" [displayWith]="orgDisplayFn">
+          <ng-container *ngIf="organizations$ | async as organizations">
+            <mat-option *ngFor="let org of organizations" [value]="org">{{ org.name }} ({{ org.uuid }})</mat-option>
+            <mat-option *ngIf="!organizations.length" disabled>No organizations available</mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Bundles</mat-label>
+        <input
+          type="text"
+          #searchBundleInput
+          matInput
+          [formControl]="searchBundleFC"
+          [matAutocomplete]="bundleAuto"
+          placeholder="Select bundle"
+        />
+        <mat-hint>The selected bundle will be added to the below list</mat-hint>
+        <mat-autocomplete #bundleAuto="matAutocomplete" [displayWith]="bundleDisplayFn">
+          <ng-container *ngIf="bundles$ | async as bundles">
+            <mat-option *ngFor="let bundle of bundles" [value]="bundle">{{ bundle.name }}</mat-option>
+            <mat-option *ngIf="!bundles.length" disabled>No bundles available</mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="excludeBase">Purchase add-ons only!</mat-checkbox>
+
+      <ng-container>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.8rem" class="spacer">
+            <h3 class="font-medium">Selected bundles</h3>
+            <span class="secondary-text">List of bundles to create order</span>
+          </div>
+        </div>
+
+        <div *ngIf="bundleChanged" class="px-16 py-8 yellow-200 mat-body-2 font-normal text-center">
+          Some bundles changed since the last time order updated. These changes will be applied when updating this
+          order.
+        </div>
+
+        <ng-container *ngFor="let bundleFG of bundlesFA.controls; let i = index">
+          <div fxLayout="row" [formGroup]="$any(bundleFG)" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <div class="text-truncate spacer">
+              {{ bundleFG.get('name').value }}
+
+              <span *ngIf="bundleFG.get('deleted').value" matTooltip="Bundle was deleted" class="red px-8 py-4 ml-16"
+                >Deleted</span
+              >
+            </div>
+            <mat-form-field fxFlex="180px">
+              <mat-label>Quantity</mat-label>
+              <input matInput type="number" formControlName="quantity" placeholder="Quantity" />
+              <mat-error *ngIf="bundleFG['controls'].quantity.errors?.['required']">Quantity is required</mat-error>
+              <mat-error *ngIf="bundleFG['controls'].quantity.errors?.['min']"
+                >Quantity must be greater than zero</mat-error
+              >
+            </mat-form-field>
+            <button *ngIf="actionType !== 'approve' && actionType !== 'view'" mat-icon-button (click)="removeBundle(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+
+        <div *ngIf="!bundlesFA.length" class="p-16 text-center secondary-text">No bundles selected</div>
+      </ng-container>
+
+      <ng-container *ngIf="totalNumberCount > 0">
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.8rem" class="spacer">
+            <h3 class="m-0">
+              <span class="font-medium">Select numbers</span>
+              <span class="secondary-text"> ({{ numbersFA.controls.length }}/{{ totalNumberCount }})</span>
+            </h3>
+          </div>
+
+          <button mat-stroked-button [disabled]="actionType === 'view'" (click)="selectNumber()">Select</button>
+        </div>
+        <div
+          *ngIf="actionType === 'approve' && totalNumberCount > numbersFA.controls.length"
+          class="px-16 py-8 yellow-200 mat-body-2 font-normal text-center"
+        >
+          All numbers must be selected before approval.
+        </div>
+        <div
+          *ngIf="totalNumberCount < numbersFA.controls.length"
+          class="px-16 py-8 yellow-200 mat-body-2 font-normal text-center"
+        >
+          The selected numbers already exceeded the quota.
+        </div>
+        <div
+          *ngIf="actionType === 'approve' && numbersFA.controls.length && !checkDocumentRes"
+          class="px-16 py-8 yellow-200 mat-body-2 font-normal text-center"
+        >
+          Document of SG numbers is invalid
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="1.6rem">
+          <div
+            *ngFor="let number of selectedNumbers"
+            class="number active p-16 py-8 b border-radius-4 my-8 cursor-pointer"
+          >
+            {{ number.number }}
+          </div>
+          <div *ngIf="!selectedNumbers.length" class="secondary-text text-center container-fluid">
+            No number selected
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="contract__wrapper">
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.8rem" class="spacer">
+            <h3 class="m-0">
+              <span class="font-medium">Contract</span>
+            </h3>
+          </div>
+        </div>
+
+        <mat-form-field>
+          <mat-label>Contracts</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="contract"
+            [matAutocomplete]="contractAuto"
+            placeholder="Select contract"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="clearContract()"
+            [disabled]="['view', 'approve'].includes(actionType)"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+          <mat-autocomplete #contractAuto="matAutocomplete" [displayWith]="contractDisplayFn">
+            <ng-container *ngFor="let contract of contracts; let idx = index">
+              <mat-option *ngIf="!hiddenContracts.includes(idx)" [value]="contract">{{
+                contract.contractNumber
+              }}</mat-option>
+            </ng-container>
+            <mat-option *ngIf="!contracts.length || hiddenContracts.length === contracts.length" disabled
+              >No contract available</mat-option
+            >
+          </mat-autocomplete>
+          <p class="contract__error" *ngIf="!!contractErrorMsg">{{ contractErrorMsg }}</p>
+        </mat-form-field>
+      </div>
+
+      <div class="order-form__wrapper">
+        <mat-divider></mat-divider>
+        <input
+          #csvInput
+          hidden="true"
+          type="file"
+          onclick="this.value=null"
+          accept=".csv"
+          (change)="orderFormChange($event)"
+        />
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.8rem" class="spacer">
+            <h3 class="m-0">
+              <span class="font-medium">Order form</span>
+            </h3>
+          </div>
+
+          <button
+            mat-stroked-button
+            [disabled]="actionType === 'view'"
+            (click)="csvInput.click()"
+            *ngIf="actionType !== 'approve'"
+          >
+            Upload
+          </button>
+        </div>
+        <mat-list>
+          <mat-list-item *ngFor="let file of fileInfos; let i = index" class="order-form__item">
+            <div class="order-form__content">
+              {{ file.name }}
+            </div>
+            <button mat-icon-button matTooltip="Download" (click)="downloadFile(file)">
+              <mat-icon>file_download</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+        <mat-list class="order-form__list">
+          <mat-list-item *ngFor="let file of orderFormFiles; let i = index" class="order-form__item">
+            <div class="order-form__content">
+              {{ file.name }}
+              <button mat-icon-button matTooltip="Remove" (click)="removeOrderFormFile(i, file.name)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+        <div *ngIf="!fileInfos.length && !orderFormFiles.length" class="secondary-text text-center container-fluid">
+          No order form file
+        </div>
+      </div>
+
+      <div class="billing-date__wrapper">
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.8rem" class="spacer">
+            <h3 class="m-0">
+              <span class="font-medium">Billing date</span>
+            </h3>
+          </div>
+        </div>
+        <mat-form-field fxFlex="1 1 0">
+          <input
+            matInput
+            readonly
+            placeholder="Billing start date"
+            name="billingStartDate"
+            [min]="minDate"
+            [max]="maxDate"
+            [matDatepicker]="billingStartDate"
+            (click)="billingStartDate.open()"
+            formControlName="billingStartDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="billingStartDate"></mat-datepicker-toggle>
+          <mat-datepicker #billingStartDate type="date"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <section formGroupName="singtelInfo" *ngIf="hasMSISDNNumber" class="singtelInfo">
+        <h3 class="font-medium">MSISDN request</h3>
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.8rem">
+          <mat-form-field>
+            <mat-label>BRNs</mat-label>
+            <input
+              matInput
+              formControlName="brn"
+              type="text"
+              placeholder="Input BRNs separated by comma or semicolon"
+            />
+            <mat-error>Value is required</mat-error>
+          </mat-form-field>
+          <div fxLayout="row wrap" fxLayoutAlign="space-between center">
+            <mat-form-field fxFlex="32">
+              <mat-select formControlName="action" placeholder="Action">
+                <mat-option *ngFor="let item of InitData.singtelInfo.actions" [value]="item.key">{{
+                  item.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field fxFlex="32">
+              <mat-select formControlName="service" placeholder="Service">
+                <mat-option *ngFor="let item of InitData.singtelInfo.services" [value]="item.key">{{
+                  item.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field fxFlex="32">
+              <mat-select formControlName="simType" placeholder="SIM Type">
+                <mat-option *ngFor="let item of InitData.singtelInfo.simTypes" [value]="item.key">{{
+                  item.value
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+    </form>
+  </section>
+
+  <mat-divider vertical="true" class=""></mat-divider>
+  <section fxFlex="400px" [ngStyle]="{ overflow: 'auto', paddingRight: '5px' }">
+    <h2 class="mt-0">Order summary</h2>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem" [innerHtml]="summaryHtml"></div>
+  </section>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    *ngIf="actionType === 'approve'"
+    mat-stroked-button
+    [loading]="rejecting"
+    [disabled]="progressing"
+    color="warn"
+    (click)="reject()"
+  >
+    Reject
+  </button>
+  <button
+    *ngIf="actionType !== 'view'"
+    mat-raised-button
+    [loading]="progressing"
+    [disabled]="
+      orderFG.invalid ||
+      (actionType === 'approve' && totalNumberCount > numbersFA.controls.length) ||
+      (actionType === 'approve' && numbersFA.controls.length && !checkDocumentRes) ||
+      totalNumberCount < numbersFA.controls.length ||
+      rejecting ||
+      !!contractErrorMsg
+    "
+    color="primary"
+    (click)="process()"
+  >
+    {{ ctaButton }}
+  </button>
+</div>

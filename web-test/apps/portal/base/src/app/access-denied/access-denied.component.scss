@@ -1,0 +1,23 @@
+@import '../../assets/scss/variables.scss';
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+iframe {
+  border: none;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+.view-not-found {
+  margin-top: 3rem;
+  .mat-icon {
+    font-size: 5rem;
+    width: 5rem;
+    color: $warning-color;
+  }
+}

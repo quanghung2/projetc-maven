@@ -1,0 +1,33 @@
+.permission {
+  margin-top: 2rem;
+  .no-permissions {
+    background: var(--gray-200);
+    padding: 1rem;
+    border-radius: 5px;
+  }
+
+  .headline {
+    color: var(--gray-700);
+    font-weight: 450;
+    margin-bottom: 0.5rem;
+    height: 36px;
+  }
+
+  .permission {
+    &__item {
+      border-radius: 4px;
+      border: 1px solid var(--gray-300);
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.6rem;
+    }
+
+    &__header {
+      font-weight: 450;
+      margin-bottom: 0.5rem;
+
+      &__title {
+        color: var(--gray-600);
+      }
+    }
+  }
+}

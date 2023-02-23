@@ -1,0 +1,28 @@
+<div class="container flex column justify-content-start align-items-none" fxFill>
+  <div class="spacer flex justify-content-space-between align-items-center">
+    <div fxLayoutAlign="start center">
+      <csh-menu-toggle></csh-menu-toggle>
+
+      <div class="title flex column justify-content-center align-items-start">
+        <span *ngIf="contact" class="display-name">{{ contact?.displayName || 'Unknown Contact' }}</span>
+        <div *ngIf="user" class="flex justify-content-start align-items-center gap-3">
+          <mat-icon
+            [fontSet]="!user.isOnline ? 'material-icons-outlined' : null"
+            [class]="user.isOnline ? 'status__online' : 'status__offline'"
+          >
+            lens
+          </mat-icon>
+          <span class="display-name">
+            {{ user.displayName }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- <ng-container *ngIf="!!contact">
+      <button class="icon-info" [class.active]="toggleInfoBtn$ | async " mat-icon-button (click)="toggleRightSidebar()">
+        <mat-icon fontSet="material-icons-outlined">vertical_split</mat-icon>
+      </button>
+    </ng-container> -->
+  </div>
+</div>

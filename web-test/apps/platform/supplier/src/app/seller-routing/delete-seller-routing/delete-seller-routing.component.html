@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Delete a routing</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <p>
+      You want to delete routing <strong>{{ sellerRouting.orgUuid }} {{ sellerRouting.type }}</strong
+      >?
+    </p>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button [disabled]="deleting" mat-raised-button (click)="deleteSellerRouting()" color="warn">
+    Delete
+    <mat-spinner *ngIf="deleting" class="loading" [diameter]="20">Loading...</mat-spinner>
+  </button>
+</div>

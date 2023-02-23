@@ -1,0 +1,93 @@
+<ng-container *ngIf="slaRecords || geSlaRecords">
+  <ng-container [ngSwitch]="type">
+    <ng-container
+      *ngSwitchCase="QuestionType.geSLA"
+      [ngTemplateOutlet]="geSLA"
+      [ngTemplateOutletContext]="{ slaRecords: geSlaRecords }"
+    ></ng-container>
+    <ng-container
+      *ngSwitchDefault
+      [ngTemplateOutlet]="normalSLA"
+      [ngTemplateOutletContext]="{ slaRecords: slaRecords }"
+    ></ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #normalSLA let-slaRecords="slaRecords">
+  <table *ngIf="slaRecords.length > 0" [dataSource]="slaRecords" mat-table>
+    <ng-container matColumnDef="queue">
+      <th *matHeaderCellDef mat-header-cell>Queue</th>
+      <td *matCellDef="let row" mat-cell>{{ row.queue }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th *matHeaderCellDef mat-header-cell>Total</th>
+      <td *matCellDef="let row" mat-cell>{{ row.total }}</td>
+    </ng-container>
+    <ng-container matColumnDef="answeredThreshold">
+      <th *matHeaderCellDef mat-header-cell>Answered threshold</th>
+      <td *matCellDef="let row" mat-cell>{{ row.answeredThreshold }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="shortAbandoned">
+      <th *matHeaderCellDef mat-header-cell>Short abandoned</th>
+      <td *matCellDef="let row" mat-cell>{{ row.shortAbandoned }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="unansweredCallback">
+      <th *matHeaderCellDef mat-header-cell>Unanswered callback</th>
+      <td *matCellDef="let row" mat-cell>{{ row.unansweredCallback }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="voicemail">
+      <th *matHeaderCellDef mat-header-cell>Voicemail</th>
+      <td *matCellDef="let row" mat-cell>{{ row.voicemail }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="rate">
+      <th *matHeaderCellDef mat-header-cell>Rate</th>
+      <td *matCellDef="let row" mat-cell>
+        <strong>{{ row.rate | percent: '1.2-2' }}</strong>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayColumns" mat-row></tr>
+  </table>
+
+  <div *ngIf="slaRecords.length == 0" class="no-data white-box">No data</div>
+</ng-template>
+
+<ng-template #geSLA let-slaRecords="slaRecords">
+  <table *ngIf="slaRecords.length > 0" [dataSource]="slaRecords" mat-table>
+    <ng-container matColumnDef="queue">
+      <th *matHeaderCellDef mat-header-cell>Queue</th>
+      <td *matCellDef="let row" mat-cell>{{ row.queueName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="total">
+      <th *matHeaderCellDef mat-header-cell>Total</th>
+      <td *matCellDef="let row" mat-cell>{{ row.total }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answered">
+      <th *matHeaderCellDef mat-header-cell>Answered</th>
+      <td *matCellDef="let row" mat-cell>{{ row.answered }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="threshold">
+      <th *matHeaderCellDef mat-header-cell>SLA Threshold</th>
+      <td *matCellDef="let row" mat-cell>{{ row.slaThreshold }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sla">
+      <th *matHeaderCellDef mat-header-cell>SLA</th>
+      <td *matCellDef="let row" mat-cell>{{ row.sla }}</td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayColumns" mat-row></tr>
+  </table>
+
+  <div *ngIf="slaRecords.length == 0" class="no-data white-box">No data</div>
+</ng-template>

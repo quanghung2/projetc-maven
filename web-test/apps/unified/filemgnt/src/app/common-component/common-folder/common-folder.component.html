@@ -1,0 +1,64 @@
+<div class="common-container">
+  <mat-toolbar>
+    <div *ngIf="isTrashBin" class="flex align-items-center">
+      <div class="item-link" (click)="onBack()">{{ title }}</div>
+      <div class="icon-link">
+        <mat-icon>chevron_right</mat-icon>
+      </div>
+    </div>
+    <div class="page-title">{{ isTrashBin ? 'Trash' : title }}</div>
+  </mat-toolbar>
+  <b3n-action-bar
+    [date]="date"
+    [type]="type"
+    [isFolder]="true"
+    [isTrashBin]="isTrashBin"
+    [selectedItems]="selectionFolders.selected"
+    [actionMapping$]="actionMapping$"
+    [folders]="folders"
+    (changeDateMonth)="onChangeMonth($event)"
+    (download)="onDownload()"
+    (delete)="onDelete()"
+    (viewTrashBin)="loadFolderTrashBin($event)"
+    (viewPendingJob)="onViewPendingJob($event)"
+    (restore)="onRestore()"
+    (refresh)="loadFolderTrashBin($event)"
+    (shred)="onShred()"
+    (toggleFolder)="toggleAllFolder($event)"
+  ></b3n-action-bar>
+  <div class="folder-container">
+    <mat-list>
+      <mat-list-item *ngFor="let folder of sortData">
+        <div class="folder" (click)="onClickFolder(folder)">
+          <mat-checkbox
+            class="custom-check"
+            [style.--value]="selectionFolders.isSelected(folder) ? 'visible' : 'hidden'"
+            (click)="$event.stopPropagation()"
+            (change)="$event ? selectionFolders.toggle(folder) : null"
+            [checked]="selectionFolders.isSelected(folder)"
+          >
+          </mat-checkbox>
+          <span class="material-icons-outlined">folder</span>
+          <div mat-line>{{ folder.name }}</div>
+        </div>
+      </mat-list-item>
+    </mat-list>
+    <div *ngIf="folders?.length === 0" fxLayoutAlign="center center">
+      <span class="mat-body-1">The trash bin is empty</span>
+    </div>
+  </div>
+  <div
+    *ngIf="isTrashBin && folders?.length > 0"
+    fxLayout="row"
+    fxLayoutAlign="end center"
+    fxLayoutGap="0.25rem"
+    class="footer-table"
+  >
+    <button mat-icon-button [disabled]="ui.paging.page === 1" (click)="onPrevPage()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button [disabled]="!nextCursor" (click)="onNextPage()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>

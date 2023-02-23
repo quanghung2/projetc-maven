@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+.div-container{
+    line-height: 1.8;
+    a{
+      word-break: break-all;
+    }
+  
+    > .image-container {
+      position: relative;
+      max-height: 300px;
+      left: 0;
+      border: thin solid #d3d3d3;
+      border-radius: 8px;
+      background-size: cover;
+      object-fit: over;
+      overflow: hidden;
+      margin-bottom: 5px;
+      margin-top: 5px;
+    
+      cursor: zoom-in;
+    
+      .not-loaded-image {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        line-height: 48px;
+        color: #808080;
+        cursor: default;
+      }
+    }
+}
+
+
+.mat-drawer-container{
+  height: 100vh;
+}

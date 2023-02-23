@@ -1,0 +1,22 @@
+.actions {
+  visibility: hidden;
+}
+
+.mat-row:hover {
+  background-color: #fafafa;
+  
+  .actions {
+    visibility: visible;
+  }
+}
+
+.mat-column-domainUuid{
+  width: 350px;
+  max-width: 350px;
+}
+
+.mat-column-portal{
+  width: 250px;
+  max-width: 250px;
+}
+

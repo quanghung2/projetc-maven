@@ -1,0 +1,30 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Rename flow</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <mat-form-field hideRequiredMarker="true">
+    <input matInput placeholder="Name" [formControl]="nameCtrl" (keyup.enter)="rename()" required />
+    <mat-error *ngIf="nameCtrl.invalid">{{ getError(nameCtrl) }}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field hideRequiredMarker="true" *ngIf="flow.type === 'BUSINESS_ACTION'">
+    <input matInput placeholder="Present Name" [formControl]="presentNameCtrl" (keyup.enter)="rename()" required />
+    <mat-error *ngIf="presentNameCtrl.invalid">{{ getError(presentNameCtrl) }}</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="updating"
+    [disabled]="
+      (flow.type === 'BUSINESS_ACTION' && (nameCtrl.invalid || presentNameCtrl.invalid)) ||
+      (flow.type !== 'BUSINESS_ACTION' && nameCtrl.invalid)
+    "
+    (click)="rename()"
+  >
+    Save
+  </button>
+</div>

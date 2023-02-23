@@ -1,0 +1,56 @@
+<mat-toolbar>
+  <div class="page-title">Notes</div>
+</mat-toolbar>
+
+<div *ngIf="noteDataSource" class="notes px-16">
+  <table mat-table [dataSource]="noteDataSource">
+    <ng-container matColumnDef="uuid">
+      <th mat-header-cell *matHeaderCellDef>Txn UUID</th>
+      <td mat-cell *matCellDef="let element">
+        <button
+          class="label box"
+          mat-button
+          matTooltip="Click to copy"
+          [cdkCopyToClipboard]="element.templateUuid"
+          (click)="copy($event)"
+        >
+          {{ element.templateUuid | slice: 0:8 }}
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="module">
+      <th mat-header-cell *matHeaderCellDef>Created for</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.module === 'flow' ? 'Programmable Flow' : 'Contact Center' }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Template Title</th>
+      <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="action-container">
+          <button (click)="viewConfig(element)" mat-icon-button matTooltip="View configuration">
+            <mat-icon class="material-icons-outlined">visibility</mat-icon>
+          </button>
+          <button (click)="openDownloadDialog(element)" mat-icon-button matTooltip="Download">
+            <mat-icon class="material-icons-outlined">file_download</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div fxLayout="column" fxLayoutAlign="center center">No note templates found</div>
+      </td>
+    </tr>
+  </table>
+</div>

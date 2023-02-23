@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>Outbound concurrent call config</h1>
+
+<ng-container *ngIf="!loading; else spinner">
+  <div mat-dialog-content>
+    <div class="dialog-content-container" fxLayout="column">
+      <mat-form-field>
+        <input
+          [(ngModel)]="queue.outboundConcurrentCallLimit"
+          matInput
+          max="{{ availableConcurrentCall }}"
+          min="0"
+          placeholder="Concurrent call"
+          type="number"
+        />
+      </mat-form-field>
+      <span
+        >Available concurrent call / Total concurrent call :
+        <span class="primary-fg"
+          >{{
+            config.outboundConcurrentCallLimit -
+              outboundConcurrentCallUsageOfQueueOrther -
+              queue.outboundConcurrentCallLimit
+          }}/{{ config.outboundConcurrentCallLimit }}</span
+        ></span
+      >
+    </div>
+  </div>
+
+  <div align="end" mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+    <button
+      (click)="save()"
+      [disabled]="
+        saving ||
+        queue.outboundConcurrentCallLimit > availableConcurrentCall ||
+        queue.outboundConcurrentCallLimit < 0 ||
+        (queue.outboundConcurrentCallLimit === 0 && !!isQueueAssigned)
+      "
+      [loading]="saving"
+      color="primary"
+      mat-flat-button
+    >
+      Update
+    </button>
+  </div>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="spinner-container" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

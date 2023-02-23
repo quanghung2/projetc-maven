@@ -1,0 +1,24 @@
+<div *ngIf="statistic" class="container" fxLayout="column" fxLayoutAlign="space-around stretch">
+  <div class="item" fxFlex>
+    <mat-list>
+      <mat-list-item>
+        <span class="metric__label"> Call Connect API Success Rate </span>
+        <span class="spacer"></span>
+        <span class="metric__number">{{
+          statistic.connectSuccessPercent !== 'N/A'
+            ? (statistic.connectSuccessPercent | percent: '1.2')
+            : statistic.connectSuccessPercent
+        }}</span>
+      </mat-list-item>
+      <mat-list-item>
+        <span class="metric__label"> Call Status API Success Rate </span>
+        <span class="spacer"></span>
+        <span class="metric__number">{{
+          statistic.callStatusSuccessPercent !== 'N/A'
+            ? (statistic.callStatusSuccessPercent | percent: '1.2')
+            : statistic.callStatusSuccessPercent
+        }}</span>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</div>

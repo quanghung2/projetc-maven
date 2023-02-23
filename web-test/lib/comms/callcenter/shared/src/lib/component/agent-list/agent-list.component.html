@@ -1,0 +1,210 @@
+<ng-container *ngIf="settings$ | async as settings">
+  <b3n-action-bar
+    [settings]="settings"
+    [queues]="queues"
+    [fetching]="fetching"
+    (filterChanged)="onFilter($event)"
+    (requestExport)="export(settings)"
+  ></b3n-action-bar>
+
+  <div *ngIf="agentDataSource" class="callcenter px-16">
+    <table mat-table [dataSource]="agentDataSource" class="agents-table">
+      <ng-container matColumnDef="agent-status">
+        <th mat-header-cell *matHeaderCellDef>
+          <span>User Status </span>
+          <span>({{ agentDataSource?.data.length }} agent<span *ngIf="agentDataSource?.data.length > 1">s</span>)</span>
+        </th>
+        <td mat-cell *matCellDef="let agent">
+          <div
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="agent-name pointer-region"
+            [matMenuTriggerFor]="agentStatus"
+          >
+            <ng-container *ngIf="agent.status === AgentStatus.available; else away">
+              <mat-icon class="green-fg icon">lens</mat-icon>
+            </ng-container>
+            <ng-template #away>
+              <ng-container *ngIf="agent.status === AgentStatus.dnd; else busy">
+                <mat-icon class="orange-fg icon">lens</mat-icon>
+              </ng-container>
+            </ng-template>
+            <ng-template #busy>
+              <ng-container *ngIf="agent.status === AgentStatus.busy; else offline">
+                <mat-icon class="red-fg icon">lens</mat-icon>
+              </ng-container>
+            </ng-template>
+            <ng-template #offline>
+              <ng-container *ngIf="agent.status === AgentStatus.offline">
+                <mat-icon class="grey-fg icon">lens</mat-icon>
+              </ng-container>
+            </ng-template>
+            <div fxFlex fxLayout="column">
+              <div fxFlex>{{ agent.displayText }}</div>
+              <div fxFlex>
+                <small *ngIf="agent.status === AgentStatus.busy" class="secondary-text">{{ agent.busyReason }}</small>
+              </div>
+            </div>
+          </div>
+
+          <mat-menu #agentStatus="matMenu">
+            <button mat-menu-item (click)="changeStatus(agent, AgentStatus.available)">
+              <mat-icon class="icon green-fg">lens</mat-icon>
+              Available
+            </button>
+            <button mat-menu-item (click)="changeStatus(agent, AgentStatus.dnd)">
+              <mat-icon class="icon orange-fg">lens</mat-icon>
+              Away
+            </button>
+            <button mat-menu-item (click)="changeStatus(agent, AgentStatus.busy)">
+              <mat-icon class="icon red-fg">lens</mat-icon>
+              Busy
+            </button>
+            <button mat-menu-item (click)="changeStatus(agent, AgentStatus.offline)">
+              <mat-icon class="icon grey-fg">lens</mat-icon>
+              Offline
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>State</th>
+        <td mat-cell *matCellDef="let agent">
+          <span>{{ agent.state }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="duration">
+        <th mat-header-cell *matHeaderCellDef>Duration</th>
+        <td mat-cell *matCellDef="let agent">
+          <span *ngIf="agent.statusDuration > 0">{{ agent.statusDuration | duration: 'millisecond' }}</span>
+          <span *ngIf="agent.statusDuration == 0"> - </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="queues">
+        <th mat-header-cell *matHeaderCellDef>Queues</th>
+        <td mat-cell *matCellDef="let agent">
+          <!-- [matTooltip]="agent.assignedQueueLabels.join('\n')" -->
+          <span>{{ agent.numberOfQueue }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sla">
+        <th mat-header-cell *matHeaderCellDef>SLA</th>
+        <td mat-cell *matCellDef="let agent">
+          {{ agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.sla || '-' }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="assigned">
+        <th mat-header-cell *matHeaderCellDef>Assigned</th>
+        <td mat-cell *matCellDef="let agent">
+          {{ agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.assigned || 0 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="answered">
+        <th mat-header-cell *matHeaderCellDef>Answered</th>
+        <td mat-cell *matCellDef="let agent">
+          {{ agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.answered || 0 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="unanswered">
+        <th mat-header-cell *matHeaderCellDef>Unanswered</th>
+        <td mat-cell *matCellDef="let agent">
+          {{ agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.unanswered || 0 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="avg-talk-time">
+        <th mat-header-cell *matHeaderCellDef>Avg Talktime</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.avgTalkDuration
+              | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="max-talk-time">
+        <th mat-header-cell *matHeaderCellDef>Total Talktime</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.maxTalkDuration
+              | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="available">
+        <th mat-header-cell *matHeaderCellDef>Available</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]
+              ?.sumAvailableDurationInSeconds | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="away">
+        <th mat-header-cell *matHeaderCellDef>Away</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]?.awayDurationInSeconds
+              | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="busy">
+        <th mat-header-cell *matHeaderCellDef>Busy</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]
+              ?.sumBusyDurationInSeconds | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="offline">
+        <th mat-header-cell *matHeaderCellDef>Offline</th>
+        <td mat-cell *matCellDef="let agent">
+          {{
+            agentInfoMapping[agent.identityUuid + '-' + settings.workspaceAgents.queueFiltering]
+              ?.sumOfflineDurationInSeconds | duration
+          }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let agent">
+          <button mat-icon-button [matMenuTriggerFor]="assignQueuesMenu" [matMenuTriggerData]="{ agent: agent }">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: true"
+        [ngClass]="{ hide: agentDataSource.data.length === 0 }"
+      ></tr>
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div *ngIf="agentDataSource.data.length === 0" fxLayout="rows" fxLayoutAlign="center center">
+      <h3>Agent not found</h3>
+    </div>
+  </div>
+
+  <mat-menu #assignQueuesMenu="matMenu">
+    <ng-template matMenuContent let-agent="agent">
+      <button mat-menu-item (click)="assignQueues(agent, settings)"><mat-icon>person_add</mat-icon>Assign queue</button>
+    </ng-template>
+  </mat-menu>
+</ng-container>

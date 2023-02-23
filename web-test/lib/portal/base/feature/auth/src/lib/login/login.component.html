@@ -1,0 +1,85 @@
+<ng-container *ngIf="!checking; else spinner">
+  <pba-template-auth *ngIf="config$ | async as config">
+    <form *ngIf="!enable2Fa && !enableVerifyEmail" [formGroup]="loginForm" (submit)="login()" fxFlexFill novalidate>
+      <div class="frame-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
+        <div class="title">Sign in</div>
+        <mat-form-field fxFlexFill>
+          <mat-label>Sign-in ID</mat-label>
+          <input
+            #idInput
+            (input)="showErrorSummary = false"
+            (focus)="removeReadonlyAttr(idInput)"
+            readonly
+            matInput
+            autocomplete="off"
+            placeholder="Email or number"
+            formControlName="credential"
+            required
+          />
+          <mat-error *ngIf="credential.invalid">{{ getErrorCredential() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlexFill>
+          <input
+            #passwordInput
+            (focus)="removeReadonlyAttr(passwordInput)"
+            (input)="showErrorSummary = false"
+            [type]="showPassword ? 'text' : 'password'"
+            readonly
+            matInput
+            autocomplete="off"
+            placeholder="Password"
+            formControlName="password"
+            required
+          />
+          <button type="button" mat-icon-button matSuffix (click)="showPassword = !showPassword">
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="password.invalid">{{ getErrorPassword() }}</mat-error>
+        </mat-form-field>
+        <mat-checkbox *ngIf="showRememberMe()" color="primary" formControlName="rememberMe" fxFlexAlign="start">
+          Remember me
+        </mat-checkbox>
+        <div class="noti-summary error" *ngIf="showErrorSummary">{{ error }}</div>
+        <button
+          mat-raised-button
+          [loading]="indicator"
+          [style.backgroundColor]="loginForm.valid && !indicator ? config.loginButtonBackground : ''"
+          [disabled]="loginForm.invalid || indicator"
+          fxFlexFill
+          color="primary"
+          type="submit"
+        >
+          Sign in
+        </button>
+        <ng-container *ngIf="enableLoginWithMs">
+          <div class="secondary-text">OR</div>
+          <b3n-ms-login-button></b3n-ms-login-button>
+        </ng-container>
+        <a routerLink="/auth/resetpassword">Forgot Password?</a>
+      </div>
+    </form>
+
+    <pba-login2fa
+      *ngIf="enable2Fa && !enableVerifyEmail"
+      [config]="config"
+      [loginForm]="loginForm"
+      [loginResponse]="loginResponse"
+      (resetLogin)="enable2Fa = false"
+      (completedLogin)="onCompletedExtraStep()"
+      fxFlexFill
+    ></pba-login2fa>
+
+    <pba-add-email
+      *ngIf="enableVerifyEmail"
+      [config]="config"
+      (updatedEmail)="onCompletedExtraStep()"
+      fxFlexFill
+    ></pba-add-email>
+  </pba-template-auth>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="spinner-container">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

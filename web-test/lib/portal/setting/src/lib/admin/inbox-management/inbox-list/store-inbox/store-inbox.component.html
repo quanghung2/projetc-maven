@@ -1,0 +1,72 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span> {{ data?.isCreate ? 'Create Inbox' : 'Edit Inbox' }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<ng-container *ngIf="loading">
+  <div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="35"></mat-spinner>
+  </div>
+</ng-container>
+
+<div
+  *ngIf="!loading"
+  [formGroup]="group"
+  class="container-dialog"
+  mat-dialog-content
+  fxLayout="column"
+  fxLayoutAlign="start none"
+  fxLayoutGap="1.6rem"
+>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput type="text" placeholder="Enter your name" formControlName="name" />
+    <button *ngIf="name.value" (click)="name.setValue('')" mat-icon-button matSuffix>
+      <mat-icon class="search-box-icon">clear</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Queue</mat-label>
+    <mat-label *ngIf="queues?.length === 0">No Queue available</mat-label>
+    <mat-select #selectProject formControlName="queueUuid">
+      <div class="option-container">
+        <mat-option [value]="null">No queue</mat-option>
+        <mat-option *ngFor="let item of queues" [value]="item.uuid">{{ item.label }}</mat-option>
+      </div>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Teams</mat-label>
+    <mat-chip-list #chipList aria-label="Fruit selection">
+      <mat-chip *ngFor="let team of teams.value || []" (removed)="remove(team)">
+        {{ team.name }}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      <input
+        placeholder="Search your team"
+        #teamInput
+        [formControl]="teamCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let team of filteredTeams$ | async" [value]="team">
+        {{ team.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [loading]="isProcessing" [disabled]="group.invalid">
+    <span *ngIf="!data.isCreate"> Update </span>
+    <span *ngIf="data.isCreate"> Create </span>
+  </button>
+</div>

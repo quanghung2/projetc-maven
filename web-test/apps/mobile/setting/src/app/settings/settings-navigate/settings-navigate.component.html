@@ -1,0 +1,23 @@
+<div>
+  <div class="navigate__card">
+    <div class="left" (click)="back()">
+      <mat-icon aria-hidden="false" aria-label="icon">chevron_left</mat-icon>
+      <p>Back</p>
+    </div>
+    <div class="mid">
+      <p style="font-weight: 450">{{ title }}</p>
+    </div>
+    <div class="right">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="save()"
+        *ngIf="hasSave"
+        [disabled]="isDisableBtn"
+        [loading]="loading"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>

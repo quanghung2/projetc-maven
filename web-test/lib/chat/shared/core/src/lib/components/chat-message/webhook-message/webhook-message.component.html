@@ -1,0 +1,34 @@
+<div>
+  <ng-container *ngIf="!isErrorFormat; else errorFormat">
+    <b><span class="markdown" [innerHTML]="renderHeaderMarkdown"></span></b>
+    <ng-container *ngIf="dataMessage">
+      <section *ngFor="let section of dataMessage.blocks">
+        <ng-container *ngIf="section.text" [ngSwitch]="section.text.type">
+          <ng-container *ngIf="!builtTextMessage.isTriggerDirective; else trigger">
+            <div
+              class="markdown"
+              *ngSwitchCase="BlockType.markdown"
+              [innerHTML]="builtTextMessage.text | safe: 'html'"
+              [style.borderLeft]="'3px solid #e0e0e0'"
+              [style.borderLeftColor]="section.color"
+            ></div>
+          </ng-container>
+          <ng-template #trigger>
+            <div
+              class="markdown"
+              lazyloadUnknown
+              *ngSwitchCase="BlockType.markdown"
+              [innerHTML]="builtTextMessage.text | safe: 'html'"
+              [style.borderLeft]="'3px solid #e0e0e0'"
+              [style.borderLeftColor]="section.color"
+            ></div>
+          </ng-template>
+          <div *ngSwitchCase="BlockType.plaintext">{{ section.text.text }}</div>
+        </ng-container>
+      </section>
+    </ng-container>
+  </ng-container>
+  <ng-template #errorFormat>
+    <span class="normal-text red-fg" [innerHTML]="message.body?.text | safe: 'html'"></span>
+  </ng-template>
+</div>

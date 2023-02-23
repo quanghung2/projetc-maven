@@ -1,0 +1,109 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 1.6rem;
+}
+
+.list-info {
+  margin-bottom: 0.8rem;
+  width: 100%;
+
+  .info {
+    padding: 0.8rem 0;
+
+    label {
+      font-weight: bold;
+    }
+
+    .name-company {
+      text-transform: uppercase;
+    }
+    .appointment {
+      padding: 0.5rem 0;
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+  }
+}
+.my-info-title {
+  margin-bottom: 0.8rem;
+}
+
+.center {
+  margin-top: 10rem;
+  text-align: center;
+
+  h3 {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.67);
+  }
+}
+
+.verify-container {
+  width: fit-content;
+  margin: auto;
+
+  .corppass,
+  .singpass {
+    padding: 2rem 1.6rem;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #ffffff;
+    height: 70px;
+    .logo-container {
+      width: 140px;
+      height: 32px;
+      .corpass-logo {
+        @extend .logo-container;
+      }
+      .singpass-logo {
+        @extend .logo-container;
+        width: 90px;
+      }
+    }
+    .corppass-btn {
+      width: 280px;
+      height: 32px;
+      .corppass-icon {
+        @extend .corppass-btn;
+        margin-bottom: 0.75rem;
+      }
+    }
+
+    .singpass-btn {
+      width: 226px;
+      height: 32px;
+      .singpass-icon {
+        @extend .singpass-btn;
+        margin-bottom: 1.25rem;
+      }
+    }
+  }
+}
+
+.myinfo-status {
+  padding: 4px 16px;
+  width: fit-content;
+  text-align: center;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.approved {
+  @extend .myinfo-status;
+  color: #155724;
+  background-color: #d4edda;
+}
+
+.additional-info {
+  .info {
+    padding: 0.8rem 0;
+  }
+  label {
+    font-weight: bold;
+  }
+}

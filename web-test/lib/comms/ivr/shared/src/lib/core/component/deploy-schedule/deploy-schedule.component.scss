@@ -1,0 +1,25 @@
+:host {
+  display: block;
+
+  .deploy-schedule {
+    &__content {
+      overflow: hidden;
+
+      mat-form-field {
+        width: 100%;
+      }
+    }
+
+    &__picker {
+      width: 100%;
+    }
+
+    &__message {
+      margin-bottom: 0.8rem;
+    }
+
+    &__public-now {
+      width: 100% !important;
+    }
+  }
+}

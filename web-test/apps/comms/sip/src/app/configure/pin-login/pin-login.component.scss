@@ -1,0 +1,32 @@
+.pin-login {
+  background-color: #fff;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 4px;
+  line-height: 37px;
+
+  .big-title {
+    font-size: 20px;
+  }
+
+  .title {
+    padding: 15px 15px 0px 0px;
+    line-height: 1.778;
+  }
+
+  .row {
+    padding-bottom: 0px;
+  }
+
+  .content {
+    margin-bottom: 30px;
+  }
+
+  .ui.grid {
+    margin: 0;
+  }
+
+  .icon {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,54 @@
+<div class="px-16 pb-16">
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>Time</th>
+      <td mat-cell *matCellDef="let e">{{ e.time | date: 'dd MMM yyyy HH:mm:ss' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="ipAddress">
+      <th mat-header-cell *matHeaderCellDef>IP Address</th>
+      <td mat-cell *matCellDef="let e">{{ e.ipAddress }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="method">
+      <th mat-header-cell *matHeaderCellDef>Method</th>
+      <td mat-cell *matCellDef="let e">{{ e.method }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="path">
+      <th mat-header-cell *matHeaderCellDef>Path</th>
+      <td mat-cell *matCellDef="let e">{{ e.path }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="queryString">
+      <th mat-header-cell *matHeaderCellDef>Query String</th>
+      <td mat-cell *matCellDef="let e">{{ e.queryString }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="httpStatus">
+      <th mat-header-cell *matHeaderCellDef>Http Status</th>
+      <td mat-cell *matCellDef="let e">{{ e.httpStatus }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let e">
+        <button mat-icon-button>
+          <mat-icon matTooltip="View body" (click)="viewBody(e.body)">data_object</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="e.response">
+          <mat-icon matTooltip="View response" (click)="viewBody(e.response)">code_blocks</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="6">
+        <div fxLayout="column" fxLayoutAlign="center center">No Data Available</div>
+      </td>
+    </tr>
+  </table>
+  <mat-paginator hidePageSize [pageSize]="10" showFirstLastButtons></mat-paginator>
+</div>

@@ -1,0 +1,51 @@
+:host {
+  .sidebar {
+    position: relative;
+    height: 100vh;
+
+    .project-selection {
+      .mat-form-field {
+        width: 100%;
+      }
+    }
+
+    .menu-item {
+      height: 36px;
+      font-size: 14px;
+      &.active {
+        font-weight: 500;
+        background-color: var(--gray-200);
+      }
+    }
+  }
+  .link-active {
+    color: #6a1b9a !important;
+  }
+
+  .permission-gp {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1.5rem 0;
+    width: 100%;
+    justify-content: center;
+    color: #000000de;
+    cursor: pointer;
+    border-top: 1px solid lightgrey;
+
+    .permission-text {
+      margin-left: 1rem;
+      font-size: 17px;
+    }
+  }
+}
+
+::ng-deep.select__arrow {
+  float: right;
+  margin-top: -10px !important;
+  cursor: pointer;
+  z-index: 9999;
+}

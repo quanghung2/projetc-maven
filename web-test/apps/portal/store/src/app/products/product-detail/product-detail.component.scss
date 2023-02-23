@@ -1,0 +1,41 @@
+:host {
+  p,
+  h1 {
+    margin: 0;
+  }
+}
+
+.wrapper {
+  padding-top: 24px;
+}
+
+.price {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.cycle {
+  font-size: 14px;
+  color: #8e8e8e;
+}
+
+.description {
+  width: 100%;
+  margin: auto;
+  text-align: justify;
+  font-size: 13px !important;
+  line-height: 1.5em;
+  height: 150px;
+  overflow: scroll;
+  padding-right: 5px;
+  margin-top: 10px;
+}
+
+button {
+  box-shadow: none !important;
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 5px;
+}

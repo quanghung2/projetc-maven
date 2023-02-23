@@ -1,0 +1,15 @@
+<ng-container *ngIf="me$ | async as me">
+  <nav mat-tab-nav-bar>
+    <a
+      #rla="routerLinkActive"
+      *ngFor="let link of navLinks"
+      [active]="rla.isActive"
+      [routerLink]="link.key"
+      mat-tab-link
+      routerLinkActive
+    >
+      {{ link.value }}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+</ng-container>

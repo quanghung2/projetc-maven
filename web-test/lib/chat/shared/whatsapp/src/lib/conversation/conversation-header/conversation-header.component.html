@@ -1,0 +1,38 @@
+<div class="container flex column justify-content-start align-items-none">
+  <div class="convo_header flex justify-content-start align-items-center gap-8">
+    <div class="convo_header__text flex column justify-content-center align-items-start">
+      <div class="convo_header__title flex justify-content-center align-items-center gap-3">
+        <div class="convo_header__name">
+          {{ ticket.customerInfo?.name || UNKNOWN_USER }}
+        </div>
+        <!-- <ng-container *ngSwitchCase="GroupType.WhatsApp">
+                          // TODO
+                          <div class="convo_header__name">
+                            <div class="flex justify-content-start align-items-center gap-8">
+                              <span>{{ channel.customerInfo?.name || UNKNOWN_USER }}</span>
+                              <mat-icon
+                                class="whatsapp"
+                                [class.u12]="getTime() - getTime(channel.id) < TimeConst.HALF_DAY"
+                                [class.u24]="
+                                  getTime() - getTime(channel.id) >= TimeConst.HALF_DAY &&
+                                  getTime() - getTime(channel.id) < TimeConst.FULL_DAY
+                                "
+                                [class.o24]="getTime() - getTime(channel.id) >= TimeConst.FULL_DAY"
+                                >access_time</mat-icon
+                              >
+                            </div>
+                          </div>
+                        </ng-container> -->
+      </div>
+    </div>
+
+    <div
+      fxFlex="1px"
+      class="viewing-date flex justify-content-center align-items-center"
+      *ngIf="viewDate$ | async as viewDate"
+    >
+      <span>{{ viewDate | viewDate }}</span>
+    </div>
+  </div>
+  <!-- <mat-progress-bar *ngIf="loading$ | async" mode="query"></mat-progress-bar> -->
+</div>

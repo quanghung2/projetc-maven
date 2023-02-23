@@ -1,0 +1,12 @@
+<mat-tab-group animationDuration="0ms">
+  <mat-tab label="Last 100 transactions">
+    <ng-template matTabContent>
+      <b3n-last-onehundred-transactions [data]="data"></b3n-last-onehundred-transactions>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Balance movement">
+    <ng-template matTabContent>
+      <b3n-balance-movement [data]="data"></b3n-balance-movement>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

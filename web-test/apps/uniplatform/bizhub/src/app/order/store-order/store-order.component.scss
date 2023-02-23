@@ -1,0 +1,94 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-items: stretch;
+  height: 100%;
+  .form-section {
+    .form {
+      max-width: 800px;
+      min-width: 680px;
+      margin: 0 auto;
+      overflow: auto;
+      height: 100%;
+      padding: 0 24px;
+    }
+  }
+
+  .selected__numbers {
+    max-height: 216px;
+    overflow: auto;
+  }
+
+  ::ng-deep {
+    .mat-dialog-content {
+      max-height: 100%;
+    }
+  }
+
+  .order-form__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    mat-divider {
+      width: 100%;
+    }
+  }
+
+  .order-form__upload {
+    margin-left: auto;
+  }
+
+  .order-form__item {
+    button {
+      opacity: 0;
+    }
+
+    &:hover {
+      background-color: #fafafa;
+
+      button {
+        opacity: 1;
+      }
+    }
+  }
+
+  .order-form__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .order-form__list {
+    margin-top: -16px !important;
+    padding-top: 0 !important;
+  }
+
+  .billing-date__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    mat-divider {
+      width: 100%;
+    }
+  }
+}
+
+.contract__error {
+  position: absolute;
+  top: 32px;
+  font-size: 10.5px;
+  color: #f44336;
+}
+
+.contract__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  mat-divider {
+    width: 100%;
+  }
+}

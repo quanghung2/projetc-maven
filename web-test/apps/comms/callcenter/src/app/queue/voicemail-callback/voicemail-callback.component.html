@@ -1,0 +1,220 @@
+<ng-template #spinner>
+  <div fxLayout="column" fxLayoutAlign="center center" class="spinner-container">
+    <mat-spinner diameter="50" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="!loading; else spinner">
+  <h1 mat-dialog-title>Voicemail And Callback</h1>
+
+  <div mat-dialog-content class="mat-dialog-content">
+    <div class="dialog-content-container">
+      <div fxLayout="column">
+        <mat-error *ngIf="errorMessage">
+          {{ errorMessage }}
+        </mat-error>
+
+        <div fxLayout="row" fxLayoutAlign="start center" class="title">
+          <div>Voicemail</div>
+          <span class="fill-remaining-space"></span>
+          <mat-slide-toggle
+            name="enabled"
+            color="primary"
+            (change)="enabledVoicemailChanged($event)"
+            [checked]="queue.callflowConfig.enabledVoicemail"
+          >
+          </mat-slide-toggle>
+        </div>
+        <div class="enabled-control" *ngIf="queue.callflowConfig.enabledVoicemail" fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-label class="enabled-control__label">Digit to trigger Voicemail</mat-label>
+            <div>
+              <mat-form-field class="digit">
+                <input type="number" [(ngModel)]="queue.callflowConfig.digitsTriggerVoiceMail" matInput />
+              </mat-form-field>
+            </div>
+          </div>
+          <b3n-voicemail-detail
+            (isInvalidVoicemail)="onInvaildForm($event)"
+            [voicemailConfig]="queue.callflowConfig.voicemailConfig"
+          ></b3n-voicemail-detail>
+
+          <div
+            fxLayout="column"
+            fxLayoutAlign="space-between start"
+            fxLayoutGap="0.8rem"
+            class="msg-area voice-mail-message"
+          >
+            <mat-label>Message to play</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="voiceMailMessage"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start center" class="title">
+          <div>Callback</div>
+          <span class="fill-remaining-space"></span>
+          <mat-slide-toggle
+            name="enabled"
+            color="primary"
+            (change)="enabledCallbackChanged($event)"
+            [checked]="queue.callflowConfig.enabledCallback"
+          >
+          </mat-slide-toggle>
+        </div>
+        <div *ngIf="queue.callflowConfig.enabledCallback">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.25rem">
+              <span>Auto Recovery Callback</span>
+              <mat-icon
+                matTooltip="Automated recovery to enable callback for customers who failed to complete the callback number input."
+                class="material-icons-outlined btn-info"
+                >info</mat-icon
+              >
+            </div>
+            <mat-slide-toggle
+              name="enabled"
+              color="primary"
+              (change)="autoRecoveryCallbackChanged($event)"
+              [checked]="queue.callflowConfig.callbackConfig.autoRecoveryCallback"
+            >
+            </mat-slide-toggle>
+          </div>
+          <div class="enabled-control">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <mat-label class="enabled-control__label">Digit to trigger Callback</mat-label>
+              <div>
+                <mat-form-field class="digit">
+                  <input type="number" [(ngModel)]="queue.callflowConfig.digitsTriggerCallback" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem">
+            <mat-form-field class="enabled-control">
+              <mat-select
+                placeholder="Callback Caller ID"
+                [(ngModel)]="queue.callflowConfig.callbackConfig.callerId"
+                name="callerId"
+                #callerId="ngModel"
+                required
+              >
+                <mat-option *ngFor="let c of callerIds" [value]="c">{{ c }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="callerId.invalid && (callerId.dirty || callerId.touched)"
+                >You have to choose a Callback Caller ID
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Announcement message to agent</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="announcementMessage2agent"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Ask caller's contact message</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="askCallerContactMessage"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Confirm caller's contact message</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="confirmCallerContactMessage"
+              [showPlay]="true"
+              [showNote]="true"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Goodbye message</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="byeMessage"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Reach Limit Retry Input Contact Message</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="reachLimitRetryInputContactMessage"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Valid Contact Pattern</mat-label>
+            <mat-form-field class="enabled-control">
+              <input [(ngModel)]="queue.callflowConfig.callbackConfig.validContactPattern" matInput />
+            </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem" class="msg-area">
+            <mat-label>Invalid Contact Message</mat-label>
+            <b3n-tts-mp3-msg-cfg
+              class="enabled-control"
+              [ttsCfg]="invalidContactMessage"
+              [showPlay]="true"
+              [showNote]="false"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem">
+            <mat-label>Max Asking Caller Contact Retry Times</mat-label>
+            <mat-form-field class="enabled-control">
+              <input [(ngModel)]="queue.callflowConfig.callbackConfig.retryAskCallerContactTimes" matInput />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxLayout="row" class="title" *ngIf="queue.callflowConfig.ringMode === 'stickyAgent'">
+          <div>Route call to other agents</div>
+          <span class="fill-remaining-space"></span>
+          <mat-slide-toggle
+            name="enabled"
+            color="primary"
+            (change)="enabledAgentChanged($event)"
+            [checked]="queue.callflowConfig.enableAgentRoute"
+          >
+          </mat-slide-toggle>
+        </div>
+        <div class="enabled-control" *ngIf="queue.callflowConfig.enableAgentRoute" fxLayout="column">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-label class="enabled-control__label">Digit to trigger Agents</mat-label>
+            <div>
+              <mat-form-field class="digit">
+                <input type="number" matInput [(ngModel)]="queue.callflowConfig.digitsTriggerDetermineNextAgent" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end" *ngIf="queue">
+    <button mat-button mat-dialog-close>Close</button>
+    <button
+      mat-raised-button
+      [disabled]="
+        (queue.callflowConfig.enabledVoicemail && this.isInvalidVoiceMail) ||
+        (!this.queue.callflowConfig.callbackConfig.callerId && this.queue.callflowConfig.enabledCallback)
+      "
+      [loading]="progressing"
+      (click)="save()"
+      color="primary"
+    >
+      Save
+    </button>
+  </div>
+</ng-container>

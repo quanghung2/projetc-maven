@@ -1,0 +1,16 @@
+{
+  "name": "api-dnc",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/dnc/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/dnc/**/*.ts", "libs/api/dnc/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

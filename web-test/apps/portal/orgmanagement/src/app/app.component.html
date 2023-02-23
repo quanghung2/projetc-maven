@@ -1,0 +1,26 @@
+<mat-progress-bar *ngIf="loading; else mainView" mode="indeterminate"></mat-progress-bar>
+
+<ng-template #mainView>
+  <mat-sidenav-container *ngIf="hasPermisison; else noPermission" class="sidenav-container">
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      opened
+      class="sidenav"
+      [fixedInViewport]="true"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
+    >
+      <b3n-sidebar (hasNoMenuEvent)="updatePermission($event)"></b3n-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-template>
+
+<ng-template #noPermission>
+  <b3n-access-denied></b3n-access-denied>
+</ng-template>

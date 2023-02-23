@@ -1,0 +1,95 @@
+:host {
+  display: block; // padding: 2rem 1.6rem;
+}
+
+.history-page {
+  .start-time {
+    width: 180px;
+  }
+
+  .row {
+    padding-top: 0.8rem;
+  }
+
+  mat-icon {
+    font-size: 1.4rem !important;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.mat-toolbar-multiple-rows {
+  font-size: 1em;
+}
+
+.export-btn {
+  margin-right: 0 !important;
+}
+
+img {
+  width: 1.5rem;
+}
+
+.table-content {
+  table {
+    padding: 0 1.6rem;
+    width: 100%;
+  }
+
+  &__a {
+    color: blue;
+    cursor: pointer;
+  }
+
+  .table-header {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  tr:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .td-uuid {
+    .material-icons {
+      display: none;
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+
+  .td-uuid:hover .material-icons {
+    display: inline;
+  }
+
+  td:nth-child(1) {
+    width: 12%;
+  }
+
+  .call-journey {
+    text-align: end;
+
+    &__icon {
+      display: inline;
+      font-size: 18px;
+      color: #616161;
+      cursor: pointer;
+    }
+  }
+}
+
+.filter-by-tag {
+  .chip-list-wrapper {
+    padding: 1.6rem !important;
+  }
+}
+
+.active {
+  background: #ff9800;
+  color: rgba(0, 0, 0, 0.87);
+}
+.custom-datePicker {
+  position: absolute;
+  left: 0;
+  background: whitesmoke;
+  width: 100%;
+}

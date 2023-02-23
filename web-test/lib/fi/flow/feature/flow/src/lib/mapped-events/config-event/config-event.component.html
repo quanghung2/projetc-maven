@@ -1,0 +1,104 @@
+<b3n-header-flow fromPage="config-event"></b3n-header-flow>
+
+<div class="container container-step flow-container">
+  <!-- id = 0: create new map -->
+  <div *ngIf="id === 0" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+    <mat-form-field hideRequiredMarker="true" [formGroup]="formMapEvent">
+      <mat-select
+        placeholder="Select release group"
+        formControlName="releaseGroupId"
+        (selectionChange)="selectReleaseGroup()"
+        required
+      >
+        <mat-option *ngFor="let g of releaseGroups" [value]="g.id">{{ g.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="releaseGroupId.invalid">This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="releaseGroupId.value" hideRequiredMarker="true">
+      <mat-select
+        placeholder="Select event"
+        panelClass="select-event"
+        [formControl]="triggerCtrl"
+        (selectionChange)="selectTriggerDef()"
+        required
+      >
+        <mat-select-trigger>{{ triggerCtrl.value ? triggerCtrl.value.displayName : '' }}</mat-select-trigger>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No events found"
+            [formControl]="searchTriggerCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option class="option-event" *ngFor="let t of filteredTriggerDefs" [value]="t">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <img *ngIf="t.iconUrl" [src]="t.iconUrl" />
+            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px">
+              <label class="name">{{ t.displayName }}</label>
+              <p>{{ t.description }}</p>
+            </div>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="triggerCtrl.invalid">This field is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div
+    *ngIf="contextVariables"
+    [formGroup]="$any(mappings)"
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    fxLayoutGap="32px"
+    class="mt-32"
+  >
+    <div
+      [formGroupName]="i"
+      *ngFor="let item of mappings['controls']; let i = index"
+      fxLayout="row"
+      fxLayoutAlign="start start"
+      fxLayoutGap="24px"
+    >
+      <div fxLayout="column" fxLayoutAlign="start start" fxFlex="25">
+        <h4 class="mb-0">
+          <strong>{{ item.value.actionDefInputKey }}</strong>
+        </h4>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="75" fxLayoutGap="8px">
+        <mat-checkbox color="primary" formControlName="userInputAllowed">User input</mat-checkbox>
+
+        <b3n-value-of-parameter
+          *ngIf="item.value.dataType !== 'array' && item.value.renderDirective?.type !== RenderDirectiveType.File"
+          class="mt-8"
+          [optionForControl]="
+            $any({
+              title: item.value.userInputAllowed ? 'Default Value' : 'Mapped Value',
+              expressionTree: item.value.defaultValue,
+              key: item.value.actionDefInputKey,
+              required: !item.value.userInputAllowed,
+              dataType: item.value.dataType
+            })
+          "
+          [valueListUuid]="item.value.renderDirective?.valueListUuid"
+          [contextVariables]="contextVariables"
+          (selectedValue)="selectValueOfConfig($any(item), $event)"
+        ></b3n-value-of-parameter>
+      </div>
+    </div>
+
+    <div dir="rtl">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [disabled]="formMapEvent.invalid"
+        [loading]="submitting"
+        (click)="submit()"
+      >
+        Publish for this event
+      </button>
+    </div>
+  </div>
+</div>

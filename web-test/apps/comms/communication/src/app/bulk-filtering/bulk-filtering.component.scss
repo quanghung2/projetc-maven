@@ -1,0 +1,22 @@
+:host {
+  .container {
+    width: 900px;
+
+    .body {
+      .widget {
+        padding: 2rem 1.6rem;
+        border: thin solid var(--gray-300);
+        background-color: var(--gray-100);
+
+        .large-character {
+          font-size: 32px;
+          font-weight: 500;
+        }
+
+        .text-align {
+          text-align: center;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>
+  {{ isCreate ? 'Add personal Whitelist' : 'Edit personal Whitelist' }}
+</h1>
+
+<div
+  [formGroup]="group"
+  class="container-dialog"
+  mat-dialog-content
+  fxLayout="column"
+  fxLayoutAlign="start none"
+  fxLayoutGap="1.6rem"
+>
+  <mat-form-field>
+    <mat-label>Number</mat-label>
+    <input matInput type="number" placeholder="Enter phone number (E.164 format)..." formControlName="number" />
+    <button *ngIf="number.value" (click)="number.setValue('')" mat-icon-button matSuffix>
+      <mat-icon class="search-box-icon">clear</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Voice</mat-label>
+    <mat-select formControlName="voice" required>
+      <mat-option *ngFor="let item of status" [value]="item.key">{{ item.value }} </mat-option>
+    </mat-select>
+    <mat-error *ngIf="voice.hasError('required')"> Voice status is required </mat-error>
+  </mat-form-field>
+
+  <!-- <mat-form-field>
+    <mat-label>SMS</mat-label>
+    <mat-select formControlName="sms" required>
+      <mat-option *ngFor="let item of status" [value]="item.key">{{ item.value }} </mat-option>
+    </mat-select>
+    <mat-error *ngIf="sms.hasError('required')"> SMS status is required </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Fax</mat-label>
+    <mat-select formControlName="fax" required>
+      <mat-option *ngFor="let item of status" [value]="item.key">{{ item.value }} </mat-option>
+    </mat-select>
+    <mat-error *ngIf="fax.hasError('required')"> Fax status is required </mat-error>
+  </mat-form-field> -->
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [loading]="isProcessing" [disabled]="group.invalid">
+    <span *ngIf="!isCreate"> Update </span>
+    <span *ngIf="isCreate"> Create </span>
+  </button>
+</div>

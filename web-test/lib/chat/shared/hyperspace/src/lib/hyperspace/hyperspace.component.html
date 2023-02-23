@@ -1,0 +1,34 @@
+<ng-container *ngIf="hyper$ | async as hyper">
+  <ng-container *ngIf="channel$ | async as channel; else noPermission">
+    <div class="convo-container flex column justify-content-end align-items-none">
+      <div fxFlex="64px" class="header">
+        <b3n-hyperspace-header [channel]="channel" [hyper]="hyper"></b3n-hyperspace-header>
+        <mat-divider></mat-divider>
+      </div>
+      <b3n-hyperspace-content
+        fxFlex="auto"
+        class="body"
+        [channel]="channel"
+        (focusQuill)="onFocusQuillEditor()"
+      ></b3n-hyperspace-content>
+      <div class="footer">
+        <b3n-hyperspace-footer
+          [channel]="channel"
+          [hyper]="hyper"
+          (uploadedFiles)="uploadFile($event, 0)"
+        ></b3n-hyperspace-footer>
+      </div>
+    </div>
+
+    <sui-template-portal [portalHostId]="RIGHT_SIDEBAR_ID">
+      <b3n-hyperspace-details [convo]="channel" [hyper]="hyper"></b3n-hyperspace-details>
+    </sui-template-portal>
+  </ng-container>
+</ng-container>
+
+<ng-template #noPermission>
+  <div class="convo-container flex column justify-content-center align-items-center">
+    <h1>You have no hyperspace.</h1>
+    <h3>Please contact your admin to get more information.</h3>
+  </div>
+</ng-template>

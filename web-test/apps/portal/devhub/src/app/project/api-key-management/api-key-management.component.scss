@@ -1,0 +1,45 @@
+:host {
+  display: block;
+  .container {
+    padding: 5rem;
+  }
+  .api-keys {
+    margin: auto;
+    max-width: 600px;
+    padding: 2.5rem;
+
+    .api-key-container {
+      margin-bottom: -8px;
+
+      .api-key {
+        min-width: 200px;
+        color: rgba(0, 0, 0, 0.67);
+        font-weight: 500;
+      }
+    }
+
+    .api-key-title {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+    .sub-title {
+      color: rgba(0, 0, 0, 0.54);
+      font-size: 14px;
+    }
+  }
+  .no-data-container {
+    padding: 2.5rem;
+
+    .no-api-message {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 16px;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.btn-warning {
+  color: #f44336 !important;
+}

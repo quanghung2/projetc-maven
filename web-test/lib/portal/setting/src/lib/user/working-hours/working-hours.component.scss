@@ -1,0 +1,75 @@
+:host {
+  .container {
+    overflow: overlay;
+    padding: 1.6rem;
+    height: calc(100vh - 64px); // mat-toolbar
+
+    .title {
+      font-weight: 500;
+    }
+
+    ::ng-deep {
+      .expansion-panel-no-shadow {
+        box-shadow: none !important;
+        border: 1px solid #e0e0e0;
+        padding-bottom: 0 !important;
+        .mat-expansion-panel-header {
+          &.mat-expanded {
+            height: 48px !important;
+          }
+        }
+      }
+    }
+
+    .working-schedule-form {
+      padding-right: 1.6rem;
+
+      mat-slide-toggle {
+        width: 130px;
+        // margin-top: 20px;
+      }
+
+      .item-range {
+        position: relative;
+        mat-form-field {
+          ::ng-deep {
+            .mat-form-field-wrapper {
+              margin-bottom: -1.25em;
+            }
+          }
+        }
+        .icon {
+          font-size: 20px;
+          height: 24px;
+          width: 24px;
+          line-height: 24px;
+          border-radius: 50%;
+          text-align: center;
+          cursor: pointer;
+
+          &.disable {
+            color: #d9d9d9;
+            pointer-events: none;
+          }
+
+          &:hover {
+            background-color: #ececec;
+          }
+        }
+      }
+
+      .add-more {
+        margin-top: 1rem;
+        cursor: pointer;
+        &.disable {
+          color: #d9d9d9;
+          pointer-events: none;
+        }
+      }
+
+      .apply-btn {
+        font-weight: normal;
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+<div class="container py-16">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-8">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <h2 class="mr-8 mb-0"><strong>My Flows</strong></h2>
+      <button mat-mini-fab color="primary" (click)="createFlow()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <input #uploadFile type="file" style="display: none" (change)="importFlow($event)" accept="application/JSON" />
+      <button mat-stroked-button *ngIf="showWorking" type="button" (click)="uploadFile.click()" [loading]="uploading">
+        Import Flow
+      </button>
+      <button mat-stroked-button [matMenuTriggerFor]="filterMenu" class="pr-8 pl-16">
+        <span *ngIf="showWorking">Working</span>
+        <span *ngIf="showArchived">Archived</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #filterMenu="matMenu">
+        <button mat-menu-item *ngIf="showArchived" (click)="tabChange(0)">Working</button>
+        <button mat-menu-item *ngIf="showWorking" (click)="tabChange(1)">Archived</button>
+      </mat-menu>
+      <button *ngIf="showSetting" mat-stroked-button (click)="goToSetting()" class="p-0" style="min-width: 48px">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="showWorking && !loadingWorking">
+    <h3 class="text-nodata" *ngIf="workingFlows.length === 0">
+      <p>You don't have any working flows.</p>
+      <button mat-raised-button color="primary" (click)="createFlow()">Create Flow</button>
+    </h3>
+
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+      <b3n-table-flow
+        *ngIf="workingFlows.length > 0"
+        [flows]="workingFlows"
+        (showAll)="loadWorkingFlows($event)"
+      ></b3n-table-flow>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="showArchived && !loadingArchived">
+    <h3 class="text-nodata" *ngIf="archivedFlows?.length === 0">
+      <p>You don't have any archived flows.</p>
+    </h3>
+
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+      <b3n-table-flow *ngIf="archivedFlows?.length > 0" [flows]="archivedFlows" [paging]="true"></b3n-table-flow>
+    </div>
+  </ng-container>
+</div>

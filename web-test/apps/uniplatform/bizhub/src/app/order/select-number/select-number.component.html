@@ -1,0 +1,83 @@
+<div mat-dialog-title>Select numbers</div>
+<div mat-dialog-content>
+  <ng-container *ngIf="KEYS(skuInfoMapping) as skus">
+    <mat-tab-group *ngIf="skus.length >= 1" animationDuration="0ms" (selectedTabChange)="skuChanged($event)">
+      <mat-tab *ngFor="let sku of skus" [label]="sku">
+        <ng-template matTabContent>
+          <ng-container [ngTemplateOutlet]="selectNumber"></ng-container>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+    <!-- <ng-container *ngIf="skus.length === 1" [ngTemplateOutlet]="selectNumber"></ng-container> -->
+  </ng-container>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="null">Close</button>
+  <button mat-raised-button [loading]="progressing" color="primary" (click)="save()">Select</button>
+</div>
+
+<ng-template #selectNumber>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <div class="mb-16">
+    <h3>
+      <span class="title">Selected numbers</span>
+      <span class="secondary-text mr-16">
+        ({{ skuInfoMapping[selectedSku].selectedNumbers.length }}/{{ skuInfoMapping[selectedSku].total }})</span
+      >
+      <button *ngIf="skuInfoMapping[selectedSku].selectedNumbers.length" mat-button color="warn" (click)="removeAll()">
+        Remove all
+      </button>
+      <button
+        mat-button
+        [disabled]="skuInfoMapping[selectedSku].selectedNumbers.length === skuInfoMapping[selectedSku].total"
+        color="primary"
+        (click)="loadNumberFromFile()"
+      >
+        Select from file
+      </button>
+    </h3>
+    <div
+      *ngIf="skuInfoMapping[selectedSku].selectedNumbers.length"
+      fxLayout="row wrap"
+      fxLayoutAlign="start start"
+      class="numbers__list selected__numbers"
+    >
+      <div
+        *ngFor="let number of skuInfoMapping[selectedSku].selectedNumbers"
+        (click)="toggleNumber(number)"
+        class="number active p-16 py-8 b border-radius-4 m-8 cursor-pointer"
+      >
+        {{ number.number }}
+      </div>
+    </div>
+    <div *ngIf="!skuInfoMapping[selectedSku].selectedNumbers.length" class="p-16 text-center">No numbers selected</div>
+  </div>
+
+  <div *ngIf="numbers$ | async as numbers">
+    <h3>
+      <span class="title">Available numbers</span>
+      <span class="secondary-text"> (Showing {{ numbers.length }}/{{ totalAvailabelNumber }})</span>
+    </h3>
+    <div>
+      <mat-form-field>
+        <mat-label>Search...</mat-label>
+        <input matInput [formControl]="searchNumberCtrl" placeholder="Enter number to search" />
+      </mat-form-field>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="start start" class="numbers__list">
+      <ng-container *ngIf="numbers.length">
+        <div
+          *ngFor="let number of numbers"
+          (click)="toggleNumber(number)"
+          [class.active]="number['active']"
+          class="number p-16 py-8 b border-radius-4 m-8 cursor-pointer"
+        >
+          {{ number.number }}
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!numbers.length">
+        <div class="text-center no-number p-16">No numbers found</div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

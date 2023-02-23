@@ -1,0 +1,69 @@
+.permission {
+  height: 100vh;
+  background-color: rgb(244, 244, 242);
+
+  &__toolbar {
+    background: transparent;
+    padding: 0 2rem;
+    color: var(--gray-800);
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+
+    .header {
+      line-height: 1.2;
+
+      h1 {
+        font-size: 18px;
+        padding: 0 1rem;
+      }
+      .subtitle {
+        font-size: 14px;
+        padding: 0 1rem;
+        font-weight: 400;
+      }
+    }
+  }
+  &__item {
+    margin-bottom: 1.5rem;
+    padding: 0 2rem 2rem 2rem;
+  }
+
+  &__header {
+    font-weight: 450;
+    margin-bottom: 0.5rem;
+    padding: 0 1rem;
+
+    &__title {
+      font-weight: 500;
+    }
+  }
+  &__content {
+    border: 1px solid rgb(230, 230, 228);
+    border-radius: 4px;
+    background-color: rgb(240, 240, 238);
+
+    .py-8px {
+      padding: 0 1rem;
+    }
+
+    .toggle-container {
+      padding: 0.75rem 0;
+
+      ::ng-deep.mat-checkbox-label {
+        font-size: 14px;
+        margin-left: 1rem;
+      }
+    }
+    .divider {
+      border-top-color: rgba(0, 0, 0, 0.075) !important;
+    }
+  }
+
+  &__footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 80px;
+    border-top: 1px solid lightgrey;
+  }
+}

@@ -1,0 +1,148 @@
+<loader [loading]="isLoading"></loader>
+<div class="ui page content container" *ngIf="!isLoading">
+  <div class="ui message">
+    <p>Define whether this domain will be taxed in a specific country.</p>
+  </div>
+  <table class="ui unstackable table" style="min-width: 940px">
+    <thead>
+      <tr>
+        <th style="min-width: 200px">Tax Profile</th>
+        <th>Tax Number</th>
+        <th style="min-width: 200px">Countries Applied</th>
+        <th style="width: 80px">Taxable</th>
+        <th style="width: 180px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of configs">
+        <td><i class="{{ c.countryCode | lowercase }} flag"></i>{{ getCountryName(c.countryCode) }}</td>
+        <td>
+          {{ c.taxNumber }}
+        </td>
+        <td>
+          <ng-container *ngIf="c.mappingCountry.forAllNotSpecified; else countryList">
+            <span class="text-primary">Default tax profile</span>
+          </ng-container>
+          <ng-template #countryList>
+            <span>
+              {{
+                c.mappingCountry.applicableCountries.length
+                  ? c.mappingCountry.applicableCountries.toString()
+                  : 'No applied countries'
+              }}
+            </span>
+          </ng-template>
+        </td>
+        <td>
+          <div class="row ui checkbox justify-content-center">
+            <input type="checkbox" id="taxable{{ c.countryCode }}" [(ngModel)]="c.taxable" disabled />
+            <label class="label" for="taxable{{ c.countryCode }}"></label>
+          </div>
+        </td>
+        <td class="right aligned">
+          <button class="ui icon small button" (click)="showModal(c)"><i class="edit icon"></i></button>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5" class="right aligned">
+          <button class="ui primary small button" (click)="showModal()">Add</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="countryMapping large ui modal">
+  <ng-container *ngIf="selectedTaxProfile">
+    <div class="header">
+      <ng-container *ngIf="selectedTaxProfile.isNew; else updatingTax">Add tax profile</ng-container>
+      <ng-template #updatingTax>
+        Update <span class="text-primary">{{ getCountryName(selectedTaxProfile.countryCode) }}</span>
+        tax profile
+      </ng-template>
+    </div>
+    <div class="content">
+      <form class="ui form">
+        <div class="field" *ngIf="selectedTaxProfile.isNew">
+          <label>Tax profile</label>
+          <select
+            class="ui fluid search selection small dropdown country"
+            name="country"
+            [ngModel]="selectedTaxProfile.countryCode"
+            (ngModelChange)="selectedTaxProfile.countryCode = $event"
+            commonDropdown
+            [forceSelection]="false"
+          >
+            <option *ngFor="let country of pickableCountries" [value]="country.code">
+              <i class="{{ country.code | lowercase }} flag"></i>
+              {{ country.name }}
+            </option>
+          </select>
+        </div>
+        <div class="field" [class.error]="!selectedTaxProfile.taxNumber">
+          <label>Tax number</label>
+          <input
+            type="text"
+            [(ngModel)]="selectedTaxProfile.taxNumber"
+            required
+            [ngModelOptions]="{ standalone: true }"
+          />
+        </div>
+        <div
+          class="ui negative message"
+          *ngIf="selectedTaxProfile.countryCode === 'SG' && !selectedTaxProfile.taxNumber.startsWith('GST')"
+        >
+          <p>Tax number should start with `GST`</p>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input
+              type="checkbox"
+              id="taxable"
+              [(ngModel)]="selectedTaxProfile.taxable"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <label for="taxable">Taxable</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui checkbox">
+            <input
+              type="checkbox"
+              id="forAllNotSpecified"
+              [(ngModel)]="selectedTaxProfile.mappingCountry.forAllNotSpecified"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <label for="forAllNotSpecified">Set as default tax profile</label>
+          </div>
+        </div>
+      </form>
+      <tag-input
+        [ngModel]="selectedCountriesMapping"
+        [onlyFromAutocomplete]="true"
+        [separatorKeyCodes]="[32]"
+        [clearOnBlur]="true"
+        [displayBy]="'value'"
+        [identifyBy]="'key'"
+        (onRemove)="removeTagInput($event)"
+        (onAdd)="addTagInput($event)"
+        placeholder="Select country"
+        secondaryPlaceholder="Select country"
+        *ngIf="!selectedTaxProfile.mappingCountry.forAllNotSpecified"
+      >
+        <tag-input-dropdown
+          [autocompleteItems]="countries"
+          [showDropdownIfEmpty]="true"
+          [displayBy]="'name'"
+          [identifyBy]="'code'"
+        >
+          <ng-template let-item="item"> {{ item.name | sentenceCase }} </ng-template>
+        </tag-input-dropdown>
+      </tag-input>
+    </div>
+    <div class="actions">
+      <div class="ui button" (click)="cancel()">Cancel</div>
+      <div class="ui primary button" (click)="save()">OK</div>
+    </div>
+  </ng-container>
+</div>

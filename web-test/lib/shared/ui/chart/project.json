@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-chart",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/chart/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/chart/**/*.ts", "libs/shared/ui/chart/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

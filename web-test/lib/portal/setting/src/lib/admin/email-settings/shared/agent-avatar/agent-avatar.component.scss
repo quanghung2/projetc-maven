@@ -1,0 +1,19 @@
+.description-wrapper {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+
+  .avatar {
+    margin-right: 6px;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    color: #fff;
+    text-align: center;
+    line-height: 2.3;
+    text-transform: uppercase;
+    font-weight: 500;
+    background-color: #ddd;
+    font-size: 10px;
+  }
+}

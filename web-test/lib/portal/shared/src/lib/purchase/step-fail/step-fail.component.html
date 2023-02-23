@@ -1,0 +1,10 @@
+<div fxLayout="row" class="container">
+  <div class="text-center noti page">
+    <img src="portal/assets/images/compilation-fail.svg" alt="compilation-success" />
+    <div class="header">Error</div>
+    <div class="desc" *ngIf="msg">{{ msg }}</div>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="goBack()">Go back</button>
+    </div>
+  </div>
+</div>

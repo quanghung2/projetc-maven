@@ -1,0 +1,21 @@
+:host {
+  .container {
+    overflow: overlay;
+    .body {
+      width: 500px;
+
+      .title {
+        font-weight: 500;
+      }
+      .secondary-text {
+        font-size: 13px;
+      }
+      .scheduling {
+        margin-top: 40px;
+      }
+    }
+    .actions {
+      width: 100%;
+    }
+  }
+}

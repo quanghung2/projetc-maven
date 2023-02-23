@@ -1,0 +1,16 @@
+{
+  "name": "api-churn",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/churn/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/churn/**/*.ts", "libs/api/churn/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-email",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/email/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/email/**/*.ts", "libs/chat/shared/email/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

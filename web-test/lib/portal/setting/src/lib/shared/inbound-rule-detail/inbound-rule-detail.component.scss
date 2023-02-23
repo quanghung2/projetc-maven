@@ -1,0 +1,26 @@
+:host {
+  display: block;
+
+  .header {
+    max-width: 800px;
+    margin: auto;
+  }
+  .title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .no-rule {
+    height: 300px;
+    font-size: 20px;
+
+    .group-icon {
+      font-size: 75px;
+      width: 75px;
+      height: 75px;
+    }
+
+    .btn-actions {
+      margin-top: 3rem;
+    }
+  }
+}

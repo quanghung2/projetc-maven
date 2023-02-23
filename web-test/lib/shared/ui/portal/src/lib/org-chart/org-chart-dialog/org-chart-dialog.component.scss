@@ -1,0 +1,22 @@
+.dialog-chart {
+  width: 1000px;
+  height: 550px;
+
+  &__header {
+    h1 {
+      margin-bottom: 0;
+    }
+
+    ::ng-deep mat-icon {
+      &:hover {
+        background-color: #8080803b;
+        border-radius: 50%;
+        color: gray;
+      }
+    }
+  }
+
+  &__content {
+    height: calc(100% - 52px);
+  }
+}

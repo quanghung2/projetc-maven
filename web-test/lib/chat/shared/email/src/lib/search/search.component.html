@@ -1,0 +1,52 @@
+<div [hidden]="viewMode === 'history'">
+  <div mat-dialog-title>
+    <mat-form-field>
+      <input
+        matInput
+        autocomplete="off"
+        placeholder="Enter search keyword"
+        [(ngModel)]="criteria.keyword"
+        (keyup.enter)="search()"
+      />
+      <button mat-button *ngIf="criteria.keyword" matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-content class="hovered-scrollbar">
+    <div class="hovered-scrollbar--content">
+      <div class="result-container">
+        <b3n-email-date-range
+          (changed)="criteriaChanged($event)"
+          class="search-criteria"
+        ></b3n-email-date-range>
+
+        <b3n-email-search-result
+          [hidden]="!searchResult"
+          class="search-result"
+          [loading]="!finishSearch"
+          (onSelect)="onViewHistory($event)"
+        ></b3n-email-search-result>
+      </div>
+      <div *ngIf="finishSearch && hasMore" class="loading-more">
+        <a (click)="loadMore(true)">Load more</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="viewMode === 'history'" class="detail">
+  <button (click)="changeMode('search')" mat-icon-button color="primary" class="go-back">
+    <mat-icon aria-label="Go back to search result" matTooltip="Go back to search result">keyboard_backspace</mat-icon>
+  </button>
+  <b3n-email-conversation-detail
+    class="content"
+    [users]="users"
+    [me]="me"
+    [isSearch]="true"
+    [convoFromSearchHistory]="conversationGroupObservable$ | async"
+  ></b3n-email-conversation-detail>
+</div>
+<div class="loading-container" *ngIf="convoLoading$ | async">
+  <mat-spinner [diameter]="80">Loading...</mat-spinner>
+</div>

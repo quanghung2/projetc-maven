@@ -1,0 +1,23 @@
+.sidebar__wrapper {
+  .sidebar__title {
+    font-size: 14px;
+    font-weight: 550;
+    margin-left: 10px;
+
+    .icon {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 26px;
+      width: 26px;
+      border-radius: 4px;
+      &-expand {
+        font-size: 26px;
+      }
+      &:hover {
+        background-color: rgba(56, 63, 69, 0.1); // darkmode #efefef4d
+      }
+    }
+  }
+}

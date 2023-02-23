@@ -1,0 +1,56 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Create project</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <div [formGroup]="formCreateProject" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <mat-form-field hideRequiredMarker="true">
+      <input matInput placeholder="Name" formControlName="name" required />
+      <mat-error *ngIf="formCreateProject.get('name').invalid">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field hideRequiredMarker="true">
+      <mat-select placeholder="Subscription" formControlName="subUuid" panelClass="select-subscription" required>
+        <mat-option class="option-subscription" *ngFor="let s of subscriptions" [value]="s.subUuid">
+          <span class="uuid">{{ s.subUuid.substr(0, 8) }}</span>
+          ({{ s.numberOfConcurrentCallAddOns }} Concurrent Call)
+          <br />
+          Assigned numbers: {{ s.assignedNumbers.length > 0 ? s.assignedNumbers.join(', ') : 'No' }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formCreateProject.get('subUuid').invalid">Subscription is required</mat-error>
+    </mat-form-field>
+
+    <div>
+      <h5 class="mb-0">Capabilities</h5>
+      <mat-selection-list [multiple]="true" formControlName="capabilities" required>
+        <mat-list-option color="primary" [checkboxPosition]="'before'" [disableRipple]="true" [value]="'voice'">
+          Voice
+        </mat-list-option>
+        <mat-list-option
+          *ngIf="allowTypeMessage"
+          color="primary"
+          [checkboxPosition]="'before'"
+          [disableRipple]="true"
+          [value]="'message'"
+        >
+          Message
+        </mat-list-option>
+        <mat-list-option color="primary" [checkboxPosition]="'before'" [disableRipple]="true" [value]="'workflow'">
+          Workflow
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="creating"
+    [disabled]="formCreateProject.invalid"
+    (click)="create()"
+  >
+    Create
+  </button>
+</mat-dialog-actions>

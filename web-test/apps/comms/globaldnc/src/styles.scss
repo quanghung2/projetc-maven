@@ -1,0 +1,58 @@
+/* You can add global styles to this file, and also import other style files */
+table {
+  tbody {
+    tr:hover {
+      background-color: #f8f8f8;
+    }
+  }
+}
+.hidden {
+  display: none !important;
+}
+.clearfix {
+  clear: both !important;
+}
+.fullwidth {
+  width: 100% !important;
+}
+.floatleft {
+  float: left !important;
+}
+.floatright {
+  float: right !important;
+}
+.ui.selection.dropdown.mini {
+  padding: 0px 10px;
+  line-height: 20px;
+  min-height: 15px;
+  min-width: 60px;
+  background-color: #e8e8e8;
+  border-radius: 2px;
+  float: left;
+  margin-right: 10px;
+  .icon {
+    padding: 0px;
+    line-height: 20px;
+  }
+}
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-button {
+  width: 7px;
+  height: 0px;
+}
+::-webkit-scrollbar-track {
+  background: #eee;
+  border: thin solid lightgray;
+  box-shadow: 0px 0px 3px #dfdfdf inset;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #999;
+  border: thin solid gray;
+  border-radius: 7px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7d7d7d;
+}

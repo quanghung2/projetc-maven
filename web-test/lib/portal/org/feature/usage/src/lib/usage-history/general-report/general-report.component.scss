@@ -1,0 +1,15 @@
+.general-report {
+  display: block;
+
+  &__table {
+    width: 100%;
+  }
+  &__spinner {
+    min-height: 200px;
+  }
+  .no-general-report {
+    min-height: 200px;
+    color: rgba(0, 0, 0, 0.67);
+    font-size: 18px;
+  }
+}

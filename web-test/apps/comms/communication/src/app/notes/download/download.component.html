@@ -1,0 +1,30 @@
+<div mat-dialog-title>Download Note Report</div>
+
+<form [formGroup]="downloadFrom" fxLayout="column">
+  <mat-form-field (click)="from.open()">
+    <mat-label>Start Date</mat-label>
+    <input matInput readonly [matDatepicker]="from" [max]="maxStart" formControlName="start" />
+    <mat-datepicker-toggle matSuffix [for]="from"></mat-datepicker-toggle>
+    <mat-datepicker #from></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field (click)="end.open()">
+    <mat-label>End Date</mat-label>
+    <input matInput readonly [matDatepicker]="end" [min]="minEnd" [max]="maxEnd" formControlName="end" />
+    <mat-datepicker-toggle matSuffix [for]="end"></mat-datepicker-toggle>
+    <mat-datepicker #end></mat-datepicker>
+  </mat-form-field>
+</form>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    (click)="download()"
+    [disabled]="downloadFrom.invalid"
+    [loading]="downloading"
+    mat-flat-button
+    color="primary"
+  >
+    Download
+  </button>
+</div>

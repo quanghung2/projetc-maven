@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Request body</h2>
+<div mat-dialog-content>
+  <span>{{ '{' }}</span>
+  <div class="ml-16" *ngFor="let key of keys; let last = last">
+    <span class="key">"{{ key }}" : </span><span *ngIf="isObject(object[key])">{{ '{' }}</span>
+    <span class="value" *ngIf="!isObject(object[key])">"{{ object[key] }}"</span>
+    <div *ngIf="isObject(object[key])">
+      <div class="ml-16" *ngFor="let keyChild of getObjectkeys(object[key]); let last = last">
+        <span class="key">"{{ keyChild }}" :</span>
+        <span class="value" *ngIf="!isObject(object[key][keyChild])">"{{ object[key][keyChild] }}"</span>
+        <i *ngIf="!last">,</i>
+      </div>
+      <span>{{ '}' }}</span>
+      <i *ngIf="!last">,</i>
+    </div>
+  </div>
+  <span>{{ '}' }}</span>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</div>

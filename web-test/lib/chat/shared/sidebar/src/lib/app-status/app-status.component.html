@@ -1,0 +1,107 @@
+<div class="org-bar flex column justify-content-start align-items-none">
+  <ng-container *ngIf="notMicrosoftTeamLicense$ | async; else noStatusUser">
+    <div class="header flex justify-content-start align-items-center gap-10">
+      <div class="widget spacer flex justify-content-start align-items-center">
+        <ng-container *ngIf="hasPhoneFeature$ | async">
+          <ng-container *ngIf="(session$ | async) && isZoom; else phone">
+            <a
+              (click)="openPhoneDialog()"
+              href="javascript:void"
+              class="call-button flex justify-content-center align-items-center"
+            >
+              <mat-icon> settings_phone</mat-icon>
+            </a>
+          </ng-container>
+          <ng-template #phone>
+            <a
+              (click)="openPhoneDialog()"
+              href="javascript:void"
+              class="call-button flex justify-content-center align-items-center"
+            >
+              <mat-icon> call</mat-icon>
+            </a>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="me$ | async as me">
+          <div
+            class="user_info status-container spacer flex flex-wrap justify-content-center align-items-center gap-8"
+            [class]="'status__' + me?.status"
+            [matTooltip]="me?.busyReason"
+            [matMenuTriggerFor]="agentStatus"
+          >
+            <section class="flex justify-content-start align-items-center gap-3">
+              <span class="text-status">
+                {{ (me?.status === AgentStatus.dnd ? 'Away' : me.status) | titlecase }}
+              </span>
+            </section>
+          </div>
+        </ng-container>
+      </div>
+      <b3n-quick-search-channel *ngIf="hasTeamChatLicense"></b3n-quick-search-channel>
+    </div>
+  </ng-container>
+  <ng-template #noStatusUser>
+    <div class="header flex justify-content-start align-items-center" style="padding: 5px 3px 5px 11px">
+      <div class="spacer"></div>
+      <b3n-quick-search-channel *ngIf="hasTeamChatLicense"></b3n-quick-search-channel>
+    </div>
+
+    <ng-container *ngIf="hasPhoneFeature$ | async">
+      <ng-container *ngIf="(session$ | async) && isZoom; else phone">
+        <button mat-raised-button (click)="openPhoneDialog()" color="primary" class="phone_button">
+          <mat-icon>settings_phone</mat-icon> <span> Calls</span>
+        </button>
+      </ng-container>
+      <ng-template #phone>
+        <button mat-raised-button (click)="openPhoneDialog()" color="primary" class="phone_button">
+          <mat-icon> call</mat-icon> <span> Calls</span>
+        </button>
+      </ng-template>
+    </ng-container>
+  </ng-template>
+</div>
+
+<mat-menu
+  #agentStatus="matMenu"
+  class="status-menu agentStatus2"
+  [class]="(hasPhoneFeature$ | async) ? '' : 'notWebPhone'"
+>
+  <ng-container *ngTemplateOutlet="menuList"></ng-container>
+</mat-menu>
+
+<ng-template #menuList>
+  <button
+    mat-menu-item
+    (click)="changeStatus(AgentStatus.available)"
+    class="flex justify-content-start align-items-center gap-8"
+  >
+    <mat-icon class="status__available">lens</mat-icon>
+    Available
+  </button>
+  <button
+    mat-menu-item
+    (click)="changeStatus(AgentStatus.busy)"
+    class="flex justify-content-start align-items-center gap-8"
+  >
+    <mat-icon class="status__busy">lens</mat-icon>
+    Busy
+  </button>
+  <button
+    mat-menu-item
+    (click)="changeStatus(AgentStatus.dnd)"
+    class="flex justify-content-start align-items-center gap-8"
+  >
+    <mat-icon class="status__dnd">do_not_disturb_on_total_silence</mat-icon>
+    Away
+  </button>
+  <button
+    mat-menu-item
+    (click)="changeStatus(AgentStatus.offline)"
+    class="flex justify-content-start align-items-center gap-8"
+  >
+    <mat-icon class="status__offline">lens</mat-icon>
+    Offline
+  </button>
+</ng-template>
+
+<audio #remoteAudio autoplay _hidden="true"></audio>

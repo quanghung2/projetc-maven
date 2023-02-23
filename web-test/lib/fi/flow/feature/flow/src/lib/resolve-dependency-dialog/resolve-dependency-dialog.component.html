@@ -1,0 +1,10 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Resolve Dependencies</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <b3n-resolve-dependency
+    [resolveDependencyInput]="data"
+    (resultResolve)="dialogRef.close($event)"
+  ></b3n-resolve-dependency>
+</mat-dialog-content>

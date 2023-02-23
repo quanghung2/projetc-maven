@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>{{ blockTypeMap[block.type] }}</h1>
+
+<div mat-dialog-content class="mat-typography">
+  <form #form="ngForm">
+    <section *ngIf="parentBlock && parentBlock.type === BlockType.transfer">
+      <h2>
+        {{ blockTypeMap[parentBlock?.type] }} settings
+        <h4>Set up the branch information of the parent block.</h4>
+      </h2>
+
+      <b3n-miss-transfer [block]="$any(parentBlock)"></b3n-miss-transfer>
+    </section>
+
+    <section *ngIf="block">
+      <h2>
+        {{ blockTypeMap[block.type] }} settings
+        <h4>Set up the main information of the current block.</h4>
+      </h2>
+
+      <b3n-gather *ngIf="block.type === BlockType.gather" [block]="$any(block)"></b3n-gather>
+
+      <b3n-transfer
+        *ngIf="block.type === BlockType.transfer"
+        [block]="$any(block)"
+        [isDevice]="isDevice"
+      ></b3n-transfer>
+
+      <b3n-notification
+        *ngIf="block.type === BlockType.notification"
+        [block]="$any(block)"
+        [workflow]="data.workflow"
+      ></b3n-notification>
+
+      <b3n-play *ngIf="block.type === BlockType.play" [block]="$any(block)"></b3n-play>
+
+      <b3n-go *ngIf="block.type === BlockType.go" [block]="$any(block)" [tree]="tree"></b3n-go>
+
+      <b3n-condition *ngIf="block.type === BlockType.condition" [block]="$any(block)"></b3n-condition>
+
+      <b3n-confirm *ngIf="block.type === BlockType.confirmation" [block]="$any(block)"></b3n-confirm>
+
+      <b3n-webhook *ngIf="block.type === BlockType.webhook" [block]="$any(block)"></b3n-webhook>
+
+      <b3n-monitor *ngIf="block.type === BlockType.monitor" [block]="$any(block)"></b3n-monitor>
+
+      <b3n-genie *ngIf="block.type === BlockType.genie" [block]="$any(block)" [skills]="skills"></b3n-genie>
+
+      <b3n-common [block]="block"></b3n-common>
+    </section>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+
+  <button mat-raised-button color="primary" [disabled]="form.invalid || saving || isE164numberInvalid" (click)="save()">
+    <span *ngIf="!saving">Save</span>
+
+    <span *ngIf="saving">Saving...</span>
+  </button>
+</div>

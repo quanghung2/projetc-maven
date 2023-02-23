@@ -1,0 +1,21 @@
+<mat-drawer-container class="email-config-container">
+  <mat-drawer mode="side" opened>
+    <mat-list role="list" *ngFor="let menu of menuLists">
+      <div mat-subheader class="list__header">{{ menu.header }}</div>
+      <mat-list-item
+        role="listitem"
+        class="list__item cursor-pointer"
+        *ngFor="let item of menu.items"
+        [routerLink]="[item.key]"
+        [queryParams]="{ level: item.level }"
+        [routerLinkActiveOptions]="{ exact: true }"
+        routerLinkActive="active"
+      >
+        {{ item.value }}
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

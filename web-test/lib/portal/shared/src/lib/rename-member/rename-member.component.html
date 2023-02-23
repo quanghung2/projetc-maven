@@ -1,0 +1,15 @@
+<div mat-dialog-title>
+  <div>Update name</div>
+  <div class="secondary-text sub-title">For members who belong to only one organization</div>
+</div>
+<div fxLayout="column">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input [(ngModel)]="name" matInput required />
+    <mat-error>Name is required</mat-error>
+  </mat-form-field>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="rename()" [disabled]="!name" [loading]="progressing" color="primary" mat-flat-button>Update</button>
+</div>

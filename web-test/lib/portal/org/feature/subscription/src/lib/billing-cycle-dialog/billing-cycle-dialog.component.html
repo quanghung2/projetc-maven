@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Billing cycle</h1>
+<div mat-dialog-content>
+  <p>
+    Pricing plan shown below is the base price in <strong>{{ data.currency }}</strong> that doesn't include price of
+    numbers, other addons, tax and discount.
+  </p>
+  <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+    <div
+      class="sale-model"
+      [class.selected]="selectedSaleModelCode == s.saleModel"
+      *ngFor="let s of listSkuPrice"
+      (click)="chooseItem(s)"
+      fxFlex
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap=".5rem"
+    >
+      <p class="price">{{ s.amount }} {{ s.currency }}</p>
+      <p class="circle">{{ s.saleModel }}</p>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [loading]="loading" [disabled]="loading" color="primary" (click)="select()">Select</button>
+</div>

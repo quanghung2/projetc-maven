@@ -1,0 +1,32 @@
+<ng-container *ngIf="openConversationGroups$ | async as convo">
+  <b3n-email-conversation-list
+    [customHeaderTemplate]="teamInboxHeader"
+    [loadMoreTemplate]="loadMoreTemplate"
+    [hideMenuIcon]="true"
+    [convo]="convo"
+  ></b3n-email-conversation-list>
+</ng-container>
+
+<ng-template #teamInboxHeader>
+  <div *ngIf="isOverModeLeftSidebar$ | async" class="action__header flex justify-content-start align-items-center">
+    <csh-menu-toggle></csh-menu-toggle>
+  </div>
+  <div class="list__header">
+    <mat-button-toggle-group class="button__group" value="open">
+      <mat-button-toggle class="button__group-toggle" value="open" (click)="changeFilter('open')">
+        Open({{ countOpen }})
+      </mat-button-toggle>
+      <mat-button-toggle class="button__group-toggle" value="unassigned" (click)="changeFilter('unassigned')">
+        Unassigned ({{ countUnassigned }})
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+</ng-template>
+
+<ng-template #loadMoreTemplate>
+  <div fxLayoutAlign="center center">
+    <button mat-raised-button (click)="loadMore()" [loading]="isLoadingMore" color="primary" class="mx-16">
+      Load more
+    </button>
+  </div>
+</ng-template>

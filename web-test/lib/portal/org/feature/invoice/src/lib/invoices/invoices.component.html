@@ -1,0 +1,93 @@
+<poi-invoices-action-bar
+  [isDownloading]="isDownloading"
+  [filterDate]="filterDate"
+  [selectedStatus]="selectedStatus"
+  [selectedInvoiceCount]="checkedInvoiceNumbers.length"
+  (downloadChange)="onDownloadChanged()"
+></poi-invoices-action-bar>
+<div class="invoices-container px-16">
+  <div [hidden]="(loading$ | async) || !dataSource?.filteredData.length">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="checked">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            [indeterminate]="isSomeInvoiceChecked"
+            [checked]="isAllInvoiceChecked"
+            (change)="selectAllInvoices($event)"
+          >
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox
+            class="avoices-checkbox"
+            [class.show-checked]="isInvoiceChecked(element)"
+            [checked]="isInvoiceChecked(element)"
+            color="primary"
+            (change)="selectInvoice(element)"
+          >
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ getDisplayDate(element?.issuedDate) }}</td>
+      </ng-container>
+
+      <!-- Number Column -->
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef>Number</th>
+        <td mat-cell *matCellDef="let element">{{ element?.number }}</td>
+      </ng-container>
+
+      <!-- Due Column -->
+      <ng-container matColumnDef="due">
+        <th mat-header-cell *matHeaderCellDef>Due</th>
+        <td mat-cell *matCellDef="let element">{{ element?.amountDue }}</td>
+      </ng-container>
+
+      <!-- Paid Column -->
+      <ng-container matColumnDef="paid">
+        <th mat-header-cell *matHeaderCellDef>Paid</th>
+        <td mat-cell *matCellDef="let element">{{ element?.paidAmount }}</td>
+      </ng-container>
+
+      <!-- currency Column -->
+      <ng-container matColumnDef="currency">
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let element">{{ element?.currency }}</td>
+      </ng-container>
+
+      <!-- status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">
+          <span *ngIf="element.isNoPayment">Awaiting Payment</span>
+          <span *ngIf="element.isPartialPayment">Partial Payment</span>
+          <span *ngIf="element.isPaid">Paid</span>
+        </td>
+      </ng-container>
+      <!-- action Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef class="header-align-right"></th>
+        <td mat-cell *matCellDef="let element">
+          <div fxLayoutAlign="end center">
+            <button mat-icon-button (click)="downloadInvoice(element)" class="download-invoice">
+              <mat-icon>cloud_download</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator hidePageSize="true" pageSize="10"></mat-paginator>
+  </div>
+
+  <div *ngIf="!(loading$ | async) && !dataSource?.filteredData.length" fxLayoutAlign="center none">
+    <p>No invoice found on this month</p>
+  </div>
+</div>
+<a id="hiddenDownload" style="display: none"></a>

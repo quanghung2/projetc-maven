@@ -1,0 +1,115 @@
+<ng-container *ngIf="uiConfig$ | async as ui">
+  <div class="container" fxFill fxLayout="column" fxLayoutAlign="end stretch">
+    <div
+      *ngIf="viewDate$ | async as viewDate"
+      fxFlex="1px"
+      class="viewing-date"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <small>{{ viewDate | viewDate }}</small>
+    </div>
+
+    <ng-container *ngIf="loadingHistory$ | async as isLoading">
+      <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+    </ng-container>
+
+    <div fxFlex class="body" fxLayout="column" fxLayoutAlign="start none">
+      <ng-container *ngIf="!loadingFirst; else viewHistory">
+        <div
+          fxFlex
+          infiniteScroll
+          [infiniteScrollUpDistance]="1.5"
+          [infiniteScrollThrottle]="50"
+          [scrollWindow]="false"
+          class="messages-viewport"
+          fxLayout="column"
+          fxLayoutAlign="start none"
+          fxLayoutGap="0.25rem"
+          #viewport
+          [class.archived]="livechat?.isArchived"
+        >
+          <ng-container *ngIf="messages$ | async as messages">
+            <div
+              class="msg-item"
+              *ngFor="let msg of messages; let i = index; trackBy: trackByIdx"
+              [attr.data-ts]="msg.ts"
+              [id]="msg.clientId"
+            >
+              <!-- isSame date -->
+              <div class="group-by-date" *ngIf="i > 0 && diffDates(msg.ts, messages[i - 1].ts)">
+                <span>{{ msg.ts | viewDate }}</span>
+              </div>
+              <b3n-profile-message
+                [hasChatBox]="hasChatBox"
+                [convo]="livechat"
+                [index]="i"
+                [msg]="msg"
+                [msgPre]="i === 0 ? null : messages[i - 1]"
+                [parentElr]="msg.mt === MsgType.attachment ? viewport : null"
+              ></b3n-profile-message>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="ui.waitingChatbot">
+            <b3n-profile-message [waitingChatbot]="true"></b3n-profile-message>
+          </ng-container>
+
+          <ng-container *ngIf="answers$ | async as answers">
+            <ng-container *ngIf="answers?.length > 0">
+              <div class="chatbot">
+                <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+                  <div *ngFor="let item of answers">
+                    <button class="mat-elevation-z0 item-btn" (click)="onAnswerQuestion(item)" mat-raised-button>
+                      {{ item }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="livechat.isArchived">
+            <div class="start-over" fxLayoutAlign="center center">
+              <button class="item-btn" (click)="startOver()" mat-raised-button>Start Over</button>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #viewHistory>
+        <div fxFlex fxLayoutAlign="center center">
+          <div class="wait-history"></div>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="footer">
+      <div class="square" *ngIf="animation"></div>
+      <ng-container *ngIf="ui.showFooter && !livechat.isArchived">
+        <quill-editor
+          format="object"
+          customToolbarPosition="bottom"
+          trackChanges="all"
+          [modules]="quillConfig"
+          [placeholder]="placeholder"
+          [preserveWhitespace]="true"
+          (onEditorCreated)="onCreatedQuill($event)"
+          [sanitize]="false"
+          class="editor"
+        >
+        </quill-editor>
+        <div class="toolbar" fxHide></div>
+        <div class="tool">
+          <div fxFlex="row" fxLayoutAlign="end center" fxLayoutGap="1rem">
+            <input fxHide type="file" id="fileInput" multiple (change)="upload($event)" #fileUpload />
+            <mat-icon [fxHide]="hasChatBox" matTooltip="Upload" (click)="fileUpload.click()"> attach_file </mat-icon>
+            <mat-icon (click)="handleEnterMessage()"> send </mat-icon>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<!-- // subcribe and destroy  -->
+<ng-container *ngIf="onmessage$ | async"></ng-container>

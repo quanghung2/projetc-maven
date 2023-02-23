@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+.mat-form-field {
+  width: 100%;
+}
+
+.body-request {
+  margin-top: 10px;
+  margin-bottom: 5px;
+
+  &__header {
+    margin-bottom: 0px !important;
+    font-weight: 600;
+  }
+
+  &__second-header {
+    font-size: 13px;
+  }
+
+  &__example {
+    margin-top: 15px;
+    padding: 5px;
+
+    .key-value {
+      margin-left: 15px;
+
+      .key {
+        color: #a31515;
+      }
+
+      .value {
+        color: #0451ad;
+        margin-left: 10px;
+      }
+      .key-value-child {
+        margin-left: 15px;
+      }
+    }
+  }
+}

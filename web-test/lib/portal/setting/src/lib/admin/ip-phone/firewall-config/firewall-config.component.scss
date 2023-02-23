@@ -1,0 +1,15 @@
+.content {
+  .row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    height: 40px;
+    label {
+      flex: 40;
+    }
+    div {
+      flex: 1 1 auto;
+    }
+  }
+}

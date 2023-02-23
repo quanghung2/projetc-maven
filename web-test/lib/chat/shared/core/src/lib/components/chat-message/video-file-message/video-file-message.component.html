@@ -1,0 +1,38 @@
+<div class="container flex justify-content-start align-items-start gap-16">
+  <video
+    *ngIf="!noIntersectionObserver"
+    [intersectionObserverDom]="parentElr"
+    (render)="onRender()"
+    class="video-js vjs-big-play-centered"
+    controls
+    preload="none"
+  >
+    <ng-container *ngTemplateOutlet="noSupport"></ng-container>
+  </video>
+
+  <video *ngIf="noIntersectionObserver" class="video-js vjs-big-play-centered" controls preload="none">
+    <ng-container *ngTemplateOutlet="noSupport"></ng-container>
+  </video>
+
+  <ng-container *ngTemplateOutlet="cannotLoaded"></ng-container>
+</div>
+
+<ng-template #cannotLoaded>
+  <button
+    *ngIf="isError"
+    class="icon-download"
+    matTooltip="Download video"
+    mat-icon-button
+    color="normal"
+    (click)="downloadVideo()"
+  >
+    <mat-icon class="material-icons-outlined">download</mat-icon>
+  </button>
+</ng-template>
+
+<ng-template #noSupport>
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to a web browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank"> supports HTML5 video </a>
+  </p>
+</ng-template>

@@ -1,0 +1,18 @@
+<ng-container *ngIf="!loading; else spinner">
+  <div class="landing" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="2rem">
+    <ng-container *ngIf="subscriptions?.length; else noSubscription">
+      <div class="message">You don't have any projects. Create one first.</div>
+      <button (click)="createProject()" color="primary" mat-flat-button>Create one</button>
+    </ng-container>
+
+    <ng-template #noSubscription>
+      You don't have any subscriptions yet. Please purchase a subscription first.
+    </ng-template>
+  </div>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="landing" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-template>

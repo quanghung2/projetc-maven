@@ -1,0 +1,21 @@
+<mat-table [dataSource]="items" class="mat-elevation-z0">
+  <ng-container matColumnDef="item">
+    <mat-header-cell *matHeaderCellDef>Item</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      {{ element?.description.substr(element?.description.indexOf('\n') + 1) }}
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="quanlity">
+    <mat-header-cell *matHeaderCellDef>Quantity</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element?.quantity }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="amount">
+    <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element?.amount }}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns" fxLayoutGap="1.6rem"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns" fxLayoutGap="1.6rem"></mat-row>
+</mat-table>

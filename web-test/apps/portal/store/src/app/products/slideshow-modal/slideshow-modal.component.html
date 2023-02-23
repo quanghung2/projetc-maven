@@ -1,0 +1,11 @@
+<div class="slide-show">
+  <div class="img__wrapper">
+    <img class="ui image" [src]="data.images[currentIndex]" />
+    <button class="left" mat-icon-button>
+      <mat-icon (click)="previous()">chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button class="right">
+      <mat-icon (click)="next()">chevron_rightt</mat-icon>
+    </button>
+  </div>
+</div>

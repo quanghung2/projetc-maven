@@ -1,0 +1,87 @@
+{
+  "name": "unified-phonesystem",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/unified/phonesystem/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/unified/phonesystem",
+        "index": "apps/unified/phonesystem/src/index.html",
+        "main": "apps/unified/phonesystem/src/main.ts",
+        "polyfills": "apps/unified/phonesystem/src/polyfills.ts",
+        "tsConfig": "apps/unified/phonesystem/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/unified/phonesystem/src/favicon.ico", "apps/unified/phonesystem/src/assets"],
+        "styles": ["apps/unified/phonesystem/src/styles.scss"],
+        "scripts": [],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/unified/phonesystem/src/environments/environment.ts",
+              "with": "apps/unified/phonesystem/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "unified-phonesystem:build:production"
+        },
+        "development": {
+          "browserTarget": "unified-phonesystem:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "unified-phonesystem:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/unified/phonesystem/**/*.ts", "apps/unified/phonesystem/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

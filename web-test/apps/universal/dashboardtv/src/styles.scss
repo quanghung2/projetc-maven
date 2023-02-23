@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'scss/core';
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+
+  b3n-root {
+    width: 100%;
+  }
+}
+
+@media (min-height: 2160px) and (min-width: 3840px) {
+  .otp {
+    font-size: calc(64px * 4) !important;
+    letter-spacing: calc(16px * 4) !important;
+
+    p {
+      font-size: calc(14px * 4) !important;
+    }
+  }
+}

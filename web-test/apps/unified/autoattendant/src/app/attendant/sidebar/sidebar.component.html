@@ -1,0 +1,52 @@
+<mat-toolbar>
+  <mat-toolbar-row><h2 class="">Auto Attendant</h2></mat-toolbar-row>
+  <mat-toolbar-row>
+    <form fxFlex="1 1 auto">
+      <mat-form-field class="full-width">
+        <input [formControl]="searchFlowCtrl" [matAutocomplete]="auto" matInput />
+        <div class="mat-select-arrow select__arrow"></div>
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="workflowDisplayFn">
+          <ng-container *ngIf="filteredWorkflow$ | async as workflows">
+            <mat-option *ngFor="let workflow of workflows; trackBy: trackBy" [value]="workflow">
+              <span [innerHTML]="workflow.displayText | highlight: searchKey"></span>
+            </mat-option>
+            <mat-option *ngIf="!workflows.length">No attendant found</mat-option>
+          </ng-container>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- tweek for search dropdown icon -->
+<mat-form-field [hidden]="true">
+  <mat-select></mat-select>
+</mat-form-field>
+<mat-divider></mat-divider>
+
+<mat-action-list>
+  <div class="list-item" *ngFor="let item of links">
+    <button
+      *ngIf="item.key !== 'permission'; else permissionFooter"
+      [routerLink]="[item.key, { uuid: selectedWorkflow?.uuid }]"
+      routerLinkActive="active"
+      (click)="childLinkChanged.emit(item.value)"
+      mat-list-item
+      class="menu-item"
+    >
+      {{ item.value }}
+    </button>
+    <ng-template #permissionFooter>
+      <button
+        class="permissions menu-item"
+        [routerLink]="[item.key, { uuid: selectedWorkflow?.uuid }]"
+        routerLinkActive="active"
+        (click)="childLinkChanged.emit(item.value)"
+        mat-list-item
+      >
+        <mat-icon class="material-icons-outlined color-permission">admin_panel_settings</mat-icon>
+        <span class="ml-10 color-permission">Permission</span>
+      </button>
+    </ng-template>
+  </div>
+</mat-action-list>

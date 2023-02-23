@@ -1,0 +1,83 @@
+:host {
+  height: 100%;
+  display: block;
+  overflow: auto;
+
+  table {
+    width: 100%;
+  }
+
+  .metric--single {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    .metric__label {
+      font-size: 22px;
+      margin-bottom: 2rem;
+    }
+    .metric__number {
+      font-size: 2.5rem;
+    }
+  }
+
+  .datatable-chart {
+    width: 100%;
+  }
+
+  .no-data {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+  }
+  canvas {
+    width: 100% !important;
+  }
+
+  .no-datasetData {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+    position: absolute;
+    top: 50%;
+    animation: fadeIn 500ms;
+  }
+
+  .hide {
+    display: none !important;
+  }
+  .mat-cell {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  .bolder {
+    .mat-cell {
+      font-weight: 900;
+      color: black;
+      font-size: 16px;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .nea-block-update__active {
+    background-color: #f8e8e8;
+
+    .ttl__row {
+      color: red;
+    }
+  }
+}

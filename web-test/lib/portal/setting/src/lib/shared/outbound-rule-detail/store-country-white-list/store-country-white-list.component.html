@@ -1,0 +1,59 @@
+<div class="update-country-whitelist">
+  <div mat-dialog-title>
+    {{
+      data.action === 'ADD'
+        ? 'Add country to whitelist'
+        : data.action === 'REMOVE'
+        ? 'Remove country from whitelist'
+        : 'Edit country'
+    }}
+  </div>
+  <mat-form-field>
+    <mat-select placeholder="Select countries" multiple [formControl]="countriesFC" id="countries">
+      <ng-container [ngTemplateOutlet]="selectAll"></ng-container>
+      <mat-divider></mat-divider>
+      <mat-option *ngFor="let country of countries" [value]="country">
+        {{ country.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-checkbox *ngIf="action === 'ADD'" [formControl]="passcode">Passcode required</mat-checkbox>
+
+  <mat-slide-toggle *ngIf="countriesFC.value?.length <= 1" [formControl]="countryArea">Specific area</mat-slide-toggle>
+
+  <ng-container *ngIf="countryArea.value">
+    <mat-form-field>
+      <mat-label>Area code</mat-label>
+      <input matInput [formControl]="areaCode" type="text" />
+      <mat-error *ngIf="areaCode.touched && areaCode.errors?.['required']"> Area code is required </mat-error>
+      <mat-error *ngIf="areaCode.touched && areaCode.errors?.['pattern']"> Area code is invalid </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Location name</mat-label>
+      <input matInput [formControl]="areaLabel" />
+      <mat-error>Label is required</mat-error>
+    </mat-form-field>
+  </ng-container>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button matDialogClose="true">Cancel</button>
+    <button
+      *ngIf="['ADD', 'EDIT'].includes(action)"
+      [disabled]="storing || form.invalid"
+      (click)="storeCountryWhiteList()"
+      mat-raised-button
+      color="primary"
+    >
+      <span *ngIf="!storing">{{ action === 'ADD' ? 'Add' : 'Update' }}</span>
+      <span *ngIf="storing">{{ action === 'ADD' ? 'Adding...' : 'Updating...' }}</span>
+    </button>
+  </div>
+</div>
+
+<ng-template #selectAll>
+  <mat-option (click)="toggleSelectAll()">
+    <mat-pseudo-checkbox class="mat-option-pseudo-checkbox" [state]="state"> </mat-pseudo-checkbox>
+    Select All
+  </mat-option>
+</ng-template>

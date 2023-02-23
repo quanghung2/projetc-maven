@@ -1,0 +1,28 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>{{ data.title }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <section fxLayout="column">
+    <span>{{ data.message }}</span>
+    <mat-checkbox *ngIf="data?.isShowChecked" [(ngModel)]="isChecked" labelPosition="after">
+      Also delete all actions below
+    </mat-checkbox>
+  </section>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <ng-container *ngFor="let item of data.buttons">
+    <button *ngIf="item.type === 'mat-button'" mat-button mat-dialog-close (click)="confirm(item.action)">
+      {{ item.label }}
+    </button>
+    <button
+      mat-raised-button
+      *ngIf="item.type === 'mat-raised-button'"
+      cdkFocusInitial
+      [color]="item.color"
+      (click)="confirm(item.action)"
+    >
+      {{ item.label }}
+    </button>
+  </ng-container>
+</mat-dialog-actions>

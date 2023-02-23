@@ -1,0 +1,65 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <form [formGroup]="formAuth" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <mat-form-field
+        hideRequiredMarker="true"
+        *ngIf="
+          connector.authenticationType === AuthenticationType.API_KEY_QUERY ||
+          connector.authenticationType === AuthenticationType.API_KEY_HEADERS
+        "
+      >
+        <input matInput placeholder="Api Key" formControlName="value" required />
+        <mat-error *ngIf="value.invalid">{{ getError(value) }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field
+        hideRequiredMarker="true"
+        *ngIf="connector.authenticationType === AuthenticationType.BEARER_TOKEN"
+      >
+        <input matInput placeholder="Token" formControlName="token" required />
+        <mat-error *ngIf="token.invalid">{{ getError(token) }}</mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="connector.authenticationType === AuthenticationType.BASIC_AUTH">
+        <mat-form-field hideRequiredMarker="true">
+          <input matInput placeholder="Username" formControlName="userName" required />
+          <mat-error *ngIf="userName.invalid">{{ getError(userName) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field hideRequiredMarker="true">
+          <input matInput type="password" placeholder="Password" formControlName="password" required />
+          <mat-error *ngIf="password.invalid">{{ getError(password) }}</mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+  </form>
+
+  <form [formGroup]="formParams" novalidate>
+    <div formArrayName="mappings" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <ng-container [formGroupName]="i" *ngFor="let item of mappings.controls; let i = index">
+        <mat-form-field *ngIf="item.value.dataType !== 'boolean'" hideRequiredMarker="true">
+          <input
+            matInput
+            [attr.type]="item.value.dataType === 'number' ? 'number' : null"
+            [placeholder]="item.value.title"
+            formControlName="expressionTreeTemp"
+            required
+          />
+          <mat-error *ngIf="item.get('expressionTreeTemp').invalid">
+            {{ getError($any(item.get('expressionTreeTemp'))) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="item.value.dataType === 'boolean'" hideRequiredMarker="true">
+          <mat-select [placeholder]="item.value.title" formControlName="expressionTreeTemp" required>
+            <mat-option [value]="true">True</mat-option>
+            <mat-option [value]="false">False</mat-option>
+          </mat-select>
+          <mat-error *ngIf="item.get('expressionTreeTemp').invalid">
+            {{ getError($any(item.get('expressionTreeTemp'))) }}
+          </mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+  </form>
+</div>

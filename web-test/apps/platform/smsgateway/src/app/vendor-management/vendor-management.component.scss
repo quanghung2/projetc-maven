@@ -1,0 +1,147 @@
+@mixin status($color) {
+  width: 65px;
+  color: $color;
+  border: 1px solid $color;
+  padding: 1px 5px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.vendor-management__loading {
+  width: 100%;
+  margin: auto;
+}
+
+.vendor-management__container {
+  width: 100%;
+  padding: 16px;
+}
+
+.status__change {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.vendor-management__form {
+  max-width: 980px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: auto;
+}
+
+.vendor-management__tools {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  mat-form-field {
+    width: 250px;
+  }
+
+  .buttons__wrapper {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+}
+
+.max-enabled-vendor__noti {
+  margin: 0;
+  color: #3f51b5;
+  font-style: italic;
+  font-size: 12px;
+  text-align: end;
+}
+
+.vendor-management__table {
+  width: 100%;
+  box-shadow: none;
+
+  .mat-column-code,
+  .mat-column-label {
+    width: 200px;
+    max-width: 200px;
+  }
+
+  .mat-column-status {
+    width: 150px;
+    max-width: 150px;
+
+    .enabled {
+      @include status(#169d6c);
+    }
+
+    .disabled {
+      @include status(#e95849);
+    }
+  }
+
+  .mat-column-password {
+    width: 250px;
+    max-width: 250px;
+  }
+
+  .mat-column-username {
+    width: 150px;
+    max-width: 150px;
+  }
+
+  .mat-column-postbackUrl {
+    width: 150px;
+    .url {
+      font-size: 12px;
+      background: #e0e0e0;
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      color: #616161;
+      text-align: center;
+      width: 80px;
+    }
+  }
+
+  .mat-column-noData {
+    display: flex;
+    justify-content: center;
+  }
+
+  td {
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.87);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    padding-right: 10px;
+
+    &:last-of-type {
+      text-align: end;
+
+      button {
+        opacity: 0;
+      }
+    }
+  }
+
+  th {
+    border-color: rgba(0, 0, 0, 0.12);
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .mat-row {
+    cursor: default;
+
+    &:hover {
+      background-color: #fafafa;
+
+      td:last-of-type {
+        button {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,315 @@
+<mat-drawer-container hasBackdrop="false" class="flow-info">
+  <mat-drawer-content>
+    <div *ngIf="fetched && !workflow" class="no-subscription">
+      <h1>You didn't assign number yet</h1>
+      <h3><button color="primary" mat-raised-button>Click here</button> to assign first</h3>
+    </div>
+
+    <mat-toolbar *ngIf="fetched && tree" class="flow-info-toolbar" fxLayoutGap="0.8rem">
+      <mat-button-toggle-group
+        name="rule"
+        [(ngModel)]="selectedRule"
+        (change)="onRuleChanged()"
+        class="btn-toggle-group"
+      >
+        <mat-button-toggle *ngFor="let rule of destinationRules" [value]="rule">{{ rule.value }}</mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <button *ngIf="!currentOrg?.licenseEnabled" (click)="configWorktime()" mat-button>Work time</button>
+
+      <mat-spinner *ngIf="loadingBlockInfo" diameter="20"></mat-spinner>
+      <span class="fill-remaining-space"></span>
+
+      <div
+        *ngIf="workflow.numbers?.length > 0 && editingVersion?.status === WorkflowStatus.pending"
+        class="flow-info-toolbar__editing-version"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+        <span *ngIf="checkMessageFlow(true)"> New version has been requested</span>
+        <span *ngIf="checkMessageFlow(false)">Your version is waiting for approval</span>
+        <mat-icon (click)="routingNewVersion()" class="flow-info-toolbar__editing-version__view" matTooltip="View">
+          visibility
+        </mat-icon>
+      </div>
+      <div
+        *ngIf="currentOrg.isUpperAdmin && workflowVersion && workflowVersion.status === WorkflowStatus.scheduled"
+        class="flow-info-toolbar__editing-version"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+        Scheduled deployment
+        <mat-icon (click)="deploySchedule()" matTooltip="Edit">edit</mat-icon>
+        <mat-icon (click)="cancelRequest()" class="flow-info-toolbar__editing-version__cancel-icon" matTooltip="Cancel">
+          close
+        </mat-icon>
+      </div>
+
+      <div
+        *ngIf="workflow.numbers?.length > 0 && editingVersion?.status === WorkflowStatus.scheduled"
+        class="flow-info-toolbar__editing-version"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+        Scheduled deployment
+        <mat-icon (click)="routingNewVersion()" class="flow-info-toolbar__editing-version__view" matTooltip="View">
+          visibility
+        </mat-icon>
+      </div>
+      <mat-form-field class="flow-info__search">
+        <input
+          matInput
+          placeholder="Enter block name"
+          [(ngModel)]="searchingBlockName"
+          (keyup.enter)="searchBlock($event)"
+          (keyup.esc)="searchingBlockName = ''"
+        />
+        <button mat-icon-button matSuffix>
+          <mat-icon (click)="searchBlock($event)" class="searchIcon">search</mat-icon>
+        </button>
+      </mat-form-field>
+      <button
+        (click)="testCallFlow()"
+        mat-icon-button
+        *ngIf="checkLicensePermission(action.testCall)"
+        matTooltip="Make a call for testing flow"
+      >
+        <mat-icon class="flow-info-toolbar__btn-icon">phone_callback</mat-icon>
+      </button>
+      <button
+        (click)="requestGoLive(workflow)"
+        mat-icon-button
+        *ngIf="
+          !workflow.numbers?.length &&
+          workflowVersion?.status === WorkflowStatus.draft &&
+          !currentOrg.isUpperAdmin &&
+          checkLicensePermission(action.request)
+        "
+        matTooltip="Request go live"
+      >
+        <mat-icon class="flow-info-toolbar__btn-icon">send</mat-icon>
+      </button>
+      <button
+        (click)="deploySchedule()"
+        mat-icon-button
+        *ngIf="
+          !workflow.numbers?.length &&
+          (workflowVersion?.status === WorkflowStatus.draft || workflowVersion?.status === WorkflowStatus.pending) &&
+          checkLicensePermission(action.deploy)
+        "
+        matTooltip="Deploy"
+      >
+        <mat-icon class="flow-info-toolbar__btn-icon">publish</mat-icon>
+      </button>
+      <button
+        (click)="cancelRequest()"
+        *ngIf="!workflow.numbers?.length && workflowVersion && workflowVersion.status === WorkflowStatus.pending"
+        [matTooltip]="currentOrg.isUpperAdmin ? 'Reject request' : 'Cancel request'"
+        mat-icon-button
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <button
+        (click)="returnActiveVersion()"
+        *ngIf="!workflow.numbers?.length && workflowVersion && workflowVersion.status !== WorkflowStatus.active"
+        class="flow-info-toolbar__btn-icon"
+        mat-icon-button
+        matTooltip="Back to stable version"
+      >
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button
+        (click)="createDraftVersion(workflow)"
+        [disabled]="progressing"
+        *ngIf="
+          workflow.numbers?.length > 0 &&
+          editingVersion?.status !== WorkflowStatus.scheduled &&
+          editingVersion?.status !== WorkflowStatus.pending &&
+          checkLicensePermission(action.edit)
+        "
+        mat-raised-button
+        matTooltip="Create draft version for editable"
+      >
+        <span *ngIf="!progressing">Edit</span> <span *ngIf="progressing">Creating...</span>
+      </button>
+      <mat-spinner *ngIf="progressing" [diameter]="22"></mat-spinner>
+
+      <button [matMenuTriggerFor]="menu" class="flow-info__menu-button" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button *ngIf="currentOrg.licenseEnabled" (click)="editName()" mat-menu-item>Rename</button>
+        <button
+          (click)="fileInput.click()"
+          [disabled]="
+            workflow.numbers?.length > 0 ||
+            (workflowVersion &&
+              workflowVersion.status !== WorkflowStatus.draft &&
+              !(this.currentOrg.isUpperAdmin && this.workflowVersion.status === WorkflowStatus.pending))
+          "
+          mat-menu-item
+        >
+          <span>Import</span>
+          <input
+            #fileInput
+            (change)="importFlow($event)"
+            accept="application/json"
+            hidden
+            id="uploadFlow"
+            type="file"
+          />
+        </button>
+        <button (click)="exportFlow()" mat-menu-item>Export</button>
+        <button (click)="openVersionHistoryDialog()" mat-menu-item>Show version history</button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <drag-scroll
+      *ngIf="fetched && tree"
+      [class.disableDragScroll]="disableDragScroll"
+      [drag-scroll-disabled]="disableDragScroll"
+      id="flow-content"
+      style="width: 100%"
+    >
+      <div id="flow-drawing">
+        <div class="flow-graph-paper" id="flow-graph-paper"></div>
+        <div
+          id="flow-graph-overlay"
+          class="flow-graph-overlay"
+          [style.background-color]="tree.nodes ? 'transparent' : '#EEEEEE'"
+        >
+          <div style="width: 100%; height: 100%"></div>
+          <div id="flow-graph-items">
+            <div
+              [class.hide]="!drawingTreeCompleted"
+              (click)="enableEditFlow && onFocusBlock()"
+              class="block incoming popup-holder"
+              id="incoming-block"
+            >
+              <span>Incoming call <span *ngIf="backupNumbers.length > 0">to</span> </span>
+              <div *ngIf="backupNumbers.length == 1">{{ backupNumbers }}</div>
+              <div *ngIf="backupNumbers.length > 1" matTooltip="{{ backupNumbers.join(', ') }}">
+                {{ backupNumbers.length }} numbers
+              </div>
+              <div
+                [class.disabled]="!workflow.enableCallRecording"
+                [class.enable]="workflow.enableCallRecording"
+                class="recording-icon"
+              >
+                <img class="ui image" src="assets/ivr-shared/images/vc-icon-record.png" />
+              </div>
+            </div>
+            <!-- GRAPH ITEMS -->
+            <div
+              *ngFor="let block of drawingBlocks"
+              class="block {{ block.type }} popup-holder"
+              id="{{ block.uuid }}"
+              [class.active]="block.uuid == currentBlock?.uuid"
+              [ngStyle]="{ top: block.position.y, left: block.position.x }"
+            >
+              <div *ngIf="block.refLabel" class="branchId" data-inverted="" style="z-index: 2">
+                <span *ngIf="block.isGatherChild">#{{ block.info }}</span>
+                <i *ngIf="!block.isGatherChild" [matTooltip]="block.refLabel" class="material-icons">info_outline</i>
+              </div>
+              <div *ngIf="block.isTransferChild" class="branchId missed">missed</div>
+
+              <div class="extended-area"></div>
+              <div
+                *ngIf="
+                  !workflow.numbers?.length &&
+                  (workflowVersion?.status === WorkflowStatus.draft ||
+                    !version ||
+                    (currentOrg.isUpperAdmin && workflowVersion.status === WorkflowStatus.pending))
+                "
+                class="insert-between"
+                [ngClass]="{ 'move-to-edge': block.isABranch }"
+                id="previous_{{ block.uuid }}"
+                matTooltip="Click to insert middle step"
+                data-inverted=""
+                (click)="enableEditFlow && showMiddlePopup(block)"
+              >
+                <i class="material-icons">add</i>
+              </div>
+
+              <!-- Edit Block's Name -->
+              <div class="blockLabel">
+                <div class="normal-state">
+                  <div class="text">{{ block.label }}</div>
+                </div>
+              </div>
+
+              <div class="content" (click)="enableEditFlow && onFocusBlock(block)">
+                <button
+                  (click)="enableEditFlow && showDeletePopup(block); $event.stopPropagation()"
+                  *ngIf="
+                    !workflow.numbers?.length &&
+                    (workflowVersion?.status === WorkflowStatus.draft ||
+                      !version ||
+                      (currentOrg.isUpperAdmin && workflowVersion.status === WorkflowStatus.pending))
+                  "
+                  mat-icon-button
+                >
+                  <mat-icon aria-label="Example icon-button with a delete icon">delete</mat-icon>
+                </button>
+
+                <div
+                  class="ui tiny expand-block icon button"
+                  [ngClass]="{ 'display-when-hover': block.hasCollapse }"
+                  *ngIf="block.hasExpand || block.hasCollapse"
+                  (click)="enableEditFlow && toggleFlowAt(block)"
+                >
+                  <i *ngIf="block.hasExpand" class="material-icons">chevron_right</i>
+                  <i *ngIf="block.hasCollapse" class="material-icons">chevron_left</i>
+                </div>
+
+                <div
+                  *ngIf="!!block.startNumber"
+                  [class.green-fg]="checkNumberExistsInWorkflow"
+                  [class.red-fg]="!checkNumberExistsInWorkflow"
+                  class="numbers"
+                >
+                  <div
+                    *ngIf="block.startNumber.split(',').length === 1"
+                    matTooltip="Incoming to {{ block.startNumber }}"
+                  >
+                    {{ block.startNumber }}
+                  </div>
+                  <div *ngIf="block.startNumber.split(',').length > 1" matTooltip="Incoming to {{ block.startNumber }}">
+                    {{ block.startNumber.split(',').length }} numbers
+                  </div>
+                </div>
+                <div class="title">{{ block.title }}</div>
+                <div *ngIf="block.message" class="message">
+                  <a
+                    (click)="enableEditFlow && openMp3(block); $event.stopPropagation()"
+                    *ngIf="block.message.includes('.mp3')"
+                    class="content__message__url"
+                    >Mp3 file</a
+                  >
+                  <span *ngIf="!block.message.includes('.mp3')">{{ block.message }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </drag-scroll>
+  </mat-drawer-content>
+
+  <mat-drawer #drawer mode="over" position="end" [autoFocus]="false">
+    <b3n-block-details
+      [sidenav]="drawer"
+      [flow]="selectedFlow"
+      [tree]="tree"
+      [block]="currentBlock"
+      [parentBlock]="parentBlock"
+      [workflow]="workflow"
+      [workflowVersion]="workflowVersion"
+      [currentOrg]="currentOrg"
+      (changed)="blockDetailsUpdated($event)"
+      (swith2EditMode)="createDraftVersion(workflow)"
+      [numbersFlowInfo]="backupNumbers"
+      [skills]="skills"
+    ></b3n-block-details>
+  </mat-drawer>
+</mat-drawer-container>

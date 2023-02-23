@@ -1,0 +1,25 @@
+.ui.page.segment {
+  position: absolute;
+  margin-top: 54px;
+  width: 100%;
+  padding-left: 1.03703704rem;
+  padding-right: 1.03703704rem;
+}
+.side-bar {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  border-right: 1px solid #ccc;
+  position: fixed !important;
+  height: 1000px;
+}
+
+.content-info {
+  margin-top: 1.03703704rem;
+  margin-bottom: 1.03703704rem;
+  padding: 0 !important;
+  left: 25% !important;
+  margin-left: 1px;
+}
+.ui.inverted.dimmer {
+  min-height: 50px;
+}

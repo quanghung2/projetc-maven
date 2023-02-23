@@ -1,0 +1,29 @@
+:host {
+  height: 100%;
+  display: block;
+  overflow: auto;
+
+  .number {
+    font-size: -webkit-xxx-large;
+  }
+
+  .green {
+    color: #5cb85c !important;
+  }
+
+  .red {
+    color: #fd0808 !important;
+  }
+
+  .orange {
+    color: #f0ad4e !important;
+  }
+
+  .blue {
+    color: #269abc !important;
+  }
+
+  .gray {
+    color: lightgray !important;
+  }
+}

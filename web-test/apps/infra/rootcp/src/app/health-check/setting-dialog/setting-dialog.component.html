@@ -1,0 +1,139 @@
+<div mat-dialog-title>{{ data ? 'Edit service' : 'Create service' }}</div>
+<div mat-dialog-content>
+  <form [formGroup]="formSetting" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Name" formControlName="name" required />
+        <mat-error *ngIf="name.invalid">{{ getErrorName() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field formGroupName="metadata">
+        <mat-label>Tags</mat-label>
+        <mat-chip-list #chipTagList formControlName="tags" [required]="tags.value.length == 0">
+          <mat-chip *ngFor="let tag of tags.value" (removed)="removeTag(tag)">
+            {{ tag }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="New tag..."
+            [matChipInputFor]="chipTagList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addTag($event)"
+          />
+        </mat-chip-list>
+        <mat-error *ngIf="tags.value.length == 0">Tag is required</mat-error>
+      </mat-form-field>
+
+      <ng-container formArrayName="monitor">
+        <fieldset
+          [formGroupName]="i"
+          *ngFor="let item of monitor.controls; let i = index"
+          fxLayout="column"
+          fxLayoutAlign="start stretch"
+          fxLayoutGap="10px"
+        >
+          <mat-form-field>
+            <input matInput placeholder="Name" formControlName="name" required />
+            <mat-error *ngIf="item.get('name').hasError('required')">Name is required</mat-error>
+          </mat-form-field>
+
+          <ng-container formGroupName="object">
+            <ng-container *ngIf="item.value.type == 'marathon'">
+              <mat-form-field>
+                <input matInput placeholder="ID" formControlName="id" required />
+                <mat-error *ngIf="item.get('object.id').hasError('required')">ID is required</mat-error>
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="item.value.type == 'elastalert'">
+              <mat-form-field>
+                <mat-label>Indice Pattern</mat-label>
+                <mat-chip-list
+                  #chipList
+                  formControlName="indice_pattern"
+                  [required]="item.get('object.indice_pattern').value.length == 0"
+                >
+                  <mat-chip
+                    *ngFor="let pattern of item.get('object.indice_pattern').value"
+                    (removed)="removePattern(item, pattern)"
+                  >
+                    {{ pattern }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="New pattern..."
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="addPattern(item, $event)"
+                  />
+                </mat-chip-list>
+                <mat-error *ngIf="item.get('object.indice_pattern').value.length == 0">Pattern is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <textarea matInput placeholder="Query" formControlName="query" required></textarea>
+                <mat-error *ngIf="item.get('object.query').hasError('required')">Query is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput type="number" placeholder="Timeframe" formControlName="timeframe" required />
+                <mat-error *ngIf="item.get('object.timeframe').hasError('required')">Timeframe is required</mat-error>
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="15px" formGroupName="rule">
+            <mat-form-field fxFlex="33.33">
+              <input matInput type="number" placeholder="Interval" formControlName="interval" required />
+              <mat-error *ngIf="item.get('rule.interval').hasError('required')">Interval is required</mat-error>
+            </mat-form-field>
+
+            <ng-container *ngIf="item.value.type == 'marathon'">
+              <mat-form-field fxFlex="33.33">
+                <input matInput type="number" placeholder="Retries" formControlName="retries" required />
+                <mat-error *ngIf="item.get('rule.retries').hasError('required')">Retries is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field fxFlex="33.33">
+                <input matInput type="number" placeholder="Timeout" formControlName="timeout" required />
+                <mat-error *ngIf="item.get('rule.timeout').hasError('required')">Timeout is required</mat-error>
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="item.value.type == 'elastalert'">
+              <mat-form-field fxFlex="33.33">
+                <input matInput type="number" placeholder="Num events" formControlName="num_events" required />
+                <mat-error *ngIf="item.get('rule.num_events').hasError('required')">Num events is required</mat-error>
+              </mat-form-field>
+            </ng-container>
+          </div>
+
+          <div>
+            <button mat-stroked-button type="button" color="warn" (click)="removeMonitor(i)">Remove monitor</button>
+          </div>
+        </fieldset>
+      </ng-container>
+
+      <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+        <label>Choose the type of monitor to add (must have at least one display)</label>
+        <mat-radio-group color="primary" [formControl]="typeCtrl">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+            <mat-radio-button value="marathon">Marathon</mat-radio-button>
+            <mat-radio-button value="elastalert">Elastalert</mat-radio-button>
+          </div>
+        </mat-radio-group>
+      </div>
+      <p>
+        <a href="javascript:;" (click)="addMonitor(typeCtrl.value)">+ Add New Monitor</a>
+      </p>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="submitting" [disabled]="formSetting.invalid" (click)="submit()">
+    {{ data ? 'Save' : 'Create' }}
+  </button>
+</div>

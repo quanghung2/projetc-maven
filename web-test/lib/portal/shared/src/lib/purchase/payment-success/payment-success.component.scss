@@ -1,0 +1,16 @@
+.container {
+  max-width: 500px;
+  text-align: center;
+  margin: 4em auto;
+  .header {
+    font-size: 30px;
+    margin: 0.5rem 0;
+  }
+  .actions {
+    display: flex;
+    justify-content: center;
+    > button {
+      margin: 12px 8px;
+    }
+  }
+}

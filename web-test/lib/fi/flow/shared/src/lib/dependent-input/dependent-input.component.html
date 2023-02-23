@@ -1,0 +1,58 @@
+<ng-container [formGroup]="myForm" *ngIf="conditions">
+  <p class="mt-0" *ngIf="keys?.length > 0 && conditions.controls.length > 0">
+    <strong>Conditional Visibility</strong>
+  </p>
+
+  <ng-container *ngIf="conditions.controls.length > 0" formGroupName="visibilityDep">
+    <mat-checkbox color="primary" formControlName="requiredWhenShow" class="mb-10">Require when visible</mat-checkbox>
+
+    <div formArrayName="conditions" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <div
+        [formGroupName]="i"
+        *ngFor="let item of conditions.controls; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="8px"
+      >
+        <mat-form-field hideRequiredMarker="true" fxFlex="30">
+          <mat-select placeholder="Key" formControlName="key" required>
+            <mat-option *ngFor="let p of keys" [disabled]="existKey(p.key)" [value]="p.key">{{ p.key }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="item.get('key').invalid">This field is required</mat-error>
+        </mat-form-field>
+
+        <div *ngIf="defineCondition[i]" fxFlex="70">
+          <mat-form-field *ngIf="defineCondition[i].dataType === 'boolean'" hideRequiredMarker="true">
+            <mat-select
+              placeholder="Value"
+              [value]="item.get('values').value[0]"
+              (selectionChange)="item.get('values').setValue([$event.value])"
+              [disabled]="!allowEdit"
+              required
+            >
+              <mat-option [value]="'true'">True</mat-option>
+              <mat-option [value]="'false'">False</mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('values').invalid">This field is required</mat-error>
+          </mat-form-field>
+          <mat-form-field *ngIf="defineCondition[i].dataType.startsWith('valuelist')" hideRequiredMarker="true">
+            <mat-select placeholder="Values" formControlName="values" required multiple>
+              <mat-option *ngFor="let ad of $any(defineCondition[i].valueSource)" [value]="ad.value">
+                {{ ad.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('values').invalid">This field is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <button *ngIf="allowEdit" mat-icon-button color="warn" (click)="removeCondition(i)" fxFlex="40px">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <p *ngIf="keys?.length > 0 && conditions.controls.length < keys?.length && allowEdit" class="mt-0">
+    <a href="javascript:;" class="link" (click)="addCondition()">+ Add visibility condition</a>
+  </p>
+</ng-container>

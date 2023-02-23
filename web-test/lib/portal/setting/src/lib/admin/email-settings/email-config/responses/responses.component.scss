@@ -1,0 +1,32 @@
+@import '../../email-settings.component';
+
+$icon-size: 20px;
+
+.container {
+  padding: 0 16px;
+  .action__toolbar {
+    margin-top: 8px;
+    padding-left: 0;
+    padding-right: 0;
+
+    mat-form-field {
+      width: 300px;
+      mat-label {
+        font-size: 14px;
+      }
+    }
+
+    &__icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+  }
+  
+  .agent-list {
+    table {
+      width: 100%;
+    }
+  }
+}

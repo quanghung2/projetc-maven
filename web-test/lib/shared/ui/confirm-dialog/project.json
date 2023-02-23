@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-confirm-dialog",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/confirm-dialog/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/confirm-dialog/**/*.ts", "libs/shared/ui/confirm-dialog/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,36 @@
+.container {
+  min-height: 83vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.item {
+  height: 50px;
+}
+
+.mat-form-field {
+  display: inline;
+}
+
+.mat-card {
+  text-align: center;
+  width: 360px;
+}
+
+.mat-card-title {
+  margin-bottom: 2rem;
+}
+
+.mat-card-actions {
+  margin: 0.8rem 0 !important;
+}
+
+.report-not-found {
+  height: 100vh;
+  color: rgba(0, 0, 0, 0.67);
+}
+.single-timer {
+  margin-bottom: 1.5rem;
+}

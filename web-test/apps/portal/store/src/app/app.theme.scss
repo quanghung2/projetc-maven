@@ -1,0 +1,68 @@
+// -----------------------------------------------------------------------------------------------------
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
+
+// Angular Material typography
+$typography: mat-typography-config(
+  $font-family: 'Roboto, sans-serif',
+  // $button: mat-typography-level(14px, 14px, 500),
+  // $input: mat-typography-level(16px, 1.125, 400) // line-height must be unitless !!!
+);
+
+// Setup the typography
+@include angular-material-typography($typography);
+
+// -----------------------------------------------------------------------------------------------------
+// @ Component theming
+// -----------------------------------------------------------------------------------------------------
+
+// Import app and page component themes here to enable theming for them
+
+// Define a mixin for easier access
+@mixin components-theme($theme) {
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define the default theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$default-primary-palette: mat-palette($mat-blue);
+$default-accent-palette: mat-palette($mat-light-blue, 600, 400, 700);
+$default-warn-palette: mat-palette($mat-red);
+
+// Create the Material theme object
+$theme: mat-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+
+// Add ".theme-default" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-default {
+  // Create an Angular Material theme from the $theme map
+  @include angular-material-theme($theme);
+
+  // Apply the theme to the b3n Core
+  @include b3n-core-theme($theme);
+
+  // Apply the theme to the user components
+  @include components-theme($theme);
+
+  // Generate b3n color classes for primary, accent and warn colors
+  $palettes: (
+    primary: $default-primary-palette,
+    accent: $default-accent-palette,
+    warn: $default-warn-palette
+  );
+
+  @include b3n-color-classes($palettes);
+  .mat-drawer-container,
+  .mat-toolbar {
+    background-color: inherit;
+  }
+  .mat-toolbar {
+    font-size: 16px;
+    font-weight: 400;
+  }
+  body {
+    background-color: #fafafa;
+  }
+}

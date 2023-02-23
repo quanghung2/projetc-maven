@@ -1,0 +1,16 @@
+{
+  "name": "fi-flow-feature-setting",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/fi/flow/feature/setting/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/fi/flow/feature/setting/**/*.ts", "libs/fi/flow/feature/setting/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

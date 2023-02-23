@@ -1,0 +1,22 @@
+:host {
+  .icon-menu {
+    border-radius: 4px !important;
+    width: 40px;
+    height: 40px;
+    margin-right: 1.6rem;
+    &.active {
+      background-color: rgba(29, 28, 29, 0.13);
+    }
+    mat-icon {
+      height: 25px;
+      line-height: 25px;
+      width: 25px;
+      font-size: 25px;
+    }
+
+    ::ng-deep .mat-badge-content {
+      top: 4px !important;
+      right: -1px !important;
+    }
+  }
+}

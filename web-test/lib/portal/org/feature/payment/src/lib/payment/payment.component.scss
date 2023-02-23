@@ -1,0 +1,12 @@
+.payment {
+  .payment-content,
+  .header {
+    max-width: 800px;
+    width: 100%;
+    margin: auto;
+    .divider {
+      height: 1px;
+      border-top: 1px solid #dddddd;
+    }
+  }
+}

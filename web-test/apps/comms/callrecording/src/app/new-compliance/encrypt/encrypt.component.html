@@ -1,0 +1,16 @@
+<div class="ui form" [ngClass]="{ loading: loading }">
+  <div class="field">
+    <textarea rows="32" [(ngModel)]="encryptConfig.encryptPublicKey" *ngIf="editing"></textarea>
+    <pre *ngIf="!editing">{{ encryptConfig.encryptPublicKey }}</pre>
+  </div>
+  <div
+    class="ui primary button"
+    [ngClass]="{ disabled: !encryptConfig.encryptPublicKey }"
+    (click)="saveEncrypt()"
+    *ngIf="editing && !saving"
+  >
+    Save
+  </div>
+  <div class="ui primary button loading" *ngIf="editing && saving">Save</div>
+  <div class="ui primary button" (click)="editing = true" *ngIf="!editing">Edit</div>
+</div>

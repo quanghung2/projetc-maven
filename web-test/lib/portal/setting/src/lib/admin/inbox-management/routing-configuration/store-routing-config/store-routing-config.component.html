@@ -1,0 +1,112 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span> {{ data?.isCreate ? 'Create Routing Configuration' : 'Edit Routing Configuration' }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<ng-container *ngIf="loading">
+  <div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="35"></mat-spinner>
+  </div>
+</ng-container>
+
+<div
+  *ngIf="!loading"
+  [formGroup]="group"
+  class="container-dialog"
+  mat-dialog-content
+  fxLayout="column"
+  fxLayoutAlign="start none"
+  fxLayoutGap="1.6rem"
+>
+  <mat-form-field>
+    <mat-label>Inbox</mat-label>
+    <mat-select formControlName="inbox" [errorStateMatcher]="matcher">
+      <div class="option-container">
+        <mat-option *ngFor="let item of filteredInbox$ | async" [value]="item.uuid">{{ item.name }}</mat-option>
+      </div>
+    </mat-select>
+  </mat-form-field>
+
+  <ng-container *ngIf="!data?.routing?.default">
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type">
+        <div class="option-container">
+          <mat-option [value]="'All'">All (*)</mat-option>
+          <mat-option *ngFor="let item of filteredType$ | async" [value]="item.id">{{ item.name }}</mat-option>
+        </div>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="products" placeholder="Products" multiple>
+        <mat-select-trigger>
+          {{ displayProduct }}
+        </mat-select-trigger>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No product found"
+            [formControl]="productCtrl"
+          >
+          </ngx-mat-select-search>
+        </mat-option>
+        <mat-option [value]="'All'">All (*)</mat-option>
+        <mat-option *ngFor="let m of filteredProduct$ | async" [disabled]="isAllProduct" [value]="m">{{
+          m.name
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Organization</mat-label>
+      <mat-chip-list #orgList>
+        <mat-chip *ngFor="let o of orgs.value || []" (removed)="removeOrg(o)">
+          {{ o?.name || (o?.orgUuid | slice: 0:8) }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input
+          placeholder="Search product name"
+          #orgInput
+          [formControl]="orgCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="orgList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        />
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedOrg($event)">
+        <mat-option *ngFor="let p of filteredOrgs$ | async" [value]="p">
+          {{ p.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="isB3">
+      <mat-label>Domain</mat-label>
+      <mat-chip-list #domain>
+        <mat-chip *ngFor="let domain of domains.value" (removed)="removeDomain(domain)">
+          {{ domain }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+      </mat-chip-list>
+      <input
+        placeholder="Add domain"
+        #domainInput
+        [matChipInputFor]="domain"
+        (matChipInputTokenEnd)="addDomain($event)"
+      />
+    </mat-form-field>
+  </ng-container>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [loading]="isProcessing" [disabled]="group.invalid">
+    <span *ngIf="!data.isCreate"> Update </span>
+    <span *ngIf="data.isCreate"> Create </span>
+  </button>
+</div>

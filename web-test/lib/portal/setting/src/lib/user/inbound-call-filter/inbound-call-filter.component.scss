@@ -1,0 +1,85 @@
+.call-filter__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 0 16px;
+  max-width: 700px;
+  margin: auto;
+  position: relative;
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  mat-progress-bar {
+    position: absolute;
+    top: -1rem;
+    width: calc(100% - 32px);
+  }
+
+  h3 {
+    margin: 0;
+  }
+
+  .first-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .customer-inbound {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .button {
+      align-self: flex-end;
+    }
+
+    mat-row,
+    mat-header-row {
+      gap: 10px;
+
+      button {
+        opacity: 0;
+      }
+    }
+
+    mat-row:hover {
+      background-color: #fafafa;
+
+      button {
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+
+    .mat-column-index {
+      flex-basis: 15%;
+    }
+
+    .mat-column-function {
+      flex-basis: 20%;
+      justify-content: right;
+    }
+
+    .mat-column-matchingPattern,
+    .mat-column-action {
+      flex-basis: 37.5%;
+    }
+
+    .text {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .function {
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}

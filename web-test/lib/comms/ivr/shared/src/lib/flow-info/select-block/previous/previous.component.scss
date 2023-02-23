@@ -1,0 +1,27 @@
+.middle-step-title {
+  margin: 0 0 12px !important;
+}
+.content {
+  .mat-subheading-1 {
+    font-size: 14px;
+  }
+}
+mat-nav-list {
+  padding-top: 0 !important;
+
+  .mat-list-item {
+    height: 44px !important;
+
+    i,
+    img {
+      margin-right: 10px;
+      font-size: 16px !important;
+    }
+  }
+}
+.mat-dialog-actions {
+  min-height: 50px !important;
+}
+::ng-deep .mat-list-item.hidden {
+  display: none !important;
+}

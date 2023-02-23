@@ -1,0 +1,54 @@
+<form autocomplete="off" class="store-item__container" [formGroup]="form">
+  <p class="store-item__noti" *ngIf="item">* Cannot edit label</p>
+  <div class="store-item__row">
+    <mat-form-field>
+      <mat-label>Label</mat-label>
+      <input matInput formControlName="label" [readonly]="!!item" [errorStateMatcher]="matcher" />
+      <mat-error *ngIf="lable.errors?.['required']">Label is required</mat-error>
+      <mat-error *ngIf="lable.errors?.['maxlength']">Maximum 2000 characters </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select formControlName="type">
+        <mat-option *ngFor="let type of types | keyvalue" [value]="type.value">
+          {{ type.key }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="option__wrapper" *ngIf="showOption">
+    <div class="option__row">
+      <mat-form-field>
+        <mat-label>Option</mat-label>
+        <input matInput formControlName="option" [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="option.errors?.['duplicate']">This option is already exist </mat-error>
+        <mat-error *ngIf="option.errors?.['empty']">Please add at least one option </mat-error>
+        <mat-error *ngIf="option.errors?.['maxlength']">Maximum 256 characters </mat-error>
+      </mat-form-field>
+      <button
+        mat-icon-button
+        [disabled]="!option.value || option.errors?.['maxlength']"
+        (click)="addOption()"
+        color="primary"
+      >
+        <mat-icon
+          [style]="!option.value || option.errors?.['maxlength'] ? 'cursor: default' : ''"
+          [matTooltip]="!option.value || option.errors?.['maxlength'] ? '' : 'Add Option'"
+          >done</mat-icon
+        >
+      </button>
+    </div>
+    <div class="option__review">
+      <div class="option" *ngFor="let option of options; let i = index">
+        <p>{{ option }}</p>
+        <mat-icon (click)="removeOption(i)" color="warn">clear</mat-icon>
+      </div>
+    </div>
+  </div>
+  <div class="store-item__action">
+    <button mat-button *ngIf="item" (click)="cancel()" type="button">Cancel</button>
+    <button mat-stroked-button color="primary" [disabled]="form?.invalid" (click)="triggerAddItem()">
+      {{ item ? 'Update' : 'Add' }} Item
+    </button>
+  </div>
+</form>

@@ -1,0 +1,23 @@
+.balance {
+  &--value {
+    font-weight: bold;
+    font-size: 3.2rem;
+    padding-right: 1rem;
+  }
+  &--currency {
+    position: absolute;
+  }
+}
+.addon-info-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  .addon-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+  }
+}

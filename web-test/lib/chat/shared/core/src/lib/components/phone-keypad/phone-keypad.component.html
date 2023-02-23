@@ -1,0 +1,150 @@
+<ng-container *ngIf="delegatedCallerId$ | async as delegatedCallerId">
+  <div class="keypad flex column justify-content-space-between align-items-center gap-16">
+    <mat-form-field floatLabel="never" class="keypad__input">
+      <input
+        placeholder="Type a name or number"
+        matInput
+        phoneNumPattern
+        type="text"
+        #inputDial
+        [formControl]="phoneNumber"
+        (keypress)="doPress($event)"
+        (keyup.enter)="delegatedCallerId.length === 0 ? btnCall(callerId) : openMenu()"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <button
+      color="primary"
+      class="num-call phone_button"
+      (click)="delegatedCallerId.length === 0 ? btnCall(callerId) : openMenu()"
+    >
+      <mat-icon>phone</mat-icon>
+    </button>
+    <!-- <ng-container *ngIf="extensionHasCallerId$ | async">
+      <section [hidden]="teams.result.length || contacts.result.length"></section>>
+      <section [hidden]="false">
+        <ng-container *ngTemplateOutlet="keypad"></ng-container>
+      </section>
+    </ng-container> -->
+  </div>
+
+  <!-- <mat-tab-group class="contact__search" *ngIf="teams.result.length || contacts.result.length"> -->
+  <!-- <mat-tab-group class="contact__search" *ngIf="false">
+    <mat-tab [label]="'TEAMS' + ' (' + teams.result.length + ')'">
+      <ng-container *ngIf="teams?.result.length; else noItem">
+        <mat-list-item *ngFor="let team of teams.result; let idx = index; trackBy: trackByTeam" class="contact">
+          <b3n-contact-record [member]="team" [key]="key" (callTo)="makeCallTo($event)"></b3n-contact-record>
+        </mat-list-item>
+      </ng-container>
+    </mat-tab>
+    <mat-tab [label]="'CONTACTS' + ' (' + contacts.result.length + ')'">
+      <ng-container *ngIf="contacts?.result.length; else noItem">
+        <mat-list-item
+          *ngFor="let contact of contacts?.result; let idx = index; trackBy: trackByContact"
+          class="contact"
+        >
+          <b3n-contact-record [contact]="contact" [key]="key"></b3n-contact-record>
+        </mat-list-item>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="DIAL-PAD">
+      <div class="mt-16">
+        <ng-container *ngTemplateOutlet="keypad"></ng-container>
+      </div>
+    </mat-tab>
+  </mat-tab-group> -->
+
+  <ng-template #noItem>
+    <div fxLayoutAlign="center center">
+      <span class="mat-caption">No results</span>
+    </div>
+  </ng-template>
+
+  <ng-template #keypad>
+    <div class="keypad__numbers flex flex-wrap justify-content-start align-items-center gap-10">
+      <div
+        *ngFor="let key of [].constructor(9); let i = index"
+        fxFlex="0 1 calc(33.3% - 0.67rem)"
+        class="number-region flex column justify-content-center align-items-center"
+        [class.no-margin-right]="(i + 1) % 3 === 0"
+      >
+        <div class="num" (click)="inputNumber(i + 1)">
+          <div class="digit-only">{{ i + 1 }}</div>
+        </div>
+      </div>
+
+      <div
+        fxFlex="0 1 calc(33.3% - 0.67rem)"
+        class="number-region flex column justify-content-center align-items-center"
+      >
+        <div class="num" (click)="inputNumber('*')">
+          <div class="digit-only">*</div>
+        </div>
+      </div>
+      <div
+        fxFlex="0 1 calc(33.3% - 0.67rem)"
+        class="number-region flex column justify-content-center align-items-center"
+      >
+        <div class="num" (click)="inputNumber('0')">
+          <div class="digit-only">0</div>
+          <div class="text">+</div>
+        </div>
+      </div>
+      <div
+        fxFlex="0 1 calc(33.3% - 0.67rem)"
+        class="number-region flex column justify-content-center align-items-center"
+      >
+        <div class="num" (click)="inputNumber('#')">
+          <div class="digit-only">#</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="keypad__actions flex justify-content-start align-items-center gap-10">
+      <span fxFlex="0 1 calc(33.3% - 0.67rem)"> </span>
+      <div fxFlex="0 1 calc(33.3% - 0.67rem)" class="flex column justify-content-center align-items-center">
+        <ng-container *ngIf="data?.isDTMF; else dialPhone">
+          <button mat-raised-button color="primary" matTooltip="##2" (click)="doTransfer()">Transfer</button>
+        </ng-container>
+        <ng-template #dialPhone>
+          <div class="phone-icon">
+            <button
+              mat-icon-button
+              class="num-call"
+              (click)="delegatedCallerId.length === 0 ? btnCall(callerId) : openMenu()"
+            >
+              <mat-icon>phone</mat-icon>
+            </button>
+            <div
+              class="menu-delegate"
+              #menuTrigger="matMenuTrigger"
+              [matMenuTriggerFor]="menuDelegate"
+              [matMenuTriggerData]="{ list: delegatedCallerId }"
+            ></div>
+          </div>
+        </ng-template>
+      </div>
+      <div
+        fxFlex="0 1 calc(33.3% - 0.67rem)"
+        class="no-margin-right flex column justify-content-center align-items-center"
+      >
+        <button mat-icon-button (click)="btnDelete()" *ngIf="phoneNumber">
+          <mat-icon fontSet="material-icons-outlined">backspace</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+
+<mat-menu #menuDelegate="matMenu">
+  <ng-template matMenuContent let-list="list">
+    <button mat-menu-item *ngIf="callerId" (click)="btnCall(callerId)">{{ callerId }}</button>
+    <button mat-menu-item *ngFor="let item of list" (click)="btnCall(item.number)">
+      {{
+        (item.extKey | selectExtensionCallcenter | async)?.displayText ||
+          'Extension ' + item.extKey + ' (' + item.extKey + ')'
+      }}
+      : {{ item.number }}
+    </button>
+  </ng-template>
+</mat-menu>

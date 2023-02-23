@@ -1,0 +1,105 @@
+<div *ngIf="case" class="detail detail-action flex wrap justify-content-end gap-8">
+  <!-- <ng-container *ngIf="isOwnerOfCase">
+    <ng-container *ngIf="collaborators$ | async as collaborators">
+      <button
+        *ngIf="isB3Org"
+        mat-icon-button
+        matTooltip="Share case"
+        [matMenuTriggerFor]="shareCaseMenu"
+        [matMenuTriggerData]="{ collaborators: collaborators }"
+      >
+        <mat-icon class="material-icons-outlined">share</mat-icon>
+      </button>
+      <button
+        *ngIf="!isB3Org && !isSharedWithB3"
+        matTooltip="Share case to B3Networks"
+        mat-icon-button
+        (click)="confirmShareToB3()"
+      >
+        <mat-icon class="material-icons-outlined">share</mat-icon>
+      </button>
+      <button
+        *ngIf="!isB3Org && isSharedWithB3"
+        matTooltip="Unshare case to B3Networks"
+        mat-icon-button
+        color="yellow-fg"
+        (click)="confirmUnshare(B3_ORG_UUID)"
+      >
+        <mat-icon class="yellow-700-fg material-icons-outlined">share</mat-icon>
+      </button>
+    </ng-container>
+  </ng-container> -->
+
+  <ng-container>
+    <button
+      *ngIf="watchers$ | async as watchers"
+      mat-icon-button
+      [matTooltip]="isWatchingCase ? 'Stop watching' : 'Start watching'"
+      (click)="toggleWatching(isWatchingCase)"
+    >
+      <mat-icon [ngClass]="isWatchingCase ? 'visibilityWatch' : 'material-icons-outlined'" class=""
+        >visibility</mat-icon
+      >
+    </button>
+  </ng-container>
+</div>
+
+<!-- Share -->
+<mat-menu #shareCaseMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-collaborators="collaborators">
+    <div class="share-case flex column gap-16" (click)="$event.stopPropagation()">
+      <h3 class="share-case-title">Share case</h3>
+      <mat-form-field class="input-search" appearance="outline">
+        <mat-label>Input a organization uuid</mat-label>
+        <input #inputSearch matInput autocomplete="off" [formControl]="searchOrg" (keydown.enter)="findOrg()" />
+      </mat-form-field>
+      <div *ngIf="shareOrg" class="found-org">
+        <p *ngIf="shareOrg?.domain">Domain: {{ shareOrg?.domain }}</p>
+        <p *ngIf="shareOrg?.sourceName">Name: {{ shareOrg?.sourceName }}</p>
+      </div>
+
+      <div class="list-org-share">
+        <mat-list class="m-0 p-0">
+          <h3 mat-subheader class="p-0">Shared with organizations</h3>
+        </mat-list>
+        <ng-container *ngIf="collaborators?.length === 0; else loadList">
+          <mat-hint fxLayoutAlign="center"> No organization shared</mat-hint>
+        </ng-container>
+        <ng-template #loadList>
+          <div
+            *ngFor="let collaborator of collaborators; let i = index"
+            class="sortable-box"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div class="item" fxLayout="row">
+              <span class="spacer">{{ collaborator.orgUuid }}</span>
+              <mat-icon
+                (click)="confirmUnshare(collaborator.orgUuid)"
+                class="code-option__btn-delete"
+                matTooltip="Delele"
+              >
+                delete
+              </mat-icon>
+            </div>
+            <mat-divider *ngIf="i < collaborators.length - 1"></mat-divider>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="shear-action" fxLayoutAlign="end end" fxLayoutGap="0.8rem">
+        <div *ngIf="firstCheckoutUUid">
+          <div *ngIf="!checkingUuid">
+            <mat-icon class="check" *ngIf="shareOrg">check_circle</mat-icon>
+            <mat-icon class="cancel" *ngIf="!shareOrg">cancel</mat-icon>
+          </div>
+        </div>
+        <mat-spinner *ngIf="checkingUuid" class="loading" [diameter]="20">Loading...</mat-spinner>
+
+        <button [disabled]="!shareOrg || !checkOrgShare" mat-flat-button color="primary" (click)="shareCase()">
+          Share
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</mat-menu>

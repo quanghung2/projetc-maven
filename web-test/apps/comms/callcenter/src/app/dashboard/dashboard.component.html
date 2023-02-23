@@ -1,0 +1,27 @@
+<mat-progress-bar *ngIf="loading" class="my-10" mode="indeterminate"></mat-progress-bar>
+
+<div class="action-bar">
+  <ng-container *ngIf="settings$ | async as filtering">
+    <b3n-action-bar-dashboard
+      [filtering]="filtering"
+      [queues]="queues"
+      [userUtcOffset]="userUtcOffset"
+      (export)="onExport($event)"
+      (switch)="onSwitchMetric($event)"
+    ></b3n-action-bar-dashboard>
+  </ng-container>
+</div>
+
+<div id="statistic" class="container">
+  <div fxLayout="row wrap" fxLayoutGap="1.6rem grid">
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-call-statistic></b3n-call-statistic></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-abandoned-rate></b3n-abandoned-rate></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-sla></b3n-sla></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-agent-statistic></b3n-agent-statistic></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-current-calls-in-queue></b3n-current-calls-in-queue></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-longest-wait-time></b3n-longest-wait-time></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-agent-status></b3n-agent-status></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-average-call-duration></b3n-average-call-duration></div>
+    <div fxFlex="33.3%" fxFlex.lt-md="50%"><b3n-average-wait-time></b3n-average-wait-time></div>
+  </div>
+</div>

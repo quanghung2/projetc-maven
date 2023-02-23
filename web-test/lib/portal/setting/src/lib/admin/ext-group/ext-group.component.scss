@@ -1,0 +1,53 @@
+.actions {
+  visibility: hidden;
+  margin-right: 8px;
+}
+
+.mat-row:hover {
+  background-color: #fafafa;
+
+  .actions {
+    visibility: visible;
+  }
+}
+
+.information {
+  font-size: 14px;
+  margin: 0 0 0 20px;
+  position: relative;
+
+  &::before {
+    font-family: 'Material Icons';
+    content: 'info';
+    position: absolute;
+    left: -20px;
+  }
+
+  i {
+    font-size: 14px;
+
+    &:hover {
+      color: #2196f3;
+      font-weight: 500;
+    }
+  }
+}
+
+.mat-column-extKey {
+  width: 150px;
+}
+
+.mat-column-extLabel {
+  width: 200px;
+}
+
+.mat-column-extList {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-actions {
+  width: 100px;
+}

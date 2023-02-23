@@ -1,0 +1,29 @@
+<b3n-email-conversation-list
+  [customHeaderTemplate]="selectAgent"
+  [loadMoreTemplate]="loadMoreTemplate"
+  [convo]="conversation$ | async"
+  [isDisplayHeaderActions]="false"
+></b3n-email-conversation-list>
+
+<ng-template #selectAgent>
+  <div *ngIf="isOverModeLeftSidebar$ | async" class="action__header flex justify-content-start align-items-center">
+    <csh-menu-toggle></csh-menu-toggle>
+  </div>
+  <form class="mx-16 mt-16">
+    <mat-form-field class="w-100 autocomplete-selection" appearance="outline">
+      <mat-label>Select Agents</mat-label>
+      <input type="text" placeholder="Agent name" matInput [formControl]="agentControl" [matAutocomplete]="auto" />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" (optionSelected)="select($event.option.value)">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.displayName">
+          {{ option.displayName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #loadMoreTemplate>
+  <button mat-raised-button (click)="loadMore()" color="primary" class="mx-16" *ngIf="hasLoadMoreButton">
+    Load more
+  </button>
+</ng-template>

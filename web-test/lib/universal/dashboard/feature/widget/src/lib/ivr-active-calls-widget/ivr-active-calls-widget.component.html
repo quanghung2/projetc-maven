@@ -1,0 +1,28 @@
+<div class="ivr-active-call__wrapper">
+  <div *ngIf="!tables.length" class="ivr-active-call__empty">No data</div>
+  <ng-container *ngFor="let table of tables; let i = index">
+    <table
+      class="ivr-active-call__table"
+      mat-table
+      [dataSource]="table"
+      [class.table-1__width]="tables.length === 1"
+      [class.table-2__width]="tables.length === 2"
+      [class.table-3__width]="tables.length >= 3"
+      [class.table__border]="i < tables.length - 1"
+    >
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let data">{{ data.workFlowName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="count">
+        <th mat-header-cell *matHeaderCellDef>Count</th>
+        <td mat-cell *matCellDef="let data" [class.text-red]="data.callCount > 0">
+          {{ data.callCount }}
+        </td>
+      </ng-container>
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ng-container>
+</div>

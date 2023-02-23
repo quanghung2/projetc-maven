@@ -1,0 +1,21 @@
+<mat-toolbar>
+  <div fxLayout="column">
+    <a href="javascript:void(0)" class="mat-caption" (click)="goBack()">Back to Campaign</a>
+    <h1>{{ campaign?.name }}</h1>
+  </div>
+</mat-toolbar>
+<div *ngIf="!loading" class="container">
+  <ng-container *ngIf="campaign.type === CampaignType.sms">
+    <b3n-sms-history-common [noDateRange]="true" [filter]="filterSMS"></b3n-sms-history-common>
+  </ng-container>
+  <ng-container *ngIf="campaign.type === CampaignType.voice">
+    <poh-unified-history
+      [noTitle]="true"
+      [noDateRange]="true"
+      [noTeams]="true"
+      [filter]="filterCall"
+    ></poh-unified-history>
+  </ng-container>
+</div>
+
+<!-- <poh-unified-history [noTitle]="true"></poh-unified-history> -->

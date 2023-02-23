@@ -1,0 +1,41 @@
+.list__header {
+  height: var(--header-height);
+  border-bottom: 1px solid var(--general-border);
+  display: block;
+  position: relative;
+  width: 100%;
+
+  .button__group {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 32px);
+
+    &-toggle {
+      width: 50%;
+    }
+
+    .mat-button-toggle-checked {
+      background-color: var(--primary-background);
+      color: white;
+    }
+
+    ::ng-deep {
+      .mat-button-toggle-label-content {
+        line-height: 36px;
+      }
+    }
+  }
+}
+
+.action__header {
+  border-bottom: 1px solid var(--general-border);
+  height: var(--header-height);
+  padding: 0 10px;
+
+  mat-icon {
+    color: var(--icon-background);
+  }
+}

@@ -1,0 +1,23 @@
+<div mat-dialog-title>Config default public holiday</div>
+<div mat-dialog-content>
+  <div [formGroup]="formConfig" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" class="mb-4">
+    <mat-form-field>
+      <mat-select placeholder="Public holiday by country" formControlName="phCountryCode" required>
+        <mat-option *ngFor="let country of contries$ | async; contries" [value]="country.code">
+          {{ country.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formConfig.get('phCountryCode').invalid">Field is required</mat-error>
+    </mat-form-field>
+
+    <mat-chip-list *ngIf="formConfig.get('phCountryCode').value">
+      <mat-chip *ngFor="let h of holidays">{{ h.date | date: 'mediumDate' }}</mat-chip>
+    </mat-chip-list>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="updating" [disabled]="formConfig.invalid" (click)="update()">
+    Update
+  </button>
+</div>

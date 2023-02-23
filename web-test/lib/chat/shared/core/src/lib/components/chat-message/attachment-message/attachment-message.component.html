@@ -1,0 +1,90 @@
+<div class="flex justify-content-start align-items-center gap-16">
+  <div class="flex column justify-content-start align-items-start">
+    <div class="file_message">
+      <ng-container *ngIf="!isImgFile; else imageWidget">
+        <ng-container *ngIf="isVideo">
+          <csh-video-file-message
+            [message]="message"
+            [isPublic]="isPublic"
+            [parentElr]="parentElr"
+          ></csh-video-file-message>
+        </ng-container>
+        <ng-container *ngIf="isAudio">
+          <csh-audio-file-message
+            [message]="message"
+            [isPublic]="isPublic"
+            [parentElr]="parentElr"
+          ></csh-audio-file-message>
+        </ng-container>
+        <ng-container *ngIf="!isAudio && !isVideo">
+          <mat-card>
+            <div class="flex justify-content-start align-items-center gap-8">
+              <img class="attachment__avatar" [src]="logoFileType" />
+              <div class="flex column justify-content-start align-items-start gap-3">
+                <span class="semi-bold">{{ attachmentData?.name }}</span>
+                <span class="description mat-caption">
+                  <span *ngIf="sizeFile"> {{ sizeFile }} </span>
+                  <ng-container *ngIf="fileType">
+                    <span class="divider">|</span>
+                    <span>{{ fileType }}</span>
+                  </ng-container>
+                </span>
+              </div>
+            </div>
+          </mat-card>
+        </ng-container>
+      </ng-container>
+      <ng-template #imageWidget>
+        <div
+          *ngIf="!noIntersectionObserver"
+          [intersectionObserverDom]="parentElr"
+          class="image-container flex justify-content-center align-items-center"
+          [ngStyle]="style"
+          [style.background-image]="backgroundImage"
+          (render)="onRenderImg()"
+          (click)="zoom()"
+        >
+          <mat-spinner *ngIf="!loaded || mediaService.loadingMap?.[this.message.id]" diameter="40"></mat-spinner>
+          <span *ngIf="loaded && !backgroundImage" class="material-icons not-loaded-image"> broken_image </span>
+        </div>
+
+        <div
+          *ngIf="noIntersectionObserver"
+          class="image-container flex justify-content-center align-items-center"
+          [style.background-image]="backgroundImage"
+          [ngStyle]="style"
+          (click)="zoom()"
+        >
+          <mat-spinner *ngIf="mediaService.loadingMap?.[this.message.id]" diameter="40"></mat-spinner>
+        </div>
+      </ng-template>
+
+      <div
+        class="file_message__actions"
+        *ngIf="!mediaService.loadingMap?.[this.message.id]&& !isHideAction && (!isLoading || !isImgFile)"
+      >
+        <button mat-icon-button *ngIf="!isHiding && !isVideo && !isAudio" (click)="download()" matTooltip="Download">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          (click)="hide()"
+          *ngIf="isImgFile && !isPublic"
+          [matTooltip]="isHiding ? 'Show this' : 'Hide this'"
+        >
+          <mat-icon *ngIf="isHiding">visibility</mat-icon>
+          <mat-icon *ngIf="!isHiding">visibility_off</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <ng-container *ngIf="isFailed">
+      <span class="mat-caption red-fg">Failed to send message.</span>
+    </ng-container>
+  </div>
+
+  <mat-spinner
+    *ngIf="!isAudio && !isVideo && !isImgFile && mediaService.loadingMap?.[this.message.id]"
+    diameter="30"
+  ></mat-spinner>
+</div>

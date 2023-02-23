@@ -1,0 +1,45 @@
+:host {
+  .container {
+    max-width: 980px;
+    margin: 1rem auto 1rem;
+
+    &-table {
+      width: 100%;
+
+      ::ng-deep {
+        .no-data-table {
+          &.hidden {
+            display: none;
+          }
+        }
+      }
+
+      .mat-row {
+        .table-actions {
+          visibility: hidden;
+        }
+
+        &:hover {
+          .table-actions {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+
+  .empty-box {
+    padding-top: 15%;
+  }
+
+  .dashboard-toolbar {
+    background-color: inherit;
+    padding: 0;
+    font-size: 14px;
+    &__content {
+      padding: 1rem 0 0 2.6rem !important;
+      width: 980px;
+      margin: auto;
+    }
+  }
+}

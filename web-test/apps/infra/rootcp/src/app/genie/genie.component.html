@@ -1,0 +1,56 @@
+<mat-toolbar><h1>Genie</h1></mat-toolbar>
+<div class="container">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="15px">
+    <mat-form-field fxFlex="300px">
+      <mat-select placeholder="Filter flow" [formControl]="flowCtrl" [compareWith]="compareFlow" [multiple]="true">
+        <mat-option>
+          <ngx-mat-select-search
+            [placeholderLabel]="'Search...'"
+            [noEntriesFoundLabel]="'No flows found'"
+            [formControl]="flowFilterCtrl"
+            [showToggleAllCheckbox]="true"
+            [toggleAllCheckboxChecked]="flowCtrl.value?.length == flows?.length"
+            [toggleAllCheckboxIndeterminate]="flowCtrl.value?.length > 0 && flowCtrl.value?.length < flows?.length"
+            [toggleAllCheckboxTooltipMessage]="'Select All / Unselect All'"
+            [toogleAllCheckboxTooltipPosition]="'above'"
+            (toggleAll)="toggleSelectAll($event)"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let f of filteredSelectFlows" [value]="f">{{ f.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="300px">
+      <input matInput placeholder="Search" [formControl]="searchCtrl" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center start" class="mt-0 mb-20">
+    <mat-spinner [diameter]="30"></mat-spinner>
+  </div>
+
+  <mat-accordion [multi]="true">
+    <mat-expansion-panel [expanded]="true" *ngFor="let flow of filteredFlows; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{ flow.name }}</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let f of flow.flows; let j = index">
+          <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+            <span>{{ f }}</span>
+            <button
+              mat-stroked-button
+              color="primary"
+              [loading]="flow.executing[j]"
+              (click)="execute(flow.name, f, i, j)"
+            >
+              Execute
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

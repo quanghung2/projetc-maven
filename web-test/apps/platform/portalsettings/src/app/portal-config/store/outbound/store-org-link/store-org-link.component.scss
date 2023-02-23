@@ -1,0 +1,15 @@
+.content {
+  display: flex !important;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+
+  .button {
+    margin: 0 !important;
+  }
+}

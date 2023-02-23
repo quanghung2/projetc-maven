@@ -1,0 +1,82 @@
+:host {
+  .container {
+    overflow: overlay;
+    height: calc(100vh - 64px); // mat-toolbar
+  }
+}
+
+::ng-deep {
+  .select-callerid {
+    .mat-select-panel {
+      max-height: 700px;
+    }
+  }
+}
+
+.errors {
+  margin-top: -10px;
+}
+
+mat-error {
+  font-style: italic;
+  font-size: 12px;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.add__btn {
+  cursor: pointer;
+}
+
+.speed-dial__wrapper {
+  display: flex;
+  flex-direction: column;
+  max-height: 250px;
+  margin: 1rem 0;
+  overflow: auto;
+}
+
+.speed-dial__row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 16px;
+
+  form {
+    display: flex;
+    align-items: center;
+    max-height: 48px;
+    overflow: hidden;
+  }
+
+  .input__wrapper {
+    width: 140px;
+    margin: 0 16px;
+  }
+
+  .line {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon__wrapper {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.speed-dial__row:hover,
+.hover__row {
+  background-color: #fafafa;
+
+  .icon__wrapper {
+    opacity: 1;
+  }
+}

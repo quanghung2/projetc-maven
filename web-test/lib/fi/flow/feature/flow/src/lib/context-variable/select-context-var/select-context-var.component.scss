@@ -1,0 +1,32 @@
+input.mat-chip-input {
+  min-height: 32px;
+}
+
+.mat-standard-chip.transparent {
+  background-color: transparent !important;
+  padding-left: 0;
+  padding-right: 0;
+  font-weight: normal;
+
+  &::after {
+    background: transparent !important;
+  }
+}
+
+.mat-icon-button {
+  width: 40px;
+  height: 40px;
+
+  .mat-icon {
+    font-size: 24px !important;
+    width: 32px;
+  }
+}
+
+::ng-deep .mat-menu-panel.dropdown-menu-value-list {
+  max-width: none;
+
+  &.hidden {
+    display: none;
+  }
+}

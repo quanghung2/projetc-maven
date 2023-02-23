@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.message {
+  //   max-width: 260px;
+  .message-header-image {
+    .mat-icon {
+      width: 40px;
+      height: 40px;
+    }
+  }
+  .message-body {
+    padding-top: 0.8rem;
+    .message-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-items: center;
+      padding-bottom: 0.25rem;
+      &:last-child {
+        padding-bottom: 0;
+      }
+      .label {
+        flex: 50%;
+        font-weight: 500;
+      }
+      .description {
+        flex: 50%;
+      }
+    }
+  }
+}
+
+.warning-message {
+  padding: 0.8rem 1.6rem;
+  background: lightgoldenrodyellow;
+  text-align: center;
+}

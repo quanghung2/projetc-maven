@@ -1,0 +1,102 @@
+.main-view {
+  height: calc(100vh - 200px);
+}
+
+.statuses,
+.monitors {
+  overflow: scroll;
+}
+
+.status {
+  border-radius: 4px;
+  border: 2px solid #f5f5f5;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .title {
+    padding: 6px 12px;
+    font-size: 16px;
+  }
+
+  &.OK {
+    &:hover,
+    &.active {
+      border: 2px solid #c3e6cb;
+    }
+
+    .bg-title {
+      background-color: #d4edda;
+    }
+  }
+
+  &.NOTOK {
+    &:hover,
+    &.active {
+      border: 2px solid #f5c6cb;
+    }
+
+    .bg-title {
+      background-color: #f8d7da;
+    }
+  }
+}
+
+h4 {
+  color: #999;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+ul.tags {
+  margin: 0;
+  padding-left: 0;
+
+  li {
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 4px;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+}
+
+.monitor {
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 15px;
+
+  .name {
+    padding: 6px 12px 6px 32px;
+    font-size: 16px;
+  }
+
+  .title {
+    font-size: 16px;
+    padding: 6px 12px;
+
+    small {
+      color: #999;
+    }
+  }
+
+  .OK {
+    border-top: 1px solid #dee2e6;
+
+    .bg-status {
+      background-color: #d4edda;
+    }
+  }
+
+  .NOTOK {
+    border-top: 1px solid #dee2e6;
+
+    .bg-status {
+      background-color: #f8d7da;
+    }
+  }
+}

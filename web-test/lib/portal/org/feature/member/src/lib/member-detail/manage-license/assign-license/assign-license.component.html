@@ -1,0 +1,26 @@
+<div mat-dialog-title>Assign user licenses</div>
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutGap="16px">
+    <mat-form-field>
+      <mat-label>Select license</mat-label>
+      <mat-select [formControl]="selectedLicenseCtr">
+        <ng-container *ngIf="licenses$ | async as licenses">
+          <mat-option *ngFor="let license of licenses" [value]="license">{{ license.displayText }}</mat-option>
+          <mat-option *ngIf="!licenses.length">Not available licenses</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="progressing">Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="progressing"
+    [disabled]="selectedLicenseCtr.invalid || progressing"
+    (click)="progress()"
+  >
+    Assign
+  </button>
+</div>

@@ -1,0 +1,45 @@
+<div mat-dialog-title>Config Compliance</div>
+<div mat-dialog-content>
+  <mat-form-field *ngIf="!getStatusDone">
+    <input matInput placeholder="Org UUID" [formControl]="orgUuidCtrl" (keyup.enter)="getStatus()" required />
+    <mat-error *ngIf="orgUuidCtrl.invalid">Org UUID is required</mat-error>
+  </mat-form-field>
+
+  <ng-container *ngIf="getStatusDone">
+    <p class="mt-8">
+      <mat-checkbox [(ngModel)]="isCompliant">Compliant</mat-checkbox>
+    </p>
+    <mat-form-field>
+      <mat-label>Caller ID Exclusions</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let id of callerIdExclusions" [removable]="true" (removed)="remove(id)">
+          {{ id }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="New ID..."
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </ng-container>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button
+    *ngIf="!getStatusDone"
+    mat-raised-button
+    color="primary"
+    [loading]="setting"
+    [disabled]="orgUuidCtrl.invalid"
+    (click)="getStatus()"
+  >
+    Get status
+  </button>
+  <button *ngIf="getStatusDone" mat-raised-button color="primary" [loading]="setting" (click)="setConfig()">
+    Set config
+  </button>
+</div>

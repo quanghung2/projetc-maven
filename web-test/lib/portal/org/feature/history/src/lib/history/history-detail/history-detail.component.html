@@ -1,0 +1,192 @@
+<div *ngIf="history" fxLayout="column" class="history-detail">
+  <div class="history-detail__header" fxLayout="row" fxLayoutAlign="start center">
+    <h2>Call Metadata</h2>
+    <span class="fill-remaining-space"></span>
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="history-detail__content" fxLayout="column" fxLayoutGap="2rem">
+    <div fxLayout="column" fxLayoutGap="0.25rem">
+      <label class="label" fxFlex="1 1 auto">Transaction UUID</label>
+      <button
+        class="box"
+        mat-button
+        matTooltip="Click to copy"
+        [cdkCopyToClipboard]="history.txnUuid"
+        (click)="copied($event)"
+      >
+        <span>{{ history.txnUuid | slice: 0:8 }}</span>
+      </button>
+    </div>
+
+    <div *ngIf="history.legUuid" fxLayout="column" fxLayoutGap="0.25rem">
+      <label class="label" fxFlex="1 1 auto">Leg UUID</label>
+      <button
+        class="box"
+        mat-button
+        matTooltip="Click to copy"
+        [cdkCopyToClipboard]="history.legUuid"
+        (click)="copied($event)"
+      >
+        <span>{{ history.legUuid | slice: 0:8 }}</span>
+      </button>
+    </div>
+
+    <ng-container *ngIf="!history.legUuid">
+      <div *ngIf="history.accessNumber" fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">Original Called Number</label>
+        <div>{{ history.accessNumber }}</div>
+      </div>
+
+      <div *ngIf="history?.callcenter?.queueName" fxLayout="column">
+        <label class="label" fxFlex="1 1 auto">{{ org?.licenseEnabled ? 'Call Center' : 'Wallboard' }}</label>
+        <div>
+          {{ 'Reached queue ' }} <strong>{{ history.callcenter.queueName }}</strong>
+        </div>
+      </div>
+
+      <div *ngIf="history?.flows?.length > 0" fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">Programmable Flow</label>
+        <ng-container *ngFor="let flow of history.flows">
+          <ng-container *ngIf="org.licenseEnabled">
+            <span *ngIf="flow.projectUuid && flow.projectName">
+              Project <strong>{{ flow.projectName }}</strong
+              >: Flow <strong>{{ flow.flowName }}</strong> (<a
+                href="javascript:;"
+                (click)="openAppFlow(flow, $event)"
+                matTooltip="Click to navigate to the Flow's execution log"
+                >Log</a
+              >)
+            </span>
+            <span *ngIf="!flow.projectUuid">
+              Flow <strong>{{ flow.flowName }}</strong> (with execution id {{ flow.executionUuid }})
+            </span>
+          </ng-container>
+
+          <ng-container *ngIf="!org.licenseEnabled">
+            <span *ngIf="flow.version > 0">
+              Flow <strong>{{ flow.flowName }}</strong> (<a
+                href="javascript:;"
+                (click)="openAppFlow(flow, $event)"
+                matTooltip="Click to navigate to the Flow's execution log"
+                >Log</a
+              >)
+            </span>
+            <span *ngIf="flow.version == 0">
+              Flow <strong>{{ flow.flowUuid | slice: 0:8 }}</strong> (<a
+                href="javascript:;"
+                (click)="openAppFlow(flow, $event)"
+                matTooltip="Click to navigate to the Flow's execution log"
+                >Log</a
+              >)
+            </span>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <div *ngIf="history?.compliance?.action" fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">{{ org?.licenseEnabled ? 'DNC' : 'Compliance' }}</label>
+        <span [ngSwitch]="history.compliance?.action">
+          <ng-container *ngSwitchCase="ActionCompliance.blockedByDnc">
+            Blocked by PDPC with ID {{ history.compliance?.pdpcId }}
+          </ng-container>
+          <ng-container *ngSwitchCase="ActionCompliance.blockedBecauseOfFailed">
+            Failed to check with PDPC
+          </ng-container>
+          <ng-container *ngSwitchCase="ActionCompliance.goThrough">
+            <ng-container *ngIf="!!history.compliance?.pdpcId; else reason">
+              Allowed by PDPC with ID {{ history.compliance?.pdpcId }}
+            </ng-container>
+            <ng-template #reason>
+              <ng-container *ngIf="history.compliance?.bypassReason; else noReason">
+                {{
+                  DNCByPassReason[history.compliance?.bypassReason]
+                    ? DNCByPassReason[history.compliance?.bypassReason]
+                    : 'Bypassed by user, bypass reason: ' + history.compliance?.bypassReason
+                }}
+              </ng-container>
+              <ng-template #noReason>
+                {{ 'Bypassed by user, bypass reason:' }}
+              </ng-template>
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchDefault> - </ng-container>
+        </span>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="org?.licenseEnabled">
+      <ng-container *ngIf="!history.legUuid; else legView">
+        <div *ngIf="history.agents?.length > 0" fxLayout="column" fxLayoutGap="0.25rem">
+          <label class="label" fxFlex="1 1 auto">User Status & Action</label>
+          <div *ngFor="let agent of history.agents">
+            <span *ngIf="agent.extensionKey">#{{ agent.extensionKey }}</span>
+            <span *ngIf="agent.extensionLabel">&nbsp;- {{ agent.extensionLabel }}</span>
+            <span *ngIf="agent.status">&nbsp;- {{ agent.status === 'dnd' ? 'Away' : (agent.status | titlecase) }}</span>
+            <span *ngIf="agent.statusAction">&nbsp;- {{ agent.statusAction.split('_').join(' ') | titlecase }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #legView>
+        <div
+          *ngIf="history.callcenter && (history.callcenter.agentStatus || history.callcenter.agentStatusAction)"
+          fxLayout="column"
+          fxLayoutGap="0.25rem"
+        >
+          <label class="label" fxFlex="1 1 auto">Status & Action</label>
+          <div fxLayout="row">
+            <span *ngIf="history.callcenter.agentStatus">{{
+              history.callcenter.agentStatus === 'dnd' ? 'Away' : (history.callcenter.agentStatus | titlecase)
+            }}</span>
+            <span *ngIf="history.callcenter.agentStatusAction">
+              &nbsp;- {{ history.callcenter.agentStatusAction.split('_').join(' ') | titlecase }}
+            </span>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="history.legUuid && history.ringGroup?.length > 0">
+      <div fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">Rang Device(s)</label>
+        <div *ngFor="let group of history.ringGroup">
+          <span *ngIf="group.device">{{ group.device.split('_').join(' ') | titlecase }}</span>
+          <span *ngIf="group.status">&nbsp;- {{ group.status | titlecase }}</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="history?.ivrFlow?.name && !history.legUuid">
+      <div fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">{{
+          org.licenseEnabled ? 'Auto Attendant Workflow Name' : 'Virtual Line Workflow Name'
+        }}</label>
+        <div>{{ history.ivrFlow.name }}</div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="history?.blocks?.length && !history.legUuid" fxLayout="column" fxLayoutGap="0.25rem">
+      <label class="label"
+        >{{ org.licenseEnabled ? 'Auto Attendant Call Journey' : 'Virtual Line Blocks Journey' }}
+      </label>
+      <div fxLayout="row wrap" fxLayoutAlign="start center">
+        <div
+          class="block-container"
+          *ngFor="let block of history.blocks; let i = index"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+        >
+          <span class="block" [matTooltip]="block?.blockName?.length > 8 ? block.blockName : ''">{{
+            block?.blockName?.length > 8 ? block.blockName.slice(0, 8) + '..' : block?.blockName || '-'
+          }}</span>
+          <mat-icon *ngIf="i + 1 < history.blocks.length">arrow_right_alt</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

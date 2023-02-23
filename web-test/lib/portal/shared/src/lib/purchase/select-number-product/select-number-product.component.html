@@ -1,0 +1,22 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+
+<div [formGroup]="form" *ngIf="!loading" style="padding: 2rem 0">
+  <mat-form-field>
+    <mat-label>Number</mat-label>
+    <mat-select formControlName="number">
+      <mat-option *ngFor="let number of numberVendor.vendors" [value]="number.productId">
+        {{ number.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field style="margin-left: 1rem">
+    <mat-label>Country</mat-label>
+    <mat-select formControlName="country">
+      <mat-option *ngFor="let country of numberVendor.selected.skuDetailList" [value]="country.sku">
+        {{ country.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <psh-select-number [skuInfoMapping]="numberSkuMapping" (selectedConfirm)="selectedNumber()"></psh-select-number>
+</div>

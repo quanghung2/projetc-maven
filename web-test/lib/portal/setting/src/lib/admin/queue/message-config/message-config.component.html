@@ -1,0 +1,198 @@
+<div class="message-config-container flex column gap-8">
+  <h1 mat-dialog-title class="mb-0">Announcement Message</h1>
+
+  <ng-container *ngIf="!loading; else spinner">
+    <div mat-dialog-content>
+      <h4 class="flex justify-content-end secondary-text mb-0 mr-24">
+        Queue -&nbsp;<strong>{{ data.label }}</strong>
+      </h4>
+      <mat-stepper #stepper [linear]="true">
+        <!-- Initial Message -->
+        <mat-step label="Initial Message" state="message" completed="false" [editable]="false">
+          <i>Plays once when callers enter the queue.</i>
+          <div class="flex align-items-center gap-8 my-10">
+            <mat-checkbox [(ngModel)]="isEnableInitMsg"> Enable message configuration </mat-checkbox>
+          </div>
+          <div *ngIf="isEnableInitMsg" class="flex column justify-content-space-between gap-8">
+            <mat-label class="mb-10 flex align-items-center gap-8">
+              Message to play
+              <div class="icon-wrapper flex">
+                <mat-icon class="note-icon"> info </mat-icon>
+                <div class="tooltip-custom">
+                  <p class="mb-0">Context variable:</p>
+                  <ul class="my-4">
+                    <li>{{"{{EWT}}: informs the estimated waiting time of the caller (in minutes)"}}</li>
+                    <li>{{"{{QueuePosition}}: informs the queue position of the caller"}}</li>
+                  </ul>
+                </div>
+              </div>
+            </mat-label>
+            <b3n-tts-mp3-msg-cfg
+              [showNote]="false"
+              [showPlay]="true"
+              [ttsCfg]="welcomeMsg"
+              (isErrorMsg)="displayErrorMsg($event)"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div class="flex justify-content-end mt-20">
+            <div class="flex align-items-center gap-20">
+              <button mat-button [disabled]="saving" mat-dialog-close>Cancel</button>
+              <button
+                mat-button
+                mat-stroked-button
+                color="primary"
+                (click)="nextStepper(stepper)"
+                [disabled]="isErrorMsg"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Marketing Message -->
+        <mat-step label="Marketing Message" state="message" completed="false" [editable]="true">
+          <i class="my-10"
+            >Plays after the initial message (if any). Otherwise, callers will hear this message first.</i
+          >
+          <div class="flex align-items-center gap-8 my-10">
+            <mat-checkbox [(ngModel)]="isEnableMarketingMsg"> Enable message configuration </mat-checkbox>
+          </div>
+          <div *ngIf="isEnableMarketingMsg" class="flex column justify-content-space-between gap-8">
+            <div class="mb-10">Message to play</div>
+            <b3n-tts-mp3-msg-cfg
+              [ttsCfg]="marketingMsg"
+              [showPlay]="true"
+              [showNote]="false"
+              (isErrorMsg)="displayErrorMsg($event)"
+            ></b3n-tts-mp3-msg-cfg>
+          </div>
+          <div class="flex justify-content-between mt-20">
+            <button mat-button (click)="previousStepper(stepper)" [disabled]="isErrorMsg">Previous</button>
+            <div class="flex align-items-center gap-20">
+              <button mat-button [disabled]="saving" mat-dialog-close>Cancel</button>
+              <button
+                mat-button
+                mat-stroked-button
+                color="primary"
+                (click)="nextStepper(stepper)"
+                [disabled]="isErrorMsg"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Music On Hold -->
+        <mat-step label="Music On Hold" state="sound" completed="false" [editable]="true">
+          <i>
+            Music callers hear while waiting for agents. If no file is uploaded, Music On Hold will play the default
+            music.
+          </i>
+          <div class="background-sound">
+            <div class="title mb-8">Background sound</div>
+            <div class="content py-20 px-80">
+              <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+                <audio
+                  *ngIf="audioUrl"
+                  controls
+                  style="width: 100%"
+                  [src]="audioUrl | safe: 'resourceUrl'"
+                  (error)="onErrorLoadFile()"
+                  class="mx-auto"
+                >
+                  Your browser does not support the <code>audio</code> element.
+                </audio>
+                <button mat-button color="primary" class="btnAction cursor-pointer" (click)="fileUpload.click()">
+                  <span>{{ audioUrl ? 'Choose another MP3 file' : 'Choose MP3 file' }}</span>
+                  <input
+                    #fileUpload
+                    (change)="onBackgroundFileChange($event)"
+                    accept=".mp3,.mpeg/*"
+                    hidden
+                    type="file"
+                  />
+                </button>
+                <mat-progress-bar
+                  *ngIf="backgroundUploading"
+                  mode="determinate"
+                  [value]="backgroundUploadProgress"
+                ></mat-progress-bar>
+              </div>
+            </div>
+            <div class="flex justify-content-space-between align-items-center">
+              <mat-label class="mr-20">Play time (in seconds)</mat-label>
+              <div>
+                <mat-form-field class="digit">
+                  <input type="number" [(ngModel)]="queue.callflowConfig.waitTime" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-content-between mt-20">
+            <button mat-button (click)="previousStepper(stepper)">Previous</button>
+            <div class="flex align-items-center gap-20">
+              <button mat-button [disabled]="saving" mat-dialog-close>Cancel</button>
+              <button mat-button mat-stroked-button color="primary" (click)="nextStepper(stepper)">Next</button>
+            </div>
+          </div>
+        </mat-step>
+        <!-- Update Message -->
+        <mat-step label="Update Message" state="message" completed="false" [editable]="true">
+          <i>Plays after Music On Hold.</i>
+          <div class="flex align-items-center gap-8 my-10">
+            <mat-checkbox [(ngModel)]="isEnableUpdateMsg"> Enable message configuration </mat-checkbox>
+          </div>
+          <ng-container *ngIf="isEnableUpdateMsg">
+            <div class="flex column justify-content-space-between gap-8">
+              <mat-label class="mb-10 flex align-items-center gap-8">
+                Message to play
+                <mat-icon
+                  class="note-icon"
+                  matTooltip="The message should include a clear instruction for the callers to leave a voicemail or request a callback (if any)."
+                >
+                  info
+                </mat-icon>
+              </mat-label>
+              <b3n-tts-mp3-msg-cfg
+                [showNote]="false"
+                [showPlay]="true"
+                [ttsCfg]="gatherMsg"
+                (isErrorMsg)="displayErrorMsg($event)"
+              ></b3n-tts-mp3-msg-cfg>
+            </div>
+            <div class="flex justify-content-space-between align-items-center">
+              <mat-label class="mr-20">Gather timeout after (in seconds)</mat-label>
+              <div>
+                <mat-form-field class="digit">
+                  <input type="number" [(ngModel)]="queue.callflowConfig.gatherTimeout" matInput />
+                </mat-form-field>
+              </div>
+            </div>
+          </ng-container>
+          <div class="flex justify-content-between mt-20">
+            <button mat-button (click)="previousStepper(stepper)" [disabled]="isErrorMsg">Previous</button>
+            <div class="flex align-items-center gap-20">
+              <button mat-button [disabled]="saving" mat-dialog-close>Cancel</button>
+              <button mat-button [loading]="saving" class="primary" (click)="updateMsgConfig()" [disabled]="isErrorMsg">
+                Save
+              </button>
+            </div>
+          </div>
+        </mat-step>
+
+        <ng-template matStepperIcon="message">
+          <mat-icon class="s-12"> chat_bubble </mat-icon>
+        </ng-template>
+        <ng-template matStepperIcon="sound">
+          <mat-icon>volume_up</mat-icon>
+        </ng-template>
+      </mat-stepper>
+    </div>
+  </ng-container>
+
+  <ng-template #spinner>
+    <div class="spinner-container flex column justify-content-center align-items-center">
+      <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+    </div>
+  </ng-template>
+</div>

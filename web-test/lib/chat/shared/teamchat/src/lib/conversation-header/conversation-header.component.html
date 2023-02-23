@@ -1,0 +1,115 @@
+<div *ngIf="channel" class="container flex column justify-content-start align-items-none">
+  <div class="convo_header spacer flex justify-content-space-between align-items-center gap-16">
+    <div fxFlex="85%" fxLayout="row" fxLayoutAlign="start center">
+      <csh-menu-toggle></csh-menu-toggle>
+      <div class="convo_header__text spacer flex column justify-content-start align-items-none">
+        <div class="convo_header__title flex justify-content-start align-items-center gap-3">
+          <ng-container [ngSwitch]="channel.type">
+            <ng-container *ngSwitchCase="ChannelType.PERSONAL">
+              <mat-icon>{{ channel.icon }}</mat-icon>
+              <div class="convo_header__name">
+                {{ channel.name | titlecase }}
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ChannelType.gc">
+              <mat-icon>{{ channel.icon }}</mat-icon>
+              <div class="convo_header__name">
+                {{ channel.name }}
+              </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="ChannelType.dm">
+              <ng-container *ngIf="directUser$ | async as directUser">
+                <ng-container *ngIf="isBot; else teamchat">
+                  <mat-icon> smart_toy </mat-icon>
+                  <div class="convo_header__name">
+                    {{ directUser.displayName }}
+                  </div>
+                </ng-container>
+                <ng-template #teamchat>
+                  <mat-icon
+                    [fontSet]="!directUser.isOnline ? 'material-icons-outlined' : null"
+                    [class]="directUser.isOnline ? 'status__online' : 'status__offline'"
+                  >
+                    {{ channel.icon }}
+                  </mat-icon>
+                  <div class="convo_header__name">
+                    {{ directUser.displayName }}
+                  </div>
+                </ng-template>
+              </ng-container>
+            </ng-container>
+            <div class="convo_header__start" *ngIf="channel.type !== ChannelType.PERSONAL">
+              <mat-icon
+                matTooltip="Unstar this channel"
+                class="icon star_icon"
+                *ngIf="channel.isStarred"
+                (click)="unstarConvo(channel)"
+                >star</mat-icon
+              >
+              <mat-icon
+                matTooltip="Star this channel"
+                class="icon star_icon"
+                *ngIf="!channel.isStarred"
+                (click)="starConvo(channel)"
+                >star_border</mat-icon
+              >
+            </div>
+            <mat-icon
+              *ngIf="!channel.isGeneral && channel.type === ChannelType.gc && channel.isMember"
+              fontSet="material-icons-outlined"
+              matTooltip="Rename channel"
+              class="icon rename-channel"
+              (click)="editChannel()"
+            >
+              edit
+            </mat-icon>
+          </ng-container>
+        </div>
+        <div *ngIf="channel.isGroupChat" class="convo_header__subtitle flex justify-content-start align-items-center">
+          <span
+            [matTooltip]="
+              channel.description?.indexOf('\n') >= 0 || channel.description?.length > 200 ? channel.description : ''
+            "
+            class="desc"
+          >
+            {{ (channel.description?.split('\n'))[0] || 'Add a description' }}
+          </span>
+          <mat-icon
+            fontSet="material-icons-outlined"
+            matTooltip="Edit description"
+            class="icon editdesc"
+            (click)="editDescription()"
+          >
+            edit
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="channel.type !== ChannelType.PERSONAL"
+      class="convo_header__actions flex justify-content-end align-items-center gap-8"
+    >
+      <ng-container *ngIf="{ value: toggleInfoBtn$ | async } as toggleInfoBtn">
+        <button
+          class="icon-info"
+          (click)="viewDetail(toggleInfoBtn.value)"
+          [class.active]="toggleInfoBtn.value"
+          mat-icon-button
+          fxLayoutAlign="center center"
+        >
+          <mat-icon fontSet="material-icons-outlined" matTooltip="View channel details"> vertical_split </mat-icon>
+        </button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div
+    fxFlex="1px"
+    class="viewing-date flex justify-content-center align-items-center"
+    *ngIf="uiStateConvo$ | async as uiState"
+  >
+    <span>{{ uiState.viewDate | viewDate }}</span>
+  </div>
+</div>
+<!-- <mat-progress-bar *ngIf="loading$ | async" mode="query"></mat-progress-bar> -->

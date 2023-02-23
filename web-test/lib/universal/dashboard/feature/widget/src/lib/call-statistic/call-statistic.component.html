@@ -1,0 +1,165 @@
+<div
+  *ngIf="statistic || geInboundStatistic || geCallbackStatistic"
+  class="container"
+  fxLayout="column"
+  fxLayoutAlign="space-around stretch"
+>
+  <div class="item" fxFlex>
+    <ng-container [ngSwitch]="type">
+      <ng-container
+        *ngSwitchCase="QuestionType.geInboundStatistic"
+        [ngTemplateOutlet]="geInboundCall"
+        [ngTemplateOutletContext]="{ statistic: geInboundStatistic }"
+      ></ng-container>
+      <ng-container
+        *ngSwitchCase="QuestionType.geCallbackStatistic"
+        [ngTemplateOutlet]="getCallbackWidget"
+        [ngTemplateOutletContext]="{ statistic: geCallbackStatistic }"
+      ></ng-container>
+      <ng-container
+        *ngSwitchDefault
+        [ngTemplateOutlet]="normalCallStatistic"
+        [ngTemplateOutletContext]="{ statistic: statistic }"
+      ></ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #normalCallStatistic let-statistic="statistic">
+  <mat-list>
+    <mat-list-item>
+      <span class="number">{{ statistic.totalCall }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.totalCall">
+        <ng-template ngPluralCase="=0">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="=1">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="other">TOTAL CALLS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number green-fg">{{ statistic.answered }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.answered">
+        <ng-template ngPluralCase="=0">ANSWERED CALL</ng-template>
+        <ng-template ngPluralCase="=1">ANSWERED CALL</ng-template>
+        <ng-template ngPluralCase="other">ANSWERED CALLS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.abandoned }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.abandoned">
+        <ng-template ngPluralCase="=0">ABANDONED CALL</ng-template>
+        <ng-template ngPluralCase="=1">ABANDONED CALL</ng-template>
+        <ng-template ngPluralCase="other">ABANDONED CALLS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.callbackUnanswered }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.callbackUnanswered">
+        <ng-template ngPluralCase="=0">UNANSWERED CALLBACK CALL</ng-template>
+        <ng-template ngPluralCase="=1">UNANSWERED CALLBACK CALL</ng-template>
+        <ng-template ngPluralCase="other">UNANSWERED CALLBACK CALLS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.voicemail }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.voicemail">
+        <ng-template ngPluralCase="=0">VOICEMAIL</ng-template>
+        <ng-template ngPluralCase="=1">VOICEMAIL</ng-template>
+        <ng-template ngPluralCase="other">VOICEMAILS</ng-template>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</ng-template>
+
+<ng-template #geInboundCall let-statistic="statistic">
+  <mat-list>
+    <mat-list-item>
+      <span class="number">{{ statistic.incomingTotal }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.incomingTotal">
+        <ng-template ngPluralCase="=0">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="=1">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="other">TOTAL CALLS</ng-template>
+      </div>
+    </mat-list-item>
+
+    <mat-list-item>
+      <span class="number green-fg">{{ statistic.incomingAnswered }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.incomingAnswered">
+        <ng-template ngPluralCase="=0">ANSWERED CALL</ng-template>
+        <ng-template ngPluralCase="=1">ANSWERED CALL</ng-template>
+        <ng-template ngPluralCase="other">ANSWERED CALLS</ng-template>
+      </div>
+    </mat-list-item>
+
+    <mat-list-item>
+      <span class="number green-fg">{{ statistic.incomingCallback }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.incomingCallback">
+        <ng-template ngPluralCase="=0">REGISTERED CALLBACK</ng-template>
+        <ng-template ngPluralCase="=1">REGISTERED CALLBACK</ng-template>
+        <ng-template ngPluralCase="other">REGISTERED CALLBACKS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number orange-fg">{{ statistic.incomingOverflow }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.incomingOverflow">
+        <ng-template ngPluralCase="=0">OVERFLOW</ng-template>
+        <ng-template ngPluralCase="=1">OVERFLOW</ng-template>
+        <ng-template ngPluralCase="other">OVERFLOWS</ng-template>
+      </div>
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.incomingAbandoned }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.incomingAbandoned">
+        <ng-template ngPluralCase="=0">ABANDONED CALL</ng-template>
+        <ng-template ngPluralCase="=1">ABANDONED CALL</ng-template>
+        <ng-template ngPluralCase="other">ABANDONED CALLS</ng-template>
+      </div>
+    </mat-list-item>
+  </mat-list>
+</ng-template>
+
+<ng-template #getCallbackWidget let-statistic="statistic">
+  <mat-list>
+    <mat-list-item>
+      <span class="number">{{ statistic.callbackTotal }}</span
+      >&nbsp;
+      <div [ngPlural]="statistic.callbackTotal">
+        <ng-template ngPluralCase="=0">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="=1">TOTAL CALL</ng-template>
+        <ng-template ngPluralCase="other">TOTAL CALLS</ng-template>
+      </div>
+    </mat-list-item>
+
+    <mat-list-item>
+      <span class="number green-fg">{{ statistic.callbackAgentAnswered }}</span
+      >&nbsp; AGENT ANSWERED
+    </mat-list-item>
+
+    <mat-list-item>
+      <span class="number orange-fg">{{ statistic.callbackRejoined }}</span
+      >&nbsp; CUSTOMER REJOINED
+    </mat-list-item>
+
+    <mat-list-item>
+      <span class="number orange-fg">{{ statistic.callbackCustomerUnanswered }}</span
+      >&nbsp; CUSTOMER UNANSWERED
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.callbackAgentUnanswered }}</span
+      >&nbsp; AGENT UNANSWERED
+    </mat-list-item>
+    <mat-list-item>
+      <span class="number red-fg">{{ statistic.callbackexpired }}</span
+      >&nbsp; EXPIRED
+    </mat-list-item>
+  </mat-list>
+</ng-template>

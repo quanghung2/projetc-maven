@@ -1,0 +1,40 @@
+<ng-container *ngIf="originAction && originAction.render">
+  <div class="ui grid" style="margin: 0">
+    <div class="row ui checkbox" [hidden]="ignoreGroupLabel">
+      <input
+        type="checkbox"
+        #input
+        [id]="originAction.name"
+        (change)="removeChildrenOnUncheckParent(input.checked)"
+        [(ngModel)]="isParentAllowed"
+        [disabled]="disabled"
+      />
+      <label [for]="originAction.name">{{ originAction.desc | sentenceCase }}</label>
+    </div>
+
+    <tag-input
+      [ngModel]="selectedItems"
+      [onlyFromAutocomplete]="true"
+      [separatorKeyCodes]="[32]"
+      [clearOnBlur]="true"
+      [disable]="disabled || !isParentAllowed"
+      [displayBy]="'value'"
+      [identifyBy]="'key'"
+      (onRemove)="removeTagInput($event)"
+      (onAdd)="addTagInput($event)"
+      (onFocus)="checkNoResult()"
+      placeholder="Select portalConfig to show"
+      secondaryPlaceholder="Select portalConfig to show"
+    >
+      <tag-input-dropdown
+        [autocompleteItems]="autocompleteItems"
+        [showDropdownIfEmpty]="true"
+        [displayBy]="'value'"
+        [identifyBy]="'key'"
+        [class.disabled]="this.selectedItems.length === this.autocompleteItems.length - 1"
+      >
+        <ng-template let-item="item"> {{ item.value | sentenceCase }} </ng-template>t
+      </tag-input-dropdown>
+    </tag-input>
+  </div>
+</ng-container>

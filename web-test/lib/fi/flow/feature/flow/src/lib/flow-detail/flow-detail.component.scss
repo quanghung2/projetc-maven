@@ -1,0 +1,36 @@
+#side-nav-overview-tree {
+  min-width: 352px;
+  max-width: calc(100vw / 2);
+}
+
+#side-nav-connector {
+  min-width: 310px;
+  max-width: 310px;
+}
+
+.warning-action {
+  background-color: #f44336 !important;
+  border-radius: 10px;
+  color: white !important;
+  padding: 12px;
+}
+
+.information-action {
+  background-color: rgba(26, 137, 23, 1);
+  border-radius: 10px;
+  color: white !important;
+  margin-bottom: 32px;
+  padding: 12px;
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 62.3px);
+}
+
+.w-select-trigger {
+  width: 600px;
+}
+
+.link {
+  display: inline;
+}

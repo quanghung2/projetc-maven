@@ -1,0 +1,51 @@
+<div class="deploy-schedule">
+  <div class="deploy-schedule__title" mat-dialog-title><h2>Deployment schedule</h2></div>
+  <div class="deploy-schedule__content" mat-dialog-content>
+    <mat-form-field>
+      <textarea [(ngModel)]="workflowVersion.releaseNote" matInput placeholder="Notes"></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="deploy-schedule__picker">
+      <input
+        (click)="picker.open()"
+        (dateChange)="dataChange($event)"
+        [disabled]="checked"
+        [matDatepicker]="picker"
+        matInput
+        readonly
+        [(ngModel)]="scheduledAt"
+        name="deploymentTime"
+        [matDatepickerFilter]="filterDate"
+        placeholder="Deployment time ({{ user.timezone }})"
+      />
+      <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #picker [clockStep]="5" type="datetime"></mat-datepicker>
+    </mat-form-field>
+
+    <div class="deploy-schedule__public-now">
+      <mat-checkbox (change)="checkboxChange($event)">Publish now</mat-checkbox>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button [mat-dialog-close]="true" mat-button>Cancel</button>
+    <button
+      (click)="scheduleWorkflowVersion()"
+      *ngIf="!checked"
+      [disabled]="(!deploymentTime && !scheduledAt) || progressing"
+      color="primary"
+      mat-raised-button
+    >
+      <span *ngIf="!progressing">Schedule</span> <span *ngIf="progressing">Scheduling..</span>
+    </button>
+    <button
+      (click)="scheduleWorkflowVersion()"
+      *ngIf="checked"
+      [disabled]="progressing"
+      color="primary"
+      mat-raised-button
+    >
+      <span *ngIf="!progressing">Publish</span> <span *ngIf="progressing">Publishing..</span>
+    </button>
+  </div>
+</div>

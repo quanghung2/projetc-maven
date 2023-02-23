@@ -1,0 +1,85 @@
+<h1 mat-dialog-title>Post-call survey configuration</h1>
+
+<ng-container *ngIf="queueConfig; else spinner">
+  <form #form="ngForm">
+    <div
+      *ngIf="senderNumbers.length > 0"
+      class="enable-toggle"
+      fxLayoutAlign="space-between center"
+      fxLayoutGap="1.6rem"
+    >
+      <h3>Enable Post-call survey</h3>
+      <mat-slide-toggle
+        (change)="changeEnablePostCallSurveyStt($event)"
+        [checked]="isEnablePostCallSurvey"
+        fxLayoutGap="1.6rem"
+      ></mat-slide-toggle>
+    </div>
+
+    <div *ngIf="senderNumbers.length === 0">You don't have any verified sender name. Please contact admin.</div>
+    <div
+      *ngIf="queueConfig && isEnablePostCallSurvey && senderNumbers.length > 0"
+      class="post-call-survey-info"
+      fxLayout="column"
+      fxLayoutAlign="start start"
+      fxLayoutGap="1.6rem"
+    >
+      <mat-form-field fxLayoutGap="1.6rem">
+        <mat-select
+          #sender="ngModel"
+          [(ngModel)]="queueConfig.postCallConfig.senderNumber"
+          name="sender"
+          placeholder="Sender"
+          required
+        >
+          <mat-option *ngFor="let senderNumber of senderNumbers" [value]="senderNumber">{{ senderNumber }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="sender.invalid && (sender.dirty || sender.touched)" class="sms-warning"
+          >The message is required.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="sms-area">
+        <b3n-textarea-sms
+          (isValid)="validForm($event)"
+          (updateValue)="onUpdateValue($event)"
+          [sms]="queueConfig.postCallConfig.message"
+        >
+        </b3n-textarea-sms>
+      </div>
+
+      <div align="end" fxLayoutGap="0.8rem" mat-dialog-actions>
+        <button mat-button mat-dialog-close>Close</button>
+
+        <button
+          (click)="update()"
+          *ngIf="senderNumbers.length > 0"
+          [disabled]="!isValid || sender.invalid"
+          [loading]="updating"
+          color="primary"
+          mat-flat-button
+        >
+          Update
+        </button>
+      </div>
+    </div>
+
+    <div
+      *ngIf="!isEnablePostCallSurvey || senderNumbers.length === 0"
+      align="end"
+      fxLayoutGap="0.8rem"
+      mat-dialog-actions
+    >
+      <button mat-button mat-dialog-close>Close</button>
+      <button (click)="update()" *ngIf="senderNumbers.length > 0" [loading]="updating" color="primary" mat-flat-button>
+        Update
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="spinner-container" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

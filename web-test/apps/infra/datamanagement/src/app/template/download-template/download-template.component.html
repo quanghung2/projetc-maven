@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>
+  <span>Download report</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <div class="header" fxLayout="row">
+        <input
+          disabled="true"
+          [(ngModel)]="templateReport.code"
+          matInput
+          placeholder="Report Code"
+          autocomplete="off"
+        />
+        <mat-icon
+          matTooltip="The recommended naming convention for Report code is: <partner/customer short name>.<service name>.<feature name>.<sub feature name>.<affected object>.<adding inapp suffix if the report means for other apps to query>
+            e.g: ge.wallboard.autodialer.agent, wallboard.inbound, wallboard.autodialer.agent.inapp, etc..."
+          matTooltipClass="blocked-tooltip"
+          >help_outline</mat-icon
+        >
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <div class="header" fxLayout="row">
+        <input [(ngModel)]="templateReport.label" disabled="true" matInput placeholder="Label" />
+        <mat-icon
+          matTooltip="The recommend naming convention for Label is: <Service Name> <Feature Name> <Sub Feature Name> <Add-on Words>
+                       e.g: Wallboard Inbound, Wallboard Callback, Wallboard Agent Activities Analytics (inapp), etc... "
+          matTooltipClass="blocked-tooltip"
+          >help_outline</mat-icon
+        >
+      </div>
+    </mat-form-field>
+    <mat-form-field>
+      <div class="header" fxLayout="row">
+        <input disabled="true" [(ngModel)]="templateReport.descriptor" matInput placeholder="Descriptor" />
+      </div>
+    </mat-form-field>
+    <span class="title">Request body</span>
+    <textarea
+      class="config-raw test-descriptor"
+      [(ngModel)]="body"
+      matInput
+      placeholder="Body Json"
+      [rows]="6"
+    ></textarea>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="downloadTemplate()">Download</button>
+</div>

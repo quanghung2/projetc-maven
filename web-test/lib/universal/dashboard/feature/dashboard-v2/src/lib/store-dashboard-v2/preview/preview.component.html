@@ -1,0 +1,73 @@
+<form [formGroup]="selectQuestionForm" class="template__container" autocomplete="off">
+  <ng-container *ngIf="template && questionsFC.value.length">
+    <div class="template__wrapper slide__active">
+      <div class="preview__wrapper">
+        <p class="preview__title">All supported filters</p>
+        <div class="tag__wrapper">
+          <div class="tag__item" *ngFor="let filter of filters">{{ filter | uppercase }}</div>
+        </div>
+        <p class="preview__title mt-16">Preview</p>
+        <div
+          class="preview__template"
+          [class]="template.class + '__wrapper'"
+          [class.active]="activePage === j"
+          *ngFor="let _ of [].constructor(pageCount); let j = index; let first = first"
+        >
+          <div
+            class="active preview__item"
+            *ngFor="let _ of [].constructor(template.item); let i = index"
+            [class]="template.class + '__item'"
+          >
+            <div class="order">
+              {{ first ? i + 1 : i + 1 + template.item * j }}
+            </div>
+          </div>
+        </div>
+        <div class="dot__wrapper">
+          <div
+            class="dot"
+            [class.active]="activePage === i"
+            (click)="activePage = i"
+            *ngFor="let _ of [].constructor(pageCount); let i = index"
+          ></div>
+        </div>
+      </div>
+      <div class="position__wrapper" *ngIf="questions.length">
+        <p class="position__title">Modify position</p>
+        <div
+          class="position__modify"
+          cdkDropList
+          [cdkDropListData]="questionsFC.value"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div *ngFor="let question of questionsFC.value; let i = index; let last = last; let first = first">
+            <p class="position__page" [class.mt-0]="first" *ngIf="i % template.item === 0">
+              Page {{ i / template.item + 1 }}
+            </p>
+            <div cdkDrag class="position__item">
+              {{ i + 1 + '. ' + questionsMap[question].name }}
+              <ng-container *ngIf="questionsFC.value.length > 1">
+                <mat-icon class="swap">swap_vert</mat-icon>
+                <mat-icon class="close" color="warn" (click)="optionClick.emit(question)">close</mat-icon>
+              </ng-container>
+            </div>
+            <div class="position__divider" *ngIf="!last && (i + 1) % template.item !== 0"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <p class="warning" *ngIf="!questionsFC.value.length">* Please select at least 1 widget</p>
+  <div class="action__wrapper">
+    <button mat-button matStepperPrevious>Back</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [loading]="saving"
+      [disabled]="selectQuestionForm.invalid"
+      (click)="save.emit()"
+    >
+      {{ saveContent }}
+    </button>
+  </div>
+</form>

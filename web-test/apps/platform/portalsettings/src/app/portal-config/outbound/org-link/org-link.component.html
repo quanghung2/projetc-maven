@@ -1,0 +1,95 @@
+<div class="org-link__container">
+  <div class="action__wrapper">
+    <div
+      class="ui fluid selection dropdown filter__dropdown"
+      [class.disabled]="!orgLinkConfigs.length || orgGroupUuids.size <= 1"
+    >
+      <i class="dropdown icon"></i>
+      <div class="default text">Group</div>
+      <div class="menu">
+        <div class="item" data-value="">All group</div>
+        <ng-container *ngFor="let orgLink of orgLinks">
+          <div *ngIf="orgGroupUuids.has(orgLink.uuid)" class="item" [attr.data-value]="orgLink.uuid">
+            {{ orgLink.name }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="button__wrapper">
+      <div class="ui primary button" *ngIf="isAdmin" (click)="openStoreOrgLinkModal()">Add</div>
+    </div>
+  </div>
+  <table class="ui basic table">
+    <thead>
+      <tr *ngIf="orgLinkConfigs.length; else empty">
+        <th>Matching pattern</th>
+        <th>Replacement</th>
+        <th></th>
+      </tr>
+      <ng-template #empty>
+        <tr>
+          <th></th>
+        </tr>
+      </ng-template>
+    </thead>
+    <tbody>
+      <tr class="row" *ngFor="let orgLinkConfig of orgLinkConfigsPagin">
+        <td>
+          <p class="org-link__info">
+            Start with
+            <span class="border border-radius-4 py-2 px-8">{{ orgLinkConfig.prefix }}</span>
+          </p>
+        </td>
+        <td>Transfer to {{ orgLinkConfig.name }}</td>
+        <td class="actions">
+          <div class="icon__wrapper">
+            <div
+              data-tooltip="Copy Uuid"
+              data-position="bottom center"
+              ngxClipboard
+              [cbContent]="orgLinkConfig.orgUuid"
+              (cbOnSuccess)="copied()"
+              (cbOnError)="copyFailed()"
+            >
+              <i class="content copy icon"></i>
+            </div>
+            <div
+              data-tooltip="Update"
+              data-position="bottom center"
+              *ngIf="isAdmin"
+              (click)="openStoreOrgLinkModal(orgLinkConfig)"
+            >
+              <i class="edit icon"></i>
+            </div>
+            <div
+              data-tooltip="Remove"
+              data-position="bottom center"
+              *ngIf="isAdmin"
+              (click)="removeOlc(orgLinkConfig.orgUuid)"
+            >
+              <i class="delete icon"></i>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr class="row" *ngIf="!orgLinkConfigsFilter.length">
+        <td class="org-link__empty" colspan="3">No organization link config available</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="4">
+          <pagination
+            [totalCount]="orgLinkConfigsFilter.length"
+            [perPage]="pagin.pageSize"
+            [currentPage]="pagin.pageStart + 1"
+            (pageChange)="page($event)"
+          >
+          </pagination>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <b3n-store-org-link [rule]="oRule"></b3n-store-org-link>
+  <app-confirm-modal [hasCloseIcon]="false" [allowMultiple]="true"></app-confirm-modal>
+</div>

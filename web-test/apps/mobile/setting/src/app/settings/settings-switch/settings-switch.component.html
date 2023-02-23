@@ -1,0 +1,38 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center" class="m-0">
+  Select Organization
+  <mat-icon mat-dialog-close>close</mat-icon>
+</div>
+
+<mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" [formGroup]="filterFG" class="select-form">
+    <mat-form-field *ngIf="shouldShowSearchBox">
+      <input matInput formControlName="queryString" placeholder="Search organization" />
+    </mat-form-field>
+    <div *ngIf="organizations.length; else emptyOrgs" class="org-list">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between"
+        fxLayoutGap="0.8rem"
+        class="org-item"
+        *ngFor="let org of organizations; trackBy: trackBy"
+        (click)="switchOrg(org)"
+        [class.active]="org.orgUuid == selectedOrgUuid"
+      >
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div class="logo">
+            <img src="{{ org.photoSrc }}" />
+          </div>
+          <div class="name">{{ org.orgName }}</div>
+          <span class="flex-spacer"></span>
+        </div>
+
+        <button *ngIf="org.isPartner" mat-flat-button color="primary">Admin</button>
+        <button *ngIf="org.type == 'DEMO'" mat-flat-button class="linkDemo">Demo</button>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<ng-template #emptyOrgs>
+  <h3 class="text-center">No organization found</h3>
+</ng-template>

@@ -1,0 +1,125 @@
+<mat-toolbar><h1>Configuration</h1></mat-toolbar>
+
+<div *ngIf="!isLoading">
+  <div *ngIf="sip" class="container" fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="column" fxLayoutGap="1.6rem" class="px-10 pt-10">
+      <ng-container *ngIf="sip.isIP; else noSipIP">
+        <h3 class="mb-15">Authentication mode</h3>
+        <div class="ml-20">
+          <mat-radio-group [(ngModel)]="authenticationMode" name="authentication" fxLayoutGap="3.2rem">
+            <mat-radio-button [value]="AuthenticationMode.ACCOUNT">Account</mat-radio-button>
+            <mat-radio-button [value]="AuthenticationMode.IP">IP</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <ng-container *ngIf="authenticationMode === AuthenticationMode.IP">
+          <mat-form-field>
+            <mat-label>Transport protocol</mat-label>
+            <mat-select [(ngModel)]="updateIpPeerReq.protocol" name="protocol">
+              <mat-option value="tcp">TCP</mat-option>
+              <mat-option value="tls">TLS</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>IP Peer</mat-label>
+            <input matInput type="text" name="IP" [(ngModel)]="updateIpPeerReq.ip" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Port</mat-label>
+            <input matInput type="number" name="Port" [(ngModel)]="updateIpPeerReq.port" />
+          </mat-form-field>
+        </ng-container>
+
+        <ng-container *ngIf="authenticationMode === AuthenticationMode.ACCOUNT">
+          <div fxLayout="row" class="mt-10" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+            <div class="item-left">Sip Username</div>
+            <span class="item-right">{{ sip.sipAccount?.username }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row" class="mt-10" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+            <div class="item-left">Sip Password</div>
+            <a href="javascript:void(0)" (click)="resetPassword()">Reset</a>
+          </div>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #noSipIP>
+        <h3 class="mb-15">Account Mode</h3>
+        <div fxLayout="row" class="mt-10" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+          <div class="item-left">Sip Username</div>
+          <span class="item-right">{{ sip.sipAccount?.username }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" class="mt-10" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+          <div class="item-left">Sip Password</div>
+          <a href="javascript:void(0)" (click)="resetPassword()">Reset</a>
+        </div>
+        <mat-divider></mat-divider>
+      </ng-template>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="1.6rem" class="px-10 pt-10">
+      <h3 class="mb-15">Call rules</h3>
+      <div fxLayout="column">
+        <mat-form-field>
+          <mat-label>Inbound Call Rule</mat-label>
+          <mat-select name="inboundRule" [(ngModel)]="sip.incomingCallRule">
+            <mat-option *ngFor="let item of inboundRules" [value]="item.id">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Outbound Call Rule</mat-label>
+          <mat-select name="outboundRule" [(ngModel)]="sip.outgoingCallRule">
+            <mat-option *ngFor="let item of outboundRules" [value]="item.id">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div
+      *ngIf="selectMode === CallerIdOptionMode.PBX || selectMode === CallerIdOptionMode.SIP_NUMBER"
+      class="px-10 pt-10"
+      fxLayout="column"
+      fxLayoutGap="1.6rem"
+    >
+      <h3 class="mb-15">Main Trunk Number</h3>
+      <mat-form-field>
+        <mat-label>Trunk Number</mat-label>
+        <mat-select name="trunkNumber" [(ngModel)]="selectCallerIdByMode">
+          <mat-option value="private"> Private </mat-option>
+          <mat-option *ngFor="let item of availableCallerIds" [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-stroked-button
+      [loading]="processing"
+      [disabled]="
+        sip.isIP &&
+        (!updateIpPeerReq.protocol || !updateIpPeerReq.ip || !updateIpPeerReq.port) &&
+        authenticationMode === AuthenticationMode.IP
+      "
+      color="primary"
+      (click)="update()"
+      fxFlexAlign="end"
+      class="mx-16 mb-16"
+    >
+      Apply
+    </button>
+  </div>
+
+  <div *ngIf="!sip">
+    <div fxLayout="column" class="container" fxLayoutAlign="center center">
+      <h3>No Available SIP</h3>
+    </div>
+  </div>
+</div>

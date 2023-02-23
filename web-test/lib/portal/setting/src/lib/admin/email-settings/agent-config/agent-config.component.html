@@ -1,0 +1,48 @@
+<div class="container">
+  <mat-toolbar fxLayoutGap="0.8rem" class="action__toolbar">
+    <mat-form-field>
+      <mat-label>Search for agents...</mat-label>
+      <input matInput (keyup)="applyFilter($event)" />
+    </mat-form-field>
+    <span class="spacer"></span>
+    <button (click)="addAgents()" mat-raised-button color="primary">
+      <mat-icon class="action__toolbar__icon">add_circle</mat-icon>
+      <span>Add agent</span>
+    </button>
+  </mat-toolbar>
+
+  <div class="agent-list">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="photoUrl">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let agent">
+          <b3n-email-agent-avatar [agent]="agent"></b3n-email-agent-avatar>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="displayName">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let agent">{{ agent.displayName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let agent">{{ agent.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let agent" class="action">
+          <a (click)="remove(agent)" class="icon cursor-pointer" title="Remove Agent">
+            <mat-icon>delete_outline</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

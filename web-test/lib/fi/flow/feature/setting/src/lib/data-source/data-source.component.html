@@ -1,0 +1,401 @@
+<mat-horizontal-stepper
+  #stepper
+  [@.disabled]="true"
+  labelPosition="bottom"
+  (selectionChange)="stepIndexChanged(stepper)"
+>
+  <mat-step>
+    <ng-template matStepLabel>{{ selectedName ? selectedName : 'Name' }}</ng-template>
+    <div [formGroup]="formDataSource" class="stepper-content">
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+        <mat-form-field hideRequiredMarker="true">
+          <input matInput placeholder="Name" formControlName="name" required />
+          <mat-error *ngIf="name.invalid">{{ getErrorInput(name) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Description" formControlName="description" />
+          <mat-error *ngIf="formDataSource.get('description').invalid">
+            {{ getErrorInput(formDataSource.get('description')) }}
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="!dataSource" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+          <label>Type</label>
+          <mat-radio-group color="primary" formControlName="type">
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+              <mat-radio-button value="STATIC">STATIC</mat-radio-button>
+              <mat-radio-button value="API">API</mat-radio-button>
+            </div>
+          </mat-radio-group>
+        </div>
+      </div>
+    </div>
+
+    <div dir="rtl" class="stepper-button">
+      <button
+        mat-raised-button
+        type="button"
+        color="primary"
+        matStepperNext
+        (click)="selectedName = name.value"
+        [disabled]="name.invalid || formDataSource.get('description').invalid"
+      >
+        Next
+      </button>
+    </div>
+  </mat-step>
+
+  <mat-step *ngIf="type.value === 'STATIC'">
+    <ng-template matStepLabel>Values</ng-template>
+    <mat-form-field fxFlex>
+      <mat-select placeholder="Data Type" [formControl]="valueDataTypeCtrl">
+        <mat-option [value]="'string'">String</mat-option>
+        <mat-option [value]="'number'">Number</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngFor="let item of formConfigStatic.controls; let i = index">
+      <div [formGroup]="$any(item)" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+        <mat-form-field hideRequiredMarker="true" fxFlex>
+          <input matInput placeholder="Label" formControlName="label" required />
+          <mat-error *ngIf="item.get('label').invalid">{{ getErrorInput(item.get('label')) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field hideRequiredMarker="true" fxFlex>
+          <input matInput placeholder="Value" formControlName="value" required />
+          <mat-error *ngIf="item.get('value').invalid">{{ getErrorInput(item.get('value')) }}</mat-error>
+        </mat-form-field>
+
+        <div fxFlex="40px">
+          <button
+            mat-icon-button
+            type="button"
+            color="warn"
+            [disabled]="formConfigStatic.controls.length === 1"
+            (click)="removeValue(i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <a href="javascript:;" class="link" (click)="addValue()">+ Add more values</a>
+
+    <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [loading]="submitting"
+        [disabled]="disabledSubmit()"
+        (click)="submitDataSource()"
+      >
+        {{ dataSource ? 'Update' : 'Create' }}
+      </button>
+
+      <button mat-button type="button" matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+
+  <mat-step *ngIf="type.value === 'API'">
+    <ng-template matStepLabel>Request</ng-template>
+
+    <ng-container [formGroup]="formConfigApi" novalidate>
+      <div class="stepper-content" formGroupName="request">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+            <label class="title">Method</label>
+            <mat-radio-group color="primary" formControlName="httpVerb">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                <mat-radio-button value="GET">GET</mat-radio-button>
+                <mat-radio-button value="POST">POST</mat-radio-button>
+                <mat-radio-button value="PUT">PUT</mat-radio-button>
+                <mat-radio-button value="PATCH">PATCH</mat-radio-button>
+                <mat-radio-button value="DELETE">DELETE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <div *ngIf="connectorType === 'INTERNAL'" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+            <label class="title">Execution Mode</label>
+            <mat-radio-group color="primary" formControlName="executionMode">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                <mat-radio-button value="INSTANT_RESPONSE">Instant</mat-radio-button>
+                <mat-radio-button value="POSTBACK_RESPONSE">Postback</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+            <section fxLayout="column">
+              <label class="title">Max retry</label>
+              <mat-form-field>
+                <mat-select formControlName="maxRetry">
+                  <mat-option [value]="0">0</mat-option>
+                  <mat-option [value]="1">1</mat-option>
+                  <mat-option [value]="2">2</mat-option>
+                  <mat-option [value]="3">3</mat-option>
+                  <mat-option [value]="4">4</mat-option>
+                  <mat-option [value]="5">5</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </section>
+
+            <section fxLayout="column">
+              <label class="title">Path</label>
+              <mat-form-field hideRequiredMarker="true" formGroupName="url">
+                <input matInput formControlName="template" required />
+                <mat-error *ngIf="requestUrlTemplate.invalid">{{ getErrorInput(requestUrlTemplate) }}</mat-error>
+              </mat-form-field>
+            </section>
+
+            <section formGroupName="headers" fxLayout="column" fxLayoutGap="8px">
+              <label class="title">Header template</label>
+              <ng-container formArrayName="templatesTemp">
+                <ng-container
+                  *ngFor="let header of requestHeaders.controls['templatesTemp']['controls']; let headerIndex = index"
+                  [formGroupName]="headerIndex"
+                >
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-form-field hideRequiredMarker="true" fxFlex="40">
+                      <input matInput placeholder="Key" formControlName="key" required />
+                      <mat-error *ngIf="header.get('key').invalid">{{ getErrorInput(header.get('key')) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field hideRequiredMarker="true" fxFlex>
+                      <input matInput placeholder="Value" formControlName="value" required />
+                      <mat-error *ngIf="header.get('value').invalid">
+                        {{ getErrorInput(header.get('value')) }}
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="onRemoveHeaderParam(requestHeaders.controls['templatesTemp'], headerIndex)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <p>
+                <a
+                  href="javascript:;"
+                  class="link"
+                  (click)="onEnterHeaderParam(requestHeaders.controls['templatesTemp'])"
+                >
+                  + Add
+                </a>
+              </p>
+            </section>
+
+            <section>
+              <label class="title">Body template</label>
+              <mat-form-field appearance="outline" formGroupName="body" id="body_template">
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  [cdkAutosizeMinRows]="5"
+                  [cdkAutosizeMaxRows]="10"
+                  formControlName="template"
+                  b3nFormatObjToJson
+                  id="body_template"
+                  [control]="requestBodyTemplate"
+                  [top]="'30'"
+                  [right]="'8'"
+                ></textarea>
+              </mat-form-field>
+              <mat-error *ngIf="requestBodyTemplate.invalid">{{ getErrorInput(requestBodyTemplate) }}</mat-error>
+            </section>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+      <button
+        mat-raised-button
+        type="button"
+        color="primary"
+        (click)="importRequest()"
+        [disabled]="
+          requestUrlTemplate.invalid || requestHeaders.get('templatesTemp').invalid || requestBodyTemplate.invalid
+        "
+      >
+        Next
+      </button>
+      <button mat-button type="button" matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+
+  <mat-step *ngIf="type.value === 'API'">
+    <ng-template matStepLabel>Fill parameters</ng-template>
+    <div class="stepper-content" *ngIf="stepper.selectedIndex === 2">
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="48px">
+        <div
+          *ngIf="
+            requestUrl.get('parameters')['controls'].length > 0 ||
+            requestHeaders.get('parameters')['controls'].length > 0 ||
+            requestBody.get('parameters')['controls'].length > 0
+          "
+        >
+          <h3><strong>Request Parameters</strong></h3>
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+            <b3n-parameter-datasource
+              *ngIf="requestUrl.get('parameters')['controls'].length > 0"
+              [title]="'URL'"
+              [group]="requestUrl"
+              [key]="'parameters'"
+              [contextVariables]="contextVariables"
+            ></b3n-parameter-datasource>
+
+            <b3n-parameter-datasource
+              *ngIf="requestHeaders.get('parameters')['controls'].length > 0"
+              [title]="'HEADER'"
+              [group]="requestHeaders"
+              [key]="'parameters'"
+              [contextVariables]="contextVariables"
+            ></b3n-parameter-datasource>
+
+            <b3n-parameter-datasource
+              *ngIf="requestBody.get('parameters')['controls'].length > 0"
+              [title]="'BODY'"
+              [group]="requestBody"
+              [key]="'parameters'"
+              [contextVariables]="contextVariables"
+            ></b3n-parameter-datasource>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+      <button
+        mat-raised-button
+        type="button"
+        color="primary"
+        matStepperNext
+        [disabled]="requestUrl.invalid || requestHeaders.invalid || requestBody.invalid"
+      >
+        Next
+      </button>
+      <button mat-button type="button" matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+
+  <mat-step *ngIf="type.value === 'API'">
+    <ng-template matStepLabel>Response content</ng-template>
+    <ng-container [formGroup]="formConfigApi" novalidate>
+      <div class="stepper-content" formGroupName="response" fxLayout="column" fxLayoutGap="8px">
+        <ng-container *ngIf="!dataSource || editResponse">
+          <mat-form-field
+            appearance="outline"
+            hideRequiredMarker="true"
+            [attr.id]="!dataSource || editResponse ? 'response_datasource' : null"
+          >
+            <mat-label>Response content</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              [cdkAutosizeMinRows]="10"
+              [cdkAutosizeMaxRows]="20"
+              [formControl]="responseCtrl"
+              [control]="responseCtrl"
+              b3nFormatObjToJson
+              id="response_datasource"
+              [top]="'12'"
+              [right]="'8'"
+              required
+            ></textarea>
+            <mat-error *ngIf="responseCtrl.invalid">{{ getErrorResponse() }}</mat-error>
+          </mat-form-field>
+
+          <div fxLayout="row" fxLayoutGap="8px">
+            <button
+              mat-stroked-button
+              color="primary"
+              type="button"
+              [loading]="extracting"
+              [disabled]="!responseCtrl.value"
+              (click)="extractJsonProps()"
+            >
+              Extract properties
+            </button>
+            <button mat-button *ngIf="dataSource && editResponse" (click)="cancelEdit()">Cancel edit</button>
+          </div>
+
+          <div *ngIf="vars && vars.length > 0" class="mt-16">
+            <mat-form-field hideRequiredMarker="true">
+              <mat-select placeholder="Array Path" formControlName="targetArrayPath" required>
+                <mat-option *ngFor="let v of vars" [value]="v.path">{{ v.path }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="response.get('targetArrayPath').invalid">This field is required</mat-error>
+            </mat-form-field>
+
+            <ng-container *ngIf="arrayPath">
+              <mat-form-field hideRequiredMarker="true">
+                <mat-select placeholder="Label Path" formControlName="labelPath" required>
+                  <mat-option *ngFor="let v of arrayPath.arrayItemDescriptions" [value]="v.path">
+                    {{ v.path }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="response.get('labelPath').invalid">This field is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field hideRequiredMarker="true">
+                <mat-select
+                  placeholder="Value Path"
+                  formControlName="valuePath"
+                  (selectionChange)="setValueDataType($event.value)"
+                  required
+                >
+                  <mat-option *ngFor="let v of arrayPath.arrayItemDescriptions" [value]="v.path">
+                    {{ v.path }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="response.get('valuePath').invalid">This field is required</mat-error>
+              </mat-form-field>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="dataSource && !editResponse">
+          <mat-form-field>
+            <input matInput placeholder="Array Path" formControlName="targetArrayPath" readonly />
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Label Path" formControlName="labelPath" readonly />
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Value Path" formControlName="valuePath" readonly />
+          </mat-form-field>
+
+          <div>
+            <button mat-stroked-button color="primary" (click)="editResponse = true">Edit</button>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [loading]="submitting"
+        [disabled]="disabledSubmit()"
+        (click)="submitDataSource()"
+      >
+        {{ dataSource ? 'Update' : 'Create' }}
+      </button>
+      <button mat-button type="button" matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

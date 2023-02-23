@@ -1,0 +1,39 @@
+.mat-form-field {
+  width: 100%;
+}
+
+.indicator {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 4px;
+  margin-right: 4px;
+
+  &.online {
+    background: #4da28c;
+  }
+  &.offline {
+    border: 1px solid #333;
+    background: #fff;
+  }
+}
+
+.triangle {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 10px;
+  height: 10px;
+  margin-left: 4px;
+  margin-right: 4px;
+  background: linear-gradient(to bottom right, #fff 0%, #fff 50%, #c1bdbd 50%, #c1bdbd 100%);
+}
+
+.hide {
+  display: none;
+}
+
+.disabled {
+  filter: opacity(0.8);
+}

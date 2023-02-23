@@ -1,0 +1,13 @@
+<form [formGroup]="formConfigs" novalidate>
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <ng-container formArrayName="mappings">
+      <ng-container [formGroupName]="i" *ngFor="let item of mappings.controls; let i = index">
+        <b3n-context-variable
+          [optionForControl]="item.value"
+          [contextVariables]="contextVariables"
+          (selectedValue)="selectValueOfConfig($any(item), $event)"
+        ></b3n-context-variable>
+      </ng-container>
+    </ng-container>
+  </div>
+</form>

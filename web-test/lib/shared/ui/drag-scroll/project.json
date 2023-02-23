@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-drag-scroll",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/drag-scroll/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/drag-scroll/**/*.ts", "libs/shared/ui/drag-scroll/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

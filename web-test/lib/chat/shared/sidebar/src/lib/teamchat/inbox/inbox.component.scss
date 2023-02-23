@@ -1,0 +1,53 @@
+:host {
+  ::ng-deep {
+    .mat-badge-content {
+      right: 0.8rem !important;
+      top: 3px !important;
+    }
+
+    .item-convo {
+      mat-icon {
+        &[data-mat-icon-name='call'] {
+          svg {
+            fill: #686d72;
+          }
+        }
+      }
+    }
+  }
+
+  .convo-list {
+    padding: 0;
+    .convo {
+      height: 32px;
+      &__headline {
+        font-size: 14px;
+        color: #686d72;
+        overflow: hidden;
+      }
+      .icon {
+        color: inherit;
+        width: 1.6rem;
+        height: 1.6rem;
+        font-size: 1.6rem;
+        display: flex;
+        flex-shrink: 0;
+        text-align: center;
+        vertical-align: baseline;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+      }
+
+      .unread {
+        font-weight: 600;
+        color: #2d2d2d;
+      }
+    }
+  }
+
+  .mat-list-icon {
+    color: rgba(0, 0, 0, 0.54);
+  }
+}

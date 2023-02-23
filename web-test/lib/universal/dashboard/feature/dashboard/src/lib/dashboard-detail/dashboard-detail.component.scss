@@ -1,0 +1,17 @@
+:host {
+  .dashboard {
+    &__content {
+      gridster {
+        background: #fafafa;
+      }
+    }
+  }
+
+  .empty-box {
+    padding-top: 15%;
+  }
+
+  .gridster-item-v2 {
+    background-color: #fafafa;
+  }
+}

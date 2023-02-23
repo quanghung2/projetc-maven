@@ -1,0 +1,65 @@
+$footer_height: 60px;
+$rem_2: 2rem;
+
+.permission {
+  &__toolbar {
+    background: transparent;
+    padding: 0 0 0 2rem;
+    color: var(--gray-800);
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 450;
+    }
+  }
+
+  &__item {
+    margin-bottom: 1.5rem;
+    padding: #{$rem_2};
+  }
+
+  &__header {
+    font-weight: 450;
+    margin-bottom: 1rem;
+
+    &__title {
+      font-weight: 500;
+      font-size: 14px;
+    }
+  }
+
+  &__content {
+    border: 1px solid rgb(230, 230, 228);
+    border-radius: 4px;
+
+    .py-8px {
+      padding: 0 1rem;
+    }
+
+    .toggle-container {
+      padding: 0.75rem 0;
+
+      ::ng-deep.mat-checkbox-label {
+        font-size: 14px;
+      }
+    }
+  }
+
+  &__footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: #{$footer_height};
+    background-color: inherit;
+
+    button {
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    .btn-update {
+      margin-left: 8px;
+      margin-right: #{$rem_2};
+    }
+  }
+}

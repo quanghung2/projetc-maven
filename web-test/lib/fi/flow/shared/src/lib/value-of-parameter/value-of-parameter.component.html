@@ -1,0 +1,25 @@
+<ng-container *ngIf="!valueListUuid">
+  <b3n-value-type-others
+    *ngIf="optionForControl.dataType !== 'string'"
+    [optionForControl]="optionForControl"
+    [contextVariables]="contextVariables"
+    [reqValidate]="myReqValidate"
+    (expressionTree)="selectedValue.emit($event)"
+  ></b3n-value-type-others>
+
+  <b3n-value-type-string
+    *ngIf="optionForControl.dataType === 'string'"
+    [optionForControl]="optionForControl"
+    [contextVariables]="contextVariables"
+    [reqValidate]="myReqValidate"
+    (expressionTree)="selectedValue.emit($event)"
+  ></b3n-value-type-string>
+</ng-container>
+
+<ng-container *ngIf="valueListUuid">
+  <b3n-value-type-datasource
+    [optionForControl]="optionForControl"
+    [valueListUuid]="valueListUuid"
+    (expressionTree)="selectedValue.emit($event)"
+  ></b3n-value-type-datasource>
+</ng-container>

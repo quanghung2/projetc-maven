@@ -1,0 +1,49 @@
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1.6rem" class="information" *ngIf="!!profile">
+  <mat-toolbar class="p-0">
+    <h1>Information</h1>
+  </mat-toolbar>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" class="detail">
+    <form [formGroup]="profileFG" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+      <div fxLayout="row" fxLayoutAlign="stretch center" fxLayoutGap="1.6rem">
+        <mat-form-field fxFlex="auto">
+          <input matInput placeholder="First Name" formControlName="givenName" />
+          <mat-error>Your first name is empty</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="auto">
+          <input matInput placeholder="Last Name" formControlName="familyName" />
+          <mat-error>Your last name is empty</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Choose how your name will appear on your profile</mat-label>
+        <mat-select formControlName="inverse">
+          <mat-option *ngFor="let item of displayNameOptions" [value]="item.key">
+            {{ item.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Timezone</mat-label>
+        <mat-select formControlName="timezoneUuid">
+          <mat-option *ngFor="let item of timezones$ | async" [value]="item.uuid"> {{ item.displayText }} </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="auto">
+        <textarea matInput placeholder="About" formControlName="about" rows="5"></textarea>
+        <mat-error>Maximum 200 characters</mat-error>
+      </mat-form-field>
+    </form>
+    <div class="actions" fxLayout="row" fxLayoutAlign="end center">
+      <button
+        mat-raised-button
+        [loading]="progressing"
+        [disabled]="profileFG.invalid"
+        color="primary"
+        (click)="updatePersonal()"
+      >
+        Update
+      </button>
+    </div>
+  </div>
+</div>

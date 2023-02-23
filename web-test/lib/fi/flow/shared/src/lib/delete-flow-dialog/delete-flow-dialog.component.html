@@ -1,0 +1,29 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Delete flow</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <ng-container *ngIf="flow.activeVersion && flow.draftVersion">
+    <p>
+      Are you sure you want to delete flow <strong>{{ flow.name }} ({{ flow.uuid.substring(0, 8) }})</strong>? Please
+      choose an option to delete
+    </p>
+    <mat-radio-group [(ngModel)]="type" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px" class="mb-16">
+      <mat-radio-button [value]="1">Draft version</mat-radio-button>
+      <mat-radio-button [value]="2">Active & Draft versions</mat-radio-button>
+      <mat-radio-button [value]="4">Permantly delete. WARNING: this action is irreversible!</mat-radio-button>
+    </mat-radio-group>
+  </ng-container>
+
+  <ng-container *ngIf="!(flow.activeVersion && flow.draftVersion)">
+    <p>
+      Are you sure you want to delete flow <strong>{{ flow.name }} ({{ flow.uuid.substring(0, 8) }})</strong>?
+    </p>
+    <mat-checkbox class="mb-8" color="primary" [formControl]="permantlyDeleteCtrl">
+      Permantly delete. WARNING: this action is irreversible!
+    </mat-checkbox>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="warn" [loading]="deleting" [disabled]="!type" (click)="submit()">Delete</button>
+</mat-dialog-actions>

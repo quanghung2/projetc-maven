@@ -1,0 +1,14 @@
+.ui.cards {
+  margin: 0;
+  flex-wrap: nowrap;
+
+  > .card {
+    margin: 0;
+    margin-left: 0.875em;
+    flex-grow: 1;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

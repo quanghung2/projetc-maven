@@ -1,0 +1,16 @@
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+.mat-drawer-side {
+  border-right: unset !important;
+}
+
+.material-icons.md-100 {
+  font-size: 75px;
+  width: 75px;
+  height: 75px;
+}
+
+.mat-tooltip {
+  font-size: 12px !important;
+}

@@ -1,0 +1,43 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>{{ mutex ? 'Update' : 'Create' }} Relationship {{ mutex?.id }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start stretch">
+    <div class="action" *ngFor="let a of actions" fxLayout="row" fxLayoutAlign="space-between center">
+      <span>{{ a.name }}</span>
+      <button mat-icon-button color="warn" (click)="delete(a)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="mt-16 option-param">
+    <a
+      *ngIf="actions.length > 0 && actionsNotUse.length > 0"
+      class="link"
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      (click)="expand.toggle()"
+    >
+      <span>Add more actions</span>
+      <mat-icon>{{ expand.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+    </a>
+    <mat-expansion-panel #expand [expanded]="mutex ? false : true" class="mat-elevation-z0">
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div class="action" *ngFor="let anu of actionsNotUse" fxLayout="row" fxLayoutAlign="space-between center">
+          <span>{{ anu.name }}</span>
+          <button mat-icon-button color="primary" (click)="add(anu)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="actions.length === 0" [loading]="submitting" (click)="save()">
+    Save
+  </button>
+</div>

@@ -1,0 +1,26 @@
+<div class="wrapper">
+  <mat-divider></mat-divider>
+
+  <ng-container *ngIf="!loading && estimatedPrice">
+    <div class="price">{{ estimatedPrice.currency }}{{ estimatedPrice.totalPrice }}</div>
+    <div class="cycle">
+      <ng-container [ngSwitch]="estimatedPrice.salesModelCode">
+        <ng-container *ngSwitchCase="'monthly'">per month</ng-container>
+        <ng-container *ngSwitchCase="'yearly'">per year</ng-container>
+        <ng-container *ngSwitchDefault>{{ estimatedPrice.salesModelCode }}</ng-container>
+      </ng-container>
+    </div>
+    <button *ngIf="product?.primarySkus.length > 0" mat-raised-button color="primary" (click)="purchase()">
+      Buy Now
+    </button>
+    <button *ngIf="product.description" mat-button type="button" (click)="togleViewDescription(!viewDescription)">
+      {{ viewDescription ? 'Hide' : 'View' }} Description
+    </button>
+
+    <div
+      *ngIf="product.description && viewDescription"
+      [innerHTML]="product.description | safeHtml"
+      class="description"
+    ></div>
+  </ng-container>
+</div>

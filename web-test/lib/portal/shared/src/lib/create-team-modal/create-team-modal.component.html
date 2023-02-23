@@ -1,0 +1,29 @@
+<div class="team-modal">
+  <h2 mat-dialog-title>{{ createTeamModalInput?.isEdit ? 'Update name' : 'Create team' }}</h2>
+  <mat-dialog-content class="mat-typography" fxLayout="column" fxLayoutAlign="stretch" fxLayoutGap="0.8rem">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        [formControl]="name"
+        [b3nRetrictInput]="'([a-z|A-Z|0-9]+[\\s]*)+$'"
+        placeholder="Enter team name"
+      />
+      <mat-error *ngIf="name.invalid">{{
+        name.value.length > 100 ? 'Maximum 100 characters' : "Name can't be empty"
+      }}</mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="isLoading"
+      [disabled]="name.invalid || isLoading"
+      color="primary"
+      (click)="onSave()"
+    >
+      {{ createTeamModalInput?.isEdit ? 'Update' : 'Create' }}
+    </button>
+  </mat-dialog-actions>
+</div>

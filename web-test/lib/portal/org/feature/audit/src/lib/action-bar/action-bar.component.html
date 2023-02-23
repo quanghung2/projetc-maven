@@ -1,0 +1,72 @@
+<mat-toolbar [formGroup]="formGroup">
+  <mat-toolbar-row fxLayoutGap="0.8rem" class="p-0">
+    <mat-form-field>
+      <mat-label>Time Range</mat-label>
+      <mat-select formControlName="lastTimeFilter" (selectionChange)="onTimeRangeChanged($event)">
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">
+          {{ timeRange.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Application</mat-label>
+      <mat-select formControlName="moduleFilter" (selectionChange)="onAppChanged($event)">
+        <mat-option *ngFor="let type of auditEventName" [value]="type.moduleName">
+          {{ type.moduleDescription | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Action</mat-label>
+      <mat-select formControlName="actionFilter" (selectionChange)="onActionChanged($event)">
+        <mat-option value=""> All </mat-option>
+        <mat-option *ngFor="let action of actionOptions" [value]="action?.name">
+          {{ action?.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <span class="spacer"></span>
+    <mat-form-field>
+      <mat-label>User</mat-label>
+      <input matInput placeholder="Search User" formControlName="userFilter" (keyup.enter)="onChangedUser()" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Enter search text" formControlName="query" (keyup.enter)="onChangedQuery()" />
+    </mat-form-field>
+
+    <button mat-raised-button [loading]="isLoading" [disabled]="isLoading" color="primary" (click)="onSearchLog()">
+      Search
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row *ngIf="isShowSpecialDate" fxLayoutGap="0.8rem" class="p-0">
+    <mat-form-field class="date-filter__start" (click)="pickerStart.open()">
+      <mat-label>Start date</mat-label>
+      <input
+        matInput
+        formControlName="startDate"
+        [matDatepicker]="pickerStart"
+        [min]="minStart"
+        [max]="maxStart"
+        (dateChange)="startDateChanged()"
+      />
+      <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerStart type="date"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="date-filter__end" (click)="pickerEnd.open()">
+      <mat-label>End date</mat-label>
+      <input
+        matInput
+        formControlName="endDate"
+        [matDatepicker]="pickerEnd"
+        [min]="minEnd"
+        [max]="maxEnd"
+        (dateChange)="endDateChanged()"
+      />
+      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd type="date"></mat-datepicker>
+    </mat-form-field>
+  </mat-toolbar-row>
+</mat-toolbar>

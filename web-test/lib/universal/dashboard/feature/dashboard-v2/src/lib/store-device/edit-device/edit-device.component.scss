@@ -1,0 +1,28 @@
+.device__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.device__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.device__actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}

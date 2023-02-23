@@ -1,0 +1,16 @@
+:host {
+  .container {
+    padding: 0 1.6rem 1.6rem 1.6rem;
+    .btnCancel {
+      margin-right: 10px;
+    }
+
+    .dialog-title {
+      display: inline-flex !important;
+    }
+
+    ::ng-deep mat-form-field input {
+      line-height: 15px;
+    }
+  }
+}

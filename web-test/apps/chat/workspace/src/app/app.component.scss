@@ -1,0 +1,56 @@
+:host {
+  width: 100%;
+
+  .app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .network-warning {
+    text-align: center;
+    height: calc(var(--app__warning--height) - var(--app__toolbar--height));
+    margin: 0 !important;
+  }
+
+  .sidenav-container {
+    height: calc(100vh - var(--app__warning--height) - var(--app__toolbar--height));
+    z-index: 1;
+
+    .main-sidebar {
+      overflow: hidden;
+      width: 250px;
+      background-color: #fafafa;
+
+      ::ng-deep .mat-drawer-inner-container {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .app__status {
+        padding: 1.6rem;
+        // height: 64px;
+
+        .home-link {
+          .mat-icon {
+            font-size: 1.6rem;
+            width: 1.6rem;
+            height: 1.6rem;
+          }
+        }
+      }
+    }
+
+    .right-sidebar {
+      width: 320px;
+    }
+
+    .txn__name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}

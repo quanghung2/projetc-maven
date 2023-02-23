@@ -1,0 +1,47 @@
+<div class="header-info">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <h2>User List</h2>
+    <button mat-icon-button (click)="back()"><mat-icon>close</mat-icon></button>
+  </div>
+  <div *ngIf="membersDeactivated > 0" class="red-fg">{{ membersDeactivated }} members deactivated</div>
+</div>
+<mat-divider></mat-divider>
+<div class="content">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap=".5rem">
+    <mat-form-field fxFlex class="users-assign">
+      <mat-select [formControl]="userCtrl" placeholder="Assign user(s)" multiple>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No users found"
+            [formControl]="userFilterCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let m of filteringMembers$ | async" [value]="m.uuid">{{ m.displayName }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      [loading]="loading"
+      [disabled]="userCtrl.value.length == 0"
+      color="primary"
+      (click)="assign()"
+    >
+      Assign
+    </button>
+  </div>
+
+  <mat-list>
+    <ng-container *ngFor="let member of assignedMembers$ | async">
+      <mat-list-item>
+        <div class="user" fxLayout="row" fxLayoutAlign="space-between center">
+          <span>{{ member.displayName }}</span>
+          <button mat-icon-button (click)="remove(member)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+    </ng-container>
+  </mat-list>
+</div>

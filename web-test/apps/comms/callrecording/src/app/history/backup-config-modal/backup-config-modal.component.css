@@ -1,0 +1,21 @@
+#download-section .grid {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#download-section .calendar input {
+  width: 100%;
+}
+
+#download-section .grid .button {
+  width: 100%;
+}
+
+.download-links {
+  border: solid thin lightgray;
+  padding: 10px 15px 10px 15px;
+  line-height: 25px;
+  max-height: 150px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

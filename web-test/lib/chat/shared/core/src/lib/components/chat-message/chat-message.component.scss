@@ -1,0 +1,225 @@
+$avatar_width: 32px;
+$avatar_height: $avatar_width;
+
+$avatar_livechat_width: 32px;
+$avatar_livechat_height: $avatar_livechat_width;
+
+@mixin img {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+
+@mixin status-user {
+  .status {
+    position: absolute;
+    height: 10px;
+    width: 10px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 50%;
+    border: 1px solid white;
+  }
+}
+
+:host {
+  display: block;
+
+  ::ng-deep {
+    .no-avatar {
+      @include img;
+      @include status-user;
+      line-height: 32px;
+      background: #cecece;
+      border: 1px solid #cecece;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .avatar {
+      @include img;
+      @include status-user;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  }
+
+  .container {
+    &:not(.no-hover):hover {
+      background: #ececec;
+      .chat_message__time {
+        opacity: 0.8;
+      }
+      .content_body__actions {
+        visibility: visible !important;
+      }
+      .actions-container {
+        visibility: visible !important;
+      }
+    }
+
+    .header-reply {
+      align-self: flex-start;
+      padding-top: 5px;
+      padding-left: 56px;
+      line-height: normal;
+      ::ng-deep {
+        .reply-text .emoji-chat {
+          zoom: 1 !important;
+        }
+
+        .avatar,
+        .no-avatar {
+          font-size: 8px;;
+          height: 15px !important;
+          width: 15px !important;
+        }
+      }
+    }
+
+    .chat_message {
+      padding: 0.3rem 1.6rem;
+      width: 100%;
+      &__avatar {
+        width: $avatar_width;
+        min-width: $avatar_width;
+        height: $avatar_height;
+        user-select: none;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          user-select: none;
+        }
+
+        csh-render-member {
+          margin-top: 0.8rem;
+        }
+
+        .container-avatar {
+          &.disabled {
+            pointer-events: none;
+          }
+
+          .icon-smart-toy {
+            margin: 0 1rem 0 0.4rem;
+            color: gray;
+          }
+        }
+      }
+
+      &__row {
+        width: 100%;
+      }
+
+      &__time {
+        line-height: 0.9em;
+        opacity: 0;
+        width: $avatar_width;
+        user-select: none;
+      }
+
+      &__content {
+        flex: 1 1 auto;
+
+        .content_header {
+          &__title {
+            font-weight: 550;
+            cursor: pointer;
+            &.disabled {
+              pointer-events: none;
+            }
+          }
+          &__convo {
+            margin-right: 0.8rem !important;
+            color: #1264a3;
+          }
+          &__time {
+            font-size: 0.9em;
+            line-height: 0.9em;
+            opacity: 0.8;
+          }
+        }
+
+        .content_body {
+          width: 100%;
+          position: relative;
+
+          .actions-container {
+            visibility: hidden;
+            background-color: rgb(255, 2555, 255);
+            box-shadow: rgba(6, 6, 7, 0.08) 0px 0px 0px 1px;
+            border-radius: 4px;
+            user-select: none;
+            transition: -webkit-box-shadow 0.1s ease-out;
+            position: absolute;
+            top: -15px;
+            right: 10px;
+            overflow: hidden;
+
+            &.visibility {
+              visibility: visible !important;
+            }
+
+            &__item {
+              height: 35px;
+              min-width: 35px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              .mat-icon {
+                color: #32323280;
+              }
+
+              &:hover {
+                background-color: #e4e4e4;
+              }
+            }
+          }
+
+          .deleted-msg {
+            color: #717274;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .delete-message {
+    color: #d72b3f;
+  }
+
+  pre.message_mention {
+    font-family: 'Open Sans', sans-serif;
+    max-width: 170px;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    margin: 0;
+    vertical-align: bottom;
+    color: #1264a3;
+    background-color: #1d9bd11a;
+    border-radius: 0.3em;
+    cursor: pointer;
+    font-weight: normal;
+  }
+
+  .custom {
+    .mat-menu-content {
+      padding-top: 0px !important;
+      padding-bottom: 0px !important;
+    }
+
+    .mat-menu-item {
+      line-height: 35px;
+      height: 35px;
+    }
+  }
+}

@@ -1,0 +1,77 @@
+<div [class.active]="isLoading" class="ui inverted dimmer transition">
+  <div class="ui text loader"></div>
+</div>
+
+<div class="settings">
+  <div class="ui breadcrumb">
+    <a [routerLink]="['../list']" class="section">Templates</a>
+    <i class="chevron right icon divider"></i>
+    <div class="active section">Credit Note</div>
+  </div>
+
+  <div class="ui info message">
+    <div class="content">
+      <p>Template settings is configured for a particular currency. Select one currency prior to configuring.</p>
+    </div>
+  </div>
+
+  <form #settingsForm="ngForm" class="ui form">
+    <h4 class="ui dividing header">Currency</h4>
+    <div class="currency field">
+      <div commonDropdown class="ui selection dropdown">
+        <div class="text">{{ currency }}</div>
+        <i class="dropdown icon"></i>
+        <div class="menu">
+          <div *ngFor="let c of supportedCurrencies" (click)="onCurrencyChanged(c)" class="item">
+            {{ c }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="ui dividing header">Note</h4>
+    <div class="note field">
+      <div class="variables" style="margin-bottom: 1em">
+        <span
+          (click)="insertVarIntoCreditNote(PredefinedVar.CUSTOMER_WALLET)"
+          class="ui tag label"
+          style="cursor: pointer"
+          >{{ PredefinedVar.CUSTOMER_WALLET }}</span
+        >
+        <span
+          (click)="insertVarIntoCreditNote(PredefinedVar.INVOICE_NUMBER)"
+          class="ui tag label"
+          style="cursor: pointer"
+          >{{ PredefinedVar.INVOICE_NUMBER }}</span
+        >
+      </div>
+
+      <textarea
+        tinymce
+        #creditNoteEditor="tinymce"
+        [value]="unsavedTemplate.creditNote"
+        (changed)="onCreditNoteChanged($event)"
+        name="cn"
+      ></textarea>
+    </div>
+
+    <div class="buttons field">
+      <button
+        (click)="resetChanges()"
+        [disabled]="settingsForm.pristine && !hasChanges"
+        class="ui button"
+        type="button"
+      >
+        Reset
+      </button>
+      <button
+        (click)="saveChanges()"
+        [disabled]="settingsForm.pristine && !hasChanges"
+        class="ui primary button"
+        type="button"
+      >
+        Save
+      </button>
+    </div>
+  </form>
+</div>

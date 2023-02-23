@@ -1,0 +1,19 @@
+{
+  "name": "universal-dashboard-feature-widget",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/universal/dashboard/feature/widget/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/universal/dashboard/feature/widget/**/*.ts",
+          "libs/universal/dashboard/feature/widget/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

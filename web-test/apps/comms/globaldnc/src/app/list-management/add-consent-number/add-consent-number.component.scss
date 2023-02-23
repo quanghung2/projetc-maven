@@ -1,0 +1,81 @@
+.ui.modal {
+  overflow-x: hidden;
+}
+.upload-container {
+  padding-top: 60px;
+  padding-bottom: 60px;
+  text-align: center;
+  background-color: #f1f1f1;
+  margin-top: 30px;
+  &.havefile {
+    padding-top: 40px;
+    padding-bottom: 39px;
+  }
+  .down-csv-template {
+    font-size: 14px;
+    width: 180px;
+    margin: auto;
+    .label {
+      border-bottom: 1px solid #333333;
+      color: #000;
+    }
+    .icon {
+      line-height: 27px;
+      font-size: 15px;
+    }
+  }
+  .file-container {
+    height: 80px;
+    width: 420px;
+    border-radius: 2px;
+    margin: auto;
+    background-color: #ffffff;
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px 15px;
+    position: relative;
+    .icon.file {
+      float: left;
+      font-size: 20px;
+      margin-right: 10px;
+      margin-top: -7px;
+    }
+    .file {
+      float: left;
+      .file-name {
+        font-weight: bold;
+        float: left;
+      }
+      .ui.progress {
+        margin: 0px;
+        height: 6px;
+        overflow: hidden;
+        margin-top: 10px;
+        width: 335px;
+      }
+      .count-number {
+        float: left;
+        color: #666666;
+        font-size: 12px;
+      }
+    }
+    .icon.close {
+      cursor: pointer;
+      position: absolute;
+      top: 0px;
+      right: 5px;
+      z-index: 1;
+      opacity: 0.8;
+      font-size: 1.6rem;
+      color: #666;
+      width: 2.25rem;
+      height: 2.25rem;
+      padding: 0.625rem 0 0 0;
+    }
+  }
+  .ui.button.primary {
+    padding: 15px 41px;
+    margin: 0px;
+    margin-bottom: 15px;
+  }
+}

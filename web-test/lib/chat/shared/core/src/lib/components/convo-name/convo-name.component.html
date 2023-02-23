@@ -1,0 +1,17 @@
+<div class="convo-name" [class.title]="title">
+  <ng-container *ngIf="!channel['isGroupChat']; else groupName">
+    <span *ngIf="!title">@</span>
+    {{ channel.description.trim() }}
+  </ng-container>
+  <ng-template #groupName>
+    <div class="flex">
+      <span *ngIf="channel['isPublic']; else privateConvo">#</span>
+      <ng-template #privateConvo>
+        <span class="private-icon">
+          <mat-icon>lock</mat-icon>
+        </span>
+      </ng-template>
+      <span>{{ channel.name.trim() }}</span>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,52 @@
+<div fxFlex fxLayout="row" fxLayoutGap="0.5em" fxLayoutAlign="end center" class="action-bar">
+  <mat-form-field>
+    <mat-select
+      [(ngModel)]="settings.workspaceAgents.autoRefreshTime"
+      [compareWith]="compareCode"
+      (selectionChange)="onFilterChanged()"
+      placeholder="Auto refresh"
+    >
+      <mat-option *ngFor="let refresh of intervalTimes" [value]="refresh.key"> {{ refresh.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field (click)="rangePicker.open()">
+    <mat-date-range-input [min]="minDate" [max]="maxDate" [rangePicker]="rangePicker">
+      <input matStartDate [(ngModel)]="dateRange.start" placeholder="Start date" />
+      <input matEndDate [(ngModel)]="dateRange.end" placeholder="End date" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-button matDateRangePickerCancel>Cancel</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply (click)="onFilterChanged()">Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="queues">
+    <mat-select
+      [(ngModel)]="settings.workspaceAgents.queueFiltering"
+      (selectionChange)="onFilterChanged()"
+      placeholder="Filter by queue"
+    >
+      <mat-option [value]="ALL_QUEUES">All queues</mat-option>
+      <mat-option *ngFor="let queueItem of queues" [value]="queueItem.uuid"> {{ queueItem.label }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select
+      [(ngModel)]="settings.workspaceAgents.sortBy"
+      [compareWith]="compareCode"
+      (selectionChange)="onFilterChanged()"
+      placeholder="Sort by"
+    >
+      <mat-option *ngFor="let sort of sortAgentBy" [value]="sort.key"> {{ sort.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-stroked-button class="export" (click)="export()">Export</button>
+
+  <button mat-icon-button [loading]="fetching" (click)="onFilterChanged()" matTooltip="Refresh">
+    <mat-icon>autorenew</mat-icon>
+  </button>
+</div>

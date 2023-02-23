@@ -1,0 +1,52 @@
+.devices {
+  position: relative;
+
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100vw - 280px);
+  }
+  &__content {
+    table {
+      width: 100%;
+      .mat-row:hover {
+        background-color: #fafafa;
+      }
+      .mat-column-securityPassword {
+        .password {
+          &:hover {
+            button {
+              opacity: 1;
+            }
+          }
+
+          button {
+            opacity: 0;
+          }
+        }
+      }
+      .actions {
+        visibility: hidden;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .mat-column-actions {
+        width: 110px;
+      }
+      tr.mat-row:hover .actions {
+        visibility: visible;
+      }
+    }
+  }
+}
+.btn-back {
+  cursor: pointer;
+  &:hover {
+    color: var(--blue-500);
+  }
+}
+.button__wrapper {
+  display: flex;
+  gap: 16px;
+}

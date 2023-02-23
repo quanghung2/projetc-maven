@@ -1,0 +1,43 @@
+<div class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">Change Sender Email</div>
+  <div class="content">
+    <div class="ui form" [class.hidden]="currentStep !== Step.Input">
+      <div
+        class="field required"
+        [class.error]="(senderEmail.invalid && senderEmail.dirty) || senderEmail.value === existingEmail"
+      >
+        <label>Input new sender email</label>
+        <input
+          type="email"
+          name="senderEmail"
+          placeholder="noreply@yourdomain.com"
+          pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+          [(ngModel)]="newSenderEmail"
+          #senderEmail="ngModel"
+          required
+        />
+        <div class="ui message small error" *ngIf="senderEmail.value === existingEmail">
+          <p>New email can't be the same as existing email.</p>
+        </div>
+      </div>
+    </div>
+    <div class="" [class.hidden]="currentStep !== Step.Done">
+      <span
+        >An verfication link has been sent to <b>{{ newSenderEmail }}</b
+        >. New sender email will take effect once you've confirmed.</span
+      >
+    </div>
+  </div>
+  <div class="actions">
+    <div
+      class="ui primary button"
+      *ngIf="currentStep === Step.Input"
+      (click)="change()"
+      [class.disabled]="senderEmail.invalid || senderEmail.value === existingEmail"
+    >
+      Change
+    </div>
+    <div class="ui approve button" *ngIf="currentStep === Step.Done" (click)="close()">Close</div>
+  </div>
+</div>

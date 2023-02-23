@@ -1,0 +1,56 @@
+<h1 mat-dialog-title>
+  <span *ngIf="type === ActionType.create">Create flow</span>
+  <span *ngIf="type == ActionType.rename">Rename flow</span>
+  <span *ngIf="type == ActionType.assign">Assign subscription</span>
+  <span *ngIf="type == ActionType.unassign">Unassign subscription</span>
+</h1>
+<div mat-dialog-content>
+  <div *ngIf="type === ActionType.unassign">
+    Do you want to unassign subscription <b>{{ subscriptionMaping[selectedSubscriptionUuid]?.description }}</b> from
+    <b>{{ workflow.label }}?</b>
+  </div>
+  <form #form="ngForm" fxLayout="column" fxLayoutGap="1.6rem">
+    <ng-container *ngIf="workflow">
+      <mat-form-field *ngIf="type != 'assign' && type !== ActionType.unassign">
+        <input
+          matInput
+          placeholder="Flow name"
+          [(ngModel)]="workflow.label"
+          #name="ngModel"
+          required
+          name="flowName"
+          maxlength="256"
+        />
+        <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Flow name is required</mat-error>
+      </mat-form-field>
+      <mat-form-field *ngIf="!updateLabelOnly && type == 'assign'">
+        <mat-label>Choose subscription</mat-label>
+        <mat-select [(ngModel)]="selectedSubscriptionUuid" name="assignedNumbers">
+          <mat-option *ngFor="let subUuid of objectKeys(subscriptionMaping)" [value]="subUuid">{{
+            subscriptionMaping[subUuid].description
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [disabled]="progressing || form.invalid" (click)="progress()">
+    <span *ngIf="!progressing">{{
+      type === 'create' ? 'Create' : type == 'assign' ? 'Assign' : type == ActionType.unassign ? 'Unassign' : 'Rename'
+    }}</span>
+    <span *ngIf="progressing"
+      >{{
+        type === 'create'
+          ? 'Creating'
+          : type == 'assign'
+          ? 'Assign'
+          : type == ActionType.unassign
+          ? 'Unassign'
+          : 'Rename'
+      }}
+      ...</span
+    >
+  </button>
+</div>

@@ -1,0 +1,32 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <section *ngIf="connector && (connector.mustToSetAuthInfo || connector.mustToSetParam)">
+    <h4 class="mb-8">Connector Config</h4>
+    <b3n-connector-config
+      [connector]="connector"
+      (invalid)="connectorConfigInvalid = $event"
+      (changeConfigs)="connectorConfig = $event; emitValue()"
+    ></b3n-connector-config>
+  </section>
+
+  <section *ngIf="showParameters">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+      <b3n-trigger-config [isOptional]="false" [formMappings]="formTriggerConfig"></b3n-trigger-config>
+
+      <div class="option-param" *ngIf="showOptionalSection">
+        <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="expandOptionalParam.toggle()">
+          <span *ngIf="!expandOptionalParam.expanded">Show optional params</span>
+          <span *ngIf="expandOptionalParam.expanded">Hide optional params</span>
+          <mat-icon>{{ expandOptionalParam.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a>
+
+        <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+          <b3n-trigger-config [isOptional]="true" [formMappings]="formTriggerConfig"></b3n-trigger-config>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </section>
+
+  <p *ngIf="!showParameters">
+    <i>No parameters</i>
+  </p>
+</div>

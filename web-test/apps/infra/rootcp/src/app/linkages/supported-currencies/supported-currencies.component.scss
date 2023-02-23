@@ -1,0 +1,30 @@
+.currency__wrapper {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+
+  .currency {
+    width: fit-content;
+    min-width: 65px;
+    color: #2196f3;
+    border: 1px solid #2196f3;
+    padding: 1px 5px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 2px;
+  }
+}
+
+.action__wrapper {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px 0;
+
+  mat-form-field {
+    width: 300px;
+  }
+}

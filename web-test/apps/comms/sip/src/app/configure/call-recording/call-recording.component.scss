@@ -1,0 +1,35 @@
+.configure-content {
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 4px;
+  line-height: 37px;
+  .big-title {
+    font-size: 20px;
+  }
+  .title {
+    padding: 15px 15px 0px 0px;
+    line-height: 1.778;
+  }
+  .row {
+    padding-bottom: 0px;
+  }
+  .content {
+    margin-bottom: 30px;
+  }
+  .ui.toggle.checkbox {
+    margin-top: 5px;
+  }
+  .ui.grid {
+    margin: 0;
+  }
+  .help-block {
+    color: #999999;
+  }
+  .inline.fields {
+    margin-bottom: 10px;
+  }
+  .inline.fields.label {
+    color: #999999;
+    margin-bottom: 0px;
+  }
+}

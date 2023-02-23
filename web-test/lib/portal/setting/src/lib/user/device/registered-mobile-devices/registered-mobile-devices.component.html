@@ -1,0 +1,78 @@
+<div class="mobile-devices">
+  <ng-container *ngIf="!isEditing; else update">
+    <h1 mat-dialog-title>Registered mobile devices</h1>
+
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Device name</th>
+        <td mat-cell *matCellDef="let element">{{ element?.deviceInfo?.deviceName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdTime">
+        <th mat-header-cell *matHeaderCellDef>Registered time</th>
+        <td mat-cell *matCellDef="let element">{{ element?.deviceInfo?.registeredTime | userDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="actions">
+            <mat-icon (click)="switchToEditMode(element)" matTooltip="Edit name" class="btn-edit">edit</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="loading">
+        <td *matFooterCellDef [attr.colspan]="displayedColumns.length" mat-footer-cell>
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <div *ngIf="loading" class="loading-container">
+              <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr *matNoDataRow>
+        <td colspan="3">
+          <div fxLayout="column" fxLayoutAlign="center center" class="no-devices">No devices found.</div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      *ngIf="dataSource?.data?.length > 10"
+      [pageSize]="10"
+      hidePageSize
+      showFirstLastButtons
+    ></mat-paginator>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Close</button>
+    </div>
+  </ng-container>
+
+  <ng-template #update>
+    <div mat-dialog-title>Update device</div>
+    <div fxLayout="column">
+      <mat-form-field>
+        <mat-label>Device name</mat-label>
+        <input matInput [(ngModel)]="selectedDevice.deviceInfo.deviceName" (keyup.enter)="updateDevice()" />
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions align="end">
+      <button mat-button (click)="back()">Cancel</button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="updateDevice()"
+        [loading]="loading"
+        [disabled]="!selectedDevice.deviceInfo.deviceName"
+      >
+        Update
+      </button>
+    </div>
+  </ng-template>
+</div>

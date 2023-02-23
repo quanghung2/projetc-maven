@@ -1,0 +1,38 @@
+<form [formGroup]="selectTemplateForm" class="template__container" autocomplete="off">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" required />
+    <span matSuffix>{{ remainNameChar }} character(s) left</span>
+    <mat-error>Name is required</mat-error>
+  </mat-form-field>
+  <p class="template__title">Layout template</p>
+  <div class="template__wrapper" *ngFor="let slide of TEMPLATE_SLIDES" [class.slide__active]="activeSlide === slide.id">
+    <ng-container *ngFor="let template of slide.templates">
+      <div
+        [class]="template.class + '__wrapper'"
+        [ngClass]="{ active: activeTemplate === template.id }"
+        (click)="templateChange.emit({ slide: slide.id, templateId: template.id })"
+      >
+        <div
+          *ngFor="let _ of [].constructor(template.item)"
+          [class]="template.class + '__item'"
+          [ngClass]="{ active: activeTemplate === template.id }"
+        ></div>
+        <p class="content">{{ template.content }}</p>
+      </div>
+    </ng-container>
+  </div>
+  <div class="dot__wrapper">
+    <div
+      class="dot"
+      *ngFor="let slide of TEMPLATE_SLIDES"
+      [class.active]="activeSlide === slide.id"
+      (click)="slideChange.emit(slide.id)"
+    ></div>
+  </div>
+  <div class="action__wrapper">
+    <button mat-raised-button matStepperNext type="button" color="primary" [disabled]="selectTemplateForm.invalid">
+      Next
+    </button>
+  </div>
+</form>

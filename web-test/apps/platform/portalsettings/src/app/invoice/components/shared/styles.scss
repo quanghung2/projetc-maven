@@ -1,0 +1,168 @@
+.ui.table {
+  > tfoot {
+    > tr:first-child > td {
+      border-top: 2px solid #ddd;
+    }
+    &.compact > tr > td {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+    &.borderless > tr {
+      > td {
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+      }
+      &:not(:first-child) > td {
+        border-top: 0 !important;
+      }
+    }
+  }
+  &.top-align {
+    > thead > tr > th,
+    > tbody > tr > td,
+    > tfoot > tr > td {
+      vertical-align: top;
+    }
+  }
+  &.item-list {
+    border: 1px solid #ddd;
+    > thead > tr > th,
+    > tbody > tr > td,
+    > tfoot > tr > td {
+      border-right: 1px solid #ddd;
+      &:last-child {
+        border-right: 0;
+      }
+    }
+    > thead > tr:last-child > th {
+      border-bottom: 2px solid #ddd;
+    }
+    > tfoot > tr:first-child > td {
+      border-top: 2px solid #ddd;
+    }
+    td hr {
+      margin: 0;
+    }
+  }
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.float-left {
+  float: left !important;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.floated {
+  &.left {
+    float: left;
+  }
+  &.right {
+    float: right;
+  }
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.ui.label {
+  &.purple {
+    background-color: #a333c8;
+    color: #fff;
+  }
+  &.black {
+    background-color: #1b1c1d;
+    color: #fff;
+  }
+}
+
+.text {
+  &.primary {
+    color: #008bd9;
+  }
+  &.info {
+    color: #2badd4;
+  }
+  &.success {
+    color: #19b37b;
+  }
+  &.warning {
+    color: #e5791a;
+  }
+  &.error {
+    color: #e64333;
+  }
+  &.pending {
+    color: #e6db19;
+  }
+  &.purple {
+    color: #a333c8;
+  }
+}
+
+.text.aligned {
+  &.center {
+    text-align: center;
+  }
+  &.right {
+    text-align: right;
+  }
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.tinytext {
+  font-size: 0.85714286rem;
+}
+
+.smalltext {
+  font-size: 0.92857143rem;
+}
+
+.bigtext {
+  font-size: 1.28571429rem;
+}
+
+.slight-bold-text {
+  font-weight: 500;
+}
+
+.bold-text {
+  font-weight: 600;
+}
+
+.very-bold-text {
+  font-weight: 700;
+}
+
+// .no-left-whitespace {
+//   margin-left: -3px;
+// }
+
+.inherit-color {
+  color: inherit;
+}

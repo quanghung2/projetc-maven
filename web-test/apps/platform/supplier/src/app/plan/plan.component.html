@@ -1,0 +1,56 @@
+<div class="content-container" *ngIf="isDomainB3">
+  <div fxLayout="row" class="action-bar">
+    <div fxFlex fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
+      <mat-form-field>
+        <mat-select [formControl]="stackCtrl" placeholder="Stack">
+          <mat-option *ngFor="let s of stacks" [value]="s['value']">{{ s['text'] }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Search by name" [formControl]="searchCtrl" />
+        <mat-icon matSuffix *ngIf="searchCtrl.value" (click)="searchCtrl.setValue('')">clear</mat-icon>
+      </mat-form-field>
+      <button mat-icon-button [loading]="loading" (click)="getPlans()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="onShowCreatePlan()">Create Plan</button>
+    </div>
+  </div>
+  <div *ngIf="filteredPlans && filteredPlans.length > 0; else noData" class="supplier mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let e">{{ e.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let e">{{ e.action }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="load">
+        <th mat-header-cell *matHeaderCellDef>Load</th>
+        <td mat-cell *matCellDef="let e">{{ e.routes?.load | number }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="primary">
+        <th mat-header-cell *matHeaderCellDef>Primary</th>
+        <td mat-cell *matCellDef="let e">{{ e.routes?.primary }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="secondary">
+        <th mat-header-cell *matHeaderCellDef>Secondary</th>
+        <td mat-cell *matCellDef="let e">{{ e.routes?.secondary }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+  <ng-template #noData>
+    <div class="no-data" fxLayout="column" fxLayoutAlign="center center">
+      <h3 *ngIf="!loading" class="message">No plans found</h3>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,82 @@
+{
+  "name": "unified-sipbyoc",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/unified/sipbyoc/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/unified/sipbyoc",
+        "index": "apps/unified/sipbyoc/src/index.html",
+        "main": "apps/unified/sipbyoc/src/main.ts",
+        "polyfills": "apps/unified/sipbyoc/src/polyfills.ts",
+        "tsConfig": "apps/unified/sipbyoc/tsconfig.app.json",
+        "aot": true,
+        "assets": ["apps/unified/sipbyoc/src/favicon.ico", "apps/unified/sipbyoc/src/assets"],
+        "styles": ["apps/unified/sipbyoc/src/styles.scss"],
+        "scripts": [],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/unified/sipbyoc/src/environments/environment.ts",
+              "with": "apps/unified/sipbyoc/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "unified-sipbyoc:build:production"
+        },
+        "development": {
+          "browserTarget": "unified-sipbyoc:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "unified-sipbyoc:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/unified/sipbyoc/**/*.ts", "apps/unified/sipbyoc/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

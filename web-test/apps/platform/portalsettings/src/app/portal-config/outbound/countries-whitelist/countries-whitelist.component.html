@@ -1,0 +1,78 @@
+<div class="countries-whitelist__container">
+  <div class="action__wrapper">
+    <div class="ui input" [class.disabled]="!allowedCountries.length">
+      <input #search type="text" placeholder="Search by country or code" />
+    </div>
+    <div class="button__wrapper">
+      <div *ngIf="isAdmin" class="ui primary button" (click)="openStoreCountriesWhitelistModal()">Add countries</div>
+      <div class="ui button" *ngIf="isAdmin" (click)="removeCountry()">Remove all</div>
+    </div>
+  </div>
+  <table class="ui basic table">
+    <thead>
+      <tr *ngIf="allowedCountries.length; else empty">
+        <th>Country</th>
+        <th>Code</th>
+        <th>Area code</th>
+        <th>Passcode required</th>
+        <th></th>
+      </tr>
+      <ng-template #empty>
+        <tr>
+          <th></th>
+        </tr>
+      </ng-template>
+    </thead>
+    <tbody>
+      <tr class="row" *ngFor="let country of allowedCountriesPagin">
+        <td>{{ country.getLocationWithLabel() }}</td>
+        <td>+{{ country.code }}</td>
+        <td [style.paddingLeft.px]="country.areaCode ? '' : 25">
+          {{ country.areaCode ? '(' + getLocationCode(country) + ')' : '-' }}
+        </td>
+        <td>
+          <div class="ui checkbox">
+            <input
+              type="checkbox"
+              [(ngModel)]="country.passcode"
+              [checked]="country.passcode"
+              (click)="checkPasscode(country)"
+            />
+          </div>
+        </td>
+        <td class="actions">
+          <div class="icon__wrapper">
+            <button mat-icon-button matTooltip="Edit" (click)="openStoreCountriesWhitelistModal(country)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Remove" (click)="removeCountry(country)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr class="row" *ngIf="!allowedCountriesFilter.length">
+        <td class="countries-whitelist__empty" colspan="4">No country available</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="5">
+          <pagination
+            [totalCount]="allowedCountriesFilter.length"
+            [perPage]="pagin.pageSize"
+            [currentPage]="pagin.pageStart + 1"
+            (pageChange)="page($event)"
+          >
+          </pagination>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+  <b3n-store-countries-whitelist
+    [oRule]="oRule"
+    [allowedCountries]="allowedCountries"
+    [allCountries]="allCountries"
+  ></b3n-store-countries-whitelist>
+  <app-confirm-modal [hasCloseIcon]="false" [allowMultiple]="true"></app-confirm-modal>
+</div>

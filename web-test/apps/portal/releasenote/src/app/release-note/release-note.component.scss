@@ -1,0 +1,91 @@
+@media (max-width: 600px) {
+  .releases-container {
+    padding: 0px 16px !important;
+  }
+}
+
+:host {
+  display: block;
+  .sidenav {
+    background: #fafafa;
+
+    width: 200px;
+
+    ::ng-deep {
+      .mat-drawer-inner-container {
+        overflow: hidden;
+      }
+    }
+    .menus {
+      list-style-type: none;
+      padding-left: 10px;
+      li {
+        padding: 8px 15px;
+        font-size: 14px;
+        a {
+          color: #707070;
+          cursor: pointer;
+        }
+      }
+      .active {
+        font-weight: bold;
+        color: #0071bc !important;
+        background: initial;
+      }
+    }
+  }
+  .releases-selected {
+    padding: 0 16px;
+  }
+
+  .title {
+    font-size: 16px;
+    font-style: inherit;
+    line-height: 1.2;
+    color: var(--ds-text-highEmphasis, var(--ds-text-highEmphasis, #172b4d));
+    font-weight: 600;
+    letter-spacing: -0.008em;
+    margin: 10px 0;
+  }
+
+  .release-container {
+    padding: 1.4rem 3.8rem;
+    max-width: 990px;
+    margin: 0 auto;
+    // background: white;
+
+    .release {
+      border-radius: 4px;
+      padding: 1rem 0 3rem 0;
+
+      color: #444;
+
+      .release-header {
+        .header-title {
+          font-size: 3rem;
+          color: #303030;
+          margin: 10px 0;
+          line-height: normal;
+        }
+        .header-time {
+          padding-left: 3px;
+          text-rendering: optimizeLegibility;
+        }
+      }
+      .release-content {
+        font-size: 15px;
+        word-break: break-word;
+        div {
+          line-height: 1.6;
+        }
+      }
+    }
+    .no-release {
+      width: 100%;
+      text-align: center;
+      font-size: 20px;
+      color: var(--gray-700);
+      height: 400px;
+    }
+  }
+}

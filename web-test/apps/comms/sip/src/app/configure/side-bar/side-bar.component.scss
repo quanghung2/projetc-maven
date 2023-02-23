@@ -1,0 +1,40 @@
+.ui.vertical.menu .item i.icon {
+  color: #414141 !important;
+}
+.ui.vertical.menu {
+  width: 100% !important;
+  border: none;
+  box-shadow: none;
+}
+.ui.accordion.menu .item .title > .dropdown.icon {
+  margin: 0px 0 0 1em !important;
+}
+.ui.vertical.menu .title {
+  padding: 15px;
+}
+.ui.vertical.menu .title:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.03);
+  color: #414141;
+}
+.ui.vertical.menu .content {
+  padding: 0px;
+}
+.ui.vertical.menu .content .item:before {
+  background: transparent;
+}
+.ui.vertical.menu .item:before {
+  background: transparent;
+}
+.ui.vertical.menu > .item {
+  padding: 15px;
+}
+.ui.vertical.menu .content .item {
+  padding: 16px 35px;
+}
+.ui.menu .haschild.item {
+  padding: 0px !important;
+}
+.ui.menu:after {
+  display: none;
+}

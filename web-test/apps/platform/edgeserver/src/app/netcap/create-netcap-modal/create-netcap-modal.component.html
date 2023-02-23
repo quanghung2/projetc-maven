@@ -1,0 +1,42 @@
+<div mat-dialog-title>Do network capture</div>
+<div mat-dialog-content>
+  <form [formGroup]="formCreateNetCap" novalidate>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Duration" formControlName="duration" required />
+      <mat-error *ngIf="duration.invalid">{{ getErrorDuration() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Nodes" formControlName="nodes" multiple required>
+        <mat-option *ngFor="let node of nodesDataSource" [value]="node">{{ node }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="nodes.invalid">{{ getErrorNodes() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field formGroupName="filters">
+      <mat-label>Filter by IP network</mat-label>
+      <input matInput placeholder="Ex: 192.168.1.3/24" formControlName="net" />
+      <mat-error *ngIf="net.invalid">{{ getErrorNet() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Tag" formControlName="tag" required />
+      <mat-error *ngIf="tag.invalid">{{ getErrorTag() }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close [disabled]="creating">
+    Cancel <ng-container *ngIf="time">({{ time }})</ng-container>
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="creating"
+    [disabled]="formCreateNetCap.invalid"
+    (click)="createNetCap()"
+  >
+    Capture
+  </button>
+</div>

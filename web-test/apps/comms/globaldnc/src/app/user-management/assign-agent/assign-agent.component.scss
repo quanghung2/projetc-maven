@@ -1,0 +1,9 @@
+.member-select {
+  &.loading {
+    i.dropdown.icon {
+      &:before {
+        content: '' !important;
+      }
+    }
+  }
+}

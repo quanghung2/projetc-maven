@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  width: var(--left-sidebar-width);
+
+  .view__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    padding: 1.5rem 1.5rem 0;
+    align-items: stretch;
+
+    .title {
+      font: 500 20px/32px Roboto, sans-serif;
+      letter-spacing: normal;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .member__wrapper {
+    text-align: left;
+    font-weight: 450;
+  }
+
+  .sidebar {
+    min-height: 100vh;
+    &__group {
+      .link {
+        cursor: pointer;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 14px;
+        color: rgb(97, 97, 97);
+
+        &:focus {
+          outline-style: none !important;
+        }
+
+        &.link {
+          &:hover,
+          &.active {
+            color: rgb(33, 33, 33);
+          }
+          &:hover {
+            background: var(--gray-200);
+          }
+          &.active {
+            font-weight: 500;
+            background-color: var(--gray-200);
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep.select__arrow {
+  float: right;
+  margin-top: -10px !important;
+  cursor: pointer;
+  z-index: 9999;
+}

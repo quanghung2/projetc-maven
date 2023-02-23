@@ -1,0 +1,91 @@
+<div fxLayout="column" class="mass-configuration">
+  <div mat-dialog-title>Bulk Assignment</div>
+
+  <div *ngIf="!uploadState" fxLayout="column" fxLayoutGap="2rem">
+    <div fxLayout="row" fxLayoutGap="0.5rem">
+      <div>Bulk assignment only supports creating new extensions.</div>
+      <a (click)="toggleMoreInfo()" href="javascript:void(0)">
+        <span *ngIf="!showMoreInfo">More info.</span>
+        <span *ngIf="showMoreInfo">Hide info.</span>
+      </a>
+    </div>
+
+    <ng-container *ngIf="showMoreInfo">
+      <ul class="mass-configuration__more-info">
+        <li><strong>Ext key</strong>: The key of the extension</li>
+        <li><strong>Number</strong>: The number (DID) assigned to the extension</li>
+        <li><strong>User</strong>: The user to assign the extension and add-ons to</li>
+        <li>
+          <strong>Add-on license</strong>: The features that a user can use. Insert more columns if the user is assigned
+          to more than 2 features. Add-on license code can be found
+          <a href="https://ui.b3networks.com/samples/sample_addons_license_code.xlsx">here.</a>
+        </li>
+      </ul>
+    </ng-container>
+
+    <div fxLayout="column" fxLayoutGap="1rem">
+      <div fxLayout="column" fxLayoutGap="1rem">
+        <div *ngIf="fileName" class="file-name">{{ fileName }}</div>
+        <div fxLayout="row" fxLayoutAlign="end start" class="cursor-pointer">
+          <label
+            for="file-csv"
+            class="mat-stroked-button label"
+            [ngClass]="backgroundUploading ? 'disabled-color' : 'normal-color'"
+          >
+            <div *ngIf="backgroundUploading" class="progress-bar-container">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+            Upload CSV (5MB)
+          </label>
+          <form id="uploadMoh" hidden>
+            <input
+              [disabled]="backgroundUploading"
+              (change)="onFileChange($event)"
+              type="file"
+              id="file-csv"
+              hidden
+              accept=".csv"
+            />
+          </form>
+        </div>
+      </div>
+      <a
+        href="https://ui.b3networks.com/samples/sample_license_configuration.csv"
+        target="_blank"
+        mat-button
+        color="primary"
+        >Download sample file</a
+      >
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button [loading]="uploading" [disabled]="!fileName" mat-raised-button color="primary" (click)="submitJob()">
+        Submit
+      </button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="uploadState">
+    <div *ngIf="job && !uploading" fxLayout="column" class="submitted-jobs">
+      <div *ngIf="job.numOfPending > 0" fxLayout="column" fxLayoutAlign="space-between center" fxLayoutGap="2rem">
+        <div class="full-width">
+          <div class="progress-percentage">{{ pendingJobPercentage }}%</div>
+          <mat-progress-bar mode="determinate" [value]="pendingJobPercentage"></mat-progress-bar>
+        </div>
+        <div>The bulk assignment is being processed. Please wait for a moment.</div>
+      </div>
+
+      <ng-container *ngIf="job.numOfPending === 0">
+        <div>
+          The bulk assignment has been processed with <strong class="green-fg">{{ job.numOfSuccess }}</strong> of
+          success and <strong class="red-fg">{{ job.numOfFailed }}</strong> of failure.
+        </div>
+
+        <div mat-dialog-actions align="end">
+          <button (click)="finish()" mat-raised-button color="primary">Done</button>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

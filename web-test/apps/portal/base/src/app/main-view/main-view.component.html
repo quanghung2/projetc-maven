@@ -1,0 +1,29 @@
+<div *ngIf="currentOrg?.isSuperAdmin" class="red-100 width-full" fxFlex="36px" fxLayoutAlign="center center">
+  Remote support is enabled.
+</div>
+
+<iframe
+  fxFlex="auto"
+  *ngFor="let frame of iframeApps$ | async; trackBy: trackByApp"
+  [src]="domain + frame.rightSourcePath | safe: 'resourceUrl'"
+  id="{{ frame.id }}"
+  class="content-item"
+  [hidden]="frame.id !== activeAppId || frame.rendering || viewNotFound"
+  (load)="iframeLoaded(frame)"
+></iframe>
+
+<!-- Will have two set of apps, iframe and web element -->
+<div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="center center" class="view-not-found" *ngIf="viewNotFound">
+  <div><mat-icon>warning</mat-icon></div>
+  <div>
+    <h1>Page not found</h1>
+    <div class="text">
+      <p class="general">
+        <span>Sorry, the page you are looking for does not exist. Please check the URL, otherwise, click </span>
+        <a [routerLink]="['/', 'home']">here</a> <span> to browse your home page.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<b3n-landing-page *ngIf="showLandingPage"></b3n-landing-page>

@@ -1,0 +1,96 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+  <b3n-mappings
+    *ngIf="contextVariables"
+    [isOptional]="false"
+    [formMappings]="formConfigs"
+    [contextVariables]="contextVariables"
+    [editable]="editable"
+    [dataSourceUuids]="dataSourceUuids"
+  ></b3n-mappings>
+
+  <div class="option-param" *ngIf="showOptionalParam">
+    <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="expandOptionalParam.toggle()">
+      <span *ngIf="!expandOptionalParam.expanded">Show optional params</span>
+      <span *ngIf="expandOptionalParam.expanded">Hide optional params</span>
+      <mat-icon>{{ expandOptionalParam.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+    </a>
+
+    <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+      <b3n-mappings
+        *ngIf="contextVariables"
+        [isOptional]="true"
+        [formMappings]="formConfigs"
+        [contextVariables]="contextVariables"
+        [editable]="editable"
+        [dataSourceUuids]="dataSourceUuids"
+      ></b3n-mappings>
+    </mat-expansion-panel>
+  </div>
+
+  <ng-container *ngIf="selectedActionDef?.extendablePath">
+    <h4 class="mb-8" *ngIf="editable || formExtended.controls.length > 0"><strong>Custom Fields</strong></h4>
+    <form [formGroup]="$any(formExtended)" novalidate>
+      <div
+        [formGroupName]="i"
+        *ngFor="let item of formExtended.controls; let i = index"
+        fxLayout="column"
+        fxLayoutAlign="start stretch"
+        fxLayoutGap="8px"
+      >
+        <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="8px">
+          <b3n-context-variable
+            fxFlex="40"
+            [optionForControl]="
+              $any({
+                title: 'Key',
+                key: 'keyUsingExpressionTree',
+                isOptional: false,
+                dataType: 'string',
+                disabled: !editable,
+                expressionTree: item.get('keyUsingExpressionTree').value
+              })
+            "
+            [contextVariables]="contextVariables"
+            [typeBooleanCheckbox]="false"
+            [textErrorOutside]="textErrorOutsides[i]"
+            (selectedValue)="selectValue($event, $any(item), 'keyUsingExpressionTree', i)"
+          ></b3n-context-variable>
+
+          <mat-form-field hideRequiredMarker="true" fxFlex="15">
+            <mat-select placeholder="Data type" formControlName="dataType" required>
+              <mat-option value="string">String</mat-option>
+              <mat-option value="number">Number</mat-option>
+              <mat-option value="boolean">Boolean</mat-option>
+            </mat-select>
+            <mat-error *ngIf="item.get('dataType').invalid">Data type is required</mat-error>
+          </mat-form-field>
+
+          <b3n-context-variable
+            *ngIf="item.get('dataType').value"
+            fxFlex="45"
+            [optionForControl]="
+              $any({
+                title: 'Value',
+                key: 'expressionTree',
+                isOptional: false,
+                dataType: item.get('dataType').value,
+                disabled: !editable,
+                expressionTree: item.get('expressionTree').value
+              })
+            "
+            [contextVariables]="contextVariables"
+            [typeBooleanCheckbox]="false"
+            (selectedValue)="selectValue($event, $any(item), 'expressionTree')"
+          ></b3n-context-variable>
+          <div fxFlex="40px" class="pb-16" *ngIf="editable">
+            <button mat-icon-button type="button" color="warn" (click)="removeMapping(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <a href="javascript:;" *ngIf="editable" class="link" (click)="addMapping()">+ Add more fields</a>
+    </form>
+  </ng-container>
+</div>

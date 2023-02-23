@@ -1,0 +1,19 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Output</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <p class="mt-8" *ngIf="allowEditOutput">
+    <mat-checkbox color="primary" [disableRipple]="true" [formControl]="exposeAllOutputCtrl">
+      Expose outputs to subsequent actions
+    </mat-checkbox>
+  </p>
+  <p *ngIf="outputs?.length === 0">No outputs</p>
+  <b3n-output-action
+    [outputs]="outputs"
+    [setOpacity]="allowEditOutput && !exposeAllOutputCtrl.value"
+  ></b3n-output-action>
+</div>
+<div *ngIf="allowEditOutput" mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" type="button" [loading]="updating" (click)="update()">Update</button>
+</div>

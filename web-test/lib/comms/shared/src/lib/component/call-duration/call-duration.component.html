@@ -1,0 +1,39 @@
+<div [formGroup]="fg">
+  <h3 [ngStyle]="!title && { display: 'none' }" [style.fontWeight]="highlightTitle ? 450 : 0">{{ title }}</h3>
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <mat-form-field>
+      <mat-select
+        placeholder="Action"
+        formControlName="action"
+        [id]="'action' + (selectUpward ? '__up' : '')"
+        disableOptionCentering="true"
+      >
+        <mat-option *ngFor="let action of actions; trackBy: trackActionId" [value]="action.key">{{
+          action.value
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ng-container *ngIf="hasTts">
+      <mat-form-field *ngIf="isAction('RECORD_VOICEMAIL')">
+        <input matInput type="email" formControlName="email" placeholder="Notify me via email" required />
+        <mat-error *ngIf="fg.controls['email']?.errors?.['required']">Email is required</mat-error>
+        <mat-error *ngIf="fg.controls['email']?.errors?.['email']">Invalid email pattern</mat-error>
+      </mat-form-field>
+      <cos-tts-config
+        class="mt-16"
+        *ngIf="fg.controls['tts'].value && actionsToShowTTS.includes(fg.controls['action'].value)"
+        [text2Speech]="fg.controls['tts'].value"
+        [fg]="fg"
+        (changed)="change($event, fg.controls['msg'].value)"
+        [isMobileApp]="isMobileApp"
+      ></cos-tts-config>
+    </ng-container>
+
+    <mat-form-field *ngIf="isAction('FORWARD_TO_FLOW')">
+      <mat-select placeholder="Select flow" formControlName="flowUuid" required>
+        <mat-option *ngFor="let flow of flows" [value]="flow.uuid">{{ flow.name }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="fg.controls['flowUuid']?.errors?.['required']">Flow is required</mat-error>
+    </mat-form-field>
+  </div>
+</div>

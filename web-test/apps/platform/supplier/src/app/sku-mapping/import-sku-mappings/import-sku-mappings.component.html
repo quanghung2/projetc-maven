@@ -1,0 +1,23 @@
+<div class="import-mapping">
+  <h2 mat-dialog-title>Import Mapping</h2>
+  <div class="import-mapping__content">
+    <div fxLayout="column">
+      <button
+        mat-stroked-button
+        class="import-mapping__upload-btn"
+        [class.disable-color]="progressing"
+        (click)="file.click()"
+      >
+        Select CSV File
+        <input #file (change)="selectCsvFile($event)" accept=".csv" hidden type="file" />
+      </button>
+    </div>
+    <div *ngIf="fileName" class="import-mapping__name">{{ fileName }}</div>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button [matDialogClose]="true" mat-button>Cancel</button>
+    <button mat-raised-button [loading]="uploading" [disabled]="!fileName" color="primary" (click)="uploadFile()">
+      Upload
+    </button>
+  </div>
+</div>

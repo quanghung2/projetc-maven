@@ -1,0 +1,30 @@
+.actions.row {
+  padding-bottom: 1rem !important;
+  .column.right {
+    width: 300px;
+  }
+  .column.left {
+    width: calc(100% - 300px);
+  }
+}
+
+.sender.row {
+  .column.label {
+    width: 150px;
+    line-height: 2rem;
+    color: #666;
+  }
+  .column.content {
+    width: calc(100% - 150px);
+
+    .ui.button {
+      margin-left: 3rem;
+    }
+  }
+
+  .change.item {
+    span:first-child {
+      color: #666;
+    }
+  }
+}

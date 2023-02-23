@@ -1,0 +1,41 @@
+<div class="noData" *ngIf="hasQueueFilter && !queueUuids?.length && !includeNonQueueFilterHash">
+  <span>{{ questionV2.question?.messages?.noFilter }}</span>
+</div>
+
+<b3n-call-center-no-data
+  *ngIf="!chartDataRows.length && questionV2"
+  [questionV2]="questionV2"
+></b3n-call-center-no-data>
+
+<div class="chart_wrapper" *ngIf="chartDataRows.length">
+  <div [id]="questionV2.uuid" class="chart"></div>
+  <ng-container *ngIf="cardContentHeight > 500">
+    <div class="total__wrapper">
+      <p>Total: {{ sum ? sum.toLocaleString() : 0 }}</p>
+    </div>
+    <div class="others__wrapper" *ngIf="othersSliceValues.length">
+      <div class="header__wrapper">
+        <div class="header__color"></div>
+        <p class="header__content">Other Details</p>
+      </div>
+      <div class="item__wrapper">
+        <div class="item" *ngFor="let item of othersSliceValues; let i = index">
+          <p class="item__content">{{ item }}</p>
+          <p *ngIf="i < othersSliceValues.length - 1">|</p>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="cardContentHeight <= 500">
+    <div class="line__wrapper">
+      <p [style.fontWeight]="500">Total: {{ sum ? sum.toLocaleString() : 0 }}</p>
+      <ng-container *ngIf="othersSliceValues.length">
+        |
+        <div class="header__color"></div>
+        <ng-container *ngFor="let item of othersSliceValues; let i = index">
+          <p>{{ item }}</p>
+        </ng-container>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

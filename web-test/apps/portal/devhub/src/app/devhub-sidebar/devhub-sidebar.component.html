@@ -1,0 +1,34 @@
+<div class="pt-16 px-16 pb-10">
+  <h2 class="mb-4">Developer Hub</h2>
+  <div>
+    <mat-form-field fxFlex="100">
+      <mat-label *ngIf="projects?.length === 0">No projects available</mat-label>
+      <mat-select #selectProject [formControl]="projectCtrl" panelClass="select-project">
+        <div class="option-container">
+          <mat-option class="option-project" *ngFor="let option of projects" [value]="option">
+            {{ option.name }}
+          </mat-option>
+        </div>
+        <ng-container *ngIf="allowCreateProject">
+          <mat-divider></mat-divider>
+          <div class="py-4 text-center">
+            <button (click)="selectProject.close(); createProject()" mat-button color="primary">
+              <mat-icon class="material-icons-outlined">add</mat-icon>
+              <span>Create new project</span>
+            </button>
+          </div>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div class="mt-10" *ngIf="projects?.length > 0 && selectedProject">
+  <ng-container *ngFor="let menu of menus">
+    <div *ngIf="!menu.hidden" class="link" [routerLink]="[selectedProject.uuid, menu.key]" routerLinkActive="active">
+      {{ menu.value }}
+    </div>
+  </ng-container>
+</div>

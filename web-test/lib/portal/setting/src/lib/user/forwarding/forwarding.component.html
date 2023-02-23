@@ -1,0 +1,141 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Call Forwarding</h1>
+</sui-template-portal>
+<div *ngIf="extension" class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+  <div class="body" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <div fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+      <mat-form-field fxFlex="350px">
+        <mat-label>Add user, phone number or call group</mat-label>
+        <input
+          #extensionInput
+          (keyup.enter)="selected(extensionCtrl.value)"
+          [formControl]="extensionCtrl"
+          [matAutocomplete]="auto"
+          matInput
+          placeholder="Enter new user or phone number..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event.option.value)">
+          <mat-option *ngFor="let extension of extensions$ | async" [value]="extension.extKey">
+            {{ extension.displayText }}
+          </mat-option>
+          <mat-option *ngFor="let extensionGroup of extensionGroups$ | async" [value]="extensionGroup.extKey">
+            {{ extensionGroup.extLabel }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <button
+        (click)="selected(extensionCtrl.value)"
+        [disabled]="(forwardList || []).length === MAX_NUMBER_ADDED"
+        color="primary"
+        mat-stroked-button
+      >
+        Add
+      </button>
+    </div>
+
+    <div class="p-0 flex align-items-center justify-content-end">
+      <span class="secondary-text">
+        Selected user(s): {{ (forwardList || []).length }} | Total limit: {{ MAX_NUMBER_ADDED }}
+      </span>
+    </div>
+
+    <ng-container *ngIf="forwardList?.length === 0; else loadList">
+      <mat-hint fxLayoutAlign="center"> No user & phone number</mat-hint>
+    </ng-container>
+    <ng-template #loadList>
+      <ng-container
+        *ngIf="
+          extension.cfConfig.ringMode === RingMode.sequential || extension.ringConfig.ringMode === RingMode.ringAll;
+          else viewList
+        "
+      >
+        <div (cdkDropListDropped)="dropDispositionCodes($event)" cdkDropList class="item__rows" fxFlexAlign="stretch">
+          <div
+            *ngFor="let option of forwardList; let i = index"
+            cdkDrag
+            class="sortable-box"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div class="item" fxLayout="row">
+              <ng-container *ngIf="option.key === EXT_TYPE.extension">
+                <span class="spacer">{{ i + 1 }}. {{ (option.value | selectExtension | async)?.displayText }}</span>
+              </ng-container>
+              <ng-container *ngIf="option.key === EXT_TYPE.call_group">
+                <span class="spacer">{{ i + 1 }}. Call Group {{ option.value }}</span>
+              </ng-container>
+              <ng-container *ngIf="option.key === EXT_TYPE.phone_number">
+                <span class="spacer">{{ i + 1 }}. {{ option.value }}</span>
+              </ng-container>
+              <mat-icon (click)="deleteCodeOption(option.value)" class="code-option__btn-delete" matTooltip="Delete">
+                delete
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #viewList>
+        <div class="item__rows" fxFlexAlign="stretch">
+          <div
+            *ngFor="let option of forwardList; let i = index"
+            class="unsortable-box"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div class="item" fxLayout="row">
+              <ng-container *ngIf="option.key === EXT_TYPE.extension">
+                <span class="spacer"> {{ (option.value | selectExtension | async)?.displayText }}</span>
+              </ng-container>
+              <ng-container *ngIf="option.key === EXT_TYPE.call_group">
+                <span class="spacer"> Call Group {{ option.value }}</span>
+              </ng-container>
+              <ng-container *ngIf="option.key === EXT_TYPE.phone_number">
+                <span class="spacer">+{{ option.value }}</span>
+              </ng-container>
+              <mat-icon (click)="deleteCodeOption(option.value)" class="code-option__btn-delete" matTooltip="Delete">
+                delete
+              </mat-icon>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+
+    <mat-form-field>
+      <mat-label>Ring Mode</mat-label>
+      <mat-select [(ngModel)]="extension.cfConfig.ringMode">
+        <mat-option [value]="RingMode.ringAll">Ring All</mat-option>
+        <mat-option [value]="RingMode.sequential">Sequential</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container>
+      <ng-container *ngIf="extension.cfConfig.ringMode === RingMode.sequential; else ringAll">
+        <mat-form-field *ngIf="extension.cfConfig.ringMode === RingMode.sequential">
+          <mat-label>Ring time (seconds)</mat-label>
+          <mat-select [(ngModel)]="extension.cfConfig.ringTime">
+            <mat-option *ngFor="let opt of optRingTime" [value]="opt.key">
+              {{ opt.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-template #ringAll>
+        <b3n-ringme-form [extension]="extension" class="full-width"></b3n-ringme-form>
+      </ng-template>
+    </ng-container>
+
+    <button
+      (click)="onSave()"
+      [disabled]="progressing"
+      [loading]="progressing"
+      color="primary"
+      fxFlexAlign="end"
+      mat-stroked-button
+    >
+      Apply
+    </button>
+  </div>
+</div>

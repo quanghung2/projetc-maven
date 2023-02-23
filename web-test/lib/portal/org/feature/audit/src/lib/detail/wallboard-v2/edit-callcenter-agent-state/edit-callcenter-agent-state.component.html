@@ -1,0 +1,81 @@
+<table mat-table [dataSource]="[0]" multiTemplateDataRows>
+  <ng-container matColumnDef="change">
+    <th mat-header-cell *matHeaderCellDef>Changes</th>
+    <td mat-cell *matCellDef="let index">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div class="icon-item-change"></div>
+        <span>{{ audit.details.changeList[index]?.name || 'Status' }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="valueChange">
+    <th mat-header-cell *matHeaderCellDef>
+      <span *ngIf="!audit.details.changeList?.length"> No changes</span>
+      <span *ngIf="audit.details.changeList?.length"> 1 change</span>
+    </th>
+    <td mat-cell *matCellDef="let index">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <span
+          *ngIf="
+            !audit.details.changeList[index]?.oldValue &&
+            !audit.details.changeList[index]?.newValue &&
+            !audit.details.changeList[index]?.formattedValue
+          "
+          >-</span
+        >
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          *ngIf="
+            audit.details.changeList[index]?.oldValue &&
+            audit.details.changeList[index]?.newValue &&
+            !audit.details.changeList[index]?.formattedValue
+          "
+        >
+          <span>
+            {{ audit.details.changeList[index].oldValue }}
+          </span>
+          <mat-icon class="audit-icon-arrow-forward">arrow_forward</mat-icon>
+          <span [innerHTML]="audit.details.changeList[index].newValue"></span>
+        </div>
+        <div
+          *ngIf="audit.details.changeList[index]?.formattedValue"
+          [innerHTML]="audit.details.changeList[index].formattedValue"
+        ></div>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          *ngIf="
+            !audit.details.changeList[index]?.oldValue &&
+            !audit.details.changeList[index]?.formattedValue &&
+            audit.details.changeList[index]?.newValue
+          "
+        >
+          <span>-</span>
+          <mat-icon class="audit-icon-arrow-forward">arrow_forward</mat-icon>
+          <span> {{ audit.details.changeList[index]?.newValue }}</span>
+        </div>
+        <div
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          *ngIf="
+            !audit.details.changeList[index]?.newValue &&
+            !audit.details.changeList[index]?.formattedValue &&
+            audit.details.changeList[index]?.oldValue
+          "
+        >
+          <span>
+            {{ audit.details.changeList[index]?.oldValue }}
+          </span>
+          <mat-icon *ngIf="audit.details.changeList[index]?.oldValue" class="audit-icon-arrow-forward"
+            >arrow_forward</mat-icon
+          >
+          <span>-</span>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>

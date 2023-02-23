@@ -1,0 +1,17 @@
+<div class="edge-server">
+  <mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="start center">
+    <a class="app-name" routerLink="/">Edge Server</a>
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <ng-container *ngFor="let item of menus">
+        <a mat-button [routerLink]="item.url" routerLinkActive="active">{{ item.title }}</a>
+      </ng-container>
+      <button mat-button (click)="download()">CDR Report</button>
+      <a mat-button routerLink="/netcap" routerLinkActive="active">Netcap</a>
+      <button mat-button (click)="backup()">Backup</button>
+      <button mat-button (click)="restore()">Restore</button>
+    </div>
+  </mat-toolbar>
+  <div class="container" *ngIf="preConfig">
+    <router-outlet></router-outlet>
+  </div>
+</div>

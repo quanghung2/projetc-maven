@@ -1,0 +1,93 @@
+<div fxLayout="column" fxLayoutAlign="start center" *ngIf="subscription$ | async as subscription" fxFlexFill>
+  <h2 *ngIf="subscription.data.length == 0" class="no-subscription">No subscriptions</h2>
+  <h2 *ngIf="displayedColumns.length == 0" class="no-subscription">
+    No data available. Please contact the admin to check the Portal Configuration.
+  </h2>
+
+  <div *ngIf="subscription.data.length > 0 && displayedColumns.length > 0" fxFlexFill>
+    <table mat-table [dataSource]="subscription.data" fxFlexFill>
+      <ng-container matColumnDef="uuid">
+        <th mat-header-cell *matHeaderCellDef>UUID</th>
+        <td mat-cell *matCellDef="let e" class="btn-copy">
+          {{ e.uuid.substring(0, 8) }}
+          <button
+            mat-icon-button
+            ngxClipboard
+            [cbContent]="e.uuid"
+            (cbOnSuccess)="copied()"
+            (click)="$event.stopPropagation()"
+          >
+            <mat-icon matTooltip="Copy to clipboard" matTooltipPosition="above">content_copy</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="productName">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let e">{{ e.primaryItem?.productName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="numbers">
+        <th mat-header-cell *matHeaderCellDef>Number(s)</th>
+        <td mat-cell *matCellDef="let e">
+          <ng-container *ngIf="e.numbers.length == 0">--</ng-container>
+          <ng-container *ngIf="e.numbers.length == 1">{{ e.numbers[0].number }}</ng-container>
+          <ng-container *ngIf="e.numbers.length > 1">{{ e.countNumbers }} numbers</ng-container>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="skuName">
+        <th mat-header-cell *matHeaderCellDef>Plan</th>
+        <td mat-cell *matCellDef="let e">{{ e.primaryItem?.skuName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="renewDate">
+        <th mat-header-cell *matHeaderCellDef>Renew / Expiring Date</th>
+        <td mat-cell *matCellDef="let e">
+          <ng-container *ngIf="e.autoRenew">Renew on {{ e.renewDate | date: 'dd MMM yyyy' }}</ng-container>
+          <ng-container *ngIf="!e.autoRenew"
+            >Expire on {{ e.expiryDateInInclusive | date: 'dd MMM yyyy' }}</ng-container
+          >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="renewalPrice">
+        <th mat-header-cell *matHeaderCellDef>Renewal Price</th>
+        <td mat-cell *matCellDef="let e">
+          <ng-container *ngIf="!e.blocked"> {{ e.totalAmount }} {{ e.currency }} </ng-container>
+          <mat-chip-list *ngIf="e.blocked">
+            <mat-chip color="warn" selected>Blocked</mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="users">
+        <th mat-header-cell *matHeaderCellDef>User(s)</th>
+        <td mat-cell *matCellDef="let e">
+          <ng-container *ngIf="e.assignees.length == 0">--</ng-container>
+          <ng-container *ngIf="e.assignees.length == 1">{{ getFirstAssigneeName(e.assignees[0]) }}</ng-container>
+          <ng-container *ngIf="e.assignees.length > 1">{{ e.assignees.length }} users</ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.selected]="selection.isSelected(row)"
+        (click)="selection.select(row); viewDetails(row)"
+      ></tr>
+    </table>
+
+    <mat-paginator
+      *ngIf="subscription.total > pageable.perPage"
+      [length]="subscription.total"
+      [pageIndex]="pageable.page - 1"
+      [pageSize]="pageable.perPage"
+      (page)="changePage($event.pageIndex + 1)"
+      hidePageSize
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

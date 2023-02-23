@@ -1,0 +1,91 @@
+<h1 mat-dialog-title>Dial plan configuration</h1>
+<div mat-dialog-content fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+  <form #form="ngForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem" class="dialplan-form">
+    <h2>New dial plan</h2>
+    <div fxFlex="1 1 0" fxLayout="row" fxLayoutGap="1.6rem" class="dialplan-form__row">
+      <mat-form-field fxFlex="1 1 auto" class="dialplan-form__startwith">
+        <mat-label>If number starts with </mat-label>
+        <input matInput required [(ngModel)]="startWiths" name="ctrStartWiths" />
+      </mat-form-field>
+      <mat-form-field fxFlex="1 1 auto">
+        <mat-label>and has a length of</mat-label>
+        <input matInput required [(ngModel)]="withLengths" name="ctrWithLengths" />
+      </mat-form-field>
+    </div>
+    <div fxFlex="1 1 0" fxLayout="row" fxLayoutGap="1.6rem" class="dialplan-form__row">
+      <mat-form-field fxFlex="1 1 auto">
+        <mat-label>Remove number of leading digits </mat-label>
+        <input matInput required [(ngModel)]="numOfDigitRemoved" name="ctrNumOfDigitRemoved" />
+      </mat-form-field>
+      <mat-form-field fxFlex="1 1 auto">
+        <mat-label>then prepend prefix</mat-label>
+        <input matInput required [(ngModel)]="appendPrefix" name="ctrAppendPrefix" />
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="1 1 0" fxLayout="row" fxLayoutGap="0.8rem" class="dialplan-form__row">
+      <span class="fill-remaining-space"></span>
+
+      <button fxFlexAlign="end" mat-button (click)="resetForm()" type="button" [disabled]="progressing">Reset</button>
+      <button
+        fxFlexAlign="end"
+        mat-stroked-button
+        color="primary"
+        (click)="addDialPlan()"
+        [disabled]="progressing || form.invalid"
+      >
+        Add more
+      </button>
+    </div>
+  </form>
+
+  <div class="dialplan">
+    <table mat-table [dataSource]="dialPlanDataSource" class="dialplan-table">
+      <ng-container matColumnDef="matching">
+        <th mat-header-cell *matHeaderCellDef>Matching Pattern</th>
+        <td mat-cell *matCellDef="let dialPlan">{{ dialPlan.matcher.formatted }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="replacement">
+        <th mat-header-cell *matHeaderCellDef>Replacement</th>
+        <td mat-cell *matCellDef="let dialPlan">{{ dialPlan.action.formatted }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let dialPlan">
+          <div class="dialplan-row--actions">
+            <mat-icon (click)="removeDialPlan(dialPlan)" class="dialplan-row--action">delete</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notFound">
+        <td mat-footer-cell *matFooterCellDef colspan="4">
+          <div class="dialplan-table--not-found">No record found</div>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: true"
+        [ngClass]="{ hide: dialPlanDataSource && dialPlanDataSource.data.length === 0 }"
+      ></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['notFound']"
+        [ngClass]="{ hide: dialPlanDataSource && dialPlanDataSource.data.length > 0 }"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons="false"></mat-paginator>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end" fxLayoutGap="0.8rem">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-stroked-button [disabled]="!canUpdate || progressing" (click)="update()" color="primary">
+    <span *ngIf="!progressing">Update</span> <span *ngIf="progressing">Updating...</span>
+  </button>
+</div>

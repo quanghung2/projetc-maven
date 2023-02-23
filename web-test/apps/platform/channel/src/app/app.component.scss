@@ -1,0 +1,23 @@
+:host {
+  width: 100%;
+  .header-channel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 64px;
+    z-index: 999;
+  }
+
+  .channel-link {
+    cursor: pointer;
+    border: none;
+    color: white;
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+
+  .channel-link:active {
+    color: white;
+  }
+}

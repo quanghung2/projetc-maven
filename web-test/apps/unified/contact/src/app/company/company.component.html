@@ -1,0 +1,106 @@
+<div class="pt-16" fxLayout="column" fxLayoutAlign="start none" class="container">
+  <mat-toolbar class="px-0">
+    <h2>Company Blacklist/Whitelist</h2>
+  </mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <mat-form-field fxFlex="250px">
+      <mat-label>Search by number</mat-label>
+      <input
+        matInput
+        type="number"
+        placeholder="Enter phone number (E.164 format)"
+        [formControl]="searchTextCtr"
+        (keydown.enter)="searchPrefix()"
+      />
+      <button mat-icon-button matSuffix [loading]="loading">
+        <mat-icon (click)="searchPrefix()" class="search-box-icon">search</mat-icon>
+      </button>
+      <button *ngIf="searchTextCtr.value" (click)="searchTextCtr.setValue(null)" mat-icon-button matSuffix>
+        <mat-icon class="search-box-icon">clear</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <div class="spacer"></div>
+
+    <button (click)="create()" mat-flat-button color="primary">Create</button>
+  </div>
+
+  <table class="dnc-status" mat-table [dataSource]="orgConsents">
+    <ng-container matColumnDef="number">
+      <th mat-header-cell *matHeaderCellDef>Number</th>
+      <td mat-cell *matCellDef="let element">
+        <span [innerHTML]="element.number | highlight: searchTextCtr.value"></span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="voice">
+      <th mat-header-cell *matHeaderCellDef>Voice</th>
+      <td mat-cell *matCellDef="let element">
+        <span [class]="element.voice">
+          {{ element.voice | titlecase }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sms">
+      <th mat-header-cell *matHeaderCellDef>SMS</th>
+      <td mat-cell *matCellDef="let element">
+        <span [class]="element.sms">
+          {{ element.sms | titlecase }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fax">
+      <th mat-header-cell *matHeaderCellDef>Fax</th>
+      <td mat-cell *matCellDef="let element">
+        <span [class]="element.fax">
+          {{ element.fax | titlecase }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="last-modified">
+      <th mat-header-cell *matHeaderCellDef>Last Modified</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.updated | userDate }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="action-container" fxLayout="row" fxLayoutAlign="end center">
+          <button mat-icon-button matTooltip="Edit" (click)="edit(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteConsent(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="noData">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsResult.length">
+        <div fxLayoutAlign="center center">
+          <span class="mat-body-1">No Data Available</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsResult"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnsResult"></tr>
+    <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="orgConsents?.length > 0"></tr>
+  </table>
+
+  <div *ngIf="orgConsents?.length >= 20" fxLayoutAlign="center center" class="secondary-text pt-8">
+    <span *ngIf="isSearching; else notSearching">
+      Refine the search if the result does not meet your requirements.
+    </span>
+    <ng-template #notSearching>
+      The page shows the latest 20 results. You can search for the number or export a CSV if the expected number is not
+      shown.
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,135 @@
+<h4 class="mb-8"><strong>Custom Fields</strong></h4>
+
+<p>
+  <mat-radio-group [formControl]="modeExtendCtrl">
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px" class="mb-8">
+      <mat-radio-button value="BASIC">Basic</mat-radio-button>
+      <mat-radio-button value="ADVANCED">Advanced</mat-radio-button>
+    </div>
+  </mat-radio-group>
+</p>
+
+<ng-container *ngIf="modeExtendCtrl.value === 'BASIC'">
+  <ng-container *ngTemplateOutlet="output; context: { formOutput: formOutputBasic }"></ng-container>
+  <a href="javascript:;" *ngIf="editable" class="link" (click)="addOutput(formOutputBasic)">+ Add more outputs</a>
+</ng-container>
+
+<ng-container *ngIf="modeExtendCtrl.value === 'ADVANCED'">
+  <div class="mb-16">
+    <mat-form-field appearance="outline" id="full_json">
+      <mat-label>Template</mat-label>
+
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="5"
+        [cdkAutosizeMaxRows]="10"
+        b3nFormatObjToJson
+        id="full_json"
+        [control]="templateJsonCtrl"
+        [formControl]="templateJsonCtrl"
+        [top]="'12'"
+        [right]="'8'"
+      ></textarea>
+
+      <mat-error *ngIf="templateJsonCtrl.invalid">{{ getErrorTemplateJsonCtrl() }}</mat-error>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      type="button"
+      [loading]="extracting"
+      [disabled]="!templateJsonCtrl.value"
+      (click)="extractJsonProps()"
+    >
+      Extract properties
+    </button>
+  </div>
+
+  <ng-container *ngTemplateOutlet="output; context: { formOutput: formOutputAdvanced }"></ng-container>
+</ng-container>
+
+<ng-template #output let-formOutput="formOutput">
+  <div [formGroup]="formOutput" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <ng-container [formGroupName]="i" *ngFor="let item of formOutput.controls; let i = index">
+      <div *ngIf="item.get('dataType').value !== 'array'" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+        <mat-form-field hideRequiredMarker="true" fxFlex="70">
+          <input matInput placeholder="Field name" formControlName="field" required />
+          <mat-error *ngIf="item.get('field').invalid">{{ getErrorField(item) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field hideRequiredMarker="true" fxFlex="30">
+          <mat-select placeholder="Data type" formControlName="dataType" required>
+            <mat-option value="string">String</mat-option>
+            <mat-option value="number">Number</mat-option>
+            <mat-option value="boolean">Boolean</mat-option>
+          </mat-select>
+          <mat-error *ngIf="item.get('dataType').hasError('required')">Data type is required</mat-error>
+        </mat-form-field>
+
+        <div fxFlex="40px" *ngIf="editable">
+          <button mat-icon-button type="button" color="warn" (click)="removeOutput(formOutput, i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div
+        *ngIf="item.get('dataType').value === 'array'"
+        fxLayout="column"
+        fxLayoutAlign="start stretch"
+        fxLayoutGap="8px"
+      >
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+          <mat-form-field hideRequiredMarker="true" fxFlex>
+            <input matInput placeholder="Field name" formControlName="field" required />
+            <mat-error *ngIf="item.get('field').invalid">{{ getErrorField(item) }}</mat-error>
+          </mat-form-field>
+
+          <div fxFlex="40px" *ngIf="editable">
+            <button mat-icon-button type="button" color="warn" (click)="removeOutput(formOutput, i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <ng-container formArrayName="arrayItemProps">
+          <div
+            [formGroupName]="j"
+            *ngFor="let subItem of item.get('arrayItemProps').controls; let j = index"
+            fxLayout="row"
+            fxLayoutAlign="start start"
+            fxLayoutGap="8px"
+            class="ml-32"
+          >
+            <mat-form-field hideRequiredMarker="true" fxFlex="70">
+              <input matInput placeholder="Field name" formControlName="field" required />
+              <mat-error *ngIf="subItem.get('field').invalid">{{ getErrorField(subItem) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field hideRequiredMarker="true" fxFlex="30">
+              <mat-select placeholder="Data type" formControlName="dataType" required>
+                <mat-option value="string">String</mat-option>
+                <mat-option value="number">Number</mat-option>
+                <mat-option value="boolean">Boolean</mat-option>
+              </mat-select>
+              <mat-error *ngIf="subItem.get('dataType').hasError('required')">Data type is required</mat-error>
+            </mat-form-field>
+
+            <div fxFlex="40px" *ngIf="editable">
+              <button
+                mat-icon-button
+                type="button"
+                color="warn"
+                (click)="removeSubOutput(formOutput, i, item.get('arrayItemProps'), j)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

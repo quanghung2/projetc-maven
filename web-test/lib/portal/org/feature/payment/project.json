@@ -1,0 +1,16 @@
+{
+  "name": "portal-org-feature-payment",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/payment/src",
+  "prefix": "pop",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/org/feature/payment/**/*.ts", "libs/portal/org/feature/payment/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

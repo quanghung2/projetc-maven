@@ -1,0 +1,28 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+  {{ noteTemplate?.title }}
+  <button mat-icon-button mat-dialog-close><mat-icon>close</mat-icon></button>
+</div>
+
+<div mat-dialog-content>
+  <div class="note-template__form">
+    <h3 *ngIf="noteTemplate?.items.length">Questions</h3>
+    <div class="item__review">
+      <div class="item__wrapper" *ngFor="let i of noteTemplate?.items; let idx = index">
+        <div class="item__row">
+          <p>{{ i.label }}</p>
+          <div class="item__details secondary-text">
+            <ng-container>
+              <p>{{ i.type === 'options' ? 'Option' : (i.type | capitalizeCase) }}</p>
+              <mat-icon *ngIf="i.type === ItemType.Option" (click)="i.expand = !i.expand">{{
+                i.expand ? 'expand_more' : 'expand_less'
+              }}</mat-icon>
+            </ng-container>
+          </div>
+        </div>
+        <mat-list role="list" *ngIf="i.type === ItemType.Option && i.expand" class="item__options">
+          <mat-list-item role="listitem" *ngFor="let option of i.options">{{ option }}</mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<h1 mat-dialog-title>Update team account confirmation</h1>
+<div mat-dialog-content class="d-flex flex-column">
+  <p>
+    Are you sure to link <strong>{{ data.extension }}</strong> with account
+    <strong>{{ data.user }}</strong>
+  </p>
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>No</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">Yes</button>
+</div>

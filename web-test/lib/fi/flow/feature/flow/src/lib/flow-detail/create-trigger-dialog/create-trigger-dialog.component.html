@@ -1,0 +1,20 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <ng-container [ngSwitch]="data.type">
+    <span *ngSwitchCase="'NORMAL'">{{ data.triggerSelected.name }}</span>
+    <span *ngSwitchCase="'SUBROUTINE'">Triggered by other flows</span>
+    <span *ngSwitchCase="'BUSINESS_ACTION'">Business action</span>
+  </ng-container>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <ng-container [ngSwitch]="data.type">
+    <b3n-create-trigger-parameters
+      *ngSwitchCase="'NORMAL'"
+      [isShowDropdow]="false"
+      [triggerSelected]="data.triggerSelected"
+      (onClose)="onClose($event)"
+    ></b3n-create-trigger-parameters>
+    <b3n-create-subroutine *ngSwitchCase="'SUBROUTINE'" (onClose)="onClose($event)"></b3n-create-subroutine>
+    <b3n-create-bacreator *ngSwitchCase="'BUSINESS_ACTION'" (onClose)="onClose($event)"></b3n-create-bacreator>
+  </ng-container>
+</mat-dialog-content>

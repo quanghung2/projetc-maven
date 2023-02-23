@@ -1,0 +1,28 @@
+:host {
+  .convo__footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    .csh-quill-editor {
+      margin: 0 1.6rem 1.6rem;
+    }
+    .warning-label {
+      .icon {
+        font-size: 1.6rem;
+        display: inline;
+      }
+    }
+  }
+  .notMember {
+    background-color: #efecec;
+  }
+  .quill {
+    margin: 8px 1.6rem 0;
+    font-size: 12px;
+
+    &.conversation-group {
+      margin: 8px 16px;
+    }
+  }
+}

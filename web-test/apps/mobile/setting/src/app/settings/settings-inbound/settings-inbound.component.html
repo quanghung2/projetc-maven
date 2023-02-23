@@ -1,0 +1,73 @@
+<div class="wrapper" [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'">
+  <b3n-settings-navigate
+    title="Inbound Call"
+    [hasSave]="true"
+    [isDisableBtn]="form?.invalid"
+    [loading]="saving"
+    (saveFn)="save()"
+  ></b3n-settings-navigate>
+  <div class="container" [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'">
+    <div class="px-16" *ngFor="let item of inboundCallDuringOptions">
+      <mat-list class="m-0 p-0">
+        <h3 mat-subheader class="m-0 p-0" [style.color]="'#5f5f5f'">{{ item.value }}</h3>
+      </mat-list>
+      <mat-card class="mb-16">
+        <ng-template [ngTemplateOutlet]="this[item.key]" [ngTemplateOutletContext]="context"></ng-template>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<ng-template #workingHours let-available="available" let-busy="busy" let-dnd="dnd" let-offline="offline">
+  <div fxLayout="column" fxLayoutGap="20px">
+    <b3n-call-duration
+      title="Available"
+      [fg]="available"
+      [actions]="availableActions"
+      [hasTts]="false"
+      [isMobileApp]="isMobileApp"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Busy"
+      [fg]="busy"
+      [actions]="allActions"
+      [isMobileApp]="isMobileApp"
+      (ttsChanged)="ttsChanged($event)"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Away"
+      [fg]="dnd"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+      [isMobileApp]="isMobileApp"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Offline"
+      [fg]="offline"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+      [isMobileApp]="isMobileApp"
+    ></b3n-call-duration>
+  </div>
+</ng-template>
+
+<ng-template #nonOfficeHours let-nonOfficeHours="nonOfficeHours">
+  <b3n-call-duration
+    [fg]="nonOfficeHours"
+    [actions]="allActions"
+    [selectUpward]="true"
+    (ttsChanged)="ttsChanged($event)"
+  ></b3n-call-duration>
+</ng-template>
+
+<ng-template #publicHoliday let-publicHoliday="publicHoliday">
+  <b3n-call-duration
+    [fg]="publicHoliday"
+    [actions]="allActions"
+    [selectUpward]="true"
+    (ttsChanged)="ttsChanged($event)"
+  ></b3n-call-duration>
+</ng-template>

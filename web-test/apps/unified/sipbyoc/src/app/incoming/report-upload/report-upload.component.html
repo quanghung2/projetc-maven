@@ -1,0 +1,23 @@
+<h1 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Report bulk upload</span>
+  <button mat-icon-button [loading]="!isDone" mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</h1>
+<div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px">Total: </label>
+    <span class="secondary-text">{{ report.success + report.fail }} lines</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px" style="color: #36b37e">Success: </label>
+    <span class="secondary-text">{{ report.success }} lines</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px" style="color: #ff5630">Failed: </label>
+    <span class="secondary-text">{{ report.fail }} lines</span>
+    <div *ngIf="isDone && report.fail > 0" class="download-file">
+      <a (click)="download()"> Download </a>
+    </div>
+  </div>
+</div>

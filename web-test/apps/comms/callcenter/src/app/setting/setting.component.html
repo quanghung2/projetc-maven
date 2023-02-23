@@ -1,0 +1,21 @@
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label> General</ng-template>
+    <ng-template matTabContent> <b3n-general-config class="container"></b3n-general-config> </ng-template>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label> CRM Integration</ng-template>
+    <ng-template matTabContent> <b3n-crm-integration class="container"></b3n-crm-integration> </ng-template>
+  </mat-tab>
+
+  <mat-tab *ngIf="hasOutbound">
+    <ng-template mat-tab-label>Work Time</ng-template>
+    <ng-template matTabContent> <b3n-worktime class="container"></b3n-worktime> </ng-template>
+  </mat-tab>
+
+  <!-- <mat-tab>
+    <ng-template mat-tab-label> Authentication Flow </ng-template>
+    <ng-template matTabContent> <b3n-authentication-flow class="container"></b3n-authentication-flow> </ng-template>
+  </mat-tab> -->
+</mat-tab-group>

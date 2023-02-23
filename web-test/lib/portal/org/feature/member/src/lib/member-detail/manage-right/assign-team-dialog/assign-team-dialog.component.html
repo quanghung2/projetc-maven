@@ -1,0 +1,23 @@
+<div mat-dialog-title class="d-flex justify-content-between">
+  Assign teams
+  <button mat-icon-button matTooltip='Create new team'>
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content class='member-role'>
+  <ng-container *ngIf='teams.length; else noTeam'>
+    <mat-form-field appearance='outline' class='w-100'>
+      <mat-label>Teams</mat-label>
+      <mat-select [formControl]='selectedTeams' multiple>
+        <mat-option *ngFor='let team of teams' [value]='team.uuid'>{{ team.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+  <ng-template #noTeam>All teams have been assigned to this person already</ng-template>
+</div>
+
+<div mat-dialog-actions align='end'>
+  <button mat-button [mat-dialog-close]='false'>Cancel</button>
+  <button mat-raised-button color='primary' (click)='assign()' [disabled]='!selectedTeams.value' [loading]='isLoading'>Assign</button>
+</div>

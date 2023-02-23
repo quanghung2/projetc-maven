@@ -1,0 +1,179 @@
+<div class="compose-loading-container" *ngIf="isLoading || (loading$ | async)">
+  <ngx-skeleton-loader
+    [theme]="{
+      width: '100%',
+      height: '100%'
+    }"
+  ></ngx-skeleton-loader>
+</div>
+
+<h1 class="d-flex justify-content-between mt-0">
+  <span *ngIf="data.isDraft">Draft Email</span>
+  <span *ngIf="data.isSchedule">Schedule Email</span>
+  <span *ngIf="data.isReply">Reply Email</span>
+  <span *ngIf="data.isForward">Forward Email</span>
+  <span *ngIf="data.isForwardAsNew">Forward As New Email</span>
+  <span *ngIf="!data.isReply && !data.isForward && !data.isForwardAsNew && !data.isDraft && !data.isSchedule">
+    Compose Email
+  </span>
+  <mat-icon class="iconClose" title="Close" (click)="closeDialog()">close</mat-icon>
+</h1>
+
+<div mat-dialog-content>
+  <mat-card class="no-shadow p-0">
+    <section class="d-flex justify-content-between">
+      <div>
+        <span class="label">From</span>
+        <button mat-button [matMenuTriggerFor]="inboxMenu" [disableRipple]="true" class="p-0">
+          <ng-container *ngIf="selectedInbox; else noSender">
+            <span *ngIf="selectedInbox.name">{{ selectedInbox.name }} ({{ selectedInbox.incommingEmail }})</span>
+            <span *ngIf="!selectedInbox.name">{{ selectedInbox.incommingEmail }}</span>
+          </ng-container>
+          <ng-template #noSender>Please select a sender</ng-template>
+        </button>
+        <mat-menu #inboxMenu="matMenu" class="inbox-menu">
+          <button mat-menu-item *ngFor="let inbox of inboxes" (click)="selectedInbox = inbox">
+            {{ inbox.name }} ({{ inbox.incommingEmail }})
+          </button>
+        </mat-menu>
+      </div>
+      <div class="additional">
+        <button mat-button *ngIf="!showCc" (click)="showCc = true">Cc</button>
+        <button mat-button *ngIf="!showBcc" (click)="showBcc = true">Bcc</button>
+      </div>
+    </section>
+
+    <b3n-email-recipient
+      [addresses]="toAddresses"
+      [label]="'To'"
+      [isRequired]="true"
+      (onAddAddress)="addAddress($event, 'to')"
+      (onRemoveAddress)="deleteAddress($event, 'to')"
+    ></b3n-email-recipient>
+    <b3n-email-recipient
+      [addresses]="ccAddresses"
+      [label]="'Cc'"
+      *ngIf="showCc"
+      (onAddAddress)="addAddress($event, 'cc')"
+      (onRemoveAddress)="deleteAddress($event, 'cc')"
+    ></b3n-email-recipient>
+    <b3n-email-recipient
+      [addresses]="bccAddresses"
+      [label]="'Bcc'"
+      *ngIf="showBcc"
+      (onAddAddress)="addAddress($event, 'bcc')"
+      (onRemoveAddress)="deleteAddress($event, 'bcc')"
+    ></b3n-email-recipient>
+
+    <section class="d-flex align-items-baseline">
+      <span class="label">Subject</span>
+      <mat-form-field style="flex: 1">
+        <input matInput [(ngModel)]="txtSubject" />
+      </mat-form-field>
+    </section>
+
+    <mat-card-content class="editor">
+      <input
+        type="file"
+        id="fileInputComposeInline"
+        style="display: none"
+        (change)="uploadInline($event)"
+        accept="image/*"
+      />
+      <mat-progress-bar
+        [style.visibility]="uploading ? 'visible' : 'hidden'"
+        mode="determinate"
+        [value]="uploadEvent.percentage"
+      ></mat-progress-bar>
+      <quill-editor
+        [(ngModel)]="content"
+        #emailQuillEditor
+        [class.editor__email-content]="!!selectedSignature"
+        [class.noBorderBottom]="data.isReply || data.isForward || data.isForwardAsNew || data.isDraft"
+        [modules]="editorOptions"
+        [formats]="formats"
+        [preserveWhitespace]="true"
+        (onEditorCreated)="getEditorInstance($event)"
+      ></quill-editor>
+      <ng-container *ngIf="data.isReply || data.isForward || data.isForwardAsNew || data.isDraft">
+        <b3n-previous-email-content
+          [textDisplay]="textHTMLEmailQuote"
+          [msg]="data.msg"
+          [noBorderBottom]="!!selectedSignature"
+          [isForward]="data.isForward"
+          [date]="data.time"
+        ></b3n-previous-email-content>
+      </ng-container>
+      <quill-editor
+        [style]="{ height: '150px' }"
+        [modules]="{ toolbar: false }"
+        [(ngModel)]="selectedSignature.content"
+        [preserveWhitespace]="true"
+        *ngIf="selectedSignature"
+        class="editor__email-signature"
+      ></quill-editor>
+      <div class="attachments" *ngIf="attachments.length > 0">
+        <div class="attachment" *ngFor="let item of attachments; let i = index">
+          <ng-container *ngIf="item.mediaUuid">
+            <img class="message__content__markupImg" [src]="getFileType(item.fileType)" alt="markup" />
+            <div class="description">
+              <a (click)="download(item)" class="semi-bold">{{ item.name }}</a>
+              <br />
+              <span class="file__info">
+                {{ humanFileSize(item.size) }}
+                <span>|</span>
+                {{ item.fileType | uppercase }}
+              </span>
+            </div>
+            <mat-icon (click)="deleteAttachment(item)">close</mat-icon>
+          </ng-container>
+        </div>
+      </div>
+      <div class="action">
+        <div class="action__secondary">
+          <button mat-button (click)="fileUpload.click()" title="Attach files">
+            <mat-icon>attach_file</mat-icon>
+            <input #fileUpload type="file" id="fileInput" multiple style="display: none" (change)="upload($event)" />
+          </button>
+          <button
+            mat-button
+            title="Canned responses"
+            [matMenuTriggerFor]="cannedResponseMenu"
+            *ngIf="cannedResponses.length > 0"
+          >
+            <mat-icon>assistant</mat-icon>
+          </button>
+          <mat-menu #cannedResponseMenu="matMenu" class="email-canned-response-menu">
+            <button mat-menu-item (click)="chooseResponse(item)" *ngFor="let item of cannedResponses">
+              {{ item.name }}
+            </button>
+          </mat-menu>
+          <button mat-button title="Signature" *ngIf="signatures.length > 1" [matMenuTriggerFor]="signatureMenu">
+            <mat-icon svgIcon="signature"></mat-icon>
+          </button>
+          <mat-menu #signatureMenu="matMenu" class="email-canned-response-menu">
+            <button mat-menu-item (click)="selectedSignature = item" *ngFor="let item of signatures">
+              {{ item.name }}
+              <mat-icon *ngIf="item.id === selectedSignature.id">done</mat-icon>
+            </button>
+          </mat-menu>
+        </div>
+        <div class="d-flex">
+          <button mat-button (click)="deleteDraft()" class="action__delete-draft" title="Delete">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+          <button mat-button (click)="saveDraft()" class="action__save-draft">Save Draft</button>
+          <button mat-raised-button color="primary" class="action__send" (click)="compose()">Send</button>
+          <button mat-raised-button [matMenuTriggerFor]="menu" color="primary" class="action__menu">
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" class="email-action-button-menu" yPosition="above">
+            <button mat-menu-item (click)="compose()">Send</button>
+            <button mat-menu-item (click)="sendAndArchive()">Send and archive</button>
+            <button mat-menu-item (click)="schedule()">Send later</button>
+          </mat-menu>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

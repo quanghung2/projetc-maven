@@ -1,0 +1,599 @@
+<ng-container *ngIf="currentOrg$ | async">
+  <mat-drawer-container [hasBackdrop]="false">
+    <mat-drawer-content fxLayout="column" class="pt-16">
+      <poh-action-bar
+        [isUnifiedWorkspace]="isUnifiedWorkspace"
+        [filter]="filter"
+        [managedTeams]="managedTeams"
+        [noTitle]="noTitle"
+        [noDateRange]="noDateRange"
+        [noTeams]="noTeams"
+        [timeZone]="timeZone"
+        [history]="ui.currentHistories"
+        [loading]="loading"
+        [loadingDownload]="loadingDownload"
+        (filterChanged)="onFilterChanged()"
+        (downloadHistory)="onDownloadHistory($event)"
+      ></poh-action-bar>
+      <div fxFlex class="history-container" fxLayout="row">
+        <table fxFlex="auto" mat-table [dataSource]="ui.currentHistories" multiTemplateDataRows [trackBy]="trackTask">
+          <ng-container matColumnDef="txnUuid">
+            <th mat-header-cell *matHeaderCellDef>
+              <div fxLayoutAlign="start center" fxLayoutGap="1rem">
+                <mat-icon
+                  *ngIf="ui.currentHistories?.length > 0 && filter.teamUuid !== Scope.personal"
+                  class="expand-icon"
+                  [matTooltip]="!isExpand ? 'Expand' : 'Collapse'"
+                  (click)="onToggleExpand()"
+                >
+                  {{ !isExpand ? 'expand_more' : 'expand_less' }}
+                </mat-icon>
+                <span>Txn UUID</span>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let history">
+              <button
+                class="label box"
+                mat-button
+                matTooltip="Click to copy"
+                ngxClipboard
+                [cbContent]="history.txnUuid"
+                (cbOnSuccess)="copied()"
+                (cbOnError)="copyFailed()"
+                (click)="$event.stopPropagation()"
+              >
+                {{ history.txnUuid | slice: 0:8 }}
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="legUuid">
+            <th mat-header-cell *matHeaderCellDef>
+              <div fxLayoutAlign="start center" fxLayoutGap="1rem">
+                <span>Leg UUID</span>
+              </div>
+            </th>
+            <td mat-cell *matCellDef="let history">
+              <button
+                class="label box"
+                mat-button
+                matTooltip="Click to copy"
+                ngxClipboard
+                [cbContent]="history.legUuid"
+                (cbOnSuccess)="copied()"
+                (cbOnError)="copyFailed()"
+                (click)="$event.stopPropagation()"
+              >
+                {{ history.legUuid | slice: 0:8 }}
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let history">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <label fxLayout="row" fxLayoutAlign="center center" class="history-type" [class]="history.type">
+                  {{ history.type || '_' | titlecase }}
+                </label>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="startTime">
+            <th mat-header-cell *matHeaderCellDef>Time</th>
+            <td mat-cell *matCellDef="let history">{{ history.startTime | userDate }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="caller">
+            <th mat-header-cell *matHeaderCellDef>Caller</th>
+            <td mat-cell *matCellDef="let history">
+              <ng-container *ngIf="filter.teamUuid !== Scope.personal; else callerIdPersonalScope">
+                <span *ngIf="history.from?.extensionKey; else viewSip">
+                  <span> {{ history.from?.extensionKey }} - {{ history.from?.extensionLabel }}</span>
+                  <span *ngIf="history.from?.device"> &nbsp;- {{ history.from?.device | extDevice }} </span>
+                </span>
+                <ng-template #viewSip>
+                  <span *ngIf="!!history.from?.sipUsername; else viewFrom">
+                    <span>{{ history.from.sipUsername }}</span>
+                    <span *ngIf="history.from?.device"> &nbsp;- {{ history.from?.device | extDevice }} </span>
+                  </span>
+                  <ng-template #viewFrom>
+                    {{ history.from?.number === 'p' ? 'Private' : history.from?.number }}
+                  </ng-template>
+                </ng-template>
+              </ng-container>
+              <ng-template #callerIdPersonalScope>
+                {{
+                  history?.translatedCallerId?.startsWith('sip') || !history.translatedCallerId
+                    ? history.from
+                    : history.translatedCallerId
+                }}
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="to">
+            <th mat-header-cell *matHeaderCellDef>To</th>
+            <td mat-cell *matCellDef="let history">
+              <ng-container *ngIf="filter.teamUuid !== Scope.personal; else toPersonalScope">
+                <span *ngIf="history.to?.extensionKey; else viewSip" fxLayoutAlign="start center">
+                  <span
+                    >{{ history.to?.extensionKey }} - {{ history.to?.extensionLabel }}
+                    <span *ngIf="history.to?.device">&nbsp;- {{ history.to?.device | extDevice }} </span></span
+                  >
+                </span>
+                <ng-template #viewSip>
+                  <span *ngIf="!!history.to?.sipUsername; else viewFrom">
+                    <span> {{ history.to.sipUsername }}</span>
+                    <span *ngIf="history.to?.device"> &nbsp;- {{ history.to?.device | extDevice }} </span>
+                  </span>
+                  <ng-template #viewFrom>
+                    {{ history.to?.originalDest || history.to?.number }}
+                  </ng-template>
+                </ng-template>
+              </ng-container>
+              <ng-template #toPersonalScope>
+                <ng-container [ngSwitch]="history.type">
+                  <ng-container *ngSwitchCase="CallType.incoming">
+                    <label fxLayout="row" fxLayoutAlign="start center" [class]="history.device">
+                      {{ (history.device | extDevice) || history.sipUsername || history.to }}
+                    </label>
+                  </ng-container>
+                  <ng-container *ngSwitchDefault>
+                    {{ history.to }}
+                  </ng-container>
+                </ng-container>
+              </ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="talkDurationAndTotalDuration">
+            <th mat-header-cell *matHeaderCellDef>Talk / Total Duration</th>
+            <td mat-cell *matCellDef="let history">
+              {{ history.talkDuration | duration: 'millisecond' }} /
+              {{ history.totalDuration | duration: 'millisecond' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Result</th>
+            <td mat-cell *matCellDef="let history">
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.3rem">
+                <label fxLayout="row" fxLayoutAlign="center center" class="history-status" [class]="history.status">
+                  {{ history.status | titlecase }}
+                </label>
+
+                <ng-container *ngIf="history.failedReason">
+                  <span
+                    class="material-icons icon-help"
+                    [matTooltip]="ReasonMapping[history.failedReason] || (history.failedReason | titlecase)"
+                    [matTooltipClass]="'blocked-tooltip'"
+                  >
+                    help_outline
+                  </span>
+                </ng-container>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="callRecording">
+            <th mat-header-cell *matHeaderCellDef>Call Recording</th>
+            <td mat-cell *matCellDef="let history">
+              <ng-container *ngIf="!!history.resources?.recording">
+                <div fxLayout="row" fxLayoutAlign="start center" (click)="$event.stopPropagation()">
+                  <button
+                    *ngIf="
+                      history.resources?.recording.contentType !== 'application/pgp-encrypted' &&
+                      displayConfig.playButton
+                    "
+                    mat-icon-button
+                    [disabled]="history.resources?.recording.deleted || !!history.resources?.recording.mirrorUrl"
+                    [matMenuTriggerFor]="playAction"
+                    [matMenuTriggerData]="{ history: history }"
+                    (click)="fetchMediaUrl(history, ResourceName.RECORDING)"
+                  >
+                    <mat-icon
+                      [className]="
+                        history.resources?.recording.deleted || !!history.resources?.recording.mirrorUrl
+                          ? 'disabled-media-download'
+                          : 'show-media-download'
+                      "
+                      >play_arrow
+                    </mat-icon>
+                  </button>
+                  <button
+                    *ngIf="displayConfig.downloadButton"
+                    [disabled]="history.resources?.recording.deleted"
+                    mat-icon-button
+                    (click)="downloadFile(history, ResourceName.RECORDING)"
+                  >
+                    <mat-icon
+                      [className]="
+                        !history.resources?.recording.deleted ? 'show-media-download' : 'disabled-media-download'
+                      "
+                      >get_app
+                    </mat-icon>
+                  </button>
+                </div>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="voiceMail">
+            <th mat-header-cell *matHeaderCellDef>Voice Mail</th>
+            <td mat-cell *matCellDef="let history">
+              <ng-container *ngIf="history.showVoicemail && history.resources?.voicemail">
+                <div fxLayout="row" fxLayoutAlign="start center" (click)="$event.stopPropagation()">
+                  <button
+                    *ngIf="
+                      history.resources?.voicemail.contentType !== 'application/pgp-encrypted' &&
+                      displayConfig.playButton
+                    "
+                    mat-icon-button
+                    [disabled]="history.resources?.voicemail.deleted"
+                    [matMenuTriggerFor]="playAction"
+                    [matMenuTriggerData]="{ history: history }"
+                    (click)="fetchMediaUrl(history, ResourceName.VOICEMAIL)"
+                  >
+                    <mat-icon
+                      [className]="
+                        !history.resources?.voicemail.deleted ? 'show-media-download' : 'disabled-media-download'
+                      "
+                      >play_arrow
+                    </mat-icon>
+                  </button>
+                  <button
+                    *ngIf="displayConfig.downloadButton"
+                    [disabled]="history.resources?.voicemail.deleted"
+                    mat-icon-button
+                    (click)="downloadFile(history, ResourceName.VOICEMAIL)"
+                  >
+                    <mat-icon
+                      [className]="
+                        !history.resources?.voicemail.deleted ? 'show-media-download' : 'disabled-media-download'
+                      "
+                      >get_app
+                    </mat-icon>
+                  </button>
+                </div>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="metadata">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let history">
+              <button (click)="openMetaData(history, $event)" mat-icon-button class="btn-metadata">
+                <mat-icon
+                  matTooltip="Call metadata"
+                  class="material-icons-outlined"
+                  [class.active]="history?.txnUuid === selectedHistory?.txnUuid"
+                  >info</mat-icon
+                >
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="originalCalledNumber">
+            <th mat-header-cell *matHeaderCellDef>Original Called Number</th>
+            <td mat-cell *matCellDef="let history">
+              {{ history.accessNumber || history.to?.number || history.to?.originalDest }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="wallboard">
+            <th mat-header-cell *matHeaderCellDef>Wallboard</th>
+            <td mat-cell *matCellDef="let history">
+              {{ history.callcenter?.queueName ? 'Reached queue ' + history.callcenter?.queueName : '_' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="DNC">
+            <th mat-header-cell *matHeaderCellDef>DNC</th>
+            <td mat-cell *matCellDef="let history">
+              <span [ngSwitch]="history.compliance?.action">
+                <ng-container *ngSwitchCase="ActionCompliance.blockedByDnc">
+                  Blocked by PDPC with ID {{ history.compliance?.pdpcId }}
+                </ng-container>
+                <ng-container *ngSwitchCase="ActionCompliance.blockedBecauseOfFailed">
+                  Failed to check with PDPC
+                </ng-container>
+                <ng-container *ngSwitchCase="ActionCompliance.goThrough">
+                  <ng-container *ngIf="!!history.compliance?.pdpcId; else reason">
+                    Allowed by PDPC with ID {{ history.compliance?.pdpcId }}
+                  </ng-container>
+                  <ng-template #reason>
+                    <ng-container *ngIf="history.compliance?.bypassReason">
+                      {{
+                        DNCByPassReason[history.compliance?.bypassReason]
+                          ? DNCByPassReason[history.compliance?.bypassReason]
+                          : 'Bypassed by ' + (history.compliance?.bypassReason | titlecase)
+                      }}
+                    </ng-container>
+                  </ng-template>
+                </ng-container>
+                <ng-container *ngSwitchDefault> _ </ng-container>
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="footer-table">
+            <td mat-footer-cell *matFooterCellDef [attr.colspan]="columns.length">
+              <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.25rem" class="footer-table">
+                <button mat-icon-button [disabled]="this.ui.paging.page === 1 || loading" (click)="prevPage()">
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+                <span mat-mini-fab>
+                  {{ ui.paging.page }}
+                </span>
+                <button
+                  mat-icon-button
+                  [disabled]="!this.ui.backUpNext || this.ui.backUpNext.length === 0 || loading"
+                  (click)="nextPage()"
+                >
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- =========================== CHILD ===================================================== -->
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let children" [attr.colspan]="columns.length">
+              <div
+                class="legs-container"
+                fxLayout="row"
+                fxLayout="start stretch"
+                [ngClass]="{ 'showing border border-radius-4': children.txnUuid === expandedElement || isExpand }"
+                [@detailExpand]="children.txnUuid === expandedElement || isExpand ? 'expanded' : 'collapsed'"
+              >
+                <table fxFlex mat-table [dataSource]="txnMapping[children.txnUuid]">
+                  <ng-container matColumnDef="legUuid">
+                    <th mat-header-cell *matHeaderCellDef>Leg UUID</th>
+                    <td mat-cell *matCellDef="let child">
+                      <button
+                        class="label box"
+                        mat-button
+                        matTooltip="Click to copy"
+                        ngxClipboard
+                        [cbContent]="child.legUuid"
+                        (cbOnSuccess)="copied()"
+                        (cbOnError)="copyFailed()"
+                        (click)="$event.stopPropagation()"
+                      >
+                        {{ child.legUuid | slice: 0:8 }}
+                      </button>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef>Type</th>
+                    <td mat-cell *matCellDef="let child">
+                      <div fxLayout="row" fxLayoutAlign="start center">
+                        <label fxLayout="row" fxLayoutAlign="center center" class="history-type" [class]="child.type">
+                          {{ child.type || '_' | titlecase }}
+                        </label>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="callerID">
+                    <th mat-header-cell *matHeaderCellDef>Caller ID</th>
+                    <td mat-cell *matCellDef="let child">
+                      {{ child.from === 'p' ? 'Private' : child.from }}
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="participant">
+                    <th mat-header-cell *matHeaderCellDef>Participant</th>
+                    <td mat-cell *matCellDef="let child; let index = index">
+                      <span *ngIf="child?.extensionKey; else viewSip" fxLayoutAlign="start center">
+                        <span
+                          >{{ child?.extensionKey }} - {{ child?.extensionLabel }}
+                          <span *ngIf="child?.device">&nbsp;- {{ child?.device | extDevice }} </span></span
+                        >
+                      </span>
+                      <ng-template #viewSip>
+                        <span *ngIf="!!child?.sipUsername; else viewFrom" fxLayoutAlign="start center">
+                          <span> {{ child.sipUsername }}</span>
+                          <span *ngIf="child?.device"> &nbsp;- {{ child?.device | extDevice }} </span>
+                        </span>
+                        <ng-template #viewFrom>
+                          {{ child?.to }}
+                        </ng-template>
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef>Result</th>
+                    <td mat-cell *matCellDef="let child">
+                      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.25rem">
+                        <label
+                          fxLayout="row"
+                          fxLayoutAlign="center center"
+                          class="history-status"
+                          [class]="child.status"
+                        >
+                          {{ child.status | titlecase }}
+                        </label>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="startTime">
+                    <th mat-header-cell *matHeaderCellDef>Start Time</th>
+                    <td mat-cell *matCellDef="let child">{{ child.startTime | userDate }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="endTime">
+                    <th mat-header-cell *matHeaderCellDef>End Time</th>
+                    <td mat-cell *matCellDef="let child">{{ child.endTime | userDate }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="callRecording">
+                    <th mat-header-cell *matHeaderCellDef>Call Recording</th>
+                    <td mat-cell *matCellDef="let history">
+                      <ng-container *ngIf="!!history.resources?.recording">
+                        <div fxLayout="row" fxLayoutAlign="start center" (click)="$event.stopPropagation()">
+                          <button
+                            *ngIf="
+                              history.resources?.recording.contentType !== 'application/pgp-encrypted' &&
+                              displayConfig.playButton
+                            "
+                            mat-icon-button
+                            [disabled]="
+                              history.resources?.recording.deleted || !!history.resources?.recording.mirrorUrl
+                            "
+                            [matMenuTriggerFor]="playAction"
+                            [matMenuTriggerData]="{ history: history }"
+                            (click)="fetchMediaUrl(history, ResourceName.RECORDING)"
+                          >
+                            <mat-icon
+                              [className]="
+                                history.resources?.recording.deleted || !!history.resources?.recording.mirrorUrl
+                                  ? 'disabled-media-download'
+                                  : 'show-media-download'
+                              "
+                              >play_arrow
+                            </mat-icon>
+                          </button>
+                          <button
+                            *ngIf="displayConfig.downloadButton"
+                            [disabled]="history.resources?.recording.deleted"
+                            mat-icon-button
+                            (click)="downloadFile(history, ResourceName.RECORDING)"
+                          >
+                            <mat-icon
+                              [className]="
+                                !history.resources?.recording.deleted
+                                  ? 'show-media-download'
+                                  : 'disabled-media-download'
+                              "
+                              >get_app
+                            </mat-icon>
+                          </button>
+
+                          <mat-icon
+                            class="call-recording-error"
+                            *ngIf="history?.recordingDisrupted"
+                            matTooltip="Recording of the call was disrupted during the process"
+                            >error_circle_rounded
+                          </mat-icon>
+                        </div>
+                      </ng-container>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="voiceMail">
+                    <th mat-header-cell *matHeaderCellDef>Voice Mail</th>
+                    <td mat-cell *matCellDef="let history">
+                      <ng-container *ngIf="history.showVoicemail && !!history.resources?.voicemail">
+                        <div fxLayout="row" fxLayoutAlign="start center" (click)="$event.stopPropagation()">
+                          <button
+                            *ngIf="
+                              history.resources?.voicemail.contentType !== 'application/pgp-encrypted' &&
+                              displayConfig.playButton
+                            "
+                            mat-icon-button
+                            [disabled]="history.resources?.voicemail.deleted"
+                            [matMenuTriggerFor]="playAction"
+                            [matMenuTriggerData]="{ history: history }"
+                            (click)="fetchMediaUrl(history, ResourceName.VOICEMAIL)"
+                          >
+                            <mat-icon
+                              [className]="
+                                !history.resources?.voicemail.deleted
+                                  ? 'show-media-download'
+                                  : 'disabled-media-download'
+                              "
+                              >play_arrow
+                            </mat-icon>
+                          </button>
+                          <button
+                            *ngIf="displayConfig.downloadButton"
+                            [disabled]="history.resources?.voicemail.deleted"
+                            mat-icon-button
+                            (click)="downloadFile(history, ResourceName.VOICEMAIL)"
+                          >
+                            <mat-icon
+                              [className]="
+                                !history.resources?.voicemail.deleted
+                                  ? 'show-media-download'
+                                  : 'disabled-media-download'
+                              "
+                              >get_app
+                            </mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="columnsChild"></tr>
+                  <tr mat-row *matRowDef="let row; columns: columnsChild"></tr>
+                </table>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="notDataAbvailable">
+            <td mat-footer-cell *matFooterCellDef [attr.colspan]="columns.length">
+              <div fxLayoutAlign="center center">
+                <span class="mat-body-1">No Data Available</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: columns"
+            class="row"
+            [class.expanded-row]="expandedElement === row.txnUuid || isExpand"
+            [class.not-me]="filter.teamUuid !== Scope.personal"
+            (click)="expand(row)"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="child-row"></tr>
+          <tr
+            mat-footer-row
+            *matFooterRowDef="['notDataAbvailable']"
+            class="no-data-table"
+            [class.hidden]="ui.currentHistories && ui.currentHistories.length > 0"
+          ></tr>
+          <tr mat-footer-row *matFooterRowDef="['footer-table']"></tr>
+        </table>
+      </div>
+
+      <mat-menu #playAction="matMenu" yPosition="above" class="callrecording-audio">
+        <ng-template matMenuContent let-history="history">
+          <ng-container *ngIf="!history.fileCallRecording?.downloadUrl; else loadAudio">
+            <div fxLayout="row" fxLayoutAlign="center center">
+              <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+            </div>
+          </ng-container>
+          <ng-template #loadAudio>
+            <div fxLayout="row" fxLayoutAlign="center center">
+              <audio
+                [src]="history.fileCallRecording.downloadUrl | safe: 'resourceUrl'"
+                controls
+                autoplay
+                type="audio/mp3"
+                controls
+                preload="auto"
+                (error)="onErrorLoadFile()"
+              >
+                Your browser does not support the <code>audio</code> element.
+              </audio>
+            </div>
+          </ng-template>
+        </ng-template>
+      </mat-menu>
+    </mat-drawer-content>
+
+    <mat-drawer [autoFocus]="false" #sidenav mode="side" position="end">
+      <poh-history-detail [history]="selectedHistory" (closeSidenav)="closeSidenav()"></poh-history-detail>
+    </mat-drawer>
+  </mat-drawer-container>
+</ng-container>

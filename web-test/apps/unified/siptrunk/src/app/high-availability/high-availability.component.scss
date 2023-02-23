@@ -1,0 +1,19 @@
+:host {
+  .container {
+    max-width: 900px;
+    margin: auto;
+    padding: 1.6rem;
+
+    .help-block {
+      color: rgb(153, 153, 153);
+    }
+
+    mat-form-field {
+      padding-right: 1.6rem;
+    }
+
+    td.mat-cell:first-of-type {
+      padding-left: 0;
+    }
+  }
+}

@@ -1,0 +1,102 @@
+.account {
+  padding-bottom: 1.6rem;
+  &__header {
+    background-color: transparent;
+    margin-bottom: 1.6rem;
+  }
+  &__links {
+    margin-bottom: 1.6rem;
+  }
+}
+
+.account__wrapper {
+  display: flex;
+  gap: 1rem;
+}
+
+.account__sidebar {
+  min-height: 100vh;
+  width: 280px;
+  min-width: 280px;
+  display: block;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  position: relative;
+
+  .avatar__wrapper {
+    padding: 2rem 1.6rem;
+    height: 200px;
+  }
+
+  .account__progress {
+    position: absolute;
+    top: 0;
+  }
+
+  .avatar__file {
+    display: none;
+  }
+
+  .avatar__upload {
+    height: 75px;
+    display: flex;
+    justify-content: center;
+
+    a {
+      height: 75px;
+      width: 75px;
+      position: relative;
+      border: 1px solid #e0e0e0;
+      border-radius: 50%;
+
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+      }
+
+      mat-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        border: 1px solid #e0e0e0;
+        background-color: white;
+        border-radius: 50%;
+        padding: 1.5px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  h1 {
+    font: 400 14px/20px Roboto, 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+  }
+
+  .link {
+    cursor: pointer;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 14px;
+    color: rgb(97, 97, 97);
+
+    &:focus {
+      outline-style: none !important;
+    }
+
+    &.link {
+      &:hover,
+      &.active {
+        color: rgb(33, 33, 33);
+      }
+      &:hover {
+        background: var(--gray-200);
+      }
+      &.active {
+        font-weight: 500;
+        background-color: var(--gray-200);
+      }
+    }
+  }
+}

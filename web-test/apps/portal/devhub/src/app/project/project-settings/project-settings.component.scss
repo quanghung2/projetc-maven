@@ -1,0 +1,36 @@
+.project-settings {
+  max-width: 550px;
+  margin: auto;
+  padding: 3rem 0;
+
+  .item-left {
+    color: var(--gray-600);
+  }
+  .item-right {
+    font-weight: 500;
+    color: var(--gray-800);
+
+    &.uuid {
+      background: var(--gray-300);
+      border-radius: 3px;
+      padding: 3px 6px;
+      width: fit-content;
+      font-size: 12px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn-edit {
+      visibility: hidden;
+      font-size: 20px !important;
+      height: 20px !important;
+      width: 20px !important;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    &:hover .btn-edit {
+      visibility: visible;
+    }
+  }
+}

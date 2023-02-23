@@ -1,0 +1,16 @@
+{
+  "name": "api-callerid-verification",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/callerid-verification/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/callerid-verification/**/*.ts", "libs/api/callerid-verification/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

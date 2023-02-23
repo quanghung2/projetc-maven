@@ -1,0 +1,203 @@
+<div [formGroup]="formMappings" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <ng-container formArrayName="urlMappings">
+    <ng-container [formGroupName]="i" *ngFor="let item of formMappings.get('urlMappings')['controls']; let i = index">
+      <b3n-context-variable
+        *ngIf="isOptional === item.value.isOptional && item.value.visible"
+        [optionForControl]="item.value"
+        [contextVariables]="contextVariables"
+        [isMultiple]="!item.value.renderDirective?.valueListUuid"
+        [renderDirective]="item.value.renderDirective"
+        [isShowContextVar]="isShowContextVar"
+        (selectedValue)="selectValue($event, item, formMappings.get('urlMappings'))"
+      ></b3n-context-variable>
+    </ng-container>
+  </ng-container>
+
+  <ng-container formArrayName="headersMappings">
+    <ng-container
+      [formGroupName]="i"
+      *ngFor="let item of formMappings.get('headersMappings')['controls']; let i = index"
+    >
+      <b3n-context-variable
+        *ngIf="isOptional === item.value.isOptional && item.value.visible"
+        [optionForControl]="item.value"
+        [contextVariables]="contextVariables"
+        [isMultiple]="!item.value.renderDirective?.valueListUuid"
+        [renderDirective]="item.value.renderDirective"
+        [isShowContextVar]="isShowContextVar"
+        (selectedValue)="selectValue($event, item, formMappings.get('headersMappings'))"
+      ></b3n-context-variable>
+    </ng-container>
+  </ng-container>
+
+  <ng-container formArrayName="bodyMappings">
+    <ng-container
+      [formGroupName]="bodyIdx"
+      *ngFor="let body of formMappings.get('bodyMappings')['controls']; let bodyIdx = index"
+    >
+      <ng-container *ngIf="isOptional === body.value.isOptional && body.value.visible">
+        <div *ngIf="body.value.dataType === 'array' && !body.value.renderDirective">
+          <div *ngIf="body.value.arrayItemDataType !== 'object'" fxLayout="column" fxLayoutGap="4px">
+            <section fxLayout="column" fxLayoutGap="4px">
+              <span class="title-array">{{ body.value.title }}</span>
+              <div fxLayout="column" fxLayoutGap="4px" formArrayName="arrayItemsMappings">
+                <div
+                  class="widget-title"
+                  *ngFor="let itemMapping of body.get('arrayItemsMappings').controls; let itemMappingIdx = index"
+                >
+                  <ng-container [formGroupName]="itemMappingIdx">
+                    <div fxLayout="row" fxLayoutAlign="start center">
+                      <b3n-context-variable
+                        fxFlex
+                        [optionForControl]="itemMapping.value"
+                        [contextVariables]="contextVariables"
+                        [isMultiple]="!itemMapping.value.renderDirective?.valueListUuid"
+                        [renderDirective]="itemMapping.value.renderDirective"
+                        [isShowContextVar]="isShowContextVar"
+                        (selectedValue)="selectValue($event, itemMapping)"
+                      ></b3n-context-variable>
+
+                      <div
+                        *ngIf="body.value.isOptional || body.get('arrayItemsMappings').value.length > 1"
+                        class="delete-button-custom"
+                      >
+                        <button
+                          *ngIf="editable"
+                          mat-icon-button
+                          (click)="removeItem(body.get('arrayItemsMappings'), itemMappingIdx)"
+                        >
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div class="widget-child">{{ itemMappingIdx + 1 }}</div>
+                </div>
+              </div>
+            </section>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <button
+                *ngIf="editable"
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="addItemForNonObject(body.get('arrayItemsMappings'), body.value)"
+              >
+                ADD
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="body.value.arrayItemDataType === 'object'" fxLayout="column" fxLayoutGap="4px">
+            <section fxLayout="column" fxLayoutGap="4px">
+              <span class="title-array">{{ body.value.title }}</span>
+              <div fxLayout="column" fxLayoutGap="4px" formArrayName="arrayItemsMappings">
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="start center"
+                  *ngFor="let itemMapping of body.get('arrayItemsMappings').controls; let itemMappingIdx = index"
+                >
+                  <div fxFlex class="widget-title" [formArrayName]="itemMappingIdx">
+                    <div
+                      [formGroupName]="itemIdx"
+                      fxLayout="row"
+                      fxLayoutAlign="start end"
+                      *ngFor="let item of itemMapping.controls; let itemIdx = index"
+                    >
+                      <b3n-context-variable
+                        fxFlex
+                        *ngIf="item.value.visible && !item.value.isOptional"
+                        [optionForControl]="item.value"
+                        [contextVariables]="contextVariables"
+                        [isMultiple]="!item.value.renderDirective?.valueListUuid"
+                        [renderDirective]="item.value.renderDirective"
+                        [isShowContextVar]="isShowContextVar"
+                        (selectedValue)="selectValue($event, item, itemMapping)"
+                      ></b3n-context-variable>
+                    </div>
+
+                    <div class="option-param" [class.hidden]="!showOptionalParam(itemMapping)">
+                      <a
+                        class="link"
+                        fxLayout="row"
+                        fxLayoutAlign="start center"
+                        (click)="panelExpand(itemMappingIdx)?.toggle()"
+                      >
+                        <span *ngIf="!panelExpand(itemMappingIdx)?.expanded">Show optional params</span>
+                        <span *ngIf="panelExpand(itemMappingIdx)?.expanded">Hide optional params</span>
+                        <mat-icon>
+                          {{ panelExpand(itemMappingIdx)?.expanded ? 'expand_less' : 'expand_more' }}
+                        </mat-icon>
+                      </a>
+
+                      <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+                        <div
+                          [formGroupName]="itemIdx"
+                          fxLayout="row"
+                          fxLayoutAlign="start end"
+                          *ngFor="let item of itemMapping.controls; let itemIdx = index"
+                        >
+                          <b3n-context-variable
+                            fxFlex
+                            *ngIf="item.value.visible && item.value.isOptional"
+                            [optionForControl]="item.value"
+                            [contextVariables]="contextVariables"
+                            [isMultiple]="!item.value.renderDirective?.valueListUuid"
+                            [renderDirective]="item.value.renderDirective"
+                            [isShowContextVar]="isShowContextVar"
+                            (selectedValue)="selectValue($event, item, itemMapping)"
+                          ></b3n-context-variable>
+                        </div>
+                      </mat-expansion-panel>
+                    </div>
+
+                    <div class="widget-child">{{ itemMappingIdx + 1 }}</div>
+                  </div>
+
+                  <div
+                    *ngIf="body.value.isOptional || body.get('arrayItemsMappings').value.length > 1"
+                    class="delete-button-custom"
+                  >
+                    <button
+                      *ngIf="editable"
+                      mat-icon-button
+                      (click)="removeItem(body.get('arrayItemsMappings'), itemMappingIdx)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <button
+                *ngIf="editable"
+                mat-stroked-button
+                color="primary"
+                type="button"
+                (click)="addItemForObject(body.get('arrayItemsMappings'), body.value.defaultValueTree)"
+              >
+                ADD
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <ng-container
+          *ngIf="body.value.dataType !== 'array' || (body.value.dataType === 'array' && body.value.renderDirective)"
+        >
+          <b3n-context-variable
+            [optionForControl]="body.value"
+            [contextVariables]="contextVariables"
+            [isMultiple]="!body.value.renderDirective?.valueListUuid"
+            [renderDirective]="body.value.renderDirective"
+            [isShowContextVar]="isShowContextVar"
+            (selectedValue)="selectValue($event, body, formMappings.get('bodyMappings'))"
+          ></b3n-context-variable>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>

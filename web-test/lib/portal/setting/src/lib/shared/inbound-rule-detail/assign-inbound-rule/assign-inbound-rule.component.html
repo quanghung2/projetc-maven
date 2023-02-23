@@ -1,0 +1,21 @@
+<div mat-dialog-title>Assign inbound rule</div>
+
+<div *ngIf="data.inboundRules" fxLayout="column">
+  <mat-form-field *ngIf="data.inboundRules.length" appearance="outline">
+    <mat-label>Select inbound rule</mat-label>
+    <mat-select [(ngModel)]="selectedRule">
+      <mat-option *ngFor="let rule of data.inboundRules" [value]="rule">{{ rule.name }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="data.inboundRules.length === 0">
+    No inbound rule found. Click on Manage rules and create a rule first.
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="assign()" [loading]="progressing" [disabled]="!selectedRule" mat-flat-button color="primary">
+    Assign
+  </button>
+</div>

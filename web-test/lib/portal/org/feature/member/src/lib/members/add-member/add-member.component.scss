@@ -1,0 +1,14 @@
+:host {
+  .access {
+    ::ng-deep .mat-radio-label {
+      align-items: flex-start;
+      .mat-radio-label-content {
+        width: 100%;
+      }
+    }
+    .description {
+      font-size: 12px;
+      margin-bottom: 0.75rem;
+    }
+  }
+}

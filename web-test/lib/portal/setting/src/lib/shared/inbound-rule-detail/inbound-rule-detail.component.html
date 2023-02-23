@@ -1,0 +1,33 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Inbound Call Rule</h1>
+</sui-template-portal>
+
+<ng-container *ngIf="extDetail$ | async as extension">
+  <mat-toolbar *ngIf="isAdmin" class="header">
+    <mat-toolbar-row fxLayoutAlign="space-between center" fxLayoutGap="0.8rem">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+        <div class="title">{{ extension.incomingCallRule }}</div>
+      </div>
+      <div *ngIf="assignedRule" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.75rem">
+        <button (click)="routingManageInboundPage()" mat-stroked-button>Manage rules</button>
+        <button (click)="assignInboundRule(extension)" color="primary" mat-flat-button>Change rule</button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <ng-container *ngIf="assignedRule; else hasNoOutbound">
+    <b3n-caller-id-plan></b3n-caller-id-plan>
+  </ng-container>
+
+  <ng-template #hasNoOutbound>
+    <div *ngIf="!fetching" class="no-rule" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon class="group-icon">groups</mat-icon>
+      <div>No inbound rule assign to this user</div>
+
+      <div *ngIf="isAdmin" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem" class="btn-actions">
+        <button (click)="assignInboundRule(extension)" color="primary" mat-flat-button>Assign</button>
+        <button (click)="routingManageInboundPage()" mat-stroked-button>Manage</button>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

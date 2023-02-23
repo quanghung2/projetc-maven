@@ -1,0 +1,89 @@
+<b3n-header-flow fromPage="logs"></b3n-header-flow>
+
+<div class="container flow-container">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+    <mat-form-field fxFlex="140px">
+      <mat-select [formControl]="timeRangeCtrl" placeholder="Date range">
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">
+          {{ timeRange.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container *ngIf="timeRangeCtrl.value === TimeRangeKey.specific_date">
+      <mat-form-field (click)="pickerStart.open()" fxFlex="200px">
+        <input
+          matInput
+          readonly
+          [matDatepicker]="pickerStart"
+          placeholder="From"
+          [formControl]="fromTimeCtrl"
+          [min]="minStart"
+          [max]="maxStart"
+          (dateChange)="fromDateChange()"
+        />
+        <button mat-icon-button type="button" *ngIf="fromTimeCtrl.value" (click)="fromTimeCtrl.setValue('')" matSuffix>
+          <mat-icon>clear</mat-icon>
+        </button>
+        <mat-datepicker-toggle matSuffix [for]="pickerStart"> </mat-datepicker-toggle>
+        <mat-datepicker #pickerStart type="datetime"> </mat-datepicker>
+        <mat-error *ngIf="fromTimeCtrl.invalid">Start time is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field (click)="pickerEnd.open()" fxFlex="200px">
+        <input
+          matInput
+          readonly
+          placeholder="To"
+          [matDatepicker]="pickerEnd"
+          [formControl]="toTimeCtrl"
+          [min]="minEnd"
+          [max]="maxEnd"
+          (dateChange)="toDateChange()"
+        />
+        <button mat-icon-button type="button" *ngIf="toTimeCtrl.value" (click)="toTimeCtrl.setValue('')" matSuffix>
+          <mat-icon>clear</mat-icon>
+        </button>
+        <mat-datepicker-toggle matSuffix [for]="pickerEnd"> </mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd type="datetime"> </mat-datepicker>
+      </mat-form-field>
+    </ng-container>
+
+    <mat-form-field fxFlex="120px">
+      <mat-select [(ngModel)]="viewVersion" placeholder="Version">
+        <mat-option [value]="0" *ngIf="versions && versions.length > 1">All</mat-option>
+        <mat-option *ngFor="let v of versions" [value]="v">
+          {{ v === flowVersion ? v + ' (Current)' : v }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="200px">
+      <input matInput placeholder="Keyword" [formControl]="keywordCtrl" (keyup.enter)="getExcutionLogs()" />
+      <mat-hint>Separate multiple keywords with space</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="130px">
+      <mat-select [formControl]="sortCtrl" placeholder="Sort by start time">
+        <mat-select-trigger>
+          {{ sortCtrl.value === 'desc' ? 'Descending' : 'Ascending' }}
+          <mat-icon class="icon-sort">{{ sortCtrl.value === 'desc' ? 'south' : 'north' }}</mat-icon>
+        </mat-select-trigger>
+        <mat-option [value]="'desc'">Descending <mat-icon class="icon-sort">south</mat-icon></mat-option>
+        <mat-option [value]="'asc'">Ascending <mat-icon class="icon-sort">north</mat-icon></mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      [loading]="loading"
+      [disabled]="fromTimeCtrl.invalid || pending"
+      (click)="getExcutionLogs()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <b3n-log-table [dataSource]="curLogs" (onLoadMore)="onLoadMore($event)"></b3n-log-table>
+</div>

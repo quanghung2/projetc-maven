@@ -1,0 +1,24 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Liability </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form class="action__wrapper" [formGroup]="form" autocomplete="off">
+      <mat-form-field>
+        <mat-label>Domain</mat-label>
+        <input matInput formControlName="domain" />
+      </mat-form-field>
+      <button mat-raised-button color="primary" [loading]="loading" [disabled]="form.invalid" (click)="search()">
+        Search
+      </button>
+    </form>
+    <div class="liability__wrapper" *ngIf="prepaymentLicense">
+      <span>Liability check: </span>
+      <mat-slide-toggle
+        [checked]="prepaymentLicense.enabled"
+        [disabled]="saving"
+        (change)="updatePrepaymentLicense($event)"
+      ></mat-slide-toggle>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

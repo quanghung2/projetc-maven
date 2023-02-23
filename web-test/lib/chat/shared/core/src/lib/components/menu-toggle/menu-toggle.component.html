@@ -1,0 +1,19 @@
+<ng-container *ngIf="isOverModeLeftSidebar$ | async">
+  <ng-container *ngIf="{ toggleLeftSidebar: toggleLeftSidebar$ | async } as data">
+    <ng-container *ngIf="{ value: mentionCountTeamChat$ | async } as unreadCount">
+      <button
+        class="icon-menu"
+        (click)="viewMenu(data?.toggleLeftSidebar)"
+        [class.active]="data?.toggleLeftSidebar"
+        mat-icon-button
+        [matBadge]="unreadCount.value < 10 ? unreadCount.value : '9+'"
+        matBadgeOverlap="false"
+        [matBadgeHidden]="unreadCount.value === 0"
+        matBadgeSize="small"
+        matBadgeColor="warn"
+      >
+        <mat-icon matTooltip="View menu"> list </mat-icon>
+      </button>
+    </ng-container>
+  </ng-container>
+</ng-container>

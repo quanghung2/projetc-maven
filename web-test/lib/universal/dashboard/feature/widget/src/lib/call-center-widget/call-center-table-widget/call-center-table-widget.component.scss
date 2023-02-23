@@ -1,0 +1,77 @@
+.noData {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.chart_wrapper {
+  margin-top: 20px;
+}
+
+::ng-deep .google-visualization-table-th {
+  font-size: 12px;
+  height: 53px;
+  background-color: #fafafa !important;
+  font-family: Roboto, Helvetica Neue, sans-serif;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.54);
+  padding: 16px !important;
+  background-image: none !important;
+
+  &:not(:first-child) {
+    text-align: center;
+  }
+}
+
+::ng-deep .table-cell {
+  font-size: 14px;
+  height: 44px;
+  padding: 0 16px !important;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: Roboto, Helvetica Neue, sans-serif;
+  border-color: #ccc !important;
+
+  &:not(:first-child) {
+    text-align: center;
+  }
+
+  &:last-child {
+    border-right: 0px;
+  }
+}
+
+::ng-deep .header-cell {
+  border-color: #ccc !important;
+  height: 44px;
+  color: #000000;
+  padding: 0 16px !important;
+  background: #fafafa;
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+
+  &:not(:first-child) {
+    text-align: center;
+  }
+
+  &:last-child {
+    border-right: 0px;
+  }
+}
+
+::ng-deep .google-visualization-table-table {
+  height: unset !important;
+}
+
+.single-metric__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+
+  .single-metric {
+    font-size: 100px;
+    font-weight: 500;
+  }
+}

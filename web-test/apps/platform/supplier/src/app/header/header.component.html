@@ -1,0 +1,17 @@
+<mat-toolbar class="header" color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <h3 class="mr-24">Supplier</h3>
+    <button mat-button [class.active]="activeLink?.key === l.key" *ngFor="let l of links" (click)="browseTo(l)">
+      {{ l.value }}
+    </button>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <button *ngIf="defaultSupplierUuid" mat-button (click)="showDefaultSupplier()" [loading]="isLoadingDefault">
+      Default supplier: {{ defaultSupplierUuid.name }}
+    </button>
+    <span *ngIf="defaultSupplierUuid" class="mr-16">|</span>
+    <span class="mr-4">Backup supplier: {{ fallbackSupplier ? fallbackSupplier.name : 'No' }}</span>
+    <mat-icon matTooltip="{{ tooltipText }}">info_outline</mat-icon>
+  </div>
+</mat-toolbar>

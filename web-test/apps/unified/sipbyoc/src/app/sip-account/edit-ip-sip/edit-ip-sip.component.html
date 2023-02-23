@@ -1,0 +1,46 @@
+<h1 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Update SIP account</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h1>
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="start none">
+    <label>Authentication Mode</label>
+    <mat-radio-group class="p-16" [(ngModel)]="authenticationMode" name="authentication" fxLayoutGap="3.2rem">
+      <mat-radio-button [value]="AuthenticationMode.ACCOUNT">Account</mat-radio-button>
+      <mat-radio-button [value]="AuthenticationMode.IP">IP</mat-radio-button>
+    </mat-radio-group>
+    <ng-container *ngIf="authenticationMode === AuthenticationMode.IP">
+      <mat-form-field>
+        <mat-label>Transport protocol</mat-label>
+        <mat-select [(ngModel)]="data.updateIpPeerReq.protocol" name="protocol">
+          <mat-option value="udp">UDP</mat-option>
+          <mat-option value="tcp">TCP</mat-option>
+          <mat-option value="tls">TLS</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>IP Peer</mat-label>
+        <input matInput type="text" name="IP" [(ngModel)]="data.updateIpPeerReq.ip" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Port</mat-label>
+        <input matInput type="number" name="Port" [(ngModel)]="data.updateIpPeerReq.port" />
+      </mat-form-field>
+    </ng-container>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button
+    mat-raised-button
+    [loading]="processing"
+    color="primary"
+    [disabled]="
+      authenticationMode === AuthenticationMode.IP &&
+      (!data.updateIpPeerReq.protocol || !data.updateIpPeerReq.ip || !data.updateIpPeerReq.port)
+    "
+    (click)="submit()"
+  >
+    Update
+  </button>
+</div>

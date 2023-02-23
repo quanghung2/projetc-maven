@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>
+  <span *ngIf="conversionTarget === 'checking'">Check DNC</span>
+  <span *ngIf="conversionTarget === 'published'">Start number list</span>
+  <span *ngIf="conversionTarget === 'finished'">Number list completed</span>
+  <span *ngIf="conversionTarget !== 'checking' && conversionTarget !== 'published' && conversionTarget !== 'finished'">
+    <span class="first-word">{{ conversionTarget | numberAction }}</span> number list
+  </span>
+</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <div *ngIf="conversionTarget === 'checking'">
+      <p>
+        Do you want to check DNC for <strong>{{ numberListData.name }}</strong> ?
+      </p>
+      <p>You will not be able start/stop it while checking.</p>
+    </div>
+
+    <p *ngIf="conversionTarget !== 'checking' && conversionTarget !== Status.finished">
+      Do you want to start {{ conversionTarget | numberAction }} or Schedule
+      <strong>{{ numberListData.name }}</strong> ?
+    </p>
+
+    <p *ngIf="conversionTarget !== 'checking' && conversionTarget === Status.finished">
+      Please start with the new number list or upload new number to the current list then restart again.
+    </p>
+
+    <p *ngIf="conversionTarget === 'paused'">After pausing, the numbers will not be dialed out.</p>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <ng-container *ngIf="numberListData.status !== Status.finished">
+    <button mat-raised-button *ngIf="conversionTarget === 'published'" class="secondary" (click)="startSchedule()">
+      <span *ngIf="numberListData.listScheduledAt.length > 0"> Reschedule</span>
+      <span *ngIf="numberListData.listScheduledAt.length === 0"> Schedule</span>
+    </button>
+    <button mat-raised-button [loading]="processing" (click)="onUpdate()" color="primary">
+      {{ conversionTarget | numberAction }}
+    </button>
+  </ng-container>
+</div>

@@ -1,0 +1,16 @@
+<div class="module__name p-16">Scheduled events</div>
+<mat-divider></mat-divider>
+<ng-container *ngIf="events.length > 0; else noEvents">
+  <div class="events-grid">
+    <div class="rowgroup" *ngFor="let g of events">
+      <div class="date__header">{{ g.date | isToday: 'EEEE, d MMMM y' }}</div>
+      <div class="row" *ngFor="let event of g.events; let idx = index">
+        <div class="time">{{ event.startTime | date: 'HH:mm' }}-{{ event.endTime | date: 'HH:mm' }}</div>
+        <div class="detail">{{ event.description }}</div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #noEvents>
+  <div class="p-16">No scheduled events</div>
+</ng-template>

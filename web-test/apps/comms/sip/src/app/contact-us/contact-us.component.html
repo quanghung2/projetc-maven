@@ -1,0 +1,24 @@
+<div sm-component class="ui modal small" modal-id="contact-us-modal">
+  <div class="header">Sales Enquiry</div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Your request</label></div>
+        <div class="ten wide column left aligned">
+          {{ subject }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="six wide column right aligned info-label"><label>Additional Info</label></div>
+        <div class="ten wide column left aligned">
+          <div class="field">
+            <textarea rows="4" [(ngModel)]="remark"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui primary button" (click)="sendEmailToSale()">Submit request</div>
+  </div>
+</div>

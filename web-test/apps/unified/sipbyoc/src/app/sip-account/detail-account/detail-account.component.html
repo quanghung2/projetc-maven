@@ -1,0 +1,120 @@
+<h1 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Configuration details</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h1>
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <h3>Basic SIP Configuration</h3>
+      <div class="pl-16" fxLayout="column" fxLayoutGap="2rem">
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">Codecs</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.codecSupported }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">Dial Pattern</label>
+          <span> Country Code + Area Code + Phone Number (e.g. 8498765432, 16505300061)</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">SIP Protocol</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.protocol }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">SSL/TLS Protocol Method</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.protocolMethod }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">SIP Registration Period</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.registrationPeriod }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">Audio Format</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.audioFormat }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">DTMF</label>
+          <span> {{ data.pbxConfig.basicSipConfiguration.dtmf }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <h3>Firewall Configuration</h3>
+      <div class="pl-16" fxLayout="column" fxLayoutAlign="start none">
+        <h3><strong> Signaling (SIP)</strong></h3>
+        <div class="pl-16" fxLayout="column" fxLayoutGap="2rem">
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">IP Addresses</label>
+            <div *ngFor="let ip of data.pbxConfig.firewallConfig.signaling.ip">{{ ip }}</div>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">Ports</label>
+            <span> {{ data.pbxConfig.firewallConfig.signaling.ports }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">Direction</label>
+            <span>{{ data.pbxConfig.firewallConfig.signaling.direction }}</span>
+          </div>
+        </div>
+
+        <h3 class="pt-16"><strong>Audio (RTP)</strong></h3>
+        <div class="pl-16" fxLayout="column" fxLayoutGap="2rem">
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">IP Addresses</label>
+            <div *ngFor="let ip of data.pbxConfig.firewallConfig.audio.ips">{{ ip }}</div>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">Ports</label>
+            <span> {{ data.pbxConfig.firewallConfig.audio.ports }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+            <label fxFlex="200px">Direction</label>
+            <span>{{ data.pbxConfig.firewallConfig.signaling.direction }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <h3>NAT Configuration (Optional. Use only if PBX is behind NAT)</h3>
+      <div class="pl-16" fxLayout="column" fxLayoutGap="2rem">
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">NAT Traversal</label>
+          <span> {{ data.pbxConfig.natConfig.traversal }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">STUN Server</label>
+          <span> {{ data.pbxConfig.natConfig.stunServer }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">STUN Port</label>
+          <span> {{ data.pbxConfig.natConfig.protocol }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+          <label fxFlex="200px">Direction</label>
+          <span> {{ data.pbxConfig.natConfig.direction }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <h3>Not supported</h3>
+      <ul>
+        <li *ngFor="let item of data.pbxConfig.notSupports">{{ item }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

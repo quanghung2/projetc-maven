@@ -1,0 +1,21 @@
+<ng-container *ngIf="files$ | async as files">
+  <div class="shared_files" *ngIf="files?.length === 0">
+    There are no files to see here right now! But there could be — drag and drop any file into the message pane to add
+    it to this conversation.
+  </div>
+
+  <ng-container *ngIf="files.length > 0">
+    <mat-nav-list>
+      <ng-container *ngFor="let file of files; trackBy: trackByFile">
+        <b3n-conversation-thumbnail-file [convo]="convo" [file]="file"></b3n-conversation-thumbnail-file>
+      </ng-container>
+    </mat-nav-list>
+    <mat-spinner style="margin: auto" [diameter]="35" *ngIf="loadingMore"></mat-spinner>
+  </ng-container>
+</ng-container>
+
+<div *ngIf="hasMore$ | async" class="show-more">
+  <small class="text" (click)="showMore()">
+    <div style="color: #2196f3">Show more</div>
+  </small>
+</div>

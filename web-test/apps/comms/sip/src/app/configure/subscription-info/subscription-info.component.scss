@@ -1,0 +1,75 @@
+.configure-content {
+  background-color: #fff;
+  padding-right: 15px;
+  padding-left: 15px;
+  border-radius: 4px;
+  line-height: 37px;
+  .big-title {
+    font-size: 20px;
+  }
+  .title {
+    padding: 15px 15px 0px 0px;
+    line-height: 1.778;
+  }
+  .row {
+    padding-bottom: 0px;
+  }
+  .content {
+    margin-bottom: 30px;
+  }
+  .help-block {
+    color: rgb(153, 153, 153);
+  }
+  .info-label {
+    font-weight: 500;
+    .ui.divider {
+      margin-top: 5px;
+    }
+  }
+  .number-info {
+    width: 100%;
+    height: auto;
+    padding: 22.5px;
+    background-color: #f1f1f1;
+    display: block;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    -webkit-transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+    text-align: center !important;
+  }
+  .amount-label {
+    margin-bottom: 3px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #0190de;
+  }
+  .number-label {
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  .ui.grid {
+    margin: 0;
+  }
+
+  .feature-row {
+    padding: 0px;
+  }
+  .feature-label {
+    border: 1px solid #dddddd;
+    border-top: 0px;
+  }
+  .feature-value {
+    border: 1px solid #dddddd;
+    border-top: 0px;
+    border-left: 0px;
+  }
+  .feature-label.first {
+    border-top: 1px solid #dddddd;
+  }
+  .feature-value.first {
+    border-top: 1px solid #dddddd;
+  }
+}

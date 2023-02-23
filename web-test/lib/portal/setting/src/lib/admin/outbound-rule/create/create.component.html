@@ -1,0 +1,41 @@
+<h1 *ngIf="data.isCreate" mat-dialog-title>Create outbound rule</h1>
+<h1 *ngIf="!data.isCreate" mat-dialog-title>Update outbound rule</h1>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <mat-form-field class="create-rule">
+      <input
+        matInput
+        placeholder="Name"
+        name="name"
+        formControlName="name"
+        (keyup.enter)="data.isCreate ? create() : update()"
+      />
+      <mat-error>{{
+        formGroup.controls['name'].value.length > 100 ? 'Maximum 100 characters' : 'Name is required'
+      }}</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    *ngIf="data.isCreate"
+    [loading]="progressing"
+    [disabled]="formGroup.invalid"
+    (click)="create()"
+    mat-flat-button
+    color="primary"
+  >
+    Create
+  </button>
+  <button
+    *ngIf="!data.isCreate"
+    [loading]="progressing"
+    [disabled]="formGroup.invalid"
+    (click)="update()"
+    mat-flat-button
+    color="primary"
+  >
+    Update
+  </button>
+</div>

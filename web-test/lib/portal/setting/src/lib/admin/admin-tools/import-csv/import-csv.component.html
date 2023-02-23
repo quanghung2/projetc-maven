@@ -1,0 +1,31 @@
+<div class="import-csv">
+  <h2 mat-dialog-title>Bulk configuration</h2>
+  <div class="import-csv__content">
+    <div fxLayout="column">
+      <button
+        mat-stroked-button
+        class="import-csv__upload-btn"
+        [class.disable-color]="progressing"
+        (click)="file.click()"
+      >
+        Select CSV File
+        <input #file (change)="selectCsvFile($event)" accept=".csv" hidden type="file" />
+      </button>
+      <a
+        href="https://ui.b3networks.com/samples/sample_extension_config.csv"
+        target="_blank"
+        mat-button
+        color="primary"
+        class="import-csv__sample"
+        >Download sample file</a
+      >
+    </div>
+    <div *ngIf="fileName" class="import-csv__name">{{ fileName }}</div>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button [matDialogClose]="true" mat-button>Cancel</button>
+    <button mat-raised-button [loading]="uploading" [disabled]="!fileName" color="primary" (click)="uploadFile()">
+      Upload
+    </button>
+  </div>
+</div>

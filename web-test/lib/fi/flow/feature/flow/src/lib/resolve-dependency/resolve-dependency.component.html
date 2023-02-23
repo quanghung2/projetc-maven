@@ -1,0 +1,57 @@
+<form [formGroup]="formGroup">
+  <ng-container formArrayName="dependencies">
+    <p>
+      <strong>
+        The following {{ resolveDependencyInput.isExtendTrigger ? 'extended' : '' }} outputs are being used by other
+        actions. Please resolve it now.
+      </strong>
+    </p>
+
+    <div
+      fxLayout="column"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="16px"
+      *ngFor="let dependency of dependencies.controls; let idx = index"
+    >
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+        <b3n-context-variable
+          fxFlex="40"
+          *ngIf="uiConfig[idx].contextVariablesOrigin?.length"
+          [optionForControl]="
+            $any({
+              title: 'Old Output',
+              expressionTree: dependency.get('originExpressionTree').value,
+              key: 'expressionTree',
+              disabled: true,
+              dataType: 'string'
+            })
+          "
+          [contextVariables]="uiConfig[idx].contextVariablesOrigin"
+        ></b3n-context-variable>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        <b3n-context-variable
+          fxFlex
+          *ngIf="uiConfig[idx].contextVariables"
+          [optionForControl]="
+            $any({
+              title: 'New Output',
+              expressionTree: dependency.get('currentExpressionTree').value,
+              key: 'expressionTree',
+              isOptional: false,
+              dataType: uiConfig[idx].dataType
+            })
+          "
+          [isMultiple]="false"
+          [isShowInputControl]="false"
+          [contextVariables]="uiConfig[idx].contextVariables"
+          (selectedValue)="selectValueOfConfig($any(dependency), $event)"
+        ></b3n-context-variable>
+      </div>
+    </div>
+  </ng-container>
+</form>
+<div dir="rtl" class="mb-2">
+  <button mat-raised-button color="primary" [loading]="isLoading" [disabled]="formGroup.invalid" (click)="confirm()">
+    Proceed
+  </button>
+</div>

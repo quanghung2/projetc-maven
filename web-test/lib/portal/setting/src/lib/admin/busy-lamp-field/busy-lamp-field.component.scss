@@ -1,0 +1,26 @@
+.mat-column-monitorExtKey {
+  width: 150px;
+}
+
+.mat-column-moniteesExtKeys {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-column-actions {
+  width: 104px;
+}
+
+.actions {
+  visibility: hidden;
+}
+
+.mat-row:hover {
+  background-color: #fafafa;
+
+  .actions {
+    visibility: visible;
+  }
+}

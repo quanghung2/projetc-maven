@@ -1,0 +1,41 @@
+@import '../../../../assets/scss/variables.scss';
+
+.twofa-saveRecoveryCode {
+  .recoveryCode {
+    text-align: center;
+    font-size: 28px;
+  }
+  .hint {
+    text-align: left;
+    color: $hint-color;
+    line-height: 21px;
+  }
+}
+
+.row {
+  width: 100%;
+  margin-bottom: 10px;
+  &.hint {
+    color: $hint-color;
+  }
+  mat-form-field {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .mat-form-field-prefix {
+    font-size: 16px;
+  }
+  .field {
+    margin-bottom: 10px;
+    button {
+      width: 100%;
+    }
+  }
+  button {
+    width: 100%;
+  }
+}
+
+.mat-dialog-actions {
+  margin-bottom: 0px;
+}

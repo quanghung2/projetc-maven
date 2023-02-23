@@ -1,0 +1,68 @@
+<h1 mat-dialog-title>{{ contact.uuid ? 'Update' : 'Create' }} contact</h1>
+<div mat-dialog-content>
+  <form class="flex column justify-content-start align-items-none gap-8" #form="ngForm">
+    <mat-form-field>
+      <input
+        matInput
+        [(ngModel)]="req.displayName"
+        required
+        type="text"
+        placeholder="Display name"
+        name="displayNameInput"
+      />
+      <mat-error>Display name is required</mat-error>
+    </mat-form-field>
+    <mat-form-field *ngIf="!noEmail">
+      <mat-label>Email</mat-label>
+      <mat-chip-list #emailList>
+        <mat-chip *ngFor="let email of emails" selectable removable (removed)="remove(email, 2)">
+          {{ email }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          matChipInputAddOnBlur
+          [matChipInputFor]="emailList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event, 2)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+    <!-- <shc-phone-number></shc-phone-number> -->
+    <mat-form-field>
+      <mat-label>Phone</mat-label>
+      <mat-chip-list #phoneList>
+        <mat-chip *ngFor="let number of numbers" selectable removable (removed)="remove(number, 1)">
+          {{ number }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          matChipInputAddOnBlur
+          [matChipInputFor]="phoneList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event, 1)"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </form>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    [disabled]="form.invalid || progressing"
+    color="primary"
+    (click)="create()"
+    *ngIf="!contact.uuid"
+  >
+    Create
+  </button>
+  <button
+    mat-raised-button
+    [disabled]="form.invalid || progressing"
+    color="primary"
+    (click)="update()"
+    *ngIf="contact.uuid"
+  >
+    Update
+  </button>
+</div>

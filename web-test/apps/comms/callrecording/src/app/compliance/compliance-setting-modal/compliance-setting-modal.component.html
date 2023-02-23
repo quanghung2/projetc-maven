@@ -1,0 +1,155 @@
+<i class="close icon" (click)="openComplianceModal()"></i>
+<div class="header">Settings</div>
+
+<div class="content" *ngIf="isLoading == true">
+  <div class="ui active centered inline loader app-loader"></div>
+</div>
+
+<div class="content" [ngClass]="{ hidden: isLoading == true }">
+  <!--<div *ngIf="errors.length > 0">
+    <div class="ui banner error message" *ngFor="let error of errors">
+      <p><i class="uninstall icon"></i> {{error}}</p>
+    </div>
+  </div>-->
+  <div #tabElements class="block">
+    <div class="ui tabular menu">
+      <a class="item active" data-tab="sftp">SFTP</a>
+      <a class="item" data-tab="s3">S3</a>
+      <a class="item" data-tab="incoming-call">Call</a>
+      <a class="item" data-tab="crypto">Encrypted</a>
+      <a class="item" data-tab="sdk">SDK</a>
+    </div>
+    <div class="ui tab bottom active" data-tab="sftp">
+      <div class="ui form">
+        <div class="two fields">
+          <div class="field">
+            <label>Host</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftpConfig.host" placeholder="192.168.1.100" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Port</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftpConfig.port" placeholder="22" />
+            </div>
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Username</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftpConfig.username" placeholder="username" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Directory</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftpConfig.directory" placeholder="/record/store" />
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Public key</label>
+          <textarea rows="3">{{ settings.ftpConfig.publicKey }}</textarea>
+        </div>
+        <div class="ui message">
+          <div class="header">Note</div>
+          <p>Add the public key to your SFTP settings.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="s3">
+      <div class="ui form">
+        <div class="field">
+          <label>Access Key</label>
+          <div class="ui fluid input">
+            <input type="password" [(ngModel)]="settings.awsConfig.accessKey" placeholder="Access Key" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Secret Access Key</label>
+          <div class="ui fluid input">
+            <input type="password" [(ngModel)]="settings.awsConfig.secretAccessKey" placeholder="Secret Access Key" />
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Bucket</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.awsConfig.bucket" placeholder="recording" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Region</label>
+            <div class="ui fluid search selection dropdown" id="region-dropdown">
+              <input type="hidden" name="country" value="af" />
+              <i class="dropdown icon"></i>
+              <input class="search" autocomplete="off" tabindex="0" />
+              <div class="text">
+                <span *ngIf="settings.awsConfig">{{ settings.awsConfig.region }}</span>
+                <span *ngIf="!settings.awsConfig">Select region</span>
+              </div>
+              <div class="menu transition hidden" tabindex="-1">
+                <div class="item" (click)="settings.awsConfig.region = region.code" *ngFor="let region of awsRegions">
+                  {{ region.name }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="incoming-call">
+      <div class="ui form">
+        <div class="field">
+          <label>Call recorded postback API</label>
+          <div class="ui fluid input">
+            <input
+              type="text"
+              [(ngModel)]="settings.postbackRecordedUrl"
+              placeholder="https://compliance.com/call/record/postback"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="crypto">
+      <div class="ui form">
+        <div class="field">
+          <label>Encrypt public key</label>
+          <textarea rows="3" [(ngModel)]="settings.crypto.encryptPublicKey"></textarea>
+        </div>
+        <div class="ui message">
+          <div class="header">Note</div>
+          <p>Add the public key to your encrypt settings.</p>
+        </div>
+        <div class="field">
+          <label>B3Networks sign public key</label>
+          <textarea rows="3" [(ngModel)]="settings.b3networksSignPublicKey"> </textarea>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="sdk">
+      <div class="ui form">
+        <div class="field">
+          Download
+          <a href="https://app-callrecording-sg.s3.amazonaws.com/callrecording/compliance/sdk/aviva-sdk-1.0.4.zip"
+            >compliance SDK 1.0.4 and sample</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="actions" *ngIf="isLoading == false">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button" (click)="openComplianceModal()">Cancel</div>
+        <div class="ui large primary button" (click)="onUpdate($event)">Update</div>
+      </div>
+    </div>
+  </div>
+</div>

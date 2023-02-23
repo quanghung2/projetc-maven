@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Create team inbox</h1>
+<div mat-dialog-content>
+  <div class="form-container" *ngIf="!finish">
+    <mat-form-field>
+      <input matInput placeholder="Inbox name" required [(ngModel)]="name" (keyup.enter)="create()" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Email" required [(ngModel)]="email" (keyup.enter)="create()" />
+    </mat-form-field>
+    <span class="error" *ngIf="error">{{ error }}</span>
+    <button class="action" mat-raised-button (click)="create()" color="primary" [disabled]="!name || !email || loading">
+      <span *ngIf="!loading">Next</span>
+      <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
+    </button>
+  </div>
+  <div class="form-container finish" *ngIf="finish">
+    <mat-form-field>
+      <input matInput placeholder="Your email" required [(ngModel)]="email" [disabled]="true" />
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Forward email" required [(ngModel)]="forwardEmail" [disabled]="true" />
+      <button mat-stroked-button matSuffix class="btnCopy" ngxClipboard [cbContent]="forwardEmail">
+        Copy
+      </button>
+    </mat-form-field>
+    <div class="hint">
+      * Forward your emails to this address.
+    </div>
+    <span class="error" *ngIf="error">{{ error }}</span>
+    <button class="action" mat-raised-button (click)="finishSetup()" color="primary">
+      <span *ngIf="!loading">Finish</span>
+      <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
+    </button>
+  </div>
+</div>

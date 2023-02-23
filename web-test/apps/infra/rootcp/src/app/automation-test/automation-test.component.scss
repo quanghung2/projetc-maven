@@ -1,0 +1,43 @@
+.container {
+  width: 70vw;
+  padding: 1.6rem;
+  .header {
+    .wrapper-input {
+      position: relative;
+
+      .btn-clear-search {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 25px;
+        top: 15px;
+        line-height: 20px;
+        border-radius: 50%;
+        color: red;
+
+        mat-icon {
+          font-size: 20px;
+          line-height: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  .body {
+    .btn-action {
+      visibility: hidden;
+    }
+
+    table {
+      tr {
+        &:hover {
+          .btn-action {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

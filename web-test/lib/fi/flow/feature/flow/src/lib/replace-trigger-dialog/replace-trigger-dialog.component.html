@@ -1,0 +1,31 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Replace Event</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutAlign="space-between none" fxLayoutGap="16px">
+    <div fxFlex="45">
+      <h4 class="mb-8"><strong>Old Event</strong></h4>
+      <b3n-update-trigger-parameters [disabledEdit]="true"></b3n-update-trigger-parameters>
+    </div>
+
+    <div class="divider" fxFlex="1px"></div>
+    <div fxFlex="55" fxLayout="column" fxLayoutAlign="start stretch">
+      <h4 class="mb-8"><strong>New Event</strong></h4>
+      <b3n-create-trigger-parameters
+        *ngIf="!showResolveDependency"
+        fxFlex
+        [replaceTriggerInput]="replaceTriggerInput"
+        [isShowDropdow]="!replaceTriggerInput.isShowOnlyParameter"
+        (onTriggerData)="onTriggerData($event, replaceTriggerInput.triggerDef.name)"
+      ></b3n-create-trigger-parameters>
+
+      <b3n-resolve-dependency
+        *ngIf="showResolveDependency"
+        fxFlex
+        [resolveDependencyInput]="dataOfResolve"
+        (resultResolve)="resultResolve($event)"
+      ></b3n-resolve-dependency>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+:host {
+  display: initial !important;
+  $title-color: #36434e;
+
+  .filter {
+    padding: 0 1.6rem;
+
+    .mat-button {
+      padding: 0 !important;
+    }
+  }
+
+  mat-icon {
+    cursor: pointer;
+  }
+
+  .status {
+    padding: 7px;
+  }
+
+  .number {
+    float: left;
+  }
+
+  .fetching-icon {
+    top: 33%;
+    left: 7rem;
+    width: 30px;
+    padding-right: 10px !important;
+  }
+
+
+}
+
+.callcenter {
+  padding: 0 1.6rem;
+  .mat-column-status {
+    .status__wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}

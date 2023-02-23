@@ -1,0 +1,186 @@
+<ng-container *ngIf="convo">
+  <csh-right-sidebar class="convo_details">
+    <csh-right-sidebar-header>
+      <csh-right-sidebar-title>{{ convo.displayDetailConvoType }}</csh-right-sidebar-title>
+      <csh-right-sidebar-action fxLayoutGap="0.8rem" fxLayout="row wrap" fxLayoutAlign="end center">
+        <!-- <button
+          class="btn-action-header"
+          matTooltip="Search messages"
+          mat-icon-button
+          color="normal"
+          (click)="openSearchMessages()"
+        >
+          <mat-icon class="material-icons-outlined">search</mat-icon>
+        </button> -->
+
+        <ng-container *ngIf="convo.isGroupChat">
+          <button class="btn-action-header" matTooltip="Copy Link" mat-icon-button color="normal" (click)="copyLink()">
+            <mat-icon class="material-icons-outlined">link</mat-icon>
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="convo.isGroupChat && convo.isMember">
+          <ng-container *ngIf="!convo.isArchived">
+            <button class="btn-action-header" matTooltip="Add" mat-icon-button color="normal" (click)="inviteMember()">
+              <mat-icon class="material-icons-outlined">group_add</mat-icon>
+            </button>
+            <button class="btn-action-header" matTooltip="Leave" mat-icon-button color="normal" (click)="leaveConvo()">
+              <mat-icon class="material-icons-outlined">exit_to_app</mat-icon>
+            </button>
+          </ng-container>
+
+          <!-- <ng-container *ngIf="convo.isArchived; else unarchiveChannel">
+            <button class="btn-action-header" matTooltip="Unarchive" mat-icon-button (click)="unarchiveConvo()">
+              <mat-icon class="material-icons-outlined">unarchive</mat-icon>
+            </button>
+          </ng-container>
+          <ng-template #unarchiveChannel>
+            <button class="btn-action-header" matTooltip="Archive" mat-icon-button (click)="archiveConvo()">
+              <mat-icon class="material-icons-outlined">archive</mat-icon>
+            </button>
+          </ng-template> -->
+        </ng-container>
+      </csh-right-sidebar-action>
+    </csh-right-sidebar-header>
+    <mat-divider></mat-divider>
+
+    <csh-right-sidebar-content>
+      <csh-right-sidebar-info class="flex column justify-content-start align-items-none">
+        <div *ngIf="hyper" class="avarta-container flex justify-content-start align-items-center gap-10">
+          <div fxFlex="50px" fxLayoutAlign="center center">
+            <section class="avatar" fxLayoutAlign="center center">
+              <img
+                *ngIf="!hyper.otherOrg?.logoUrl"
+                src="https://ui.b3networks.com/external/logo/default_org_icon.png"
+              />
+              <img *ngIf="hyper.otherOrg?.logoUrl" [src]="hyper.otherOrg.logoUrl" />
+            </section>
+          </div>
+          <div class="flex column justify-content-center align-items-none">
+            <span class="display-name">{{ hyper.otherOrg?.name }}</span>
+          </div>
+        </div>
+
+        <ng-container *ngIf="!convo.isGroupChat; else groupChannel">
+          <ng-container *ngIf="directChatUser$ | async as directChatUser">
+            <div class="avarta-container flex justify-content-start align-items-center gap-10">
+              <div fxFlex="50px" fxLayoutAlign="center center">
+                <csh-render-member
+                  [user]="directChatUser"
+                  [showStatus]="true"
+                  [showDisplayName]="false"
+                ></csh-render-member>
+              </div>
+              <div class="flex column justify-content-center align-items-none">
+                <span class="display-name">{{ directChatUser.displayName }}</span>
+                <span class="mat-caption">{{ convo.displayConvoType }}</span>
+              </div>
+            </div>
+
+            <ng-container *ngIf="directChatUser?.mobileNumber">
+              <div class="phone-container flex justify-content-start align-items-center gap-10">
+                <div fxFlex="50px" fxLayoutAlign="center center">
+                  <mat-icon>phone</mat-icon>
+                </div>
+                <div class="flex column justify-content-center align-items-none">
+                  <span> {{ directChatUser.mobileNumber }} </span>
+                  <span class="mat-caption">Work</span>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="directChatUser?.email">
+              <div class="phone-container flex justify-content-start align-items-center gap-10">
+                <div fxFlex="50px" fxLayoutAlign="center center">
+                  <a href="mailTo:{{ directChatUser.email }}" fxLayoutAlign="center center">
+                    <mat-icon>mail</mat-icon>
+                  </a>
+                </div>
+                <div class="flex column justify-content-center align-items-none">
+                  <span>{{ directChatUser.email }}</span>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #groupChannel>
+          <div class="avarta-container flex justify-content-start align-items-center gap-10">
+            <div fxFlex="50px" fxLayoutAlign="center center">
+              <section class="avatar" fxLayoutAlign="center center">
+                <img src="https://ui.b3networks.com/external/logo/default_org_icon.png" />
+              </section>
+            </div>
+            <div class="flex column justify-content-center align-items-none">
+              <span class="display-name">{{ convo.displayName }}</span>
+              <span class="mat-caption">{{ convo.displayConvoType }}</span>
+            </div>
+          </div>
+          <div class="avarta-container flex justify-content-start align-items-center gap-10">
+            <div fxFlex="50px" fxLayoutAlign="center center">
+              <mat-icon class="material-icons-outlined">info</mat-icon>
+            </div>
+            <div class="flex column justify-content-center align-items-none gap-16">
+              <div *ngIf="!!convo.description" class="text-description" style="word-break: break-word">
+                {{ convo.description }}
+              </div>
+              <span class="mat-caption">Created on {{ convo.createdAt | date: 'mediumDate' }}</span>
+            </div>
+          </div>
+        </ng-template>
+      </csh-right-sidebar-info>
+
+      <csh-right-sidebar-extend>
+        <mat-accordion class="flat-mat-accordion">
+          <ng-container *ngIf="convo.isGroupChat">
+            <ng-container *ngIf="membersCurrentOrg$ | async as membersCurrentOrg">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title> {{ hyper.currentOrg?.shortName }} </mat-panel-title>
+                  <mat-panel-description class="expanded__description">
+                    {{ membersCurrentOrg?.length || 0 }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                  <b3n-hyperspace-members
+                    [convo]="convo"
+                    [members]="membersCurrentOrg"
+                    [hyper]="hyper"
+                  ></b3n-hyperspace-members>
+                </ng-template>
+              </mat-expansion-panel>
+            </ng-container>
+
+            <ng-container *ngIf="membersOtherOrg$ | async as membersOtherOrg">
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title> {{ hyper.otherOrg?.shortName }} </mat-panel-title>
+                  <mat-panel-description class="expanded__description">
+                    {{ membersOtherOrg?.length || 0 }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                  <b3n-hyperspace-members
+                    [convo]="convo"
+                    [members]="membersOtherOrg"
+                    [hyper]="hyper"
+                  ></b3n-hyperspace-members>
+                </ng-template>
+              </mat-expansion-panel>
+            </ng-container>
+          </ng-container>
+
+          <!-- <mat-expansion-panel #files *ngIf="loadedFiles$">
+            <mat-expansion-panel-header>
+              <mat-panel-title> Files </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <ng-container *ngIf="files.expanded">
+                <b3n-hyperspace-storage-shared-files [convo]="convo"></b3n-hyperspace-storage-shared-files>
+              </ng-container>
+            </ng-template>
+          </mat-expansion-panel> -->
+        </mat-accordion>
+      </csh-right-sidebar-extend>
+    </csh-right-sidebar-content>
+  </csh-right-sidebar>
+</ng-container>

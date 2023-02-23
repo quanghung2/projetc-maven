@@ -1,0 +1,13 @@
+<section fxLayout="row" fxLayoutAlign="flex-start" fxLayoutGap="0.5rem">
+  <mat-form-field fxFlex="5%">
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto" name="e164Input" />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <mat-option *ngFor="let country of countries$ | async" [value]="country">
+        {{ country.Flag }} {{ country.CountryName }} <span class="e164">+{{ country.E164 }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field fxFlex="1 1 auto">
+    <input matInput type="text" placeholder="Enter phone number" mask="0000 0000" />
+  </mat-form-field>
+</section>

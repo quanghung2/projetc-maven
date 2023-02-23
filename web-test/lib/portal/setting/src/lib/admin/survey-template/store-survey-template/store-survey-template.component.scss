@@ -1,0 +1,24 @@
+.config__container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h1,
+  p {
+    margin: 0;
+  }
+}
+
+.config__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 17.5px;
+}

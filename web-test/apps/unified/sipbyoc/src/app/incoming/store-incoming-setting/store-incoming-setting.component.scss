@@ -1,0 +1,21 @@
+:host {
+  .container-dialog {
+    padding-bottom: 1.6rem;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    label.field {
+      color: #989898;
+    }
+
+    .sip-chip-input {
+      ::ng-deep {
+        .mat-form-field-wrapper {
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+}

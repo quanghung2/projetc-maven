@@ -1,0 +1,143 @@
+<ng-template #loading>
+  <div fxLayout="row" fxLayoutAlign="center center" class="p-32 text-center mx-a">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="wallet; else loading">
+  <ng-container
+    *ngIf="!wallet.postpaid"
+    [ngTemplateOutlet]="prepaid"
+    [ngTemplateOutletContext]="{ $implicit: wallet }"
+  ></ng-container>
+  <ng-container
+    *ngIf="wallet.postpaid"
+    [ngTemplateOutlet]="postpaid"
+    [ngTemplateOutletContext]="{ $implicit: wallet }"
+  ></ng-container>
+</ng-container>
+
+<ng-template #postpaid let-wallet>
+  <div class="balance pt-16">
+    <h2>
+      Amount Due
+      <mat-icon
+        [matTooltip]="
+          wallet.billed >= 0 ? ' The amount that you have overpaid.' : 'The amount that you need to settle.'
+        "
+        class="s-16 teal-fg"
+        >info</mat-icon
+      >
+    </h2>
+    <div [class.green-fg]="wallet.billed >= 0" [class.red-fg]="wallet.billed < 0" class="p-32 b text-center">
+      <span class="balance--value">
+        {{ wallet.billed >= 0 ? 'CR' : 'DR' }}
+        {{ ABS(wallet.billed) | currency: wallet.currency:'symbol':'1.0-6' }}</span
+      >
+    </div>
+  </div>
+  <section class="addon-info-block mt-16">
+    <div class="addon-item">
+      <div>
+        <span class="mat-label">Current Balance:</span>
+        <strong [class.green-fg]="wallet.balance >= 0" [class.red-fg]="wallet.balance < 0">
+          {{ wallet.balance > 0 ? 'CR' : 'DR' }} {{ ABS(wallet.balance) | currency: wallet.currency:'symbol':'1.0-6' }}
+        </strong>
+      </div>
+      <div>
+        Usable Credit:
+        <strong>{{ wallet.usableCredit | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+    </div>
+    <div class="addon-item">
+      <div>
+        Reserved Credits:
+        <strong>{{ wallet.reserved | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+      <div *ngIf="wallet.creditLimit > 0">
+        Credit Limit:
+        <strong>{{ wallet.creditLimit | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+    </div>
+
+    <div class="addon-item">
+      <div>
+        <span class="mat-label">Expecting Invoice:</span>
+        <strong [class.green-fg]="wallet.unbilled >= 0" [class.red-fg]="wallet.unbilled < 0">
+          {{ wallet.unbilled > 0 ? 'CR' : 'DR' }}
+          {{ ABS(wallet.unbilled) | currency: wallet.currency:'symbol':'1.0-6' }}
+        </strong>
+      </div>
+      <div *ngIf="organization.isPartner">
+        Liability: <strong>{{ wallet.liability | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+    </div>
+    <div class="addon-item">
+      <span class="spacer"></span>
+      <a href="javascript:void(0)" (click)="showMoreAboutCredit(wallet)">Learn more about credits</a>
+    </div>
+  </section>
+</ng-template>
+
+<ng-template #prepaid let-wallet>
+  <div class="balance pt-16">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-16">
+      <h2 class="m-0">
+        Usable Credit
+        <mat-icon
+          [matTooltip]="
+            'The amount that you can spend' + (wallet.creditLimit > 0 ? ', inclusive of the credit limit.' : '.')
+          "
+          class="s-16 teal-fg"
+          >info</mat-icon
+        >
+      </h2>
+      <div
+        *ngIf="organization.isPartner || (!organization.isPartner && portalConfig?.allowTopup)"
+        fxLayout="row"
+        fxLayoutGap="1.6rem"
+      >
+        <button mat-raised-button color="primary" (click)="onTopup(wallet)">Top Up Credit</button>
+      </div>
+    </div>
+    <div
+      [class.green-fg]="wallet.usableCredit >= 0"
+      [class.red-fg]="wallet.usableCredit < 0"
+      class="p-32 b text-center"
+    >
+      <span class="balance--value">
+        {{ wallet.usableCredit >= 0 ? '' : 'DR' }}
+        {{ ABS(wallet.usableCredit) | currency: wallet.currency:'symbol':'1.0-6' }}</span
+      >
+    </div>
+  </div>
+  <section class="addon-info-block mt-16">
+    <div class="addon-item">
+      <div>
+        <span class="mat-label">Balance:</span>
+        <strong [class.green-fg]="wallet.balance >= 0" [class.red-fg]="wallet.balance < 0">
+          {{ wallet.balance > 0 ? '' : 'DR' }} {{ ABS(wallet.balance) | currency: wallet.currency:'symbol':'1.0-6' }}
+        </strong>
+      </div>
+      <div>
+        Reserved Credits:
+        <strong>{{ wallet.reserved | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+    </div>
+    <div *ngIf="organization.isPartner || wallet.creditLimit" class="addon-item">
+      <div *ngIf="organization.isPartner">
+        Liability:
+        <strong>{{ wallet.liability | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+      <div *ngIf="wallet.creditLimit > 0">
+        Credit Limit:
+        <strong>{{ wallet.creditLimit | currency: wallet.currency:'symbol':'1.0-6' }} </strong>
+      </div>
+    </div>
+
+    <div class="addon-item">
+      <span class="spacer"></span>
+      <a href="javascript:void(0)" (click)="showMoreAboutCredit(wallet)">Learn more about credits</a>
+    </div>
+  </section>
+</ng-template>

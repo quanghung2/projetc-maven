@@ -1,0 +1,16 @@
+{
+  "name": "portal-org-feature-usage",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/usage/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/org/feature/usage/**/*.ts", "libs/portal/org/feature/usage/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

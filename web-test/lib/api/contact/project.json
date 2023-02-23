@@ -1,0 +1,16 @@
+{
+  "name": "api-contact",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/contact/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/contact/**/*.ts", "libs/api/contact/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Remove blocked number</h1>
+<div mat-dialog-content>
+  <p>
+    Are you sure to remove the <b>{{ blockedNumber.number }}</b> number from the blacklist?
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="warn" [disabled]="progressing" (click)="delete()">
+    <span *ngIf="!progressing">Remove</span> <span *ngIf="progressing">Removing...</span>
+  </button>
+</div>

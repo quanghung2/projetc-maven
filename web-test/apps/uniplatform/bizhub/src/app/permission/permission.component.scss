@@ -1,0 +1,111 @@
+@mixin role($color) {
+  width: 65px;
+  color: $color;
+  border: 1px solid $color;
+  padding: 1px 5px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+:host {
+  display: block;
+
+  mat-drawer {
+    width: 400px;
+    position: fixed;
+    height: 100vh;
+  }
+  mat-drawer-content {
+    margin-right: 0 !important;
+  }
+
+  .permission {
+    height: 100vh;
+
+    .action-bar {
+      height: 56px;
+
+      .search-box {
+        width: 270px;
+      }
+    }
+    .progress-bar {
+      position: absolute;
+      top: 0;
+    }
+    .permission-toolbar {
+      background: #ffffff;
+    }
+
+    .table-container {
+      max-width: 100%;
+      overflow: auto;
+    }
+
+    table {
+      tr {
+        &.mat-row {
+          height: 52px;
+          &:hover {
+            background-color: var(--gray-100);
+          }
+        }
+      }
+      td.mat-cell,
+      th.mat-header-cell {
+        min-width: 90px;
+      }
+
+      .done-icon {
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        margin-top: 5px;
+      }
+      .no-member {
+        text-align: center;
+      }
+      .uuid-column {
+        background: var(--gray-300);
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        padding: 3px 6px;
+        width: fit-content;
+        font-size: 12px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .mat-column-actions {
+        text-align: center;
+        right: 0 !important;
+
+        > * {
+          visibility: hidden;
+        }
+        .edit-icon {
+          color: #000000de;
+        }
+      }
+      .mat-row:hover {
+        .mat-column-actions {
+          > * {
+            visibility: visible;
+          }
+        }
+      }
+      .mat-column-role {
+        .OWNER {
+          @include role(#e95849);
+        }
+        .ADMIN {
+          @include role(#007be0);
+        }
+        .MEMBER {
+          @include role(#2badd4);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<div *ngIf="history" fxLayout="column" class="history-detail">
+  <div class="history-detail__header" fxLayout="row" fxLayoutAlign="start center">
+    <h2>SMS Metadata</h2>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="history-detail__content" fxLayout="column" fxLayoutGap="2rem">
+    <ng-container *ngIf="history.deliveryAckTime; else noMetaData">
+      <div>
+        <label class="label" fxFlex="1 1 auto">Acked</label>
+        <div *ngIf="history.deliveryAcked" class="status green"></div>
+        <div *ngIf="!history.deliveryAcked" class="status red"></div>
+      </div>
+      <div *ngIf="history.deliveryAckTime" fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">Acked Time</label>
+        <div>{{ history.deliveryAckTime | date: 'yyyy-MM-dd HH:mm' }}</div>
+      </div>
+      <div *ngIf="history.notifyEndpoint" fxLayout="column" fxLayoutGap="0.25rem">
+        <label class="label" fxFlex="1 1 auto">Endpoint</label>
+        <div>{{ history.notifyEndpoint }}</div>
+      </div>
+    </ng-container>
+    <ng-template #noMetaData>
+      <div class="no-meta-data">
+        <mat-icon class="material-icons-outlined sms-icon">sms</mat-icon>
+        <div>No metadata</div>
+      </div>
+    </ng-template>
+  </div>
+</div>

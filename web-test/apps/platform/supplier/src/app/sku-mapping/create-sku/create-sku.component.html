@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>
+  <span>Create SKU</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <input #name="ngModel" disabled="true" [(ngModel)]="sku.skuUuid" matInput placeholder="Uuid" required />
+    </mat-form-field>
+    <mat-form-field>
+      <input #name="ngModel" [(ngModel)]="skuName" matInput placeholder="Name" required />
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="createSku()" [disabled]="!sku.skuUuid || !skuName || loading">
+    Create
+    <mat-spinner *ngIf="loading" class="loading" [diameter]="20">Loading...</mat-spinner>
+  </button>
+</div>

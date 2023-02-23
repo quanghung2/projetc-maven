@@ -1,0 +1,32 @@
+<div class="transfer" fxLayout="column" fxLayoutGap="1.6rem">
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <h2>Transfer credits</h2>
+    <mat-icon class="close-transfer" (click)="close()">clear</mat-icon>
+  </div>
+  <form [formGroup]="formGroup">
+    <div fxLayout="column" fxLayoutAlign="1.6rem">
+      <mat-form-field>
+        <mat-label>Transfer to organization</mat-label>
+        <mat-select formControlName="orgSelected">
+          <ng-container *ngFor="let org of orgs">
+            <mat-option [value]="org.orgUuid">{{ org.orgName }}</mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Transfer Amount ({{ wallet.currency }})</mat-label>
+        <input matInput placeholder="100" formControlName="transferAmount" (keyup)="onChangeTransferAmount($event)" />
+      </mat-form-field>
+
+      <div class="error">
+        <span [hidden]="!error">{{ error }}</span>
+      </div>
+    </div>
+  </form>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+    <button mat-button (click)="close()">Cancel</button>
+    <button mat-raised-button [loading]="isLoading" [disabled]="isLoading" color="primary" (click)="onTransfer()">
+      Transfer
+    </button>
+  </div>
+</div>

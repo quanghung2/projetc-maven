@@ -1,0 +1,15 @@
+<div mat-dialog-title>Remove blacklist email</div>
+<div mat-dialog-content>
+  <mat-form-field [formGroup]="formGroup">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="Enter your email" formControlName="email" [errorStateMatcher]="matcher" />
+    <mat-error *ngIf="email.hasError('required')">Email is required</mat-error>
+    <mat-error *ngIf="email.hasError('email')">Invaild email format</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="processing" [disabled]="formGroup.invalid" (click)="save()">
+    Save
+  </button>
+</div>

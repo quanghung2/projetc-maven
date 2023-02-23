@@ -1,0 +1,208 @@
+<div [formGroup]="formConfigs" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+    <label class="title">Method</label>
+
+    <mat-radio-group formControlName="httpVerb">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px" class="mb-8">
+        <mat-radio-button value="GET">GET</mat-radio-button>
+        <mat-radio-button value="POST">POST</mat-radio-button>
+        <mat-radio-button value="PUT">PUT</mat-radio-button>
+        <mat-radio-button value="PATCH">PATCH</mat-radio-button>
+        <mat-radio-button value="DELETE">DELETE</mat-radio-button>
+      </div>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field>
+    <mat-select placeholder="Max retry" formControlName="maxRetry">
+      <mat-option [value]="0">0</mat-option>
+      <mat-option [value]="1">1</mat-option>
+      <mat-option [value]="2">2</mat-option>
+      <mat-option [value]="3">3</mat-option>
+      <mat-option [value]="4">4</mat-option>
+      <mat-option [value]="5">5</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <b3n-context-variable
+    [optionForControl]="
+      $any({
+        title: 'URL',
+        key: 'urlTemplate',
+        isOptional: false,
+        dataType: 'string',
+        disabled: !editable,
+        expressionTree: urlTemplateInit
+      })
+    "
+    [contextVariables]="contextVariables"
+    [reqValidate]="{ maxlength: ValidateStringMaxLength.TEMPLATE, dataType: 'string', required: true }"
+    (selectedValue)="selectValue($event, urlMappings, 'urlTemplate')"
+  ></b3n-context-variable>
+
+  <div [formGroup]="$any(formHeaderTemplate)" fxLayout="column" fxLayoutGap="8px">
+    <label class="title">Header</label>
+
+    <ng-container *ngFor="let header of formHeaderTemplate.controls; let i = index" [formGroupName]="i">
+      <div fxLayout="row" fxLayoutAlign="start end" fxLayoutGap="8px">
+        <mat-form-field hideRequiredMarker="true" fxFlex="30">
+          <input matInput placeholder="Key" formControlName="key" required />
+          <mat-error *ngIf="header.get('key').invalid">{{ getErrorCtrl($any(header.get('key'))) }}</mat-error>
+        </mat-form-field>
+
+        <b3n-context-variable
+          fxFlex="70"
+          [optionForControl]="
+            $any({
+              title: 'Value',
+              key: 'value',
+              isOptional: false,
+              dataType: 'string',
+              disabled: !editable,
+              expressionTree: header.get('valueInit').value
+            })
+          "
+          [contextVariables]="contextVariables"
+          (selectedValue)="selectValue($event, headersMappings, 'headerTemplate', $any(header))"
+        ></b3n-context-variable>
+
+        <div *ngIf="editable" fxFlex="40px" class="mb-18">
+          <button mat-icon-button color="warn" type="button" (click)="removeHeaderParam(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <p *ngIf="editable">
+      <a href="javascript:;" class="link" (click)="addHeaderParam()">+ Add</a>
+    </p>
+  </div>
+
+  <div>
+    <label class="title">Body</label>
+
+    <div class="body-template">
+      <b3n-context-variable
+        [optionForControl]="
+          $any({
+            key: 'bodyTemplate',
+            isOptional: true,
+            dataType: 'string',
+            selectAllDynamicVar: true,
+            disabled: !editable,
+            expressionTree: bodyTemplateInit
+          })
+        "
+        [contextVariables]="contextVariables"
+        [reqValidate]="{
+          maxlength: ValidateStringMaxLength.CUSTOM_ACTION_BODY_TEMPLATE,
+          dataType: 'string',
+          required: false
+        }"
+        (selectedValue)="selectValue($event, bodyMappings, 'bodyTemplate')"
+      ></b3n-context-variable>
+    </div>
+  </div>
+
+  <div class="mt-16" *ngIf="!actionDetail">
+    <mat-form-field appearance="outline" id="response">
+      <mat-label>Sample response content</mat-label>
+
+      <textarea
+        matInput
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        b3nFormatObjToJson
+        id="response"
+        [control]="responseCtrl"
+        [formControl]="responseCtrl"
+        [top]="'12'"
+        [right]="'8'"
+      ></textarea>
+
+      <mat-error *ngIf="responseCtrl.invalid">{{ getErrorResponse() }}</mat-error>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      type="button"
+      [loading]="extracting"
+      [disabled]="!responseCtrl.value"
+      (click)="extractResponse()"
+    >
+      Extract properties
+    </button>
+  </div>
+
+  <div
+    *ngFor="let item of formConfigs.get('extractedResponseFields').value; let i = index"
+    class="mt-16"
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    fxLayoutGap="8px"
+  >
+    <div *ngIf="item.dataType !== 'array'" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Path" value="{{ item.path }}" disabled />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="50">
+        <input matInput placeholder="Data type" value="{{ item.dataType }}" disabled />
+      </mat-form-field>
+
+      <div fxFlex="40px" *ngIf="editable">
+        <button
+          mat-icon-button
+          type="button"
+          color="warn"
+          (click)="removeOutput(formConfigs.get('extractedResponseFields').value, i)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="item.dataType === 'array'" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Path" value="{{ item.path }}" disabled />
+        </mat-form-field>
+
+        <div fxFlex="40px" *ngIf="editable">
+          <button
+            mat-icon-button
+            type="button"
+            color="warn"
+            (click)="removeOutput(formConfigs.get('extractedResponseFields').value, i)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div
+        *ngFor="let subItem of item.arrayItemProps; let j = index"
+        fxLayout="row"
+        fxLayoutAlign="start start"
+        fxLayoutGap="8px"
+        class="ml-32"
+      >
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Path" value="{{ subItem.path }}" disabled />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Data type" value="{{ subItem.dataType }}" disabled />
+        </mat-form-field>
+
+        <div fxFlex="40px" *ngIf="editable">
+          <button mat-icon-button type="button" color="warn" (click)="removeOutput(item.arrayItemProps, j)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

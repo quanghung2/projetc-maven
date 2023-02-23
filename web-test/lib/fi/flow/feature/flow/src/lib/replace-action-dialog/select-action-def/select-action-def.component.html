@@ -1,0 +1,119 @@
+<div *ngIf="showForApp !== AppName.PROGRAMMABLE_FLOW" fxLayout="column" fxLayoutAlign="start stretch">
+  <section fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <h4><strong>Connector</strong></h4>
+    <mat-form-field hideRequiredMarker="true">
+      <mat-select
+        placeholder="Select connector"
+        panelClass="select-action-def"
+        [formControl]="connectorCtrl"
+        [compareWith]="compareConnector"
+        required
+      >
+        <mat-select-trigger>{{ connectorCtrl.value ? connectorCtrl.value.name : '' }}</mat-select-trigger>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No connectors found"
+            [formControl]="searchConnectorCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option class="option-connector" *ngFor="let c of filteredConnectors$ | async as connector" [value]="c">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+            <img *ngIf="c.iconUrl" [src]="c.iconUrl" />
+            <div *ngIf="!c.iconUrl" class="logo">
+              <mat-icon style="color: #f26c33">miscellaneous_services</mat-icon>
+            </div>
+            <label class="name">{{ c.name }}</label>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="connectorCtrl.invalid">{{ getErrorConnector() }}</mat-error>
+    </mat-form-field>
+  </section>
+
+  <section *ngIf="selectedConnector?.needToSetAuthInfo || selectedConnector?.needToSetParam">
+    <h4 class="mb-8"><strong>Connector Configuration</strong></h4>
+    <b3n-connector-config
+      #config
+      [connector]="selectedConnector"
+      (invalid)="configInvalid.emit($event)"
+    ></b3n-connector-config>
+  </section>
+
+  <p style="color: red" *ngIf="selectedConnector && showWarning(selectedConnector?.uuid)">
+    Licenses not found! Your action might not work as expected!
+  </p>
+
+  <section fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" class="mb-10">
+    <h4><strong>New Action</strong></h4>
+    <mat-form-field hideRequiredMarker="true">
+      <mat-select
+        placeholder="Select action"
+        panelClass="select-action-def"
+        [formControl]="actionDefCtrl"
+        [compareWith]="compareActionDef"
+        required
+      >
+        <mat-select-trigger>{{ actionDefCtrl.value ? actionDefCtrl.value.name : '' }}</mat-select-trigger>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No actions found"
+            [formControl]="searchActionDefCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option class="option-action" *ngFor="let a of filteredActionDefs" [value]="a">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+            <ng-container [ngSwitch]="a.uuid">
+              <div class="logo" *ngSwitchCase="'SUBROUTINE_RETURN'">
+                <mat-icon>keyboard_return</mat-icon>
+              </div>
+              <img *ngSwitchDefault [src]="a.iconUrl" />
+            </ng-container>
+            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px">
+              <label class="name" mat-line>{{ a.name }}</label>
+              <p mat-line>{{ a.description }}</p>
+            </div>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="actionDefCtrl.invalid">{{ getErrorActionDef() }}</mat-error>
+    </mat-form-field>
+  </section>
+</div>
+
+<div
+  *ngIf="showForApp === AppName.PROGRAMMABLE_FLOW"
+  fxLayout="column"
+  fxLayoutAlign="start stretch"
+  fxLayoutGap="8px"
+  class="mb-10"
+>
+  <h4><strong>New Action</strong></h4>
+  <mat-form-field hideRequiredMarker="true">
+    <mat-select placeholder="Select action" panelClass="select-action" [formControl]="actionDefCtrl" required>
+      <ng-container *ngFor="let connector of connectors; let i = index">
+        <mat-optgroup
+          *ngIf="connector.actionDefs.length > 0"
+          [label]="
+            connector.type === 'SUBROUTINE'
+              ? 'Transfer to Other Flow'
+              : connector.type === 'MEMORY'
+              ? connector.name
+              : null
+          "
+          [class.hidden-label]="connector.type !== 'SUBROUTINE' && connector.type !== 'MEMORY'"
+        >
+          <mat-option
+            *ngFor="let actionDef of connector.actionDefs"
+            [value]="actionDef"
+            [class.sub-pl]="connector.type !== 'SUBROUTINE' && connector.type !== 'MEMORY'"
+          >
+            {{ actionDef.name }}
+          </mat-option>
+        </mat-optgroup>
+        <mat-divider *ngIf="connector.actionDefs.length > 0 && i < connectors.length - 1"></mat-divider>
+      </ng-container>
+    </mat-select>
+  </mat-form-field>
+</div>

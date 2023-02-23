@@ -1,0 +1,27 @@
+.checkout__container {
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .highlight {
+    font-size: 24px;
+  }
+  .item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    &__pricing {
+      color: #e95849;
+    }
+    &__available {
+      color: #007be0;
+    }
+    &__remaining {
+      color: #169d6c;
+    }
+  }
+  .no-border-bottom {
+    border-bottom: 0;
+  }
+}

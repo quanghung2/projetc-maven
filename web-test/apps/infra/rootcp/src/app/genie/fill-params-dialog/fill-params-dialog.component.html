@@ -1,0 +1,40 @@
+<div mat-dialog-title>Following params are needed</div>
+<div mat-dialog-content>
+  <form [formGroup]="formParams" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+      <ng-container *ngFor="let p of data.params; let i = index">
+        <mat-form-field *ngIf="p.type == 'text'">
+          <input matInput [placeholder]="p.name" [formControlName]="p.name" required />
+          <mat-error *ngIf="formParams.get(p.name).invalid">{{ p.name }} is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="p.type == 'textarea'">
+          <textarea matInput [placeholder]="p.name" [formControlName]="p.name" required></textarea>
+          <mat-error *ngIf="formParams.get(p.name).invalid">{{ p.name }} is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="p.type == 'select'">
+          <mat-select [placeholder]="p.name" [formControlName]="p.name" required>
+            <mat-option>
+              <ngx-mat-select-search
+                [placeholderLabel]="'Search...'"
+                [noEntriesFoundLabel]="'No options'"
+                [(ngModel)]="filterInput[i]"
+                [ngModelOptions]="{ standalone: true }"
+                (ngModelChange)="filterOptions($event, p)"
+              ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let i of p.filteredOptions" [value]="i">{{ i }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="formParams.get(p.name).invalid">{{ p.name }} is required</mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="calling" [disabled]="formParams.invalid" (click)="execute()">
+    Execute
+  </button>
+</div>

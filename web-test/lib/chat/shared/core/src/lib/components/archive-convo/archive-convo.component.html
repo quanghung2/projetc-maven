@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>
+  Archive
+  <mat-icon
+    *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS && convo.privacy === Privacy.private"
+    class="icon"
+    >lock</mat-icon
+  >
+  <mat-icon
+    *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS && convo.privacy !== Privacy.private"
+    class="icon"
+    >#</mat-icon
+  >
+  <span *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS">{{ convo?.name }}</span>
+  <span *ngIf="convo.type === GroupType.WhatsApp || convo.type === GroupType.SMS">conversation</span>
+</h1>
+<div mat-dialog-content>
+  <ng-container *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS; else CHAT">
+    Archiving is useful if you don’t think you’ll need this channel any longer. Here’s what will happen when you archive
+    this channel:
+    <ul>
+      <li>No one will be able to send messages to it</li>
+      <li>Apps installed in this channel will be disabled</li>
+      <li>A message will be posted that you archived the channel</li>
+    </ul>
+    <p>
+      Messages from archived channels will still show up in search and archives, the same way they do today. You can
+      always un-archive an archived channel later, if you need it again.
+    </p>
+
+    <p>
+      Are you sure you want to archive
+      <mat-icon *ngIf="convo.privacy === Privacy.private" class="icon">lock</mat-icon>
+      <mat-icon *ngIf="convo.privacy !== Privacy.private" class="icon">#</mat-icon>
+      <span>{{ convo?.name }}</span
+      >?
+    </p>
+  </ng-container>
+  <ng-template #CHAT> Do you want to archive this conversation with {{ convo?.name }}? </ng-template>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" color="warn" (click)="submit()">Archive</button>
+</div>

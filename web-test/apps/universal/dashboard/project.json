@@ -1,0 +1,103 @@
+{
+  "name": "universal-dashboard",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/universal/dashboard/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/universal/dashboard",
+        "index": "apps/universal/dashboard/src/index.html",
+        "main": "apps/universal/dashboard/src/main.ts",
+        "polyfills": "apps/universal/dashboard/src/polyfills.ts",
+        "tsConfig": "apps/universal/dashboard/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/universal/dashboard/src/favicon.ico", "apps/universal/dashboard/src/assets"],
+        "styles": ["apps/universal/dashboard/src/custom-styles.scss", "apps/universal/dashboard/src/styles.scss"],
+        "scripts": [
+          "node_modules/lodash/lodash.min.js",
+          "node_modules/chart.js/dist/Chart.min.js",
+          {
+            "input": "node_modules/document-register-element/build/document-register-element.js"
+          }
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        },
+        "allowedCommonJsDependencies": [
+          "crypto-js/enc-hex",
+          "crypto-js/sha512",
+          "date-fns-tz",
+          "lodash",
+          "chartjs-plugin-colorschemes",
+          "chart.js"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "5mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "5mb",
+              "maximumError": "5mb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/universal/dashboard/src/environments/environment.ts",
+              "with": "apps/universal/dashboard/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "universal-dashboard:build:production"
+        },
+        "development": {
+          "browserTarget": "universal-dashboard:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "universal-dashboard:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/universal/dashboard/**/*.ts", "apps/universal/dashboard/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

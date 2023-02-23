@@ -1,0 +1,114 @@
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="bundles-progress-bar"></mat-progress-bar>
+<div class="bundles">
+  <mat-toolbar class="bundles__header">
+    <h1>Bundle Management</h1>
+  </mat-toolbar>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" class="bundles__body px-16">
+    <div [formGroup]="filterFG" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+      <mat-form-field class="search-box">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="queryString" placeholder="Search by name" />
+        <button mat-icon-button matSuffix>
+          <mat-icon class="search-icon">search</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="filter-status-container">
+        <mat-select formControlName="status" placeholder="Status">
+          <mat-option *ngFor="let item of InitData.filter.statuses" [value]="item.key">{{ item.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="spacer"></span>
+      <button mat-button [disabled]="loading$ | async" (click)="refreshPage()">
+        <mat-icon>refresh</mat-icon> Refresh
+      </button>
+      <ng-container *ngIf="actionMapping$ | async as actionMapping">
+        <button *ngIf="actionMapping['ModifyBundle']" mat-raised-button color="primary" (click)="createOrUpdate()">
+          Create
+        </button>
+      </ng-container>
+    </div>
+
+    <ng-container [ngTemplateOutlet]="tableView"></ng-container>
+  </div>
+</div>
+
+<ng-template #tableView
+  ><table mat-table [dataSource]="dataSource" class="bundles-table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="bundleUuid">
+      <th mat-header-cell *matHeaderCellDef>Bundle UUID</th>
+      <td mat-cell *matCellDef="let element">
+        <shc-copy-button [text]="element.bundleUuid" tooltip="Click to copy"></shc-copy-button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let element">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+          <span
+            class="mat-caption box"
+            [class.teal]="element.status === BundleStatus.active"
+            [class.red]="element.status === BundleStatus.deleted"
+          >
+            {{ element.status }}
+          </span>
+          <mat-icon *ngIf="!!element.remark" [matTooltip]="element.remark" class="teal-fg cursor-pointer s-20"
+            >info</mat-icon
+          >
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="published">
+      <th mat-header-cell *matHeaderCellDef>Published</th>
+      <td mat-cell *matCellDef="let element">
+        <span *ngIf="element.published" class="material-icons teal-fg">check</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef>Last updated</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.updatedAt | date }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="actionMapping$ | async as actionMapping">
+          <button *ngIf="actionMapping['ModifyBundle']" mat-icon-button (click)="createOrUpdate(element)">
+            <mat-icon class="materials-outline">edit</mat-icon>
+          </button>
+          <button *ngIf="actionMapping['DeleteBundle']" mat-icon-button color="warn" (click)="deleteBundle(element)">
+            <mat-icon class="materials-outline">delete_outline</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="5">
+        <div fxLayout="column" fxLayoutAlign="center center">No bundles found</div>
+      </td>
+    </tr>
+  </table>
+  <mat-paginator pageSize="10" showFirstLastButtons hidePageSize></mat-paginator
+></ng-template>

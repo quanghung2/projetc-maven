@@ -1,0 +1,95 @@
+.container {
+  padding: 1rem 16px 16px;
+
+  .conference-room {
+    margin-top: 10px;
+    padding: 10px;
+
+    .meetings {
+      margin: 10px 0px;
+      background-color: #fff;
+      border-radius: 0.5rem;
+      font-size: 1.1em;
+      opacity: 1;
+      padding: 0.5em 1em;
+      text-align: center;
+      transition: box-shadow 0.03s linear, opacity 0.25s linear;
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      height: 72px;
+      .members {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  @keyframes slideDown {
+    0% {
+      transform: translateX(200%);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  .cdk-overlay-pane.search-message {
+    animation: slideDown 0.3s forwards 0s ease;
+
+    .mat-dialog-container {
+      padding: 0;
+    }
+  }
+}
+.header-info {
+  padding: 1.5rem;
+
+  h2 {
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+.loading-container {
+  mat-spinner {
+    margin: 0 auto;
+  }
+}
+.name {
+  color: black;
+}
+
+::ng-deep .btn-fab {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+
+  .mat-button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .mat-icon {
+      font-size: 20px;
+      line-height: 20px;
+      color: rgb(104, 109, 114);
+    }
+  }
+
+  &__members {
+    background: #cecece !important;
+    border: 1px solid #cecece;
+    position: relative;
+    box-shadow: 0 0 0 2px var(--background-overlay, #ffffff) !important;
+    font-size: 8px !important;
+    width: 16px !important;
+    height: 16px !important;
+  }
+}

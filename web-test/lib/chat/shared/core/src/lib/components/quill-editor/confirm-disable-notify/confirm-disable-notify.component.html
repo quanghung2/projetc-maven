@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Confirm</h1>
+
+<div mat-dialog-body>
+  <pre class="message_mention">@{{ data.user?.displayName }}</pre>
+  is on <span style="color: red">{{ data.requestLeaveNow?.displayText }}</span> and will not receive notifications by
+  default. Do you want to notify?
+</div>
+
+<div mat-dialog-actions align="end">
+  <button (click)="confirm()" color="primary" mat-button>No</button>
+  <button mat-button [mat-dialog-close]="false">Yes</button>
+</div>

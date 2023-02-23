@@ -1,0 +1,229 @@
+<div class="ui page content container">
+  <div class="ui page control borderless menu">
+    <div #dropdownApp class="item vertical filter">
+      <label>Filter by App</label>
+      <div class="ui underline selected dropdown">
+        <div class="text">All Apps</div>
+        <i class="icon dropdown"></i>
+        <div class="menu">
+          <div class="item" data-value="all">All Apps</div>
+          <div class="item" data-value="virtual_line">Virtual Line</div>
+          <div class="item" data-value="sip">SIP</div>
+          <div class="item" data-value="direct_line">Direct Line</div>
+          <div class="item" data-value="biz_phone">BizPhone</div>
+          <div class="item" data-value="wallboard">Wallboard</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- From Date-->
+    <div #fromDateElement class="item vertical filter">
+      <div class="ui calendar from-date" id="from-date">
+        <div class="ui input right icon">
+          <i class="today icon"></i>
+          <input type="text" placeholder="From date" />
+        </div>
+      </div>
+    </div>
+    <!-- To Date-->
+    <div #toDateElement class="item vertical filter">
+      <div class="ui calendar to-date">
+        <div class="ui input right icon">
+          <i class="today icon"></i>
+          <input type="text" placeholder="To date" />
+        </div>
+      </div>
+    </div>
+
+    <div class="right menu">
+      <div class="item search filter">
+        <div class="ui icon input">
+          <input
+            class="prompt"
+            type="text"
+            placeholder="Enter caller number..."
+            [(ngModel)]="queryRequest.fromNumber"
+            (keyup.enter)="getHistories(1, 1, true)"
+          />
+          <i class="search icon"></i>
+        </div>
+      </div>
+
+      <div class="item search filter">
+        <div class="ui icon input">
+          <input
+            class="prompt"
+            type="text"
+            placeholder="Enter callee number..."
+            [(ngModel)]="queryRequest.toNumber"
+            (keyup.enter)="getHistories(1, 1, true)"
+          />
+          <i class="search icon"></i>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="ui fluid primary buttons">
+          <div class="ui primary button" (click)="getHistories(1, 1)">Refresh</div>
+          <div
+            #dropdownMoreActions
+            class="ui floating dropdown icon button"
+            *ngIf="user.role === 'ADMIN' || user.role === 'OWNER'"
+          >
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <div class="item" (click)="showExportConfig()">Export</div>
+              <div class="item" (click)="showBackupConfig()" *ngIf="term.isBackUpEnabled">Back up</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui active centered loader" *ngIf="loading"></div>
+  <table id="history-table" class="ui page unstackable table" *ngIf="!loading">
+    <thead>
+      <tr>
+        <th>UUID</th>
+        <th>App</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Date & Time</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let history of showingHistories">
+        <td>
+          {{ history.txnUuid.substr(0, 8) }}...
+          <div
+            class="ui tiny icon button"
+            data-tooltip="Copy to clipboard"
+            data-inverted=""
+            style="margin-left: 4px"
+            ngxClipboard
+            [cbContent]="history.txnUuid"
+          >
+            <i class="content copy icon"></i>
+          </div>
+        </td>
+        <td>
+          <img class="ui app image" src="{{ appIconMapper[history.app.toLowerCase()]?.icon }}" />
+          <span>{{ appIconMapper[history.app.toLowerCase()]?.name }}</span>
+        </td>
+        <td>
+          <div [attr.title]="history.callerId">{{ history.callerId }}</div>
+        </td>
+        <td>
+          <div [attr.title]="history.dest">{{ history.dest }}</div>
+        </td>
+        <td>
+          {{ history.startTime | date: user.timeFormat:user.timezoneOffset }} ({{
+            $any(history).endTime - $any(history).startTime | durationMinutes
+          }})
+        </td>
+        <td *ngIf="history.sourceType === 'ms-data'">
+          <div
+            (click)="getSftpURL(history)"
+            *ngIf="!history.gettingSftpUrl"
+            class="ui icon tooltip button small outlined primary"
+            data-tooltip="Download mp3"
+            data-inverted=""
+            data-variation="small"
+            data-position="top center"
+          >
+            <i class="icon link file download"></i>
+          </div>
+          <div class="ui icon button small outlined primary loading" *ngIf="history.gettingSftpUrl">
+            <i class="icon computer"></i>
+          </div>
+        </td>
+        <td *ngIf="history.sourceType === 'db'">
+          <div class="ui basic buttons">
+            <div
+              (click)="play(history)"
+              [attr.id]="'play-' + history.txnUuid"
+              [attr.data-html]="history.popupContent"
+              *ngIf="!term.isEncryptionEnabled && !history.gettingMp3Url"
+              class="ui icon tooltip button small outlined primary"
+              data-tooltip="Play mp3"
+              data-inverted=""
+              data-variation="small"
+              data-position="top center"
+            >
+              <i class="icon link play arrow"></i>
+            </div>
+            <div
+              (click)="getDownloadLink(history, 'mp3')"
+              *ngIf="!history.gettingMp3Url"
+              class="ui icon tooltip button small outlined primary"
+              data-tooltip="Download mp3"
+              data-inverted=""
+              data-variation="small"
+              data-position="top center"
+            >
+              <i class="icon link file download"></i>
+            </div>
+            <div class="ui icon button small outlined primary loading" *ngIf="history.gettingMp3Url">
+              <i class="icon computer"></i>
+            </div>
+
+            <div
+              (click)="getDownloadLink(history, 'txt')"
+              *ngIf="
+                term.isEncryptionEnabled && (user.role === 'ADMIN' || user.role === 'OWNER') && !history.gettingTxtUrl
+              "
+              class="ui icon tooltip button small outlined primary"
+              data-tooltip="Download checksum"
+              data-inverted=""
+              data-variation="small"
+              data-position="top center"
+            >
+              <i class="icon receipt"></i>
+            </div>
+            <div class="ui icon button small outlined primary loading" *ngIf="history.gettingTxtUrl">
+              <i class="icon computer"></i>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="histories.length == 0">
+        <td colspan="6">
+          <p style="text-align: center">Not found any records.</p>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot *ngIf="histories.length > 0">
+      <tr>
+        <th colspan="6">
+          <div class="ui right floated pagination menu">
+            <a
+              [class.disabled]="pagination.currentPage <= 1"
+              class="icon item"
+              (click)="getHistoriesWithUnFormatPagination(pagination.currentPage - 1)"
+            >
+              <i class="icon chevron left"></i>
+            </a>
+
+            <ng-template ngFor let-page [ngForOf]="getPageList()" let-i="index">
+              <a
+                class="item"
+                [class.active]="page === pagination.currentPage"
+                (click)="getHistoriesWithUnFormatPagination(page)"
+                >{{ page }}</a
+              >
+            </ng-template>
+
+            <a
+              [class.disabled]="pagination.isLastPage"
+              class="icon item"
+              (click)="getHistoriesWithUnFormatPagination(pagination.currentPage + 1)"
+            >
+              <i class="icon chevron right"></i>
+            </a>
+          </div>
+        </th>
+      </tr>
+    </tfoot>
+  </table>
+</div>

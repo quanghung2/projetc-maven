@@ -1,0 +1,87 @@
+{
+  "name": "platform-smsgateway",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/platform/smsgateway/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/platform/smsgateway",
+        "index": "apps/platform/smsgateway/src/index.html",
+        "main": "apps/platform/smsgateway/src/main.ts",
+        "polyfills": "apps/platform/smsgateway/src/polyfills.ts",
+        "tsConfig": "apps/platform/smsgateway/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/platform/smsgateway/src/favicon.ico", "apps/platform/smsgateway/src/assets"],
+        "styles": ["apps/platform/smsgateway/src/styles.scss"],
+        "scripts": [],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/platform/smsgateway/src/environments/environment.ts",
+              "with": "apps/platform/smsgateway/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "platform-smsgateway:build:production"
+        },
+        "development": {
+          "browserTarget": "platform-smsgateway:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "platform-smsgateway:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/platform/smsgateway/**/*.ts", "apps/platform/smsgateway/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,25 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>{{ data.title || 'Select Path to Keep' }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<mat-dialog-content>
+  <p *ngIf="data?.message?.length">{{ data.message }}</p>
+  <section fxLayout="column" fxLayoutGap="8px">
+    <mat-radio-group [formControl]="selectedPath">
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="8px">
+        <mat-radio-button class="block-path" *ngFor="let path of data.paths" [value]="path.pathId">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon fxFlex="32px">call_split</mat-icon>
+            <h4 class="mb-0"><strong>{{ path.pathName }}</strong></h4>
+          </div>
+        </mat-radio-button>
+      </div>
+    </mat-radio-group>
+  </section>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="!data.isHiddenDeleteAllPaths" mat-button (click)="skipAnDelete()">Delete all paths</button>
+  <button mat-raised-button color="primary" [disabled]="selectedPath.invalid" (click)="checkDependencies()">
+    Next
+  </button>
+</mat-dialog-actions>

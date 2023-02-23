@@ -1,0 +1,14 @@
+@mixin panel {
+  min-width: calc(100%) !important;
+  position: absolute !important;
+  left: 16px !important;
+}
+
+::ng-deep #action-panel {
+  @include panel;
+}
+
+::ng-deep #action__up-panel {
+  @include panel;
+  bottom: -16px;
+}

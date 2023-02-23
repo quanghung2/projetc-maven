@@ -1,0 +1,33 @@
+:host {
+  display: block;
+
+  .missed-call-notification {
+    margin: auto;
+    padding: 0 1.6rem;
+
+    &__notification-tabcontent {
+      padding: 0;
+      max-width: 720px;
+      margin: 0 auto;
+      padding-top: 2rem;
+
+      &__close-icon {
+        font-size: 18px !important;
+      }
+
+      &__sensitive-settings {
+        margin-top: 0.8rem;
+      }
+    }
+
+    mat-form-field {
+      width: 100%;
+      margin-bottom: 1.6rem;
+      box-sizing: border-box;
+    }
+  }
+
+  .toolbar-actions {
+    margin: 0 0 1.6rem;
+  }
+}

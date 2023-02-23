@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+body {
+  margin: 0 !important;
+}
+
+a.link {
+  color: #2196f3 !important;
+  text-decoration: none;
+}
+
+.container {
+  margin: 1.6rem auto 3.2rem;
+  width: 120rem;
+}
+
+table.original {
+  width: 100%;
+
+  .action-button {
+    visibility: hidden;
+  }
+
+  tr {
+    &.mat-row:hover {
+      background-color: #f0f0f0;
+
+      .action-button {
+        visibility: visible;
+      }
+    }
+
+    th:last-child,
+    td:last-child {
+      width: 7.5rem;
+    }
+  }
+}
+
+.mat-form-field-infix {
+  width: 180px !important;
+}

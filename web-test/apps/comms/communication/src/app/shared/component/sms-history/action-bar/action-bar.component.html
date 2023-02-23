@@ -1,0 +1,112 @@
+<mat-toolbar class="pt-16">
+  <!-- <mat-toolbar-row>
+    <h1>SMS History</h1>
+  </mat-toolbar-row> -->
+
+  <mat-toolbar-row fxLayoutGap="0.8rem">
+    <span class="spacer"></span>
+    <mat-form-field *ngIf="!noDateRange">
+      <mat-select (selectionChange)="onSelectRange()" [(ngModel)]="filter.timeRange" placeholder="Date Range">
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">
+          {{ timeRange.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Enter a phone number" [formControl]="searchTextCtr" />
+      <mat-icon *ngIf="filter.inputSearch" (click)="searchTextCtr.setValue(''); onFilterChanged()" matSuffix>
+        clear
+      </mat-icon>
+    </mat-form-field>
+    <a mat-button (click)="advancedSearch = !advancedSearch">Advanced search</a>
+    <button mat-icon-button [loading]="loading" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+    <button
+      mat-stroked-button
+      class="btn-download"
+      [loading]="loadingDownload"
+      [disabled]="history.length == 0 || loadingDownload"
+      (click)="onDownloadHistory('sms')"
+    >
+      Export
+    </button>
+  </mat-toolbar-row>
+
+  <mat-toolbar-row
+    *ngIf="(filter.timeRange === TimeRangeKey.specific_date && !noDateRange) || advancedSearch"
+    fxLayoutAlign="start baseline"
+    fxLayoutGap="0.8rem"
+  >
+    <span class="spacer"></span>
+
+    <ng-container *ngIf="filter.timeRange === TimeRangeKey.specific_date && !noDateRange">
+      <mat-form-field (click)="pickerStart.open()">
+        <input
+          readonly
+          matInput
+          [matDatepicker]="pickerStart"
+          placeholder="Start Time"
+          [(ngModel)]="filter.startDate"
+          [min]="configDatepicker.minStart"
+          [max]="configDatepicker.maxStart"
+          (dateChange)="startDateChanged()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [class.hidden-icon]="!!filter.startDate"
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart type="datetime" [twelveHour]="false"></mat-datepicker>
+        <mat-icon
+          *ngIf="filter.startDate"
+          (click)="$event.stopPropagation(); filter.startDate = null; startDateChanged()"
+          matSuffix
+        >
+          clear
+        </mat-icon>
+      </mat-form-field>
+
+      <mat-form-field (click)="pickerEnd.open()">
+        <input
+          readonly
+          matInput
+          [matDatepicker]="pickerEnd"
+          placeholder="End Time"
+          [(ngModel)]="filter.endDate"
+          [min]="configDatepicker.minEnd"
+          [max]="configDatepicker.maxEnd"
+          (dateChange)="endDateChanged()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [class.hidden-icon]="!!filter.endDate"
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd type="datetime" [twelveHour]="false"></mat-datepicker>
+        <mat-icon
+          *ngIf="filter.endDate"
+          (click)="$event.stopPropagation(); filter.endDate = null; endDateChanged()"
+          matSuffix
+        >
+          clear
+        </mat-icon>
+      </mat-form-field>
+    </ng-container>
+    <ng-container *ngIf="advancedSearch">
+      <mat-form-field>
+        <mat-select (selectionChange)="onFilterChanged()" [(ngModel)]="filter.type" placeholder="SMS Type">
+          <mat-option *ngFor="let type of types" [value]="type.key">{{ type.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select (selectionChange)="onFilterChanged()" [(ngModel)]="filter.status" placeholder="SMS Status">
+          <mat-option *ngFor="let item of statusCall" [value]="item.key">{{ item.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>

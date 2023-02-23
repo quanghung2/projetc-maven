@@ -1,0 +1,18 @@
+<ng-container *ngIf="records">
+  <table *ngIf="records.length > 0" [dataSource]="records" mat-table>
+    <ng-container matColumnDef="queue">
+      <th *matHeaderCellDef mat-header-cell>Queue</th>
+      <td *matCellDef="let row" mat-cell>{{ row.queue }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="rate">
+      <th *matHeaderCellDef mat-header-cell>Duration</th>
+      <td *matCellDef="let row" mat-cell>{{ row.rate | duration }}</td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayColumns" mat-row></tr>
+  </table>
+
+  <div *ngIf="records.length == 0" class="no-data white-box">No data</div>
+</ng-container>

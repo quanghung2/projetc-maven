@@ -1,0 +1,71 @@
+:host {
+  max-width: 850px;
+  margin: auto;
+  display: block;
+}
+
+.sender {
+  img {
+    max-width: 210px !important;
+    max-height: 85px;
+  }
+  .info {
+    margin-top: 3rem;
+  }
+}
+
+.instruction {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+table.payment {
+  display: inline-block;
+}
+
+table.payment > tbody > tr > td:first-child {
+  padding-right: 15px;
+}
+
+table.item-list {
+  > tbody > tr > td {
+    border-top: 0;
+  }
+  > thead > tr > th.quantity,
+  > tbody > tr > td.quantity {
+    width: 80px;
+  }
+  > thead > tr > th.unit-price,
+  > tbody > tr > td.unit-price {
+    min-width: 120px;
+  }
+  > thead > tr > th.tax,
+  > tbody > tr > td.tax {
+    width: 80px;
+  }
+  > thead > tr > th.discount,
+  > tbody > tr > td.discount {
+    width: 100px;
+  }
+  > thead > tr > th.amount,
+  > tbody > tr > td.amount {
+    min-width: 120px;
+  }
+}
+
+.item-list .group-label td {
+  padding-bottom: 0;
+}
+
+.item-list .grouped td {
+  padding: 0 1.11111111rem 0 28px;
+}
+
+.item-list .grouped + .group-label td,
+.item-list .grouped + .single td {
+  padding-top: 10px !important;
+}
+
+.item-list tr:last-child.grouped td,
+.item-list tr:last-child.group-label td {
+  padding-bottom: 0.74074074rem !important;
+}

@@ -1,0 +1,187 @@
+<h1 mat-dialog-title>Agent Management</h1>
+
+<div mat-dialog-content>
+  <form #agentForm="ngForm" fxLayout="column" fxLayoutGap="1.6rem" class="dialog-content-container agent-config">
+    <ng-container *ngIf="!loading">
+      <mat-form-field>
+        <input
+          type="number"
+          matInput
+          #ringTime="ngModel"
+          [(ngModel)]="queue.callflowConfig.ringTime"
+          required
+          [min]="orgConfig.minimumRingTimeInSeconds"
+          placeholder="Ring time per agent (in seconds)"
+          name="ringTime"
+        />
+
+        <mat-error *ngIf="ringTime.invalid && (ringTime.dirty || ringTime.touched)">
+          <span *ngIf="ringTime.errors?.['required']">Ring time per agent is required</span>
+          <span *ngIf="ringTime.errors?.['min']"
+            >Ring time per agent should be greater than {{ orgConfig.minimumRingTimeInSeconds }}</span
+          >
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>SLA Threshold (in seconds)</mat-label>
+        <mat-select [(ngModel)]="queue.slaThreshold" name="slaThreshold">
+          <mat-option *ngFor="let slaThreshold of slaThresholds" [value]="slaThreshold.key">
+            {{ slaThreshold.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Abandoned Threshold (in seconds)</mat-label>
+        <mat-select [(ngModel)]="queue.thresholdConfigs.abandonedThreshold" name="abandonedThreshold">
+          <mat-option *ngFor="let slaThreshold of slaThresholds" [value]="slaThreshold.key">
+            {{ slaThreshold.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Ring mode" [(ngModel)]="queue.callflowConfig.ringMode" name="ringMode">
+          <mat-option value="roundRobin">Round robin</mat-option>
+          <mat-option value="ringAll">Ring all</mat-option>
+          <mat-option value="proficiency">Proficiency level</mat-option>
+          <mat-option value="stickyAgent">Sticky agent</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="queue.callflowConfig.ringMode === 'stickyAgent'">
+        <mat-label>Number of dial to agents</mat-label>
+        <input
+          matInput
+          type="number"
+          [(ngModel)]="queue.callflowConfig.dialNumber"
+          #dialNumber="ngModel"
+          min="1"
+          required
+          name="dialNumber"
+        />
+
+        <mat-error *ngIf="dialNumber.invalid && (dialNumber.dirty || dialNumber.touched)">
+          <span *ngIf="dialNumber.errors?.['required']">Number of dial to agents is required</span>
+          <span *ngIf="dialNumber.errors?.['min']">Number of dial to agents should be greater than 0</span>
+        </mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" class="title">
+        <div>Disable agent note</div>
+        <span class="fill-remaining-space"></span>
+        <mat-slide-toggle
+          color="primary"
+          [(ngModel)]="queue.agentWorkflowConfig.disableNotes"
+          name="disabledNotes"
+        ></mat-slide-toggle>
+      </div>
+
+      <mat-form-field>
+        <mat-select
+          placeholder="Popup show when"
+          [(ngModel)]="queue.agentWorkflowConfig.popupNotificationMode"
+          name="popupNotificationMode"
+        >
+          <mat-option *ngFor="let option of popupNotificationModes" [value]="option.key">{{ option.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea
+          matInput
+          placeholder="Answer script"
+          [(ngModel)]="queue.agentWorkflowConfig.script"
+          rows="3"
+          name="aentConfigScript"
+        ></textarea>
+      </mat-form-field>
+
+      <section fxLayout="column" fxLayoutAlign="start none">
+        <span class="agent__header" fxLayoutAlign="start center">
+          Agents
+          <mat-icon
+            class="agent-proficiency-info-icon"
+            *ngIf="queue.callflowConfig.ringMode === 'proficiency'"
+            matTooltip="You can drag and drop to set agent proficiency or put value to textbox directly. Or input to textbox from 0 to 100"
+          >
+            info
+          </mat-icon>
+        </span>
+
+        <mat-form-field>
+          <mat-select placeholder="Select agent to assign" name="agentList">
+            <mat-option *ngFor="let agent of allAgents" (click)="assignAgent(agent)"
+              >{{ agent.displayText }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-hint fxLayout="column" *ngIf="assignedAgents.length > 0" fxLayoutGap="1rem">
+          <span [ngPlural]="assignedAgents.length" fxLayoutAlign="end">
+            <ng-template ngPluralCase="=1">1 assigned agent</ng-template>
+            <ng-template ngPluralCase="other">{{ assignedAgents.length }} assigned agents</ng-template>
+          </span>
+        </mat-hint>
+
+        <mat-hint fxLayoutAlign="center" *ngIf="assignedAgents.length === 0"> No assigned agent </mat-hint>
+
+        <mat-hint
+          *ngIf="count > 0 && queue.callflowConfig.ringMode === 'proficiency'"
+          fxLayoutAlign="start"
+          style="color: red"
+        >
+          Proficiency values need to be higher than 0
+        </mat-hint>
+        <div
+          cdkDropList
+          class="agent__rows"
+          *ngIf="assignedAgents.length > 0"
+          (cdkDropListDropped)="dropAgents($event)"
+        >
+          <div
+            class="sortable-box"
+            *ngFor="let assignedAgent of assignedAgents; let i = index"
+            cdkDrag
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+              <span>{{ i + 1 }}. {{ assignedAgent.displayText }}</span>
+              <section>
+                <input
+                  [ngClass]="{
+                    valueProficiency: assignedAgent.proficiency == 0
+                  }"
+                  class="form-control proficiency__input"
+                  placeholder="0"
+                  *ngIf="queue.callflowConfig.ringMode === 'proficiency'"
+                  maxlength="3"
+                  max="100"
+                  min="0"
+                  type="number"
+                  [(ngModel)]="assignedAgent.proficiency"
+                  (ngModelChange)="changeProficiency()"
+                  [name]="'proficiency' + i"
+                  pattern="\d*"
+                  onkeyup="if (this.value > 100) { this.value = 100} else if (0 > this.value) {this.value = 0} "
+                />
+                <mat-icon (click)="deleteAssignedAgent(i)" class="code-option__btn-delete" matTooltip="Delete">
+                  delete
+                </mat-icon>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </ng-container>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end" *ngIf="!loading">
+  <button mat-button mat-dialog-close>Close</button>
+  <button [disabled]="agentForm.invalid" [loading]="saving" mat-raised-button (click)="save()" color="primary">
+    Save
+  </button>
+</div>

@@ -1,0 +1,16 @@
+<div mat-dialog-title>Set demo tag</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Org UUID" [formControl]="orgUuidCtrl" (keyup.enter)="setDemo()" required />
+    <mat-error *ngIf="orgUuidCtrl.invalid">Org UUID is required</mat-error>
+  </mat-form-field>
+  <p>
+    <mat-checkbox [formControl]="demoCtrl">Demo</mat-checkbox>
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="setting" [disabled]="orgUuidCtrl.invalid" (click)="setDemo()">
+    Set
+  </button>
+</div>

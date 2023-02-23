@@ -1,0 +1,50 @@
+:host {
+  display: block;
+
+  .action-bar {
+    padding: 0.8rem 1.6rem;
+  }
+
+  .active-calls-table {
+    .mat-column-action {
+      text-align: right;
+    }
+
+    .mat-table {
+      width: 100%;
+    }
+
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      background: #e6e6e6 !important;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #424242 !important;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .active-call-type {
+      &.forwarding {
+        color: #ff991f;
+      }
+
+      &.incoming {
+        color: #36b37e;
+      }
+
+      &.outgoing {
+        color: #00b8d9;
+      }
+
+      &.internal {
+        color: #36b37e;
+      }
+    }
+  }
+}

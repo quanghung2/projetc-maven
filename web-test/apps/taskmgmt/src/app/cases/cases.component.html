@@ -1,0 +1,104 @@
+<div class="container-content">
+  <div class="d-flex align-items-center" fxLayout="row" fxLayoutAlign="end center">
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px" class="action-bar action-bar-max">
+      <b3n-search-bar fxHide.lt-md></b3n-search-bar>
+    </div>
+  </div>
+  <div
+    class="mt-20 page-title-holder d-flex align-items-center header-second"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <ng-container *ngIf="!mobileQuery.matches" [ngTemplateOutlet]="caseTabs"> </ng-container>
+
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2rem" class="header-right">
+      <button fxHide.gt-sm fxLayoutAlign="end center" class="search-mobile" [matMenuTriggerFor]="menu">
+        <mat-icon>search</mat-icon>
+      </button>
+      <div
+        *ngIf="filterSetting.activeTab !== 'assigned2me'"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="0.8rem"
+      >
+        <div
+          *ngIf="filterSetting.memberFiltering"
+          (click)="$event.stopPropagation()"
+          [matMenuTriggerFor]="assignMember"
+        >
+          <img [src]="filterSetting.memberFiltering.photoUrlOrDefault" class="avatar" />
+        </div>
+        <span
+          (click)="$event.stopPropagation()"
+          matTooltip="All"
+          [matMenuTriggerFor]="assignMember"
+          *ngIf="!filterSetting.memberFiltering"
+          class="no-avatar avatar-size-filter unassigned"
+          fxLayoutAlign="center center"
+          ><mat-icon>group</mat-icon>
+        </span>
+      </div>
+      <mat-form-field>
+        <mat-select [formControl]="statusFC">
+          <mat-option *ngFor="let status of statuses; trackBy: trackbyStatus" [value]="status.key"
+            >{{ status.value }} ({{ status.count }})</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button color="primary" (click)="createCase()">Create Case</button>
+    </div>
+  </div>
+
+  <div *ngIf="mobileQuery.matches">
+    <ng-container *ngIf="mobileQuery.matches" [ngTemplateOutlet]="caseTabs"> </ng-container>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"> </mat-progress-bar>
+
+  <div *ngIf="casePage$ | async as casePage" class="py-16" class="mb-16 mt-16 mat-elevation-z1">
+    <div *ngIf="casePage?.data.length > 0">
+      <ul class="content-list issuable-list issues-list" animation="200">
+        <li *ngFor="let case of casePage.data">
+          <b3n-case-item [case]="case"></b3n-case-item>
+        </li>
+      </ul>
+      <mat-paginator
+        [length]="casePage.total"
+        [pageIndex]="pageable.page - 1"
+        [pageSize]="pageable.perPage"
+        (page)="changePage($event.pageIndex + 1)"
+        hidePageSize
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </div>
+
+    <div *ngIf="casePage?.data.length === 0" class="p-16 secondary-text">
+      <h3 class="m-0" fxLayoutAlign="center center">No case found</h3>
+    </div>
+  </div>
+</div>
+
+<mat-menu #menu="matMenu" xPosition="before">
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="0.5rem"
+    class="title-search mobile-search"
+    (click)="$event.stopPropagation()"
+  >
+    <b3n-search-bar></b3n-search-bar>
+  </div>
+</mat-menu>
+
+<mat-menu #assignMember="matMenu" xPosition="before">
+  <ng-template matMenuContent let-cases="cases">
+    <b3n-search-member useFor="filter" (searchResultChange)="filterByMember($event)"></b3n-search-member>
+  </ng-template>
+</mat-menu>
+
+<ng-template #caseTabs>
+  <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedTabChange)="onSelectedTabChange($event)">
+    <mat-tab *ngFor="let item of tabs" [label]="item.label"></mat-tab>
+  </mat-tab-group>
+</ng-template>

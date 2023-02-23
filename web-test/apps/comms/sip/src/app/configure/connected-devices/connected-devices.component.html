@@ -1,0 +1,34 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">
+    Connected devices
+    <i
+      sm-component
+      class="icon info outline"
+      data-position="right center"
+      [attr.data-content]="'List of devices connected to this SIP account in the last 7 days'"
+    ></i>
+    <i class="sync icon" (click)="refresh()"></i>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <table class="ui selectable table">
+      <thead>
+        <tr>
+          <th>Device endpoint</th>
+          <th>User agent</th>
+          <th>Last registered</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of connectedDevices">
+          <td>{{ device.deviceEndpoint }}</td>
+          <td>{{ device.userAgent }}</td>
+          <td>{{ device.lastRegistered | date: user.timeFormat || 'medium':user.timezoneOffset }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="isRefreshing" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

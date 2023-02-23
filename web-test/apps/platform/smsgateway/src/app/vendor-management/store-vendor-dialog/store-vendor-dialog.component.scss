@@ -1,0 +1,52 @@
+@mixin d-flex($gap) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+.dialog__wrapper {
+  width: 450px;
+  @include d-flex(2rem);
+
+  h3 {
+    font-size: 18px;
+    font-weight: 450;
+    margin: 0;
+  }
+
+  .dropdowns {
+    overflow: auto;
+    font-size: 14px;
+    @include d-flex(0);
+
+    ::ng-deep.mat-form-field:not(:first-child) {
+      margin-top: -5px;
+    }
+
+    ::ng-deep.mat-form-field-underline {
+      opacity: 0.5;
+    }
+
+    mat-error {
+      font-size: 12px;
+      font-style: italic;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  mat-icon {
+    cursor: pointer;
+    user-select: none;
+  }
+}

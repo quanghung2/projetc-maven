@@ -1,0 +1,101 @@
+.system-settings__container {
+  max-width: 650px;
+  margin: auto;
+}
+
+.system-settings__loading {
+  margin: 0 16px;
+}
+
+.call-pickup__container,
+.call-parking__container,
+.default-rules__container,
+.public-holiday__container {
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+.call-pickup__card,
+.call-parking__card,
+.public-holiday__card {
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .content__row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+      }
+
+      .information {
+        font-size: 14px;
+        position: relative;
+
+        i {
+          font-size: 14px;
+
+          &:hover {
+            color: #2196f3;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+.default-rules__container {
+  padding: 16px;
+
+  table {
+    .mat-column-actions {
+      .actions__wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        opacity: 0;
+      }
+    }
+
+    .mat-row {
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+
+        .actions__wrapper {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+
+.agent-configuration,
+.remarks {
+  padding: 16px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+h3.fw-500 {
+  font-weight: 500;
+}

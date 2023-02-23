@@ -1,0 +1,52 @@
+:host {
+  .sidebar__title {
+    font-size: 14px;
+    font-weight: 550;
+    padding: 0 10px;
+    overflow: hidden;
+
+    .img-org {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      margin-left: 0.25rem;
+    }
+
+    .text-overflow {
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      .name-title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-right: 1.6rem;
+        margin-left: 0.25rem;
+      }
+    }
+
+    .icon {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 26px;
+      width: 26px;
+      border-radius: 4px;
+      &-expand {
+        font-size: 26px;
+      }
+      &:hover {
+        background-color: rgba(56, 63, 69, 0.1); // darkmode #efefef4d
+      }
+    }
+
+    ::ng-deep {
+      .mat-badge-content {
+        position: relative;
+        top: 0 !important;
+        right: 0 !important;
+      }
+    }
+  }
+}

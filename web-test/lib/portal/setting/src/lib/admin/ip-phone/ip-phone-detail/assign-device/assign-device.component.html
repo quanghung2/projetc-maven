@@ -1,0 +1,21 @@
+<div mat-dialog-title>Assign device</div>
+
+<div *ngIf="devices" fxLayout="column">
+  <mat-form-field *ngIf="devices.length" appearance="outline">
+    <mat-label>Select device</mat-label>
+    <mat-select [(ngModel)]="selectedDevice">
+      <mat-option *ngFor="let device of devices" [value]="device"
+        >{{ device.deviceUuid }} <span *ngIf="device.name">({{ device.name }})</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="devices.length === 0">No devices found. Click on Manage devices and import devices first</div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="assign()" [loading]="progressing" [disabled]="!selectedDevice" mat-flat-button color="primary">
+    Assign
+  </button>
+</div>

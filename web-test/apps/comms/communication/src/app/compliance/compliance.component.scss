@@ -1,0 +1,72 @@
+:host {
+  .container {
+    width: 80%;
+    min-width: 800px;
+    .body {
+      .permitted {
+        color: #36b37e;
+      }
+
+      .blocked {
+        color: #ff5630;
+      }
+
+      .search-input {
+        width: 300px;
+      }
+
+      button.label {
+        padding: 0;
+        line-height: 25px;
+      }
+
+      .box {
+        background: #e6e6e6;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #424242;
+        height: 25px;
+        padding: 0 8px;
+        white-space: nowrap;
+      }
+
+      .extra-info {
+        width: 300px;
+        padding-left: 1.6rem;
+        line-height: 25px;
+        border-left: 2px solid #40b5d8;
+      }
+
+      .capitalize {
+        text-transform: capitalize;
+      }
+
+      table.dnc-status {
+        padding-bottom: 3rem;
+        th,
+        tr {
+          text-align: center;
+          vertical-align: middle;
+        }
+
+        td.mat-cell:first-of-type,
+        td.mat-cell:last-of-type,
+        th.mat-header-cell:first-of-type,
+        th.mat-header-cell:last-of-type {
+          padding: 0;
+        }
+      }
+
+      table.activity-log {
+        padding-bottom: 1.6rem;
+        th {
+          &.mat-column-txnUuid,
+          &.mat-column-target,
+          &.mat-column-form {
+            width: 120px;
+          }
+        }
+      }
+    }
+  }
+}

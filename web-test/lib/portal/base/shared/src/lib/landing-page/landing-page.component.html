@@ -1,0 +1,173 @@
+<ng-container *ngIf="data$ | async as data; else spinner">
+  <div
+    *ngIf="colorPallet$ | async as colorPallet"
+    [ngStyle]="{ background: colorPallet.bgColor }"
+    class="org-home-container p-32 py-0"
+  >
+    <div class="org-home pt-0">
+      <ng-container *ngIf="data.profile && !loading">
+        <div class="org-home__header" fxLayout="row" fxLayoutAlign="start center">
+          <div>
+            <div [ngStyle]="{ color: colorPallet.fontColor }" class="org-home__header__title">
+              Welcome, {{ data.profile.displayName }}!
+            </div>
+            <div
+              *ngIf="data.session?.items?.length > 0"
+              [ngStyle]="{ color: colorPallet.fontColor }"
+              class="org-home__last-login"
+            >
+              Last {{ data.session.items[0].successful ? 'successful' : 'failed' }} login at
+              {{ data.session.items[0].datetime | date: 'HH:mm a MMM dd, yyyy' }}
+            </div>
+          </div>
+          <span class="fill-remaining-space"></span>
+          <div *ngIf="data.currentOrg" fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="0.5rem">
+            <div [ngStyle]="{ color: colorPallet.fontColor }" class="org-home__header__name">
+              {{ data.currentOrg.orgName }}
+            </div>
+            <div
+              (click)="copy()"
+              [cbContent]="data.currentOrg.orgUuid"
+              class="org-home__header__org-uuid"
+              matTooltip="Click to copy"
+              ngxClipboard
+            >
+              {{ data.currentOrg.orgUuid }}
+            </div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </ng-container>
+
+      <div *ngIf="announcements$ | async as announcements" class="org-home__content">
+        <div *ngIf="announcements?.length > 0" class="mb-16" fxLayout="row" fxLayoutAlign="space-between center">
+          <div [ngStyle]="{ color: colorPallet.fontColor }" class="announcement-title">ANNOUNCEMENTS</div>
+          <button
+            (click)="createAnnouncement()"
+            *ngIf="data.currentOrg.isUpperAdmin"
+            color="primary"
+            mat-raised-button
+            ngif
+          >
+            Create
+          </button>
+        </div>
+
+        <div *ngIf="announcements?.length > 0" class="announcement-container" fxLayout="column" fxLayoutGap="2rem">
+          <div
+            *ngFor="let announcement of announcements"
+            class="announcemnent mat-elevation-z1"
+            fxLayout="column"
+            fxLayoutGap="1rem"
+          >
+            <div
+              class="announcemnent-header"
+              fxFlex="100"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="1.5rem"
+            >
+              <div class="label mat-elevation-z1" fxFlex="74px">
+                {{ announcement.displayDate }}
+              </div>
+
+              <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxLayout="column">
+                  <div class="title">{{ announcement.title }}</div>
+                  <div class="announcement-content">
+                    <ng-container *ngIf="announcement.editor && announcement.editor.name">
+                      <span class="secondary-text">by </span>
+                      <span class="creator">{{ announcement.editor.name }} </span>
+                      <span *ngIf="announcement.modifiedAt" class="secondary-text">
+                        at {{ announcement.modifiedAt * 1000 | date: 'HH:mm' }}
+                      </span>
+                    </ng-container>
+
+                    <ng-container *ngIf="!announcement.editor && announcement.creator && announcement.creator.name">
+                      <span class="secondary-text">by </span>
+                      <span class="creator">{{ announcement.creator.name }} </span>
+                      <span *ngIf="announcement.createdAt" class="secondary-text"
+                        >at {{ announcement.createdAt * 1000 | date: 'HH:mm' }}</span
+                      >
+                    </ng-container>
+                  </div>
+                </div>
+                <div *ngIf="data.currentOrg.isUpperAdmin" class="edit-announcement">
+                  <button (click)="editAnnouncement(announcement)" mat-icon-button>
+                    <mat-icon class="edit-btn">edit</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="announcement-content" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.5rem">
+              <div fxFlex="74px"></div>
+              <div>{{ announcement.content }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="announcements?.length === 0"
+          class="no-announcement"
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          fxLayoutGap="2rem"
+        >
+          <div>No announcement</div>
+          <button (click)="createAnnouncement()" *ngIf="data.currentOrg.isUpperAdmin" color="primary" mat-raised-button>
+            Create
+          </button>
+        </div>
+
+        <div class="float-btn-container" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <button
+              [class.hidden-change-bg]="!data.currentOrg.isOwner"
+              [matMenuTriggerFor]="menu"
+              class="change-bg-btn"
+              mat-icon-button
+              mat-raised-button
+              matTooltip="Change background"
+            >
+              <mat-icon class="palette-icon">palette</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <div
+                class="select-background-color"
+                fxLayout="column wrap"
+                fxLayoutAlign="center center"
+                fxLayoutGap="0.8rem"
+              >
+                <div
+                  (click)="changeSidebarBackgroundColor(bg)"
+                  *ngFor="let bg of bgColors"
+                  [ngStyle]="{ background: bg }"
+                  class="mat-elevation-z1 color-item"
+                  fxFlex="50px"
+                >
+                  <button
+                    [ngStyle]="{
+                      visibility: bg !== colorPallet.bgColor ? 'hidden' : 'visible',
+                      color: darkBgColor.includes(bg) ? '#ffffff' : '#000000'
+                    }"
+                    class="check-icon"
+                    mat-icon-button
+                  >
+                    <mat-icon>check</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #spinner>
+  <div class="org-home-spinner" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="40" mode="indeterminate" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-template>

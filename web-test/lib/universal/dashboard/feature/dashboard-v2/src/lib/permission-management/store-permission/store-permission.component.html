@@ -1,0 +1,66 @@
+<form class="sp__container" [formGroup]="form" autocomplete="off">
+  <h3>{{ iamMember ? iamMember.displayName + "'s Permission" : 'Assign Permissions' }}</h3>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <div class="sp-controls" [class.sp-disabled]="loading">
+    <mat-form-field [class.sp-hide]="iamMember">
+      <mat-label>Member</mat-label>
+      <input
+        type="text"
+        placeholder="Select member"
+        matInput
+        formControlName="searchMember"
+        [matAutocomplete]="memberAuto"
+      />
+      <mat-icon matSuffix class="py-8">arrow_drop_down</mat-icon>
+      <mat-autocomplete [displayWith]="memberDisplayFn" autoActiveFirstOption #memberAuto="matAutocomplete">
+        <mat-option *ngFor="let member of membersFilter" [value]="member">
+          {{ member.displayName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Dashboard</mat-label>
+      <input
+        type="text"
+        placeholder="Select dashboard"
+        matInput
+        formControlName="searchDashboard"
+        [matAutocomplete]="dashboardAuto"
+      />
+      <mat-icon matSuffix class="py-8">arrow_drop_down</mat-icon>
+      <mat-autocomplete [displayWith]="dashboardDisplayFn" autoActiveFirstOption #dashboardAuto="matAutocomplete">
+        <mat-option *ngFor="let dashboard of dashboardsFilter" [value]="dashboard">
+          {{ dashboard.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="sp-dashboards" [class.sp-disabled]="loading">
+    <ng-container *ngFor="let selectedDashboard of selectedDashboards.value; let i = index">
+      <form
+        class="sp-dashboard"
+        *ngIf="selectedDashboard.controls['dashboard'].value; let dashboard"
+        [formGroup]="selectedDashboard"
+      >
+        <div class="sp-dashboard__title">
+          <div class="name">
+            <p>{{ dashboard.name }}</p>
+            <div *ngIf="dashboard.isDefault" class="default">default</div>
+          </div>
+          <mat-icon color="warn" matTooltip="Remove" (click)="removeSelectedDashboardForm(dashboard)">close</mat-icon>
+        </div>
+        <div class="sp-dashboard__options">
+          <mat-checkbox color="primary" formControlName="readonly">View</mat-checkbox>
+          <mat-divider></mat-divider>
+          <mat-checkbox color="primary" formControlName="manage">Manage</mat-checkbox>
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="sp-actions">
+    <button mat-button (click)="cancel()" [disabled]="saving">Cancel</button>
+    <button mat-raised-button color="primary" [disabled]="form.invalid" [loading]="saving" (click)="save()">
+      Save
+    </button>
+  </div>
+</form>

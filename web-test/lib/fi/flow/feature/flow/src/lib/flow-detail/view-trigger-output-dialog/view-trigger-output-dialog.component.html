@@ -1,0 +1,16 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Output</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <ng-container *ngIf="input.type === 'NORMAL'">
+    <b3n-output-action [outputs]="input.data.parent"></b3n-output-action>
+    <div class="mt-4" *ngIf="input.data.extended.length > 0">
+      <b3n-output-action [outputs]="input.data.extended" [showCustom]="true"></b3n-output-action>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="input.type === 'SUBROUTINE'">
+    <b3n-output-action [outputs]="input.data"></b3n-output-action>
+  </ng-container>
+</div>

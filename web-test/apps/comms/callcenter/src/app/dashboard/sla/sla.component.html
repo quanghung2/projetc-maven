@@ -1,0 +1,51 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>SLA</mat-card-title>
+    <span class="fill-remaining-space"></span>
+    <div *ngIf="loading">
+      <mat-progress-spinner strokeWidth="2" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <div class="container">
+      <mat-list *ngIf="slas && slas.length > 1">
+        <mat-list-item *ngFor="let sla of slas">
+          <div class="mat-list-text">
+            <h3 matLine>{{ sla.queueLabel }}</h3>
+            <p matLine>
+              <span class="secondary-text">Threshold: {{ sla.slaThreshold }} seconds </span>
+            </p>
+          </div>
+          <div class="mat-list-appended">
+            <span *ngIf="sla.sla >= 0">{{ sla.sla | percent: '1.2-2' }}</span> <span *ngIf="sla.sla == -1">-</span>
+          </div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+
+      <div fxLayout="column" fxLayoutAlign="space-around stretch" *ngIf="slas && slas.length === 1" class="sla-one">
+        <div fxFlex="10" class="item">Threshold: {{ slas[0].slaThreshold }} seconds</div>
+        <div fxFlex="60" class="item">
+          <span class="number" *ngIf="slas[0].sla >= 0">{{ slas[0].sla | percent: '1.2-2' }}</span>
+          <span class="number" *ngIf="slas[0].sla == -1">-</span>
+        </div>
+        <div fxFlex="30">
+          <div fxLayout="row" fxLayoutAlign="space-around stretch">
+            <div fxFlex="37.5">
+              <p>Answered in threshold: {{ slas[0].answeredThreshold }}</p>
+            </div>
+            <div fxFlex="37.5">
+              <p>Short abandoned: {{ slas[0].shortAbandoned }}</p>
+              <p>Unanswered callback: {{ slas[0].unansweredCallback }}</p>
+            </div>
+            <div fxFlex="25">
+              <p>Voicemails: {{ slas[0].voicemail }}</p>
+              <p>Total calls: {{ slas[0].totalCall }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,31 @@
+<div mat-dialog-title>Create plan</div>
+<div mat-dialog-content>
+  <form [formGroup]="formCreatePlan" fxLayout="column" fxFlexAlign="start stretch" fxLayoutGap="8px" novalidate>
+    <mat-form-field>
+      <mat-select placeholder="Stack" formControlName="stack" required>
+        <mat-option *ngFor="let s of stacks" [value]="s['value']">
+          {{ s['text'] }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formCreatePlan.get('stack').invalid">Stack is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Name" formControlName="name" readonly />
+      <button mat-button matSuffix mat-icon-button (click)="generateName()" matTooltip="Rename">
+        <mat-icon style="font-size: 24px">refresh</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Peer" [formControl]="peerCtrl" required />
+      <mat-error *ngIf="peerCtrl.invalid">Peer is required</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [disabled]="formCreatePlan.invalid" [loading]="creating" (click)="create()">
+    Create
+  </button>
+</div>

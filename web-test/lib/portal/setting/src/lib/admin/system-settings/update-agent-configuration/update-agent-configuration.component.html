@@ -1,0 +1,27 @@
+<h3 mat-dialog-title>Update agent configuration</h3>
+<mat-dialog-content>
+  <mat-form-field floatLabel="always" fxFlexFill>
+    <mat-select
+      [formControl]="agentSLAThreshold"
+      placeholder="SLA Threshold (in seconds)"
+      [errorStateMatcher]="matcher"
+    >
+      <mat-option *ngFor="let num of numbersSlaThreshold" [value]="num">
+        {{ num }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="agentSLAThreshold.hasError('required')">SLA Threshold is required</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="saving"
+    [disabled]="agentSLAThreshold.invalid"
+    (click)="saveAgentConfiguration()"
+  >
+    Update
+  </button>
+</mat-dialog-actions>

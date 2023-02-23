@@ -1,0 +1,83 @@
+<div class="channel" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+  <section fxLayout="column" fxLayoutAlign="start center">
+    <mat-toolbar fxLayoutAlign="end center" class="channel__header">
+      <mat-form-field class="channel__header__search" floatLabel="never">
+        <mat-label class="grey-800-fg">Search channel by Name or Uuid</mat-label>
+        <input [(ngModel)]="searchValue" (keyup)="onSearchChannel($event)" matInput />
+        <button (click)="reset()" mat-icon-button matSuffix>
+          <mat-icon class="channel__header__search__icon">{{ searchValue ? 'close' : 'search' }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </mat-toolbar>
+    <div class="channel__content" fxLayout="column">
+      <mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+        <ng-container matColumnDef="orgUuid">
+          <mat-header-cell *matHeaderCellDef>Uuid</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button
+              class="channel__button-copy"
+              mat-button
+              matTooltip="Click to copy this uuid to clipboard"
+              ngxClipboard
+              [cbContent]="element?.partnerUuid"
+              (cbOnSuccess)="copied()"
+              (cbOnError)="copyFailed()"
+            >
+              {{ element?.partnerUuid | slice: 0:8 }}...
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="channel">
+          <mat-header-cell *matHeaderCellDef>Channel</mat-header-cell>
+          <mat-cell (click)="openChanelDetail(element)" *matCellDef="let element">{{ element?.partnerName }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="createDate">
+          <mat-header-cell *matHeaderCellDef>Created At</mat-header-cell>
+          <mat-cell (click)="openChanelDetail(element)" *matCellDef="let element">
+            {{ element?.createDate | date: 'mediumDate' }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef>
+            <div fxLayout="row" fxLayoutAlign="center center">Action</div>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <div fxLayout="row" fxLayoutAlign="end center">
+              <button mat-stroked-button (click)="openChanelDetail(element)">View</button>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="noData">
+          <mat-cell mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div fxLayoutAlign="center center">
+              <span class="mat-body-1">No Data Available</span>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="loading">
+          <mat-cell mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div fxLayoutAlign="center center">
+              <div *ngIf="loading" class="loading-container">
+                <mat-spinner diameter="25" strokeWidth="2"></mat-spinner>
+              </div>
+            </div>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns" fxLayoutGap="1.6rem"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns" fxLayoutGap="1.6rem"></mat-row>
+        <mat-footer-row
+          *matFooterRowDef="['noData']"
+          [hidden]="dataSource.filteredData.length > 0 || loading"
+        ></mat-footer-row>
+        <mat-footer-row *matFooterRowDef="['loading']" [hidden]="!loading"></mat-footer-row>
+      </mat-table>
+      <mat-paginator hidePageSize="true" pageSize="10" showFirstLastButtons class="mat-elevation-z1"></mat-paginator>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,11 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+  <div *ngFor="let output of data" [class]="setOpacity ? 'opacity' : ''">
+    <h4 class="mb-0">
+      <strong>{{ output.title }}</strong>
+      <ng-container *ngIf="output.dataType !== 'array'"> ({{ output.dataType | titlecase }})</ng-container>
+      <ng-container *ngIf="output.dataType === 'array'"> (List)</ng-container>
+      <label class="label-status secondary" *ngIf="showCustom"><small>Custom</small></label>
+    </h4>
+    <p class="mb-0" *ngIf="output.description">{{ output.description }}</p>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<div class="ui grid two column form">
+  <div class="row">
+    <div class="three wide column left aligned">
+      <label>Message Type</label>
+    </div>
+    <div class="eleven wide column">
+      <div class="inline fields">
+        <div class="field">
+          <div class="checkbox">
+            <label>
+              <input
+                type="radio"
+                [attr.name]="'playtype-' + id"
+                value="tts"
+                [checked]="getType() === 'tts'"
+                (change)="updateType($event.target['value'])"
+              />Text to speech
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="checkbox">
+            <label>
+              <input
+                type="radio"
+                [attr.name]="'playtype-' + id"
+                value="mp3"
+                [checked]="getType() === 'mp3'"
+                (change)="updateType($event.target['value'])"
+              />Recording
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="getType() === 'tts'">
+    <div class="three wide column left aligned">
+      <label>Language</label>
+    </div>
+    <div class="eleven wide column">
+      <div class="field">
+        <select sm-component (change)="updateLanguage($event.target['value'])" class="ui dropdown">
+          <option
+            *ngFor="let lang of availableLanguages"
+            value="{{ lang.code }}"
+            [selected]="getLanguage() === lang.code"
+          >
+            {{ lang.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="getType() === 'tts'">
+    <div class="three wide column left aligned">
+      <label>Message</label>
+    </div>
+    <div class="eleven wide column">
+      <div class="field">
+        <textarea
+          placeholder="This call will be recorded for training and quality purpose"
+          rows="2"
+          (change)="updateMessage($event.target['value'])"
+          >{{ getMessage() }}</textarea
+        >
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="getType() === 'mp3'">
+    <div class="three wide column left aligned">
+      <label>Upload file</label>
+    </div>
+    <div class="eleven wide column">
+      <div class="messages">
+        <div class="ui icon message choose file" *ngIf="!uploading && getMp3Url()">
+          <i class="icon voicemail"></i>
+          <div class="content">
+            <div class="header">Current recording file:</div>
+            <a href="{{ getMp3Url() }}">mp3 file</a>
+          </div>
+          <i class="icon close" (click)="clearMp3File()"></i>
+        </div>
+        <div class="ui icon message choose file" *ngIf="uploading">
+          <i class="icon voicemail"></i>
+          <div class="content">
+            <div class="header">Uploading</div>
+            <div class="ui active blue progress">
+              <div class="bar">
+                <div class="progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <label class="ui icon message choose file" *ngIf="!uploading && !getMp3Url()">
+          <i class="icon file upload"></i>
+          <div class="content">
+            <div class="header">Upload your recording message now!</div>
+            <p>Only allow mp3 file format.</p>
+          </div>
+          <input accept="audio/mpeg" class="files" type="file" (change)="upload($event)" />
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

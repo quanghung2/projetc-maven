@@ -1,0 +1,16 @@
+{
+  "name": "api-supplier",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/supplier/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/supplier/**/*.ts", "libs/api/supplier/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

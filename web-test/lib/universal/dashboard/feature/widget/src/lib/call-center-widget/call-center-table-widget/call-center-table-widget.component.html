@@ -1,0 +1,17 @@
+<div class="noData" *ngIf="hasQueueFilter && !queueUuids?.length && !includeNonQueueFilterHash">
+  <span>{{ questionV2.question?.messages?.noFilter }}</span>
+</div>
+
+<ng-container *ngIf="!singleMetric">
+  <b3n-call-center-no-data *ngIf="!chartData && questionV2" [questionV2]="questionV2"></b3n-call-center-no-data>
+  <div class="chart_wrapper">
+    <div [id]="questionV2.uuid"></div>
+  </div>
+</ng-container>
+
+<div *ngIf="singleMetric" class="single-metric__wrapper">
+  <b3n-call-center-no-data *ngIf="!singleMetricData && questionV2" [questionV2]="questionV2"></b3n-call-center-no-data>
+  <div *ngIf="singleMetricData" class="single-metric">
+    {{ singleMetricData }}
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Remarks</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <ng-container>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          #remark
+          (keyup.enter)="addRemark(remark.value)"
+          placeholder="Input new remark and press Enter"
+        />
+      </mat-form-field>
+
+      <mat-label>Remarks</mat-label>
+
+      <div cdkDropList class="agent__rows" *ngIf="remarks?.length > 0" (cdkDropListDropped)="drop($event)">
+        <div class="sortable-box" *ngFor="let remark of remarks; let i = index" cdkDrag>
+          {{ i + 1 }}. {{ remark | titlecase }} <span class="fill-remaining-space"></span>
+          <mat-icon
+            *ngIf="(remark | lowercase) !== 'lunch break' && (remark | lowercase) !== 'toilet break'"
+            (click)="deleteRemark(remark)"
+            matTooltip="Delele"
+            >delete
+          </mat-icon>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="save()" color="primary">Save</button>
+</div>

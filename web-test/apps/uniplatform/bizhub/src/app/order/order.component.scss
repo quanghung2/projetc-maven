@@ -1,0 +1,40 @@
+:host {
+  .orders {
+    &__header {
+      background-color: transparent;
+    }
+  }
+  .bundles-progress-bar {
+    position: absolute;
+    top: 0;
+  }
+  .search-box {
+    width: 320px;
+  }
+  .filter-status-container {
+    min-width: 80px;
+  }
+  .orders-table {
+    .mat-column-actions {
+      width: 160px;
+      > * {
+        visibility: hidden;
+      }
+    }
+    .mat-column-status {
+      padding: 0 1rem;
+      .box {
+        border-radius: 4px;
+        padding: 2px 12px;
+      }
+    }
+    .mat-row:hover {
+      background-color: #fafafa;
+      .mat-column-actions {
+        > * {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

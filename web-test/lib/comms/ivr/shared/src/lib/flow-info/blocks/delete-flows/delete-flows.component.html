@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Delete Flow</h1>
+<div mat-dialog-content *ngIf="!isLoaing">
+  <p>
+    Are you sure you want to delete <b>{{ flow.label }}?</b>
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="warn" (click)="delete()" [disabled]="deleting">
+    <span *ngIf="!deleting">Delete</span> <span *ngIf="deleting">Deleting...</span>
+  </button>
+</div>

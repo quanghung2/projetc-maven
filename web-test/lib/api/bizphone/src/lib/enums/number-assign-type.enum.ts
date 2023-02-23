@@ -1,0 +1,6 @@
+export enum NumberAssignType {
+  EXTENSION = 'EXTENSION',
+  EXTENSION_GROUP = 'EXTENSION_GROUP',
+  CONFERENCE = 'CONFERENCE',
+  NONE = 'NONE'
+}

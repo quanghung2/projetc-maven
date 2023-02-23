@@ -1,0 +1,47 @@
+.invoices-container {
+  width: 100%;
+  margin: auto;
+  .loading-container {
+    margin-top: 5rem;
+    mat-spinner {
+      margin: 20px auto;
+    }
+  }
+  .avoices-checkbox,
+  .download-invoice {
+    visibility: hidden !important;
+  }
+
+  .show-checked {
+    visibility: visible !important;
+  }
+
+  table {
+    width: 100%;
+
+    tr {
+      &.mat-row {
+        height: 52px;
+
+        &:hover {
+          background-color: #f0f0f0;
+          .avoices-checkbox,
+          .download-invoice {
+            visibility: visible !important;
+          }
+        }
+      }
+    }
+  }
+  .icon-vertical_bottom {
+    font-size: 18px;
+  }
+  .header-align-right {
+    text-align: end;
+  }
+  .content-pading {
+    text-align: right;
+    margin-left: 70%;
+    margin-right: 24px;
+  }
+}

@@ -1,0 +1,40 @@
+.header-info {
+  padding: 1.5rem;
+
+  img {
+    width: 38px;
+  }
+
+  h2 {
+    font-weight: 700;
+    margin: 0 0 0.8rem;
+  }
+
+  p {
+    color: #919191;
+    margin: 0;
+  }
+}
+
+.content {
+  padding: 0 1.5rem;
+
+  .item-detail {
+    padding: 1.6rem 0;
+
+    h5 {
+      color: #666;
+      font-weight: 700;
+      margin: 0 0 0.8rem;
+    }
+    div {
+      margin-bottom: 0.5rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      &.sale-model-code {
+        text-transform: capitalize;
+      }
+    }
+  }
+}

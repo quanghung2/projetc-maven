@@ -1,0 +1,13 @@
+<div fxLayout="column" fxLayoutAlign="center center" class="permission-denied-region">
+  <h1 *ngIf="!me || (me && !me.adminRole)">
+    Access denied. You do not have any permission on this app, please ask your admin for this.
+  </h1>
+  <ng-container *ngIf="me && me.adminRole">
+    <h1>You should be assigned an extension for the first time</h1>
+    <!--
+      <button (click)="goExtension()" mat-raised-button color="primary" class="purchase-button">
+        Go to Extension app
+      </button>
+    -->
+  </ng-container>
+</div>

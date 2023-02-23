@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Create a SMS</h1>
+
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Contact number</mat-label>
+    <input matInput [(ngModel)]="number" />
+  </mat-form-field>
+
+  <mat-form-field class="sms-container">
+    <mat-label>Messages</mat-label>
+    <textarea
+      matInput
+      placeholder="Please enter messages"
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="5"
+      cdkAutosizeMaxRows="8"
+      placeholder="Message"
+      [formControl]="smsControl"
+    ></textarea>
+  </mat-form-field>
+
+  <div class="flex justify-content-end align-items-none gap-15">
+    <div>
+      <span>Characters: </span>
+      <span
+        ><strong>{{ smsControl.value.length }} / {{ smsCounter.charsInOneSms }}</strong></span
+      >
+    </div>
+    <div>
+      <span>SMS: </span>
+      <span
+        ><strong>{{ smsCounter.smsParts }}</strong></span
+      >
+    </div>
+  </div>
+  <mat-checkbox checked="true">Include a Profile Private Link at end of the SMS content</mat-checkbox>
+</div>
+
+<div mat-dialog-actions align="end" *ngIf="!loading">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="send()" color="primary" [disabled]="!number || loading">Send</button>
+</div>

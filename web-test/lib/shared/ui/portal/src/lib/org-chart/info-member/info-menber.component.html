@@ -1,0 +1,38 @@
+<div class="info-member">
+  <mat-icon class="btn-close" mat-dialog-close>close</mat-icon>
+  <div *ngIf="!isLoading; else loading">
+    <div class="wrapper-avatar">
+      <img *ngIf="memberInfo.photoUrl; else elseAvatar" class="avatar" [src]="memberInfo.photoUrl" alt="avatar" />
+      <ng-template #elseAvatar><mat-icon svgIcon="user" class="avatar"></mat-icon></ng-template>
+      <div class="display-name">{{ memberInfo.displayName }}</div>
+    </div>
+    <p *ngIf="(memberInfo.about || '').trim()" class="about secondary-text">{{ memberInfo.about }}</p>
+    <div class="wrapper-info">
+      <p>
+        <span class="label">Role</span>
+        <span
+          *ngIf="data.member.teamRole; else noTeamRole"
+          [class]="'badges ' + data.member.teamRole.toLocaleLowerCase()"
+          >{{ data.member.teamRole }}</span
+        >
+        <ng-template #noTeamRole><i>NA</i></ng-template>
+      </p>
+      <p>
+        <span class="label">Phone Number</span>
+        <span *ngIf="memberInfo.mobileNumber; else noPhoneNum">{{ memberInfo.mobileNumber }}</span>
+        <ng-template #noPhoneNum><i>NA</i></ng-template>
+      </p>
+      <p>
+        <span class="label">Extension</span>
+        <span *ngIf="data.member.extensionKey; else noExtCode">{{ data.member.extensionKey }}</span>
+        <ng-template #noExtCode><i>NA</i></ng-template>
+      </p>
+      <p>
+        <span class="label">Email</span>
+        <span *ngIf="memberInfo.email; else noEmail">{{ memberInfo.email }}</span>
+        <ng-template #noEmail><i>NA</i></ng-template>
+      </p>
+    </div>
+  </div>
+  <ng-template #loading><mat-spinner></mat-spinner></ng-template>
+</div>

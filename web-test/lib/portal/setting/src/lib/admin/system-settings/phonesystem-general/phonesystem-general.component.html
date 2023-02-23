@@ -1,0 +1,149 @@
+<mat-toolbar><h1>General Settings</h1></mat-toolbar>
+<form [formGroup]="form" fxLayout="column" fxLayoutGap="1.6rem" class="system-settings__container" autocomplete="off">
+  <div *ngIf="loading" class="system-settings__loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+  <h3>Agent configuration</h3>
+  <mat-form-field class="short-line">
+    <mat-select
+      formControlName="agentSLAThreshold"
+      placeholder="SLA Threshold (in seconds)"
+      [errorStateMatcher]="matcher"
+    >
+      <mat-option *ngFor="let num of numbersSlaThreshold" [value]="num">
+        {{ num }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="f['agentSLAThreshold'].hasError('required')"> SLA Threshold is required </mat-error>
+  </mat-form-field>
+
+  <h3>Call Pickup</h3>
+  <mat-form-field class="short-line">
+    <mat-label>Pickup prefix</mat-label>
+    <strong matPrefix>*&nbsp;&nbsp;</strong>
+    <input
+      formControlName="pickupPrefix"
+      matInput
+      placeholder="At most 2 digits"
+      onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+      required
+      [errorStateMatcher]="matcher"
+    />
+    <mat-error> From 1 to 2 digits </mat-error>
+  </mat-form-field>
+  <div class="content-info">
+    <div class="content__row">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p class="information">
+        To directly pick up the call of any user, press
+        <i [matTooltip]="hintMsg">*{{ pickupPrefix }} + user key + #</i>
+      </p>
+    </div>
+    <div class="content__row">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p class="information">
+        To pick up the call of another user in the same group, press
+        <i>*{{ pickupPrefix }}#</i>
+      </p>
+    </div>
+  </div>
+
+  <h3>Call Parking</h3>
+  <mat-form-field class="short-line">
+    <mat-label>Prefix</mat-label>
+    <strong matPrefix>*&nbsp;&nbsp;</strong>
+    <input
+      matInput
+      formControlName="prefix"
+      placeholder="From 2 to 4 digit"
+      onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+      required
+      [errorStateMatcher]="matcher"
+    />
+    <mat-error *ngIf="f['prefix']?.hasError('required')">Prefix is required </mat-error>
+    <mat-error *ngIf="!!f['prefix']?.hasError('minlength') || !!f['prefix']?.hasError('maxlength')">
+      From 2 to 4 digit
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="short-line">
+    <mat-label>Parking Time (second)</mat-label>
+    <div style="display: flex">
+      <input
+        matInput
+        formControlName="parkingTime"
+        placeholder="From 300 (5 minutes) to 14400 (4 hours)"
+        onkeypress="return 48 <= event.charCode && event.charCode <= 57 || event.charCode === 42"
+        maxlength="5"
+        required
+        [errorStateMatcher]="matcher"
+      />
+      <div style="white-space: nowrap">
+        {{ transferParkingTime(f['parkingTime']?.value) }}
+      </div>
+    </div>
+    <mat-error *ngIf="f['parkingTime']?.hasError('required')"> Parking Time is required </mat-error>
+    <mat-error *ngIf="!!f['parkingTime']?.hasError('min') || !!f['parkingTime']?.hasError('max')">
+      From 300 to 14400 seconds
+    </mat-error>
+  </mat-form-field>
+  <div class="content-info">
+    <div class="content__row">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p class="information">
+        To park call, press
+        <i><strong>##2</strong> + {{ orgConfig?.callParkingConfig?.prefix }} + channel number + #</i>
+      </p>
+    </div>
+    <div class="content__row">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p class="information">
+        To retrieve call, press <i>{{ orgConfig?.callParkingConfig?.prefix }} + channel number + call</i>
+      </p>
+    </div>
+    <div class="content__row">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p class="information">
+        Parking time is <i>{{ transferParkingTime(orgConfig?.callParkingConfig?.parkingtime) }}</i>
+      </p>
+    </div>
+  </div>
+
+  <div class="remarks">
+    <div fxLayout="column">
+      <h3 class="fw-500">Busy Remarks</h3>
+      <mat-form-field class="short-line">
+        <input
+          matInput
+          [formControl]="remarkCtrl"
+          type="text"
+          [disabled]="remarks.length >= 10"
+          (keyup.enter)="addRemark()"
+          placeholder="Enter new remark"
+          [errorStateMatcher]="matcher"
+        />
+        <mat-error *ngIf="remarkCtrl?.hasError('maxlength')"> Maximum 30 characters </mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="start" class="mt-10">
+        <mat-label>Remarks</mat-label>
+      </div>
+
+      <div cdkDropList class="short-line agents" *ngIf="remarks?.length > 0" (cdkDropListDropped)="drop($event)">
+        <div class="sortable-box" *ngFor="let remark of remarks; let i = index" cdkDrag>
+          {{ i + 1 }}. {{ remark | titlecase }} <span class="fill-remaining-space"></span>
+          <mat-icon
+            *ngIf="(remark | lowercase) !== 'lunch break' && (remark | lowercase) !== 'toilet break'"
+            (click)="deleteRemark(remark)"
+            matTooltip="Delele"
+            >delete
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div align="end" class="actions-bar">
+    <button type="button" (click)="update()" [disabled]="form.invalid" color="primary" mat-raised-button>
+      <span *ngIf="!progressing">Update</span> <span *ngIf="progressing">Updating...</span>
+    </button>
+  </div>
+</form>

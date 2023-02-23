@@ -1,0 +1,74 @@
+<div class="ui form" [ngClass]="{ loading: loading }">
+  <h4 class="ui header custom-header">Local Server</h4>
+  <div class="field" style="margin-bottom: 48px">
+    <div class="ui input" *ngIf="editing">
+      <input placeholder="Enter URL..." [(ngModel)]="aclConfig.localPath" (keyup.enter)="saveAcl()" />
+    </div>
+    <div *ngIf="!editing">
+      {{ aclConfig.localPath }}
+      <i class="edit icon clickable-icon" (click)="editing = true" *ngIf="!editing"></i>
+    </div>
+  </div>
+  <div class="fields" style="margin-bottom: 24px">
+    <div class="six wide field">
+      <h4 class="ui header custom-header">Access Control List</h4>
+    </div>
+    <div class="four wide field"></div>
+    <div class="six wide field action">
+      <div class="ui small icon input">
+        <input type="text" placeholder="Enter callerID..." [(ngModel)]="query" (keyup.enter)="searchMembers()" />
+        <i class="search icon"></i>
+      </div>
+      <div class="ui primary button action-add" (click)="openAddItemModal()" *ngIf="aclConfig.localPath">Add</div>
+    </div>
+  </div>
+  <div class="field" *ngIf="aclConfig.localPath">
+    <table class="ui page unstackable table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Assigned Caller Ids</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let member of showingMembers; let i = index">
+          <td>{{ i + 1 }}.</td>
+          <td>{{ member.displayName }}</td>
+          <td>{{ member.email }}</td>
+          <td style="text-transform: lowercase">{{ member.role }}</td>
+          <td style="max-width: 120px">
+            <a
+              class="custom-label tooltip"
+              data-tooltip="All numbers"
+              data-inverted=""
+              data-variation="small"
+              data-position="top center"
+              *ngIf="member.callerIds.length == 1 && member.isAllowAll"
+              (click)="openCallerIDsView(member)"
+            >
+              *
+            </a>
+            <a
+              class="custom-label"
+              *ngIf="member.callerIds.length == 1 && !member.isAllowAll"
+              (click)="openCallerIDsView(member)"
+            >
+              {{ member.callerIds.length }} number
+            </a>
+            <a class="custom-label" *ngIf="member.callerIds.length > 1" (click)="openCallerIDsView(member)">
+              {{ member.callerIds.length }} numbers
+            </a>
+          </td>
+          <td style="width: 72px">
+            <i class="edit icon clickable-icon" (click)="openEditItemModal(member)"></i>
+            <i class="delete icon clickable-icon" (click)="deleteItem(member.uuid)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

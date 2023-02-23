@@ -1,0 +1,78 @@
+<div class="update-config">
+  <div mat-dialog-title>{{ title }}</div>
+
+  <div mat-dialog-content>
+    <form #form="ngForm" fxLayout="column">
+      <mat-form-field>
+        <mat-label>Code</mat-label>
+        <mat-select
+          (selectionChange)="changeCode()"
+          name="code"
+          [(ngModel)]="config.code"
+          placeholder="Code"
+          [disabled]="type == 'view'"
+          required
+        >
+          <mat-option *ngFor="let codeSample of supportedCodeSampleList" [value]="codeSample.code">
+            {{ codeSample.code }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <section fxLayoutGap="10px">
+        <mat-form-field fxFlex="100px">
+          <input value="POST" matInput="text" name="method" placeholder="Method" disabled />
+        </mat-form-field>
+        <mat-form-field>
+          <input
+            (keydown.enter)="registerWebhook()"
+            [(ngModel)]="config.url"
+            matInput="url"
+            name="url"
+            placeholder="Postback URL"
+            [disabled]="type == 'view'"
+            required
+          />
+        </mat-form-field>
+      </section>
+
+      <section class="body-request" *ngIf="keysSampleBody.length > 0">
+        <h3 class="body-request__header body">Request body</h3>
+        <span class="body-request__second-header">Example of the request body your webhook will be received</span>
+        <div class="body-request__example mat-elevation-z1">
+          <span>{{ '{' }}</span>
+          <div class="key-value" *ngFor="let key of keysSampleBody; let last = last">
+            <span class="key">"{{ key }}" : </span><span  *ngIf="isObject(sampleBody['sample'][key])">{{ '{' }}</span>
+            <span class="value" *ngIf="!isObject(sampleBody['sample'][key])">"{{ sampleBody['sample'][key] }}"</span>
+
+            <div *ngIf="isObject(sampleBody['sample'][key])" >
+              <div class="key-value-child" *ngFor="let keyChild of getObjectkeys(sampleBody['sample'][key]); let last = last">
+                <span class="key">"{{ keyChild }}" :</span>
+                <span class="value" *ngIf="!isObject(sampleBody['sample'][key][keyChild])">"{{ sampleBody['sample'][key][keyChild] }}"</span>
+                <i *ngIf="!last">,</i>                
+              </div>
+              <span>{{ '}' }}</span>
+              <i *ngIf="!last">,</i>
+            </div>     
+                 
+          </div>
+          <span>{{ '}' }}</span>
+        </div>
+      </section>
+    </form>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <button
+      *ngIf="type == 'register'"
+      [loading]="registering"
+      [disabled]="registering || form.invalid"
+      mat-raised-button
+      color="primary"
+      (click)="registerWebhook()"
+    >
+      Register
+    </button>
+  </div>
+</div>

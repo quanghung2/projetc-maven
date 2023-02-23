@@ -1,0 +1,38 @@
+<div class="recover" fxLayout="column" fxLayoutAlign="center center" b3nRecoverMatchHeight>
+  <div class="recover-container">
+    <mat-horizontal-stepper #recoverSteper labelPosition="bottom" #stepper>
+      <mat-step>
+        <ng-template matStepLabel>Recover</ng-template>
+        <b3n-select-subscription
+          [wallet]="wallet"
+          [totalAmount]="totalAmount"
+          [loading]="loading"
+          [subscriptions]="subscriptions"
+          (topuped)="onTopup()"
+        ></b3n-select-subscription>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <b3n-finish
+          [subscriptionsSelected]="subscriptionsSelected"
+          [orgUuid]="orgUuid"
+          [recoverUuid]="recoverUuid"
+        ></b3n-finish>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+  <div class="recover-footer">
+    <div class="footer-container" fxLayout="row" fxLayoutAlign="space-around center">
+      <button mat-stroked-button (click)="goToHome()">Back to home</button>
+      <button
+        mat-raised-button
+        [loading]="isProcess"
+        [disabled]="isNotCheckedAny()"
+        color="primary"
+        (click)="onComplete()"
+      >
+        Complete
+      </button>
+    </div>
+  </div>
+</div>

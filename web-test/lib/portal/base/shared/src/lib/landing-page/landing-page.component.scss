@@ -1,0 +1,154 @@
+:host {
+  display: block;
+  .org-home-container {
+    height: 100vh;
+    overflow: auto;
+
+    .hidden {
+      visibility: hidden;
+    }
+
+    .org-home {
+      max-width: 750px;
+      margin: auto;
+      padding: 1.6rem;
+      &__content {
+        padding: 3rem 0;
+        .mb-16 {
+          margin-bottom: 1rem;
+        }
+        .announcement-title {
+          font-weight: 600;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.6);
+        }
+        .announcement-container {
+          .announcemnent {
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            padding: 3rem 3rem 3rem 0;
+            background: white;
+
+            .announcemnent-header {
+              .label {
+                text-align: center;
+                background: #1565c0;
+                color: white;
+                border-radius: 0 2px 2px 0;
+                padding: 4px 0;
+                font-size: 15px;
+                color: #f6fafe;
+              }
+              .title {
+                font-size: 20px;
+                font-weight: 300;
+              }
+              .creator {
+                font-size: 15px;
+              }
+            }
+            .announcement-content {
+              font-size: 15px;
+              word-break: break-word;
+            }
+            .edit-announcement {
+              visibility: hidden;
+              .edit-btn {
+                color: var(--gray-700);
+              }
+            }
+            &:hover {
+              background: #fafafa;
+              .edit-announcement {
+                visibility: visible;
+              }
+            }
+          }
+        }
+        .no-announcement {
+          text-align: center;
+          font-size: 20px;
+          color: var(--gray-700);
+          height: 400px;
+        }
+
+        .float-btn-container {
+          position: absolute;
+          bottom: 3rem;
+          right: 3rem;
+          .hidden-change-bg {
+            display: none;
+          }
+          .change-bg-btn {
+            width: 50px;
+            height: 50px;
+            .palette-icon {
+              font-size: 24px;
+              width: 24px;
+              height: 24px;
+            }
+          }
+        }
+      }
+      &__last-login {
+        color: rgba(0, 0, 0, 0.54);
+        font-size: 13px;
+      }
+      &__header {
+        padding: 4rem 0;
+        &__logo {
+          border: 1px solid var(--gray-300);
+          border-radius: 50%;
+        }
+        &__title {
+          color: rgba(0, 0, 0, 0.67);
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 0.8rem;
+        }
+        &__message {
+          padding-bottom: 1.6rem;
+          color: rgba(0, 0, 0, 0.67);
+        }
+        &__org-name {
+          font-weight: 600;
+        }
+        &__org-uuid {
+          font-size: 12px;
+          background: var(--gray-300);
+          padding: 4px 10px;
+          border-radius: 2px;
+          cursor: pointer;
+          color: var(--gray-700);
+        }
+        &__name {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .org-home-spinner {
+    min-height: 500px;
+  }
+}
+.select-background-color {
+  padding: 0 10px;
+  .color-item {
+    margin-bottom: 0.8rem;
+    width: 100%;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    position: relative;
+    .check-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

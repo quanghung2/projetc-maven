@@ -1,0 +1,23 @@
+<form class="recipient-wrapper" [formGroup]="form">
+  <span class="label">{{ label }} </span>
+  <mat-form-field style="flex: 1">
+    <mat-label></mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip *ngFor="let address of addresses" (removed)="removeAddress(address)">
+        <span *ngIf="address.name">{{ address.name }}</span>
+        <span *ngIf="!address.name">{{ address.address }}</span>
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+      <input
+        placeholder="Add recipient"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        formControlName="emailAddress"
+        [matChipInputAddOnBlur]="true"
+        (matChipInputTokenEnd)="addAddress()"
+        [required]="required"
+      />
+      <mat-error *ngIf="emailAddress.touched && emailAddress.invalid">{{ getErrorMessage() }}</mat-error>
+    </mat-chip-list>
+  </mat-form-field>
+</form>

@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Assign member to project</h2>
+<mat-dialog-content>
+  <h3 class="mb-8">Add member to this project (maximum {{ maxMember }})</h3>
+  <mat-form-field>
+    <mat-label>Member</mat-label>
+    <input matInput placeholder="Enter name..." [formControl]="searchCtrl" [matAutocomplete]="auto" />
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectMember($event)">
+      <mat-option *ngFor="let member of members$ | async" [value]="member">
+        {{ member.displayName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-hint *ngIf="selection.selected.length === 0">No members</mat-hint>
+  <ng-container *ngFor="let member of selection.selected; let i = index">
+    <div class="member" fxLayout="row" fxLayoutAlign="space-between center">
+      <span>{{ i + 1 }}. {{ member.memberName }}</span>
+      <button mat-icon-button color="warn" (click)="removeMember(member)" matTooltip="Remove">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <mat-divider *ngIf="i < selection.selected.length - 1"></mat-divider>
+  </ng-container>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button color="primary" [loading]="saving" (click)="assign()">Assign</button>
+</mat-dialog-actions>

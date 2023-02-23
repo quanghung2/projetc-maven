@@ -1,0 +1,54 @@
+<div
+  class="container"
+  *ngIf="extension$ | async as extension"
+  [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'"
+>
+  <b3n-settings-navigate
+    class="w-100"
+    title="Outbound Call"
+    [hasSave]="true"
+    [loading]="progressing"
+    (saveFn)="onSave(extension)"
+  ></b3n-settings-navigate>
+
+  <div class="body w-100 px-16 pt-10" fxLayout="column" fxLayoutAlign="start none">
+    <div *ngIf="allowedCallerId$ | async as allowedCallerId" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+      <mat-form-field>
+        <mat-label>CallerID</mat-label>
+        <mat-select panelClass="select-callerid" [(ngModel)]="extension.callerId" placeholder="select caller ID">
+          <ng-container *ngIf="allowedCallerId?.private?.length > 0">
+            <mat-option [value]="allowedCallerId?.private[0]">
+              {{ allowedCallerId?.private[0] | titlecase }}
+            </mat-option>
+          </ng-container>
+          <mat-optgroup *ngIf="allowedCallerId?.identity?.length > 0" label="Identity">
+            <mat-option *ngFor="let item of allowedCallerId?.identity" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup *ngIf="allowedCallerId?.auto?.length > 0" label="Auto">
+            <mat-option *ngFor="let item of allowedCallerId?.auto" [value]="item">
+              {{ item | callerIDPipe }}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup *ngIf="allowedCallerId?.groupCallerId?.length > 0" label="Call Group">
+            <mat-option *ngFor="let item of allowedCallerId?.groupCallerId" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-optgroup>
+          <mat-optgroup *ngIf="allowedCallerId?.delegation?.length > 0" label="Delegation">
+            <mat-option *ngFor="let item of allowedCallerId?.delegation" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-optgroup>
+
+          <mat-optgroup *ngIf="allowedCallerId?.org?.length > 0" label="Organization">
+            <mat-option *ngFor="let item of allowedCallerId?.org" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-optgroup>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

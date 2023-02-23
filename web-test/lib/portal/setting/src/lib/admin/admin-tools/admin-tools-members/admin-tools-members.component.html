@@ -1,0 +1,33 @@
+<mat-toolbar [formGroup]="filterFG" class="view__wrapper" fxLayout="row" fxLayoutGap="1rem">
+  <mat-form-field [style.width.px]="150">
+    <mat-select formControlName="teamUuid" placeholder="View" floatLabel="never">
+      <mat-option *ngIf="me$ | async as me" value="me">Me</mat-option>
+      <mat-option *ngIf="isManagedWholeOrg$ | async" value="everyone">Everyone</mat-option>
+      <mat-option *ngFor="let team of managedTeams$ | async" [value]="team.uuid">
+        {{ team.name | titlecase }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <ng-container *ngIf="isMeView" [ngTemplateOutlet]="meInfo"> </ng-container>
+
+  <mat-form-field class="full-width" floatLabel="never" [style.width.px]="200" [hidden]="isMeView">
+    <mat-label>Members</mat-label>
+    <input formControlName="searchExtension" [matAutocomplete]="auto" matInput class="member__input" />
+    <div class="mat-select-arrow select__arrow"></div>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      <ng-container *ngIf="members$ | async as fMembers">
+        <mat-option *ngFor="let member of fMembers" [value]="member">
+          <span [innerHTML]="member.directoryText | highlight: searchKey"></span>
+        </mat-option>
+        <mat-option *ngIf="!fMembers.length">No member</mat-option>
+      </ng-container>
+    </mat-autocomplete>
+  </mat-form-field>
+</mat-toolbar>
+
+<ng-template #meInfo>
+  <div *ngIf="me" class="member__wrapper">
+    {{ me.displayText }}
+  </div>
+</ng-template>

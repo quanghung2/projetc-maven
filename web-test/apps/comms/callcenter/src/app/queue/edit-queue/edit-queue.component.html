@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Queue information</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <mat-form-field>
+      <input type="number" min="0" max="99" matInput [(ngModel)]="queue.priority" placeholder="Queue priority" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" matInput [(ngModel)]="queue.label" placeholder="Queue label" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input numberPatternQuantity matInput [(ngModel)]="queue.code" placeholder="Queue code" />
+    </mat-form-field>
+    <mat-form-field *ngIf="queue.callflowConfig.genieCode">
+      <mat-label>Flow Name</mat-label>
+      <mat-select [(ngModel)]="queue.callflowConfig.genieCode" placeholder="Flow Name">
+        <mat-option *ngFor="let flow of data['listFlow']" [value]="flow.code"> {{ flow.name }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button [disabled]="saving" (click)="save()" color="primary">
+    <span *ngIf="!saving">Save</span> <span *ngIf="saving">Saving...</span>
+  </button>
+</div>

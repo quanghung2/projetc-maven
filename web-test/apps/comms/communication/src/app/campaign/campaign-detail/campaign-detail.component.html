@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Detail campaign</h1>
+
+<div mat-dialog-content class="container" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+  <div fxLayoutAlign="start stretch">
+    <label fxFlex="40%">UUID:</label>
+    <span fxFlex="60%">
+      {{ campaign.uuid }}
+    </span>
+  </div>
+  <div fxLayoutAlign="start stretch">
+    <label fxFlex="40%">Name:</label>
+    <span fxFlex="60%"> {{ campaign.name }} </span>
+  </div>
+  <div fxLayoutAlign="start stretch">
+    <label fxFlex="40%">Campaign type:</label>
+    <span fxFlex="60%">
+      {{ campaign.type | typeCampaign }}
+    </span>
+  </div>
+  <ng-container *ngIf="campaign.type === CampaignType.voice">
+    <div fxLayoutAlign="start stretch">
+      <label fxFlex="40%">Trigger Flow:</label>
+      <span fxFlex="60%"> {{ campaign.flowLable || '_' }} </span>
+    </div>
+    <div fxLayoutAlign="start stretch">
+      <label fxFlex="40%">Caller ID:</label>
+      <span fxFlex="60%"> {{ campaign.callerId }} </span>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="campaign.type === CampaignType.sms">
+    <div fxLayoutAlign="start stretch">
+      <label fxFlex="40%">Trigger Flow:</label>
+      <span fxFlex="60%"> {{ campaign.flowSMSLable || '_' }} </span>
+    </div>
+  </ng-container>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" mat-dialog-close>Ok</button>
+</div>

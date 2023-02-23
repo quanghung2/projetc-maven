@@ -1,0 +1,259 @@
+<div *ngIf="case" class="side-right-content">
+  <div class="case-info flex column gap-0">
+    <section class="assignee case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Assignee</div>
+        <div class="case-item__action">
+          <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="assigneeMenu">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <ng-container *ngIf="assignees$ | async as assignees">
+          <ng-container *ngIf="assignees.length; else none">
+            <div class="item flex gap-16">
+              <div class="item__avatar">
+                <div [style.background-image]="'url(' + assignees[0].photoUrlOrDefault + ')'" class="avatar"></div>
+              </div>
+              <div class="item__content">
+                <div class="item__title">{{ assignees[0].displayName }}</div>
+                <div>{{ assignees[0].email }}</div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+    <section class="organization case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Organization</div>
+        <div class="case-item__action">
+          <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchOrganization">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <div class="item">
+          <ng-container *ngIf="affectedOrganization$ | async as organization; else none">
+            <div class="item__content flex column gap-8 fluid">
+              <div class="flex column align-items-left justify-content-left">
+                <label class="secondary-text">UUID</label>
+                <shc-copy-button
+                  [tooltip]="'Click to copy'"
+                  [text]="case.srcOrgUuid"
+                  [limitContentLength]="36"
+                  class="item__title gray-300"
+                ></shc-copy-button>
+              </div>
+              <div class="flex column align-items-left justify-content-left">
+                <label class="secondary-text">Name</label> <span class="item__title">{{ organization.name }}</span>
+              </div>
+              <div class="flex column align-items-left justify-content-left">
+                <label class="secondary-text">Domain UUID</label
+                ><span class="item__title">{{ organization.domain }}</span>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+    <section class="product case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Products</div>
+        <div class="case-item__action">
+          <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchProduct">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <div class="item flex gap-16">
+          <ng-container *ngIf="products$ | async as products">
+            <div *ngIf="products.length; else none" class="item__title">
+              {{ products.join(', ') }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+
+    <mat-divider></mat-divider>
+    <section class="type case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Type</div>
+        <div class="case-item__action">
+          <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchType">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <div class="item flex gap-16">
+          <ng-container *ngIf="type$ | async as type; else none">
+            <div class="item__title">
+              {{ type.name | titlecase }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+    <mat-divider></mat-divider>
+
+    <section class="severity case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Severity</div>
+        <div class="case-item__action">
+          <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchSeverity">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <div class="item flex gap-16">
+          <ng-container *ngIf="severity$ | async as severity">
+            <div *ngIf="severity" class="item__title">
+              {{ severity.name | titlecase }}
+            </div>
+            <div *ngIf="!severity" class="item__title secondary-text">
+              <ng-container>None</ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+    <mat-divider></mat-divider>
+
+    <section class="reporter case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Reporter</div>
+      </div>
+      <div class="case-item__content">
+        <div class="item flex gap-16">
+          <ng-container *ngIf="reporter$ | async as reporter; else none">
+            <ng-container *ngIf="reporter">
+              <div class="item__avatar">
+                <div [style.background-image]="'url(' + reporter.photoUrlOrDefault + ')'" class="avatar"></div>
+              </div>
+              <div class="item__content">
+                <div class="item__title">{{ reporter.displayName }}</div>
+                <div>{{ reporter.email }}</div>
+              </div>
+            </ng-container>
+            <div *ngIf="!reporter" class="item__title secondary-text">
+              <ng-container>None</ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </section>
+    <mat-divider></mat-divider>
+
+    <section class="due-date case-item">
+      <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+        <div class="title">Due date</div>
+        <div class="case-item__action">
+          <mat-form-field appearance="fill" class="due-date-form">
+            <input
+              matInput
+              [value]="case.dueAt"
+              [matDatepicker]="dueDatePicker"
+              (dateChange)="onDueDateChange($event)"
+              placeholder="Select due date"
+            />
+            <mat-datepicker #dueDatePicker></mat-datepicker>
+          </mat-form-field>
+          <button mat-icon-button class="material-icons-outlined" (click)="dueDatePicker.open()">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div class="case-item__content">
+        <div class="item flex gap-16">
+          <div [class.red-fg]="case.isReachedDueDate" class="item__title">
+            {{ case.dueAt | date: 'mediumDate' }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #none>
+  <div class="item__title secondary-text">None</div>
+</ng-template>
+
+<mat-menu #assigneeMenu="matMenu" xPosition="before">
+  <ng-template matMenuContent let-cases="cases">
+    <b3n-search-member useFor="assign" (searchResultChange)="onSelectedUserChange($event)"></b3n-search-member>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #searchOrganization="matMenu" xPosition="before">
+  <div (click)="$event.stopPropagation()" class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Organization UUID</mat-label>
+      <input matInput [formControl]="searchOrgFC" placeholder="Enter organization UUID" />
+    </mat-form-field>
+
+    <div class="p-16 pt-0 flex column gap-16">
+      <h3 class="m-0">Search result</h3>
+      <ng-container *ngIf="checkedOrgResult$ | async as organization; else noResultFound">
+        <div class="flex column gap-8">
+          <div class="flex gap-16"><span class="secondary-text">Name</span>{{ organization.name }}</div>
+          <div class="flex gap-16"><span class="secondary-text">Domain</span>{{ organization.domain }}</div>
+        </div>
+        <div class="flex justify-content-end gap-8">
+          <button mat-stroked-button color="primary" (click)="updateSourceOrg(organization)">Reassign</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</mat-menu>
+
+<mat-menu #searchType="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search type</mat-label>
+      <mat-select [value]="case.typeId" (valueChange)="onTypeChange($event)">
+        <mat-option *ngFor="let type of allTypes$ | async" [value]="type.id">{{ type.name | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #searchSeverity="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search severity</mat-label>
+      <mat-select [value]="case.severityId" (valueChange)="onSeverityChange($event)">
+        <mat-option *ngFor="let item of allSeverities$ | async" [value]="item.id">{{
+          item.name | titlecase
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #searchProduct="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search product</mat-label>
+      <mat-select [value]="case.productIds" multiple="true" (valueChange)="onProductChange($event)">
+        <mat-option *ngFor="let item of allProducts$ | async" [value]="item.id">{{ item.name | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<ng-template #noResultFound>
+  <div class="secondary-text">No result found</div>
+  <!-- <div class="flex justify-content-end gap-8">
+    <button mat-button color="warn" (click)="(searchOrganization.close)">Cancel</button>
+  </div> -->
+</ng-template>

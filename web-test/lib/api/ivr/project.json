@@ -1,0 +1,16 @@
+{
+  "name": "api-ivr",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/ivr/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/ivr/**/*.ts", "libs/api/ivr/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

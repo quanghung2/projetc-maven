@@ -1,0 +1,24 @@
+.mat-selection-list {
+  min-height: 160px;
+  max-height: 320px;
+  overflow: auto;
+  width: 100%;
+  padding-top: 0;
+
+  .mat-list-item,
+  .mat-list-option {
+    height: 32px;
+    font-size: 14px;
+
+    .navigate-next {
+      color: #7d7d7d;
+      visibility: hidden;
+    }
+  }
+
+  .mat-list-option:hover {
+    .navigate-next {
+      visibility: visible;
+    }
+  }
+}

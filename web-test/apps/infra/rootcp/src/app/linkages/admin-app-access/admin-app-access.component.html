@@ -1,0 +1,54 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Admin app access </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <ng-container *ngIf="!loading">
+      <form class="action__wrapper" autocomplete="off">
+        <mat-form-field>
+          <mat-label>Search by name</mat-label>
+          <input matInput (keyup)="applyFilter($event.target['value'])" (focus)="setupFilter()" />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="openStoreAdminAppAccess()">Create</button>
+      </form>
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let adminApp">{{ adminApp.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="visibilityType">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let adminApp">{{ adminApp.visibilityType | capitalizeCase }}</td>
+        </ng-container>
+        <ng-container matColumnDef="visibilityExceptions">
+          <th mat-header-cell *matHeaderCellDef>Visibility Exceptions</th>
+          <td mat-cell *matCellDef="let adminApp">
+            <div class="wrapper">
+              <ng-container *ngIf="adminApp.visibilityExceptions.length <= MAX_VISIBILITY_EXCEPTION; else expand">
+                <div *ngFor="let exception of adminApp.visibilityExceptions" class="exception">{{ exception }}</div>
+              </ng-container>
+              <ng-template #expand>
+                <div *ngFor="let x of [].constructor(MAX_VISIBILITY_EXCEPTION); let i = index" class="exception">
+                  {{ adminApp.visibilityExceptions[i] }}
+                </div>
+                <div class="expand">+ {{ adminApp.visibilityExceptions.length - MAX_VISIBILITY_EXCEPTION }}</div>
+              </ng-template>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let adminApp">
+            <div class="icons">
+              <mat-icon matTooltip="Edit" (click)="openStoreAdminAppAccess(adminApp)">edit</mat-icon>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+      </table>
+      <mat-paginator [pageSize]="5" showFirstLastButtons></mat-paginator>
+    </ng-container>
+  </mat-expansion-panel>
+</mat-accordion>

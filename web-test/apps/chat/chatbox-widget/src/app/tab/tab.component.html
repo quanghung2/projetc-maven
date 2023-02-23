@@ -1,0 +1,41 @@
+<!-- // subcribe and destroy  -->
+<ng-container *ngIf="onmessage$ | async"></ng-container>
+
+<ng-container *ngIf="ui$ | async as ui">
+  <ng-container *ngIf="ui.isOpenChat; else viewIcon">
+    <div class="chatbox" fxLayout="column" fxLayoutAlign="start none">
+      <section class="header" fxFlex="52px" fxLayoutAlign="center center">
+        <span class="title">{{ viewChat ? customerInfo?.displayName : 'Chat with us!' }}</span>
+        <mat-icon class="icon-close" (click)="toggleChatBox(false)">close</mat-icon>
+      </section>
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="!viewChat; else chat">
+        <section fxFlex fxLayout="column" fxLayoutAlign="start none">
+          <b3n-form-information
+            fxFlex="auto"
+            [isLoading]="loading"
+            [errorEmail]="errorEmail"
+            [errorPhoneNumber]="errorPhoneNumber"
+            (value)="createCustomer($event)"
+          ></b3n-form-information>
+        </section>
+      </ng-container>
+      <ng-template #chat>
+        <ng-container *ngIf="liveChat$ | async as livechat">
+          <b3n-chatbox-content
+            fxFlex
+            [livechat]="livechat"
+            [hasChatBox]="hasChatBox"
+            [animation]="animation"
+            (onStartOver)="startConvo()"
+          ></b3n-chatbox-content>
+        </ng-container>
+      </ng-template>
+    </div>
+  </ng-container>
+  <ng-template #viewIcon>
+    <button class="icon-launcher" mat-fab color="primary" (click)="toggleChatBox(true)">
+      <mat-icon svgIcon="contact"></mat-icon>
+    </button>
+  </ng-template>
+</ng-container>

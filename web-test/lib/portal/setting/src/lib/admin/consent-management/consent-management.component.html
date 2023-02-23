@@ -1,0 +1,117 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+
+<section fxLayout="column" class="consent-container">
+  <mat-toolbar class="consent-container__header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h1>Consent Management</h1>
+  </mat-toolbar>
+
+  <div fxFlex fxLayout="column" fxLayoutAlign="start none" class="consent-container__body">
+    <div fxLayout="row" class="action-bar" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+        <mat-form-field class="search-name">
+          <input matInput [formControl]="searchCtr" placeholder="Search by name" />
+          <button *ngIf="!!searchCtr.value" mat-icon-button matSuffix>
+            <mat-icon (click)="searchCtr.setValue('')" class="btn-search">clear</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <button *ngIf="!loading; else spinner" mat-icon-button (click)="reload()" matTooltip="Refresh">
+          <mat-icon>autorenew</mat-icon>
+        </button>
+        <ng-template #spinner>
+          <mat-progress-spinner strokeWidth="2" mode="indeterminate" diameter="20"></mat-progress-spinner>
+        </ng-template>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+        <button mat-flat-button color="primary" (click)="openCreateConsent()">Add Consent</button>
+        <button mat-stroked-button (click)="openExport()">Export</button>
+        <b3n-upload-consent (uploadEvent)="loading = $event" (uploadDoneEvent)="reload()"></b3n-upload-consent>
+      </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef>Destination</th>
+        <td mat-cell *matCellDef="let element">{{ element.number }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="voiceStatus">
+        <th mat-header-cell *matHeaderCellDef class="tags-column">Voice Status</th>
+        <td mat-cell *matCellDef="let element" class="tags-column">{{ element.voice | statusConsent }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="faxStatus">
+        <th mat-header-cell *matHeaderCellDef>Fax Status</th>
+        <td mat-cell *matCellDef="let element">{{ element.fax | statusConsent }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="smsStauts">
+        <th mat-header-cell *matHeaderCellDef>Sms Stauts</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.sms | statusConsent }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastModified">
+        <th mat-header-cell *matHeaderCellDef>Last Modified</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.updatedAt | userDate }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="column-action" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.6rem">
+            <button mat-icon-button matTooltip="Edit" (click)="edit(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button mat-icon-button matTooltip="Delete" (click)="delete(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notDataAbvailable">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="columns.length">
+          <div fxLayoutAlign="center center">
+            <span class="mat-body-1">No Data Available</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="footer-table">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="columns.length">
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.25rem" class="footer-table">
+            <button mat-icon-button [disabled]="this.ui.paging.page === 1" (click)="prevPage()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span mat-mini-fab>
+              {{ ui.paging.page }}
+            </span>
+            <button
+              mat-icon-button
+              [disabled]="!this.ui.backUpNext || this.ui.backUpNext.length === 0"
+              (click)="nextPage()"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['notDataAbvailable']"
+        class="no-data-table"
+        [class.hidden]="ui.current && ui.current.length > 0"
+      ></tr>
+      <tr mat-footer-row *matFooterRowDef="['footer-table']"></tr>
+    </table>
+  </div>
+</section>

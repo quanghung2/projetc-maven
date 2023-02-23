@@ -1,0 +1,36 @@
+<h1 mat-dialog-title [class.large-file]="isLargeFile">Upload a file ({{ index + 1 }} of {{ data.max }})</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <section fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+      <img [src]="getFileType(getFileExtension(model.fileName))" />
+      <div class="title" fxFlex fxLayout="column" fxLayoutAlign="start none">
+        <div>{{ model.fileName }}</div>
+        <div>
+          <span class="mat-caption" [class.large-file]="isLargeFile">{{ humanFileSize(model.fileSize) }}</span>
+          <span class="mat-caption" *ngIf="isLargeFile"> (1GB) </span>
+        </div>
+        <mat-progress-bar mode="determinate" *ngIf="uploading" [value]="uploadPercentage"></mat-progress-bar>
+      </div>
+    </section>
+
+    <div class="preview-img" *ngIf="model.isImage">
+      <img fxFill [src]="model.filePath | safe: 'url'" />
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    (click)="handleUploadFile()"
+    [disabled]="isLargeFile || model.uploading"
+    [loading]="uploading"
+    color="primary"
+    #btnFocus="matButton"
+    [autofocus]="btnFocus.focus()"
+  >
+    {{ data.model.uploading ? 'Uploading' : 'Upload' }}
+  </button>
+</div>

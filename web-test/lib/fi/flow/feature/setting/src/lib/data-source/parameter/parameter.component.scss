@@ -1,0 +1,9 @@
+.template {
+  position: relative;
+
+  &__button {
+    position: absolute;
+    bottom: 32px;
+    right: 8px;
+  }
+}

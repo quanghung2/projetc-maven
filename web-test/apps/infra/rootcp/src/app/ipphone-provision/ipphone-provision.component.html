@@ -1,0 +1,86 @@
+<mat-toolbar><h1>IP Phone Provision</h1></mat-toolbar>
+<div class="container" fxLayout="column" fxLayoutAlign="start none">
+  <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+      <mat-form-field fxFlex="150px">
+        <mat-label>Search Model</mat-label>
+        <input matInput placeholder="Enter search text" [formControl]="searchTextCtr" />
+        <mat-icon *ngIf="!!searchTextCtr.value" (click)="searchTextCtr.setValue('')" matSuffix> clear </mat-icon>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="200px">
+        <mat-label>Brand</mat-label>
+        <mat-select [formControl]="brandSelectedCtrl">
+          <mat-option *ngFor="let item of brands" [value]="item.key">
+            {{ item.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+      <button mat-icon-button [loading]="loading" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="createTemplate()">Create New Template</button>
+    </div>
+  </div>
+  <div class="body">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="brand">
+        <th mat-header-cell *matHeaderCellDef>Brand</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.brand | titlecase }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef>Model</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.model }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="version">
+        <th mat-header-cell *matHeaderCellDef>Version</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.version }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="template">
+        <th mat-header-cell *matHeaderCellDef>Template</th>
+        <td mat-cell *matCellDef="let item">
+          <a *ngIf="item.s3Key" (click)="download(item)" style="cursor: pointer">Download</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let item">
+          <div class="btn-action" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+            <a (click)="fileUpload.click()" style="cursor: pointer">Upload</a>
+            <input #fileUpload (change)="uploadFile($event, item)" hidden type="file" />
+
+            <a (click)="openSampleData(item)" style="cursor: pointer">Sample config </a>
+
+            <div>
+              <button mat-icon-button matTooltip="Duplicate" (click)="duplicate(item)">
+                <mat-icon>file_copy</mat-icon>
+              </button>
+
+              <button mat-icon-button color="warn" matTooltip="Delete Template" (click)="deleteTemplate(item)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 15, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

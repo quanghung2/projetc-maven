@@ -1,0 +1,36 @@
+<form [formGroup]="verifyEmailForm" (submit)="verifyEmail()" fxFlexFill novalidate>
+  <div class="frame-content" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxFlexFill>
+    <div class="title">Email Verification</div>
+
+    <mat-form-field fxFlexFill>
+      <mat-label>Please provide a valid email</mat-label>
+      <input
+        matInput
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+        (input)="showErrorSummary = false"
+        required
+      />
+      <mat-error *ngIf="email.invalid">{{ getErrorEmail() }}</mat-error>
+    </mat-form-field>
+
+    <div class="noti-summary error" *ngIf="showErrorSummary">{{ error }}</div>
+    <div class="noti-summary success" *ngIf="showSuccessSummary">
+      We’ll send an email with a verification URL to the above address. Please check and click on the URL to complete
+      the process
+    </div>
+
+    <button
+      mat-raised-button
+      type="submit"
+      color="primary"
+      [loading]="indicator"
+      [style.backgroundColor]="verifyEmailForm.valid && !indicator ? config.loginButtonBackground : ''"
+      [disabled]="verifyEmailForm.invalid || indicator"
+      fxFlexFill
+    >
+      Verify My Email
+    </button>
+  </div>
+</form>

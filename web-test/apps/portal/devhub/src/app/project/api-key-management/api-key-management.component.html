@@ -1,0 +1,60 @@
+<mat-toolbar><h1>API Key</h1></mat-toolbar>
+
+<ng-container *ngIf="loading; else content">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="30" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-container>
+
+<ng-template #content>
+  <div class="container">
+    <mat-card
+      *ngIf="assignedApiKey; else noApiKey"
+      class="card"
+      class="api-keys"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <div fxLayout="column">
+        <div class="api-key-title">Active API Key</div>
+        <div class="sub-title">Created {{ assignedApiKey.created | timeAgo }}</div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="1.5rem">
+        <div fxLayout="column" class="api-key-container">
+          <ng-container>
+            <div *ngIf="!showApiKey" class="api-key">{{ assignedApiKey?.displayApiKey }}</div>
+            <div *ngIf="showApiKey" class="api-key">{{ assignedApiKey.apiKey }}</div>
+          </ng-container>
+          <div fxLayout="row">
+            <button (click)="toggleViewApiKey()" color="primary" disableRipple mat-button>
+              {{ showApiKey ? 'Hide' : 'Show' }}
+            </button>
+            <button
+              (click)="copied()"
+              [cdkCopyToClipboard]="assignedApiKey.apiKey"
+              [disabled]="!showApiKey"
+              disableRipple
+              mat-button
+            >
+              Copy
+            </button>
+          </div>
+        </div>
+        <div>
+          <button [matMenuTriggerFor]="menu" mat-stroked-button>Actions</button>
+          <mat-menu #menu="matMenu">
+            <button (click)="confirmReset()" class="btn-warning" mat-menu-item>Reset</button>
+            <button (click)="confirmDelete()" class="btn-warning" mat-menu-item>Delete</button>
+          </mat-menu>
+        </div>
+      </div>
+    </mat-card>
+
+    <ng-template #noApiKey>
+      <div fxLayout="column" fxLayoutAlign="center center" class="no-data-container">
+        <div class="no-api-message">No API Key found. Click the button below to create one</div>
+        <button (click)="create()" color="primary" mat-flat-button>Create</button>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>

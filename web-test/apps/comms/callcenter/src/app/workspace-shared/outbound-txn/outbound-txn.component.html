@@ -1,0 +1,130 @@
+<h1 mat-dialog-title>Call from auto dialer</h1>
+
+<div mat-dialog-content>
+  <form #form="ngForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+    <div>
+      <strong>UUID:</strong>
+      {{ _me.assignedTxn.txnUuid }}
+    </div>
+
+    <div>
+      <strong>Queue:</strong>
+      {{ _me.assignedTxn.queue.label }}
+    </div>
+
+    <div *ngIf="campaign" fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+      <div>
+        <strong>Campaign:</strong>
+        {{ campaign.name }}
+      </div>
+
+      <div>
+        <strong>Mode:</strong>
+        {{ campaign.mode }}
+      </div>
+    </div>
+
+    <div>
+      <strong>Status:</strong>
+      {{ _me.assignedTxn.status }}
+      <span *ngIf="inAcwMode">(after call work)</span>
+    </div>
+
+    <div class="customer-info info">
+      <div><strong>Customer Info</strong></div>
+
+      <ul>
+        <li>Number: {{ _me.assignedTxn.customerNumber }}</li>
+
+        <li *ngFor="let info of _me.assignedTxn.customerInfoInList">
+          {{ info.header }}: {{ info.data }}
+          <span *ngIf="info.header.toLowerCase() === 'link'">
+            <button mat-icon-button [cdkCopyToClipboard]="info.data" (cdkCopyToClipboardCopied)="copy()">
+              <mat-icon>content_copy</mat-icon>
+            </button>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="full-width">
+      <strong>Answer script:</strong>
+
+      <textarea
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        class="script-text-color"
+        matInput
+        [value]="_me.assignedTxn.queue.agentWorkflowConfig.script"
+        disabled
+      ></textarea>
+    </div>
+
+    <ng-container *ngIf="hasCustomField; else loadDespositionCode">
+      <div class="full-width">
+        <div *ngFor="let field of customFields; let i = index">
+          <b3n-display-custom-field [detailField]="field"></b3n-display-custom-field>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadDespositionCode>
+      <mat-form-field>
+        <mat-select
+          placeholder="Disposition Code"
+          [(value)]="request.code"
+          [disabled]="_me.assignedTxn.status === 'transfering' || _me.assignedTxn.status === 'waiting'"
+        >
+          <mat-option [value]="code" *ngFor="let code of _me.assignedTxn.queue.agentWorkflowConfig.codeOptions">
+            {{ code }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-template>
+
+    <mat-form-field *ngIf="!_me.assignedTxn.queue.agentWorkflowConfig.disableNotes">
+      <textarea
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        matInput
+        placeholder="Note"
+        [(ngModel)]="request.note"
+        [disabled]="_me.assignedTxn.status === 'transfering' || _me.assignedTxn.status === 'waiting'"
+        name="note"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <span class="fill-remaining-space"></span>
+
+  <ng-container *ngIf="campaign && campaign.mode == 'preview'">
+    <button (click)="takeAction('skip')" *ngIf="_me.assignedTxn.status === 'previewing'" mat-raised-button>Skip</button>
+
+    <button
+      (click)="takeAction('dial')"
+      *ngIf="_me.assignedTxn.status === 'previewing'"
+      mat-raised-button
+      color="primary"
+    >
+      Dial
+    </button>
+  </ng-container>
+
+  <button
+    *ngIf="
+      _me.assignedTxn.status !== 'dialingAgent' &&
+      _me.assignedTxn.status !== 'dialingCustomer' &&
+      _me.assignedTxn.status !== 'previewing' &&
+      (_me.assignedTxn.status !== 'talking' || inAcwMode)
+    "
+    (click)="takeAction('done')"
+    mat-raised-button
+    color="primary"
+  >
+    Finish call
+  </button>
+</div>

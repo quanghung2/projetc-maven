@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  .import-mapping {
+    .disable-color {
+      color: var(--gray-200);
+    }
+    &__upload-btn {
+      margin: 0.25rem 0.8rem 0 0;
+    }
+    &__content {
+      button {
+        width: 100%;
+      }
+      &__progress-bar {
+        height: 3px;
+      }
+    }
+    &__name {
+      text-align: center;
+      color: rgba(0, 0, 0, 0.67);
+    }
+  }
+}

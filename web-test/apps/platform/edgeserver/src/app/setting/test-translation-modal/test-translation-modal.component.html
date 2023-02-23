@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Test Translation</h2>
+<mat-dialog-content class="mat-typography">
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.8rem">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput placeholder="Name" [value]="name" disabled="true" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter number</mat-label>
+      <input matInput placeholder="Enter number" [formControl]="number" [b3nRetrictInput]="'[0-9]+$'" />
+      <mat-error *ngIf="number?.errors?.['required']">Number can't be empty</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Result</mat-label>
+      <input matInput placeholder="Result" [value]="translationProfile?.translated_number" disabled="true" />
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="isLoading"
+    [disabled]="number.invalid"
+    (click)="onTestTranslation()"
+  >
+    Test Translation
+  </button>
+</mat-dialog-actions>

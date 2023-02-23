@@ -1,0 +1,27 @@
+<mat-drawer-container hasBackdrop="true">
+  <mat-drawer-content>
+    <mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem" class="attendant__header">
+      <h1>Licenses</h1>
+      <!-- <nav mat-tab-nav-bar>
+        <a
+          mat-tab-link
+          *ngFor="let link of links"
+          [routerLink]="link.key"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [active]="rla.isActive"
+        >
+          {{ link.value }}
+        </a>
+      </nav> -->
+    </mat-toolbar>
+    <div class="p-16">
+      <b3n-licenses></b3n-licenses>
+    </div>
+  </mat-drawer-content>
+
+  <mat-drawer mode="over" opened="false" position="end">
+    <b3n-assignment-page></b3n-assignment-page>
+  </mat-drawer>
+</mat-drawer-container>

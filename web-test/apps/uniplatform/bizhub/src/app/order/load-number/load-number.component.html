@@ -1,0 +1,41 @@
+<div fxLayout="column" class="mass-configuration">
+  <div mat-dialog-title>Load numbers</div>
+
+  <div fxLayout="column" fxLayoutGap="2rem">
+    <div class="secondary-text">
+      Load numbers from file.
+      <a href="javascript:void(0)" (click)="downloadSample()">Download sample file</a>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="1rem">
+      <div fxLayout="column" fxLayoutGap="1rem">
+        <mat-form-field>
+          <div>
+            <div fxLayout="row" fxLayoutAlign="space-between center" class="upload-file-block">
+              <!-- Display files names -->
+              <input matInput [value]="filename" readonly name="name" />
+
+              <!-- Browse Button -->
+              <button mat-button color="primary">Browse File</button>
+            </div>
+
+            <!-- Fetch selected filed on change -->
+            <input
+              type="file"
+              #uploadFileInput
+              id="uploadFile"
+              (change)="uploadFileEvt($event)"
+              name="uploadFile"
+              accept=".csv"
+            />
+          </div>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button [loading]="uploading" mat-raised-button color="primary" (click)="update()">Done</button>
+    </div>
+  </div>
+</div>

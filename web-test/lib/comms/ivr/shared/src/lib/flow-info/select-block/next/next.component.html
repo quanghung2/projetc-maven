@@ -1,0 +1,86 @@
+<h1
+  mat-dialog-title
+  *ngIf="isIncomingBlock || [BlockType.gather, BlockType.condition, BlockType.webhook].indexOf(block.type) < 0"
+>
+  Next step
+</h1>
+<div mat-dialog-content>
+  <mat-nav-list
+    fxLayout="row"
+    fxLayoutAlign="right center"
+    *ngIf="!isIncomingBlock && [BlockType.gather, BlockType.condition, BlockType.webhook].indexOf(block.type) >= 0"
+    class="multiple-content"
+  >
+    <a mat-list-item href="javascript:void(0)" (click)="createMultipleBlocks()"> Next Step(s) </a>
+  </mat-nav-list>
+  <div *ngIf="isIncomingBlock || [BlockType.gather, BlockType.condition, BlockType.webhook].indexOf(block.type) < 0">
+    <h4 *ngIf="block?.type == BlockType.transfer" class="mat-subheading-1">
+      Configure next step if <b>{{ block?.label }}</b> missed a call.
+    </h4>
+
+    <mat-nav-list *ngIf="showBasicMode">
+      <a mat-list-item href="javascript:void(0)" *ngFor="let option of basicOptions" (click)="selectType(option)">
+        <img
+          *ngIf="option.key == BlockType.gather"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-extension.png"
+        />
+        <img
+          *ngIf="option.key == BlockType.notification"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-voicemail.png"
+        />
+        <i *ngIf="option.key == BlockType.play" class="material-icons" style="color: #6eaae7">play_circle_outline</i>
+        <i *ngIf="option.key == BlockType.transfer" class="material-icons" style="color: #52c174; font-weight: bold"
+          >call</i
+        >
+        <i *ngIf="option.key == BlockType.monitor" class="material-icons" style="color: indianred">record_voice_over</i>
+        {{ option.value }}
+      </a>
+    </mat-nav-list>
+
+    <mat-nav-list *ngIf="!showBasicMode">
+      <a
+        mat-list-item
+        href="javascript:void(0)"
+        *ngFor="let option of advanceOptions"
+        [class.hidden]="option.key == BlockType.go && tree.nodes.length == 0"
+        (click)="selectType(option)"
+      >
+        <img
+          *ngIf="option.key == BlockType.condition"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-condition.png"
+        />
+        <img
+          *ngIf="option.key == BlockType.confirmation"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-confirmation.png"
+        />
+        <img *ngIf="option.key == BlockType.go" class="ui image" src="assets/ivr-shared/images/vc-icon-back.png" />
+        <img
+          *ngIf="option.key == BlockType.webhook"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-webhook.png"
+        />
+        <img
+          *ngIf="option.key == BlockType.genie"
+          class="ui image"
+          src="assets/ivr-shared/images/vc-icon-genie.png"
+          class="genie-icon"
+        />
+        {{ option.value }}
+      </a>
+    </mat-nav-list>
+  </div>
+</div>
+
+<div
+  *ngIf="isIncomingBlock || [BlockType.gather, BlockType.condition, BlockType.webhook].indexOf(block.type) < 0"
+  mat-dialog-actions
+  align="end"
+>
+  <button mat-button mat-dialog-close>Close</button>
+  <button *ngIf="showBasicMode" mat-button color="primary" (click)="showBasicMode = false">Advanced next step</button>
+  <button *ngIf="!showBasicMode" mat-button color="primary" (click)="showBasicMode = true">Basic next step</button>
+</div>

@@ -1,0 +1,59 @@
+<h1 mat-dialog-title>Caller Announcement Message</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <ng-container *ngIf="!loading">
+      <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem">
+        <mat-label>Message to play</mat-label>
+        <b3n-tts-mp3-msg-cfg
+          class="enabled-control"
+          [ttsCfg]="gatherMsg"
+          [showPlay]="true"
+          [showNote]="true"
+        ></b3n-tts-mp3-msg-cfg>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-label class="enabled-control__label">Repeat every (in seconds)</mat-label>
+        <div>
+          <mat-form-field class="digit">
+            <input type="number" [(ngModel)]="queue.callflowConfig.waitTime" matInput />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-label class="enabled-control__label">Max gather times</mat-label>
+        <div>
+          <mat-form-field class="digit">
+            <input type="number" [(ngModel)]="queue.callflowConfig.maxGatherTimes" matInput />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-label class="enabled-control__label">Gather timeout after (in seconds)</mat-label>
+        <div>
+          <mat-form-field class="digit">
+            <input type="number" [(ngModel)]="queue.callflowConfig.gatherTimeout" matInput />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="0.8rem">
+        <mat-label>Hangup message on max gather time</mat-label>
+        <b3n-tts-mp3-msg-cfg
+          class="enabled-control"
+          [ttsCfg]="hangupMsgOnMaxGatherTimes"
+          [showPlay]="true"
+          [showNote]="false"
+        ></b3n-tts-mp3-msg-cfg>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="save()" color="primary">Save</button>
+</div>

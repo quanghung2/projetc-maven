@@ -1,0 +1,170 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Outbound Call</h1>
+</sui-template-portal>
+
+<ng-container *ngIf="extension$ | async as extension">
+  <div class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+      <section fxLayout="row">
+        <ng-container *ngIf="allowedCallerId$ | async as allowedCallerId">
+          <mat-form-field fxFlex="400px">
+            <mat-label>CallerID</mat-label>
+            <mat-select panelClass="select-callerid" [(ngModel)]="extension.callerId" placeholder="select caller ID">
+              <ng-container *ngIf="allowedCallerId?.private?.length > 0">
+                <mat-option [value]="allowedCallerId?.private[0]">
+                  {{ allowedCallerId?.private[0] | titlecase }}
+                </mat-option>
+              </ng-container>
+              <mat-optgroup *ngIf="allowedCallerId?.identity?.length > 0" label="Identity">
+                <mat-option *ngFor="let item of allowedCallerId?.identity" [value]="item">
+                  {{ item }}
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup *ngIf="allowedCallerId?.auto?.length > 0" label="Auto">
+                <mat-option *ngFor="let item of allowedCallerId?.auto" [value]="item">
+                  {{ item | callerIDPipe }}
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup *ngIf="allowedCallerId?.groupCallerId?.length > 0" label="Call Group">
+                <mat-option *ngFor="let item of allowedCallerId?.groupCallerId" [value]="item">
+                  {{ item }}
+                </mat-option>
+              </mat-optgroup>
+              <mat-optgroup *ngIf="allowedCallerId?.delegation?.length > 0" label="Delegation">
+                <mat-option *ngFor="let item of allowedCallerId?.delegation" [value]="item">
+                  {{ item }}
+                </mat-option>
+              </mat-optgroup>
+
+              <mat-optgroup *ngIf="allowedCallerId?.org?.length > 0" label="Organization">
+                <mat-option *ngFor="let item of allowedCallerId?.org" [value]="item">
+                  {{ item }}
+                </mat-option>
+              </mat-optgroup>
+
+              <mat-optgroup *ngIf="allowedCallerId?.byocNumbers?.length > 0" label="BYOC Trunk">
+                <mat-option *ngFor="let item of allowedCallerId?.byocNumbers" [value]="item">
+                  {{ item }}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+      </section>
+
+      <ng-container *ngIf="hasDnc$ | async">
+        <section fxLayout="row">
+          <mat-form-field fxFlex="400px">
+            <mat-label>DNC</mat-label>
+            <mat-select [(ngModel)]="extension.dncAction" [disabled]="!isAllowDNC && currentOrg.isMember">
+              <mat-option [value]="ComplianceAction.BLOCK">Block</mat-option>
+              <mat-option [value]="ComplianceAction.CHECK_AND_ASK">Prompt (Check and ask)</mat-option>
+              <mat-option [value]="ComplianceAction.BYPASS">Allow (Bypass)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+
+        <section fxLayout="row">
+          <mat-form-field fxFlex="400px">
+            <mat-label>Company Blacklist/Whitelist</mat-label>
+            <mat-select [(ngModel)]="extension.consentAction" [disabled]="!isAllowDNC && currentOrg.isMember">
+              <mat-option [value]="ComplianceAction.BLOCK">Block</mat-option>
+              <mat-option [value]="ComplianceAction.CHECK_AND_ASK">Prompt (Check and ask)</mat-option>
+              <mat-option [value]="ComplianceAction.BYPASS">Allow (Bypass)</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </section>
+      </ng-container>
+
+      <section fxLayout="column" class="w-100">
+        <h3 class="mb-10">Speed dial configuration</h3>
+        <div *ngIf="!speedDial.length && !addSpeedDialFlag" fxLayout="row" fxLayoutAlign="center center">
+          Do not have any speed dial config. Click &nbsp;<a (click)="addSpeedDialFlag = true" class="add__btn">Add</a
+          >&nbsp; to config now.
+        </div>
+
+        <ng-container *ngIf="speedDial.length || (!speedDial.length && addSpeedDialFlag)">
+          <form [formGroup]="form" autocomplete="off" fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="center center">
+            <mat-form-field fxFlex="30">
+              <mat-label>Key</mat-label>
+              <input matInput formControlName="key" />
+            </mat-form-field>
+            <mat-form-field fxFlex="70">
+              <mat-label>Phone Number</mat-label>
+              <input matInput formControlName="phoneNumber" />
+            </mat-form-field>
+            <button mat-stroked-button color="primary" [disabled]="form.invalid" (click)="addSpeedDial()">Add</button>
+          </form>
+
+          <div fxLayout="column" fxAlignGap="1rem" class="errors">
+            <ng-container *ngIf="key.invalid && (key.dirty || key.touched)">
+              <mat-error *ngIf="key.errors?.['required']">* Key is required</mat-error>
+              <mat-error *ngIf="key.errors?.['pattern']">* Key requires from 1 to 2 digits</mat-error>
+            </ng-container>
+            <ng-container *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)">
+              <mat-error *ngIf="phoneNumber.errors?.['required']">* Phone number is required</mat-error>
+              <mat-error>* Number format must be &lt;+>&lt;country code>&lt;area code>&lt;phone number></mat-error>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <div *ngIf="speedDial.length" class="speed-dial__wrapper">
+          <div *ngFor="let s of speedDial; let i = index">
+            <div class="speed-dial__row" [id]="s[0]" [class.hover__row]="editSpeedDialFlag === s[0]">
+              <form
+                *ngIf="editSpeedDialFlag === s[0]; else line"
+                autocomplete="off"
+                (keyup)="escapeForm($event)"
+                (ngSubmit)="editPhoneNumber(i)"
+              >
+                <span
+                  >Press key <strong>{{ s[0] }}</strong> to dial</span
+                >
+                <mat-form-field class="input__wrapper">
+                  <input
+                    matInput
+                    type="text"
+                    [id]="s[0]"
+                    [value]="s[1]"
+                    (input)="phoneNumberChange($event.target['value'])"
+                  />
+                </mat-form-field>
+              </form>
+              <ng-template #line>
+                <div *ngIf="editSpeedDialFlag !== s[0]" class="line">
+                  <span
+                    >Press key <strong>{{ s[0] }}</strong> to dial <strong>{{ s[1] }}</strong></span
+                  >
+                </div>
+              </ng-template>
+              <div class="icon__wrapper">
+                <ng-container *ngIf="editSpeedDialFlag === s[0]; else ediDelete">
+                  <mat-icon (click)="cancelEditPhoneNumber()">close</mat-icon>
+                  <mat-icon (click)="editPhoneNumber(i)" [ngClass]="editSpeedDialError && 'disabled'" color="primary"
+                    >check</mat-icon
+                  >
+                </ng-container>
+                <ng-template #ediDelete>
+                  <mat-icon (click)="startEditPhoneNumber(s[0])">edit</mat-icon>
+                  <mat-icon color="warn" (click)="delSpeedDial(i)">delete_outline</mat-icon>
+                </ng-template>
+              </div>
+            </div>
+            <mat-error *ngIf="editSpeedDialFlag === s[0] && editSpeedDialError">{{ editSpeedDialError }}</mat-error>
+          </div>
+        </div>
+      </section>
+
+      <button
+        fxFlexAlign="end"
+        mat-stroked-button
+        color="primary"
+        [loading]="progressing"
+        [disabled]="progressing"
+        (click)="onSave(extension)"
+      >
+        Apply
+      </button>
+    </div>
+  </div>
+</ng-container>

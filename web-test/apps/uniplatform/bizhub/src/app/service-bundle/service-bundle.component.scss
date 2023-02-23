@@ -1,0 +1,54 @@
+:host {
+  .bundles {
+    &__header {
+      background-color: transparent;
+    }
+  }
+  .bundles-progress-bar {
+    position: absolute;
+    top: 0;
+  }
+  .search-box {
+    width: 320px;
+  }
+  .filter-status-container {
+    min-width: 80px;
+  }
+  .bundles-table {
+    th,
+    td {
+      padding: 0 1rem;
+    }
+    .mat-column-actions {
+      width: 120px;
+      > * {
+        display: none;
+      }
+    }
+    .mat-column-updatedAt {
+      width: 110px;
+    }
+    .mat-column-bundleUuid {
+      font-size: 13px;
+    }
+    .mat-column-description {
+      width: 400px;
+    }
+    .mat-column-status {
+      padding: 0 1rem;
+      .box {
+        border-radius: 4px;
+        padding: 2px 12px;
+      }
+      width: 100px;
+    }
+    .mat-row:hover {
+      background-color: #fafafa;
+      .mat-column-actions {
+        > * {
+          display: flex;
+        }
+      }
+    }
+  }
+}

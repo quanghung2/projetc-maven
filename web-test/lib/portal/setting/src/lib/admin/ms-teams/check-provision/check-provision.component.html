@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>Provision direct routing</h1>
+<div mat-dialog-content class="d-flex flex-column">
+  <div *ngIf="!isLoading">
+    <div *ngIf="!enabledDirectRouting" fxLayout="column" fxLayoutGap="1.6rem" class="content">
+      <div fxLayout="column" fxLayoutGap="0.8rem">
+        <span class="secondary-text">Provision type</span>
+
+        <mat-radio-group
+          aria-label="Select an option"
+          fxLayout="row"
+          fxLayoutGap="1.6rem"
+          [(ngModel)]="addressOfRecordMode"
+        >
+          <div flex="1 1 0"><mat-radio-button value="extKey">Extension</mat-radio-button></div>
+          <div flex="1 1 0"><mat-radio-button value="did">DDI numbers</mat-radio-button></div>
+          <div flex="1 1 0"><mat-radio-button value="systemDefined">System defined</mat-radio-button></div>
+        </mat-radio-group>
+      </div>
+
+      <div fxLayout="column" fxLayoutGap="0.5rem">
+        Provision for all selected devices to your Microsoft Account and this type will be applied to the whole system.
+      </div>
+    </div>
+
+    <div *ngIf="enabledDirectRouting">
+      Provision for all selected devices to your Microsoft Account and this type will be applied to the whole system
+    </div>
+  </div>
+
+  <!-- <div>This action will upload and provision all selected numbers to your Microsoft account.?</div> -->
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!addressOfRecordMode && !enabledDirectRouting"
+    (click)="enableDirectRouting()"
+    mat-button
+  >
+    Provision
+  </button>
+</div>

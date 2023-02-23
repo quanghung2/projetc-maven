@@ -1,0 +1,36 @@
+<div mat-dialog-title>
+  <div>Assign permissions</div>
+  <div class="sub-title">Select a member and assign permissions</div>
+</div>
+<form [formGroup]="formPermission" fxLayout="column">
+  <mat-form-field>
+    <mat-label>Member</mat-label>
+    <input matInput size="auto" formControlName="member" [matAutocomplete]="auto" placeholder="Search member" />
+    <span (click)="onReset()" mat-icon-button matSuffix class="cursor-pointer">
+      <mat-icon>close</mat-icon>
+    </span>
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selectMemberChanged($event)">
+      <mat-option *ngFor="let option of filteredMembers$ | async" [value]="option">
+        {{ option.displayName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field *ngIf="permissions$ | async as permissions">
+    <mat-label>Assign permissions</mat-label>
+    <mat-select multiple formControlName="permissions" #perSelect>
+      <mat-option
+        *ngFor="let p of permissions"
+        [value]="p.action"
+        (onSelectionChange)="isFileExplorer && onCheckFileExplorer($event, p, perSelect)"
+        [disabled]="p.disabled"
+        >{{ p.displayText }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+</form>
+<div mat-dialog-actions align="end">
+  <button mat-dialog-close mat-button>Cancel</button>
+  <button (click)="onAssign()" [loading]="progressing" mat-flat-button color="primary" [disabled]="!selectedMember">
+    Assign
+  </button>
+</div>

@@ -1,0 +1,52 @@
+.container {
+  max-width: 650px;
+  margin: auto;
+}
+
+.public-holiday__container {
+
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+.public-holiday__card {
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .content__row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+      }
+
+      .information {
+        font-size: 14px;
+        position: relative;
+
+        i {
+          font-size: 14px;
+
+          &:hover {
+            color: #2196f3;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}

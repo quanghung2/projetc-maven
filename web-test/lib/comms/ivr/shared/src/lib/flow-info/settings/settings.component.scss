@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+.settings-section {
+  ::ng-deep.mat-tab-body-wrapper {
+    padding: 0.8rem 0;
+  }
+  padding: 0 1.6rem !important;
+}

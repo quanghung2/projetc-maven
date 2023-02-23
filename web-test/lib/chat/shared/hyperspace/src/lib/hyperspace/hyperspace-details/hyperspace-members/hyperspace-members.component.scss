@@ -1,0 +1,32 @@
+:host {
+  .members {
+    padding-top: 0;
+    margin: 0 -24px;
+    .member {
+      height: 36px;
+      ::ng-deep {
+        .mat-list-item-content {
+          margin-left: 7px;
+        }
+      }
+
+      .box {
+        color: #007be0;
+        border: 1px solid #007be0;
+        padding: 1px 5px;
+        font-size: 12px;
+        text-align: center;
+        border-radius: 2px;
+
+        &.other-org {
+          color: #e95849;
+          border: 1px solid #e95849;
+        }
+      }
+    }
+  }
+
+  button {
+    margin-top: 8px;
+  }
+}

@@ -1,0 +1,73 @@
+.header {
+  position: fixed !important;
+  top: 0;
+  z-index: 2;
+
+  a {
+    color: white;
+    text-decoration: none;
+    padding-right: 1.6em;
+    &:hover {
+      text-decoration: none !important;
+    }
+  }
+}
+
+.active {
+  background-color: brown !important;
+}
+
+.mat-button {
+  color: white;
+}
+
+.icon {
+  zoom: 0.7;
+  margin-right: 0.1em;
+}
+
+.material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle !important;
+}
+
+.boundtype {
+  ::ng-deep.mat-form-field-appearance-legacy .mat-form-field-underline {
+    height: 0;
+  }
+  font-size: 0.8em;
+  mat-form-field {
+    width: 6em;
+    height: 100%;
+  }
+}
+
+.right-area {
+  height: 100%;
+  div {
+    height: 100%;
+  }
+}
+
+.select-bound {
+  font-size: 0.8em;
+}
+.me {
+  line-height: 1.6rem;
+  padding: 0.4rem 0;
+}
+
+::ng-deep.status-menu {
+  width: 160px;
+}
+
+.explain-msg {
+  width: 12em;
+  padding: 0 0.5em;
+  font-style: italic;
+}
+.hiden {
+  display: none;
+}

@@ -1,0 +1,57 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Call Recordings</h1>
+</sui-template-portal>
+
+<div class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+  <ng-container *ngIf="extension$ | async as extension">
+    <div class="body" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+      <mat-slide-toggle labelPosition="before" [(ngModel)]="extension.crConfig.isEnableIncoming">
+        <span class="spacer"
+          >Toggle {{ extension.crConfig.isEnableIncoming ? ' off to disable ' : ' on to enable ' }} recording for the
+          incoming</span
+        >
+      </mat-slide-toggle>
+
+      <ng-container *ngIf="extension.crConfig.isEnableIncoming">
+        <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+          <cos-tts-config
+            #TtsConfig
+            *ngIf="incomingTts"
+            [text2Speech]="incomingTts"
+            (changed)="ttsChanged($event, extension.crConfig.incomingTts)"
+          ></cos-tts-config>
+        </div>
+      </ng-container>
+
+      <mat-divider></mat-divider>
+
+      <mat-slide-toggle labelPosition="before" [(ngModel)]="extension.crConfig.isEnableOutgoing">
+        <span class="spacer"
+          >Toggle {{ extension.crConfig.isEnableOutgoing ? ' off to disable ' : ' on to enable ' }} recording for the
+          outgoing
+        </span>
+      </mat-slide-toggle>
+
+      <ng-container *ngIf="extension.crConfig.isEnableOutgoing">
+        <mat-form-field>
+          <mat-label>Record when</mat-label>
+          <mat-select [(ngModel)]="extension.crConfig.crAction">
+            <mat-option [value]="CrAction.RECORD_ALL">Record all</mat-option>
+            <mat-option [value]="CrAction.ASK_TO_RECORD">Ask to record</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+
+      <button
+        fxFlexAlign="end"
+        mat-stroked-button
+        color="primary"
+        [disabled]="saving || (extension.crConfig.isEnableIncoming && isValidInput)"
+        [loading]="saving"
+        (click)="onSave(extension)"
+      >
+        <span>Apply</span>
+      </button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,75 @@
+@import 'scss/core';
+@import 'app/app.theme.scss';
+@import '../../../libs/fi/flow/shared/src/assets/shared.scss';
+@import './assets/style/ckeditor-style.scss';
+
+@mixin img {
+  position: relative;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  // background-color: #eee !important;
+}
+
+.no-avatar {
+  @include img;
+  line-height: 32px;
+
+  background: #cecece;
+  border: 1px solid #cecece;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.avatar {
+  @include img;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.avatar-size {
+  height: 16px !important;
+  width: 16px !important;
+  font-size: 8px !important;
+  vertical-align: middle;
+}
+
+.avatar-mini-size {
+  height: 14px !important;
+  width: 14px !important;
+  font-size: 7px !important;
+  vertical-align: middle;
+}
+
+.container,
+.container-fluid {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: auto 16px;
+}
+.container-limited {
+  max-width: 1280px;
+  &.limit-container-width {
+    max-width: 990px;
+  }
+}
+
+.fluid {
+  width: 100%;
+}
+
+.mat-form-field {
+  min-width: 180px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

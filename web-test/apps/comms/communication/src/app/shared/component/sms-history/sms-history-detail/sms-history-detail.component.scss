@@ -1,0 +1,53 @@
+:host {
+  display: block;
+
+  strong {
+    font-weight: 500;
+  }
+
+  .history-detail {
+    height: 100vh;
+    &__header {
+      padding: 1.5rem 2rem;
+
+      h2 {
+        margin-bottom: 0 !important;
+      }
+    }
+    &__content {
+      padding: 1.5rem 2rem;
+
+      .label {
+        color: var(--gray-600);
+      }
+
+      .status {
+        box-shadow: 0 0 3px #9b9b9b;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+
+        &.red {
+          background-color: #bf2600;
+        }
+
+        &.green {
+          background-color: #0abd00;
+        }
+      }
+    }
+    .no-meta-data {
+      font-size: 16px;
+      color: var(--gray-700);
+      padding: 3rem;
+      text-align: center;
+    }
+    .sms-icon {
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      margin-bottom: 0.75rem;
+      color: var(--gray-700);
+    }
+  }
+}

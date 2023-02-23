@@ -1,0 +1,29 @@
+:host {
+  ::ng-deep .mat-tab-body-wrapper {
+    padding-top: 1.6rem;
+  }
+
+  .title {
+    font-weight: 550;
+  }
+
+  .numbers__list {
+    .number {
+      &:hover {
+        background-color: whitesmoke;
+      }
+      &.active {
+        background-color: teal;
+        color: white;
+        border-color: teal;
+      }
+    }
+    .no-number {
+      width: 100%;
+    }
+  }
+  .selected__numbers {
+    max-height: 216px;
+    overflow: auto;
+  }
+}

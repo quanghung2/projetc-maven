@@ -1,0 +1,29 @@
+:host {
+  min-width: 800px;
+
+  mat-form-field {
+    min-width: 150px !important;
+
+    ::ng-deep .mat-form-field-flex {
+      // X button clear flex end
+      align-items: flex-end;
+
+      mat-icon {
+        cursor: pointer;
+      }
+
+      .hidden-icon {
+        display: none;
+      }
+    }
+  }
+  .resource-checkbox {
+    margin-right: 1.5rem !important;
+    font-size: 14px !important;
+  }
+}
+
+.hidden-type,
+.hidden-status {
+  display: none !important;
+}

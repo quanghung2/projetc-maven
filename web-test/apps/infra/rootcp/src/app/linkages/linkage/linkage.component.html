@@ -1,0 +1,90 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Linkage </mat-panel-title>
+    </mat-expansion-panel-header>
+    <form class="linkage__form" autocomplete="off" [formGroup]="form">
+      <mat-form-field>
+        <mat-label>Buyer Uuid</mat-label>
+        <input matInput formControlName="buyerUuid" />
+        <mat-error>* Buyer Uuid is required</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Seller Uuid</mat-label>
+        <input matInput formControlName="sellerUuid" />
+        <mat-error>* Seller Uuid is required</mat-error>
+      </mat-form-field>
+    </form>
+    <div class="action__wrapper">
+      <button
+        mat-raised-button
+        color="primary"
+        [loading]="linkageSearching"
+        [disabled]="form.invalid"
+        (click)="searchLinkage()"
+      >
+        Search
+      </button>
+      <button mat-raised-button color="primary" (click)="openStoreLinkageDialog()">Create</button>
+    </div>
+    <table mat-table *ngIf="linkageDataSource" [dataSource]="linkageDataSource">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let linkage">{{ linkage.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="buyerUuid">
+        <th mat-header-cell *matHeaderCellDef>Buyer Uuid</th>
+        <td mat-cell *matCellDef="let linkage">
+          <div
+            class="uuid"
+            matTooltip="Click to copy"
+            ngxClipboard
+            [cbContent]="linkage.buyerUuid"
+            (cbOnSuccess)="copied()"
+            (cbOnError)="copyFailed()"
+          >
+            {{ linkage.buyerUuid | slice: 0:8 }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="sellerUuid">
+        <th mat-header-cell *matHeaderCellDef>Seller Uuid</th>
+        <td mat-cell *matCellDef="let linkage">
+          <div
+            class="uuid"
+            matTooltip="Click to copy"
+            ngxClipboard
+            [cbContent]="linkage.sellerUuid"
+            (cbOnSuccess)="copied()"
+            (cbOnError)="copyFailed()"
+          >
+            {{ linkage.sellerUuid | slice: 0:8 }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdDate">
+        <th mat-header-cell *matHeaderCellDef>Created Date</th>
+        <td mat-cell *matCellDef="let linkage">{{ linkage.createdDate | date }}</td>
+      </ng-container>
+      <ng-container matColumnDef="defaultCurrency">
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let linkage">{{ linkage.defaultCurrency }}</td>
+      </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let linkage">{{ linkage.type | capitalizeCase }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let linkage">
+          <div class="icons">
+            <mat-icon matTooltip="Edit" (click)="openStoreLinkageDialog(linkage)">edit</mat-icon>
+            <mat-icon matTooltip="Delete" (click)="deleteLinkage(linkage)">delete</mat-icon>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="linkageDisplayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: linkageDisplayColumns"></tr>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>

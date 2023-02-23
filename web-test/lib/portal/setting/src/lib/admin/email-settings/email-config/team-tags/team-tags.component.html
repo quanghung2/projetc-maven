@@ -1,0 +1,41 @@
+<div class="container">
+  <mat-toolbar fxLayoutGap="0.8rem" class="action__toolbar">
+    <mat-form-field>
+      <mat-label>Search for tags...</mat-label>
+      <input matInput (keyup)="applyFilter($event)" />
+    </mat-form-field>
+    <span class="spacer"></span>
+    <button (click)="viewDetail(null)" mat-raised-button color="primary">
+      <mat-icon class="action__toolbar__icon">add_circle</mat-icon>
+      <span>Add tag</span>
+    </button>
+  </mat-toolbar>
+
+  <table mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let item">{{ item.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="displayName">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let item">{{ item.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let item" class="action">
+        <b3n-delete-action
+          [key]="'tag'"
+          [displayText]="item.name"
+          (deleteEvent)="delete($event, item)"
+        ></b3n-delete-action>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="viewDetail(row)"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
+</div>

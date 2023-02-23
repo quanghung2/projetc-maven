@@ -1,0 +1,9 @@
+<div class="dialog-chart">
+  <div mat-dialog-title fxLayoutAlign="space-between start" class="dialog-chart__header">
+    <h1>Organizational Chart</h1>
+    <mat-icon mat-dialog-close>close</mat-icon>
+  </div>
+  <div class="dialog-chart__content">
+    <b3n-org-chart [teamsData]="teamsData" [isLoading]="isLoading"></b3n-org-chart>
+  </div>
+</div>

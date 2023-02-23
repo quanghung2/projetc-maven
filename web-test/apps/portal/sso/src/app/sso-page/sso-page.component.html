@@ -1,0 +1,10 @@
+<div id="sso-page">
+  <div *ngIf="!loaded" class="auth" fxLayout="column" fxLayoutAlign="center center">
+    <div *ngIf="redirecting"><img height="50px" src="{{ currentApp.iconUrl }}" width="50px" /></div>
+    <h2 *ngIf="redirecting">Redirecting to {{ currentApp.name }}</h2>
+    <div *ngIf="authenticating"><img height="50px" src="./assets/auth.png" width="50px" /></div>
+    <h2 *ngIf="authenticating">Authenticating</h2>
+    <mat-spinner *ngIf="authenticating || redirecting" diameter="40" strokeWidth="2"></mat-spinner>
+  </div>
+  <div *ngIf="loaded && src" class="iframe-content"><iframe [src]="src"></iframe></div>
+</div>

@@ -1,0 +1,30 @@
+<div class="criteria-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Select a date range</mat-label>
+    <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
+      <input
+        matStartDate
+        placeholder="Start date"
+        formControlName="start"
+        [min]="LAUNCH_PRODUCTION_DATE"
+        [max]="end.value"
+        (dateChange)="onDateChanged()"
+        (click)="picker.open()"
+        readonly
+      />
+      <input
+        matEndDate
+        placeholder="End date"
+        [min]="start.value"
+        formControlName="end"
+        (dateChange)="onDateChanged()"
+        (click)="picker.open()"
+        readonly
+      />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker disabled="false"></mat-date-range-picker>
+    <mat-error *ngIf="start.invalid">Invalid start date</mat-error>
+    <mat-error *ngIf="end.invalid">Invalid end date</mat-error>
+  </mat-form-field>
+</div>

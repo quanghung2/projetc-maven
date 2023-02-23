@@ -1,0 +1,91 @@
+<div ngModelGroup="block" class="notification-section">
+  <section>
+    <mat-form-field>
+      <mat-label>Email address</mat-label>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let email of block.email.emailAddresses" (removed)="removeEmail(email)">
+          {{ email }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input
+          placeholder="Enter new email"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          [disabled]="block.email.emailAddresses.length >= 10"
+          (matChipInputTokenEnd)="addEmail($event)"
+        />
+      </mat-chip-list>
+      <mat-hint>Example: {{ user.email }}</mat-hint>
+    </mat-form-field>
+  </section>
+
+  <section *ngIf="!licenseEnabledOrg || hasSMSLicense" class="sms">
+    <mat-form-field>
+      <mat-select placeholder="SMS" [(ngModel)]="block.smsType" name="smsType">
+        <mat-option *ngFor="let option of smsTypeOptions" [value]="option.key"> {{ option.value }} </mat-option>
+      </mat-select>
+      <mat-hint>This will be charged to your account.</mat-hint>
+    </mat-form-field>
+
+    <div *ngIf="block.smsType != SmsType.none" class="child-component pointer-right" class="sms-select">
+      <mat-form-field>
+        <mat-select [(ngModel)]="block.sms.smsSender" name="smsSender" placeholder="Sender" required>
+          <mat-form-field class="searchBlock">
+            <input [(ngModel)]="query" matInput name="searchNumber" placeholder="Search senders" />
+          </mat-form-field>
+          <mat-option *ngFor="let number of senderNumbers | listFilter: undefined:query" [value]="number">
+            {{ number }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="block.smsType == SmsType.custom">
+        <input
+          required
+          matInput
+          placeholder="Phone number"
+          [(ngModel)]="block.sms.customSmsAddress"
+          name="customSmsAddress"
+          #customSmsAddress="ngModel"
+        />
+        <mat-error *ngIf="customSmsAddress.invalid && (customSmsAddress.dirty || customSmsAddress.touched)"
+          >Phone number is required</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field>
+        <textarea
+          required
+          rows="5"
+          matInput
+          placeholder="SMS message"
+          [(ngModel)]="block.sms.smsMessage"
+          name="smsMessage"
+          #smsMessage="ngModel"
+        ></textarea>
+        <mat-error *ngIf="smsMessage.invalid && (smsMessage.dirty || smsMessage.touched)"
+          >SMS Message is required</mat-error
+        >
+      </mat-form-field>
+    </div>
+  </section>
+
+  <section>
+    <mat-slide-toggle (ngModelChange)="onEnableWebhookChange($event)" [(ngModel)]="enableWebHook" name="enableWebHook"
+      >Enable webhook
+    </mat-slide-toggle>
+    <div *ngIf="enableWebHook" class="child-component pointer-right"><b3n-webhook [block]="block"></b3n-webhook></div>
+  </section>
+
+  <section>
+    <mat-slide-toggle [(ngModel)]="block.enableVoiceMail" name="enableVoiceMail"
+      ><span>Enable voice mail</span></mat-slide-toggle
+    >
+    <div *ngIf="block.enableVoiceMail" class="child-component pointer-right">
+      <b3n-tts [text2Speech]="block.tts" [blockUuid]="block.uuid"></b3n-tts>
+    </div>
+  </section>
+</div>

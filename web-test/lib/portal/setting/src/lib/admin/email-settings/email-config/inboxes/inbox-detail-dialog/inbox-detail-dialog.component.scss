@@ -1,0 +1,41 @@
+@import '../../../email-settings.component';
+
+.form-container {
+  margin: 20px auto 0;
+  mat-form-field {
+    width: 100%;
+  }
+  .color {
+    display: flex;
+    margin: 20px 0;
+    .description {
+      flex: 1 1 auto;
+      .header {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .hint {
+        color: $empty-color;
+      }
+    }
+  }
+  .emailInfo {
+    ::ng-deep {
+      .mat-form-field-suffix {
+        align-self: center;
+        .btnCopy {
+          line-height: 24px;
+          min-width: 68px;
+          border-color: $general-border;
+        }
+      }
+    }
+    .hint {
+      padding-bottom: 2.25em;
+      text-align: center;
+      color: $empty-color;
+      line-height: 1.66;
+    }
+  }
+}
+

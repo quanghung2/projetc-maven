@@ -1,0 +1,13 @@
+<mat-toolbar color="primary" role="heading">
+  <a class="app-title" href="javascript:void(0)" [routerLink]="APP_ROUTING_LINK.dashboard">Dashboards</a>
+
+  <button
+    *ngFor="let l of links"
+    [class.active]="activeLink?.key === l.key"
+    [routerLink]="l.key"
+    mat-button
+    routerLinkActive="active"
+  >
+    {{ l.value }}
+  </button>
+</mat-toolbar>

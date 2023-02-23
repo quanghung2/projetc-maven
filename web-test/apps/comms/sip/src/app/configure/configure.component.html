@@ -1,0 +1,10 @@
+<div class="ui page content segment">
+  <div class="ui grid">
+    <div class="four wide column" [class.hidden]="switchingAccount" style="border-right: 1px solid #ccc">
+      <side-bar></side-bar>
+    </div>
+    <div class="twelve wide column">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

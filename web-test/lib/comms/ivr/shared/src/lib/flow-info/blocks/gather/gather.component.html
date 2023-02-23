@@ -1,0 +1,23 @@
+<div class="gather-section" fxLayout="column" fxLayoutGap="1.6rem">
+  <div>
+    <button (click)="openTestCallDialog()" color="primary" mat-button type="button">Make a phone call</button> for
+    playing message.
+  </div>
+  <b3n-tts [text2Speech]="block.tts" [blockUuid]="block.uuid" [isGatherBlock]="true"></b3n-tts>
+
+  <div class="mess-block" fxLayout="column">
+    <mat-form-field floatLabel="always">
+      <mat-label>Play times</mat-label>
+      <mat-select [(ngModel)]="block.attempts">
+        <mat-option *ngFor="let item of [1, 2, 3, 4, 5]" [value]="item"> {{ item }} times </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field floatLabel="always">
+      <mat-label>Caller input timeout</mat-label>
+      <mat-select [(ngModel)]="block.timeout">
+        <mat-option *ngFor="let item of [5, 7, 9, 11, 13, 15]" [value]="item"> {{ item }} seconds </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

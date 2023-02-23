@@ -1,0 +1,32 @@
+.clickable-icon {
+  cursor: pointer;
+  color: #616161;
+}
+
+.clickable-icon:hover {
+  color: #212121;
+}
+
+.custom-header {
+  line-height: 33px;
+  font-weight: bold !important;
+  color: #767676;
+  text-decoration: underline;
+}
+
+.custom-label {
+  cursor: pointer;
+}
+
+.custom-label:hover {
+  text-decoration: underline;
+}
+.content {
+  padding-bottom: 0px !important;
+}
+.action {
+  display: flex;
+}
+.action-add {
+  margin-left: 10px;
+}

@@ -1,0 +1,61 @@
+:host{
+      table{
+        width: 100%;
+        margin-top: 30px;
+      }
+      .mat-column-name {
+        width: 20%;
+      }
+    
+      .mat-column-actions {
+        width: 20%;
+        text-align: end;
+      }
+    
+      .mat-column-lastError {
+        width: 20%;
+      }
+
+      .mat-column-lastSuccess {
+        width: 20%;
+      }
+    
+      .mat-raised-button.mat-success {
+        color: #FFF;
+        background-color: #2BADD4;
+      }
+      
+      .mat-raised-button {
+        margin-left: 8px;
+      }
+    
+      .mat-column-actions {
+        .icon-action{
+          margin-left: 8px;
+          font-size: 1.7rem; 
+          color: #008bd9;
+          // visibility: hidden;
+          
+        }
+        .icon-action-red{
+          margin-left: 8px;
+          font-size: 1.7rem; 
+          color: rgb(248, 92, 1);
+        }
+        &:hover {
+          .icon-action{
+            visibility: visible;
+            cursor: pointer;
+          }
+        }
+        
+        &:hover {
+          .icon-action-red{
+            visibility: visible;
+            cursor: pointer;
+          }
+        }
+      }
+    
+    }
+    

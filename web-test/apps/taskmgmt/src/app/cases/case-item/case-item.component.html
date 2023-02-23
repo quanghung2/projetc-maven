@@ -1,0 +1,87 @@
+<div *ngIf="case" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+  <div fxFlex="85" class="issuable-main-info" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="2px">
+    <div class="issue-title">
+      <a (middleclick)="goToCase($event, case)" (click)="goToCase($event, case)"> {{ case.title }}</a>
+    </div>
+    <div class="issuable-info" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="6px">
+      <span class="issuable-reference" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
+        <span>{{ case?.ownerOrgName }}</span></span
+      >
+      <span>#{{ case.sid }}</span>
+      <span [matTooltip]="case.createdAt | date: 'dd-MM-yyy HH:mm'" fxLayout="row" fxLayoutGap="4px">
+        <span> created</span> <span fxHide.lt-sm> {{ case.createdAt | distanceToNow }} </span>
+      </span>
+      <span
+        *ngIf="case.dueAt"
+        fxHide.lt-md
+        class="issuable-due-date"
+        [ngClass]="{ 'text-red': overTime }"
+        fxLayoutAlign="center center"
+        fxLayoutGap="0px"
+        ><mat-icon>calendar_today</mat-icon>
+        <span> {{ case.dueAt | date: 'MMM dd , yyyy' }}</span>
+      </span>
+      <span
+        fxHide.lt-md
+        class="issuable-type"
+        [ngClass]="{
+          'type-bug': case.typeId === 1,
+          'type-tech': case.typeId === 2,
+          'type-genaral': case.typeId === 3,
+          'type-finance': case.typeId === 4,
+          'type-request ': case.typeId === 5,
+          'type-orther ': case.typeId > 5
+        }"
+        >{{ typeName | titlecase }}</span
+      >
+    </div>
+  </div>
+
+  <div class="issuable-meta" fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="2px">
+    <div class="issue-title">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+        <div fxHide.lt-sm [matTooltip]="severityName">
+          <img *ngIf="case?.severityId === 1" [src]="'assets/image/general.svg'" class="severity-logo" />
+          <img *ngIf="case?.severityId === 2" [src]="'assets/image/critical.svg'" class="severity-logo" />
+          <img *ngIf="case?.severityId === 3" [src]="'assets/image/urgent.svg'" class="severity-logo" />
+        </div>
+        <div
+          *ngIf="assignee"
+          class="issue-avatar"
+          (click)="$event.stopPropagation()"
+          [matTooltip]="assignee?.displayName"
+          [matMenuTriggerFor]="assignMember"
+          [matMenuTriggerData]="{ cases: case }"
+        >
+          <ng-container *ngIf="!assignee?.hasPhoto; else hasAvatar">
+            <span class="no-avatar avatar-size" fxLayoutAlign="center center"
+              >{{ assignee.displayName | firstWord }}
+            </span>
+          </ng-container>
+          <ng-template #hasAvatar>
+            <div class="avatar-size avatar" [style.background-image]="'url(' + assignee.photoUrl + ')'"></div>
+          </ng-template>
+        </div>
+        <span
+          (click)="$event.stopPropagation()"
+          matTooltip="Unassigned"
+          [matMenuTriggerFor]="assignMember"
+          [matMenuTriggerData]="{ cases: case }"
+          *ngIf="!assignee"
+          class="no-avatar avatar-size unassigned"
+          fxLayoutAlign="center center"
+          ><mat-icon>person</mat-icon>
+        </span>
+      </div>
+    </div>
+    <div fxHide.lt-md class="issuable-info">
+      <span [matTooltip]="case.updatedAt | date: 'dd-MM-yyy HH:mm'"> updated {{ case.updatedAt | distanceToNow }}</span>
+    </div>
+  </div>
+</div>
+
+<mat-menu #assignMember="matMenu" xPosition="before">
+  <ng-template matMenuContent let-cases="cases">
+    <b3n-search-member (searchResultChange)="onSelectedMember($event)"></b3n-search-member>
+  </ng-template>
+</mat-menu>

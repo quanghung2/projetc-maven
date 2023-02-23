@@ -1,0 +1,81 @@
+<ng-container [ngSwitch]="component.type">
+  <ng-container *ngSwitchCase="IMessType.text">
+    <csh-interactive-text
+      [messageId]="messageId"
+      [component]="component"
+      (showProfile)="showProfile.emit($event)"
+    ></csh-interactive-text>
+  </ng-container>
+  <ng-container *ngSwitchCase="IMessType.input">
+    <csh-interactive-input
+      [messageId]="messageId"
+      [component]="component"
+      [uploadPercentage]="uploadPercentage"
+      [uploadStatusMap]="uploadStatusMap"
+      [isSubmiting]="isSubmiting"
+      [control]="$any(groupParent).controls[component?.element?.id]"
+    ></csh-interactive-input>
+  </ng-container>
+  <ng-container *ngSwitchCase="IMessType.button">
+    <csh-interactive-button
+      [messageId]="messageId"
+      [component]="component"
+      (closeDialog)="closeDialog.emit($event)"
+    ></csh-interactive-button>
+  </ng-container>
+  <ng-container *ngSwitchCase="IMessType.section">
+    <csh-interactive-loop
+      [messageId]="messageId"
+      [components]="component.components"
+      [parent]="component"
+      [groupRoot]="groupParent"
+      [isSection]="true"
+      [isDialog]="isDialog"
+      [uploadPercentageMap]="uploadPercentageMap"
+      [uploadStatusMap]="uploadStatusMapRoot"
+      [isSubmiting]="isProgressing"
+      (showProfile)="showProfile.emit($event)"
+      (closeDialog)="closeDialog.emit($event)"
+    ></csh-interactive-loop>
+  </ng-container>
+  <ng-container *ngSwitchCase="IMessType.form">
+    <!-- // check full  -->
+    <ng-container *ngIf="isDialog; else normalMessage">
+      <ng-container *ngTemplateOutlet="formComponent"></ng-container>
+    </ng-container>
+    <ng-template #normalMessage>
+      <div class="flex column justify-content-start align-items-start">
+        <ng-container *ngTemplateOutlet="formComponent"></ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
+</ng-container>
+
+<ng-template #formComponent>
+  <div class="flex column justify-content-start align-items-none" [class.form-border]="!isDialog">
+    <csh-interactive-loop
+      [messageId]="messageId"
+      [components]="component.components"
+      [parent]="component"
+      [groupRoot]="groupRoot"
+      [isDialog]="isDialog"
+      [uploadPercentageMap]="uploadPercentageMap"
+      [uploadStatusMap]="uploadStatusMapRoot"
+      [isSubmiting]="isProgressing"
+      (showProfile)="showProfile.emit($event)"
+      (closeDialog)="closeDialog.emit($event)"
+    ></csh-interactive-loop>
+    <ng-container *ngIf="!component.auto_submit">
+      <button
+        class="mt-8"
+        fxFlexAlign="end"
+        mat-raised-button
+        color="primary"
+        [loading]="isProgressing"
+        (click)="submit(component)"
+      >
+        Submit
+      </button>
+    </ng-container>
+  </div>
+</ng-template>

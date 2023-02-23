@@ -1,0 +1,122 @@
+.preview-box {
+  width: 100%;
+  border: 1px solid #d0d0d0;
+  overflow: hidden;
+
+  .text-success {
+    color: #3c763d;
+  }
+
+  .tabs {
+    border-bottom: 1px solid #d0d0d0;
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      float: left;
+      border-right: 1px solid #d0d0d0;
+      padding: 3px 8px 4px 14px;
+      > img {
+        vertical-align: middle;
+        width: 16px;
+      }
+      > span {
+        vertical-align: middle;
+      }
+      > i {
+        vertical-align: middle;
+        margin-top: -6px;
+      }
+      > .icon.close {
+        margin-left: 4px;
+      }
+    }
+  }
+  .search-bar {
+    border-bottom: 1px solid #d0d0d0;
+    padding: 3px 9px 4px;
+    overflow: hidden;
+    .left-buttons {
+      display: inline-block;
+      width: 74px;
+      vertical-align: middle;
+      > i {
+        margin-right: 5px;
+      }
+    }
+    .right-buttons {
+      display: inline-block;
+      width: 52px;
+      vertical-align: middle;
+      > .ext {
+        width: 16px;
+        margin-left: 5px;
+        vertical-align: middle;
+      }
+      > i {
+        margin-left: 5px;
+        margin-top: -3px;
+        vertical-align: middle;
+        font-size: 1.1em;
+      }
+    }
+    > .search-box {
+      border: 1px solid #d0d0d0;
+      border-radius: 3px;
+      padding: 3px 7px;
+      overflow: hidden;
+      display: inline-block;
+      width: calc(100% - 135px);
+      vertical-align: middle;
+      > .star.border {
+        margin-top: 2px;
+        vertical-align: middle;
+        float: right;
+        font-size: 1.2em;
+      }
+      > .icon.lock {
+        margin-right: 0px;
+      }
+    }
+  }
+  .document {
+    .login-screen {
+      text-align: center;
+      border: 1px solid #d0d0d0;
+      border-radius: 0.59259259rem;
+      box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.23);
+      margin: 30px auto;
+      width: 300px;
+      > .logo {
+        border-top-left-radius: 0.59259259rem;
+        border-top-right-radius: 0.59259259rem;
+        padding: 15px;
+        height: 60px;
+        img {
+          vertical-align: middle;
+          height: 30px;
+          max-width: 100% !important;
+          max-height: 30px !important;
+          display: inline-block;
+        }
+      }
+      > form {
+        text-align: left;
+        padding: 5px 25px 15px;
+
+        .ui.button.login {
+          margin-top: 15px;
+        }
+        .anchor {
+          color: #008bd9;
+          margin-top: 15px;
+        }
+        .center {
+          text-align: center;
+        }
+      }
+    }
+  }
+}

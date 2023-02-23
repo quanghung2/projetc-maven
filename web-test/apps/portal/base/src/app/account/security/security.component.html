@@ -1,0 +1,156 @@
+<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1.6rem" class="security" *ngIf="profile">
+  <section fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="5rem" class="section">
+    <div fxFlex="auto" class="credentials">
+      <h2>Credentials</h2>
+      <div class="item">
+        <div class="content">
+          <p>
+            Email: <strong>{{ profile.email }}</strong>
+          </p>
+        </div>
+        <a href="javascript:void(0)" (click)="showEmailModal()">Edit</a>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="item">
+        <div class="content">
+          <p *ngIf="profile.mobileNumber">
+            Phone number: <strong>{{ profile.mobileNumber }}</strong>
+          </p>
+          <p *ngIf="!profile.mobileNumber">You have no phone number</p>
+        </div>
+        <a href="javascript:void(0)" (click)="showMobileModal()" *ngIf="profile.mobileNumber">Edit</a>
+        <a href="javascript:void(0)" (click)="showMobileModal()" *ngIf="!profile.mobileNumber">Create</a>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="item">
+        <div class="content"><p>Change password</p></div>
+        <a href="javascript:void(0)" (click)="showPasswordModal()">Edit</a>
+      </div>
+    </div>
+    <div fxFlex="25%" class="hint-container">
+      <div class="content">
+        <p class="help">
+          <mat-icon>help</mat-icon>Credentials are information you use to sign in to the portal. Email is compulsory,
+          phone number is optional.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="5rem" class="section">
+    <div fxFlex="auto" class="tfa">
+      <h2>Two-Factor Authentication</h2>
+      <div class="status-container">
+        <div class="content">
+          <div style="display: inline">
+            <span class="text">Status: </span> <strong class="status off" *ngIf="!tfaInfo.tfaEnabled">Off</strong>
+            <strong class="status on" *ngIf="tfaInfo.tfaEnabled">On</strong>
+          </div>
+          <button
+            mat-raised-button
+            color="primary"
+            class="floatRight"
+            (click)="setup2fa()"
+            *ngIf="!tfaInfo.tfaEnabled"
+            [disabled]="!profile.email"
+          >
+            Enable Two-Factor Authentication
+          </button>
+          <button
+            mat-stroked-button
+            class="floatRight"
+            (click)="disable2fa()"
+            *ngIf="tfaInfo.tfaEnabled && !securityCompliance.tfaRequired && !currentOrg?.isPartner"
+            [disabled]="!profile.email"
+          >
+            Disable Two-Factor Authentication
+          </button>
+        </div>
+        <div class="ui banner warning message" *ngIf="!profile.email">
+          <span>Please provide your email address to enable 2fa.</span>
+        </div>
+      </div>
+      <div class="detail" *ngIf="tfaInfo.tfaEnabled">
+        <div class="defaultMethodContainer">
+          <div class="title">
+            <div class="header">Your second step</div>
+            <div class="description">After entering your password, you’ll be asked for a second verification step.</div>
+          </div>
+          <div class="items">
+            <div class="box" *ngIf="tfaInfo.totpActivated">
+              <img class="image" src="https://ui.b3networks.com/external/icon/authenticator.jpg" />
+              <div class="box-container">
+                <div class="header">Authenticator app <strong>(Default)</strong></div>
+                <div class="description maxWidth">
+                  From now on, you'll use Authenticator to sign in to your account.
+                </div>
+              </div>
+              <div class="action">
+                <a href="javascript:void(0)" (click)="showDeleteAuthenticationModal()"> <mat-icon>delete</mat-icon> </a>
+              </div>
+            </div>
+            <div class="box">
+              <mat-icon>email</mat-icon>
+              <div class="box-container">
+                <div class="header">Email <strong *ngIf="!tfaInfo.totpActivated">(Default)</strong></div>
+                <div class="description maxWidth">Verification codes are sent to {{ profile.email }}</div>
+              </div>
+            </div>
+            <div class="box">
+              <mat-icon>lock</mat-icon>
+              <div class="box-container">
+                <div class="header">Recovery Key: {{ tfaInfo.recoveryKey }}</div>
+                <div class="description maxWidth">
+                  <p class="noMarginTop">
+                    Recovery Key can be used to access your account in case you lose access to your email and cannot
+                    receive Two-Factor Authentication codes.
+                  </p>
+                  <p>
+                    <b
+                      >Saving your Recovery Key in a safe place can help keep you from being locked out of your
+                      account.</b
+                    >
+                  </p>
+                </div>
+                <div class="actionLink">
+                  <a href="javascript:void(0)" (click)="createNewRecoveryCode()">Create New Recovery Key</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="alternativeContainer" *ngIf="!tfaInfo.totpActivated">
+          <div class="title">
+            <div class="header">Set up alternative second step</div>
+            <div class="description">
+              Set up at least one backup option so that you can sign in even if your other second steps aren't
+              available.
+            </div>
+          </div>
+          <div class="items">
+            <div class="box">
+              <img class="image" src="https://ui.b3networks.com/external/icon/authenticator.jpg" />
+              <div class="box-container">
+                <div class="header">Authenticator app</div>
+                <div class="description maxWidth">
+                  <p class="noMarginTop">
+                    Use the Authenticator app to get free verification codes, even when your phone is offline.
+                  </p>
+                </div>
+                <div class="actionLink"><a href="javascript:void(0)" (click)="showAuthenticatorModal()">Set up</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxFlex="25%" class="hint-container">
+      <div class="content">
+        <p class="help">
+          <mat-icon>help</mat-icon>Two-Factor Authentication provides another layer of security to your account. Your
+          email needs to be verified before you can enable this feature.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>

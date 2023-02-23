@@ -1,0 +1,145 @@
+<i class="close icon"></i>
+<div class="header">Settings</div>
+
+<div class="content" *ngIf="isLoading == true">
+  <div class="ui active centered inline loader app-loader"></div>
+</div>
+
+<div class="content" [class.hidden]="isLoading">
+  <!--<div *ngIf="errors.length > 0">
+    <div class="ui banner error message" *ngFor="let error of errors">
+      <p><i class="uninstall icon"></i> {{error}}</p>
+    </div>
+  </div>-->
+  <div #tabElements class="block">
+    <div class="ui tabular menu">
+      <a class="item active" data-tab="sftp">SFTP</a>
+      <a class="item" data-tab="incoming-call">Call</a>
+      <a class="item" data-tab="sdk">SDK</a>
+    </div>
+    <div class="ui tab bottom active" data-tab="sftp">
+      <div class="ui form">
+        <div class="two fields">
+          <div class="field">
+            <label>Host</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftp.host" placeholder="192.168.1.100" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Port</label>
+            <div class="ui fluid input"><input type="text" [(ngModel)]="settings.ftp.port" placeholder="22" /></div>
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>Username</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftp.username" placeholder="username" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Directory</label>
+            <div class="ui fluid input">
+              <input type="text" [(ngModel)]="settings.ftp.directory" placeholder="/record/store" />
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Private key passphrase</label>
+          <div class="ui fluid input">
+            <input type="password" [(ngModel)]="settings.ftp.passphrase" placeholder="private key passphrase" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Private key</label>
+          <textarea [(ngModel)]="settings.ftp.privateKey" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="incoming-call">
+      <div class="ui form">
+        <div class="field">
+          <label>Incoming transfer API</label>
+          <div class="ui fluid input">
+            <input
+              type="text"
+              [(ngModel)]="settings.incoming.transferUrl"
+              placeholder="https://compliance.com/call/incoming/transfer"
+            />
+          </div>
+        </div>
+        <div class="field">
+          <label>Sample</label>
+          <div class="sample">
+            <label>Request</label>
+            <div class="code">
+              GET
+              /call/incoming/transfer?session=f7b851ea-6315-42e5-920b-c85853ace123&from=%2B6587654321&to=%2b651111111
+              HTTP/1.1<br />
+              Accept: application/json, application/javascript, text/javascript<br />
+              Content-Type: application/json; charset=UTF-8<br />
+              Host: compliance.com<br />
+            </div>
+            <table>
+              <colgroup>
+                <col style="width: 50%" />
+                <col style="width: 50%" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>session</td>
+                  <td>Incoming call session uuid</td>
+                </tr>
+                <tr>
+                  <td>from</td>
+                  <td>Phone number of caller</td>
+                </tr>
+                <tr>
+                  <td>to</td>
+                  <td>callerId of BizPhone</td>
+                </tr>
+              </tbody>
+            </table>
+            <label>Response</label>
+            <div class="code">
+              {{ '{' }}<br />
+              "phoneNumber" : "+65321321321" // agent phone number.<br />
+              "recordingMessage" : "This call may be recorded for quality and training purposes" // The message that you
+              want to play when the call is going to recorded. <br />
+              "tag" : "+65321321321" // Your own reference ID submitted, must be 256 characters or less.<br />
+              {{ '}' }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui tab bottom" data-tab="sdk">
+      <div class="ui form">
+        <div class="field">
+          Download
+          <a href="https://app-callrecording-sg.s3.amazonaws.com/callrecording/compliance/sdk/aviva-sdk-1.0.4.zip"
+            >compliance SDK 1.0.4 and sample</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="actions" *ngIf="isLoading == false">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button">Cancel</div>
+        <div class="ui large primary button" (click)="onUpdate($event)">Update</div>
+      </div>
+    </div>
+  </div>
+</div>

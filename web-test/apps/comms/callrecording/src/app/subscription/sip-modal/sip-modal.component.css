@@ -1,0 +1,8 @@
+:host >>> .content .ui.form .content {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+:host .ui.accordion {
+  margin: 0;
+}

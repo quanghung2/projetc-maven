@@ -1,0 +1,28 @@
+::ng-deep .mat-select-panel.select-event {
+  max-height: 720px !important;
+
+  .mat-datepicker-content {
+    box-shadow: none !important;
+  }
+
+  .mat-option.option-event {
+    height: 64px !important;
+    line-height: 1.5 !important;
+
+    img {
+      height: 40px;
+      width: 40px;
+    }
+
+    .name {
+      cursor: pointer;
+      font-size: 14px !important;
+    }
+
+    p {
+      margin: 0;
+      color: #999;
+      font-size: 14px;
+    }
+  }
+}

@@ -1,0 +1,124 @@
+<div class="tts-n-mp3-msg-cfg">
+  <div class="item audio-type" *ngIf="showPlay">
+    <mat-radio-group class="auto-type-group" [(ngModel)]="ttsCfg.msgType">
+      <div fxLayout="row" fxLayout fxLayoutGap="32px">
+        <div fxFlex="1 1 0">
+          <mat-radio-button class="auto-type-button" value="speech"> Play the message</mat-radio-button>
+        </div>
+
+        <div fxFlex="1 1 0"><mat-radio-button class="auto-type-button" value="mp3"> Play a mp3</mat-radio-button></div>
+      </div>
+    </mat-radio-group>
+  </div>
+
+  <div class="mp3" *ngIf="ttsCfg.msgType === 'mp3'">
+    <div fxLayout="row" fxLayoutGap="1.6rem" class="uploader">
+      <div fxFlexAlign="center">Upload</div>
+
+      <div fxFlex="auto">
+        <label class="mat-stroked-button" [for]="'file-mkt-' + uuid">Upload file (5MB Max)</label>
+
+        <form id="upload-audio" style="display: none">
+          <input
+            (change)="onFileChange($event)"
+            [id]="'file-mkt-' + uuid"
+            accept="audio/mp3"
+            style="display: none"
+            type="file"
+          />
+        </form>
+      </div>
+    </div>
+
+    <div class="audio-url cfg-item">
+      <div class="empty-url" *ngIf="audioUploading">
+        <mat-progress-bar mode="determinate" [value]="audioUploadProgress"></mat-progress-bar>
+      </div>
+
+      <div *ngIf="!fileUrl && !audioUploading" class="empty-url">You have not uploaded an MP3 file yet.</div>
+
+      <div *ngIf="fileUrl && !audioUploading" class="valid-url">
+        <audio controls preload="auto" [src]="fileUrl | safe: 'resourceUrl'" type="audio/mp3" (error)="fileUrl = ''">
+          Your browser does not support the
+          <code>audio</code>
+          element.
+        </audio>
+      </div>
+    </div>
+  </div>
+
+  <div class="item tts" *ngIf="ttsCfg.msgType === 'speech'">
+    <div class="advance-cfg" *ngIf="showAdvance">
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-select placeholder="Language" [(value)]="ttsCfg.language">
+              <mat-option [value]="langCode" *ngFor="let langCode of langCodes" (click)="changeLanguage(langCode)">
+                {{ languages[langCode] }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <mat-form-field>
+            <mat-select placeholder="Voice" [(value)]="ttsCfg.voiceCode" (selectionChange)="updateVoiceCfg()">
+              <mat-option [value]="voice" *ngFor="let voice of voiceCodes">
+                {{ voices[ttsCfg.language][voice].voiceName }} ({{ voices[ttsCfg.language][voice].gender }} -
+                {{ voices[ttsCfg.language][voice].vendor }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="1.6rem">
+        <div fxFlex="1 1 0">
+          <mat-form-field>
+            <mat-select placeholder="Pitch" [(value)]="'' + ttsCfg.pitch">
+              <mat-option *ngFor="let pitch of pitchNRate" [value]="pitch"> {{ pitch }} </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div fxFlex="1 1 0">
+          <mat-form-field>
+            <mat-select placeholder="Rate" [(value)]="'' + ttsCfg.rate">
+              <mat-option *ngFor="let rate of pitchNRate" [value]="rate"> {{ rate }} </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-msg">
+      <mat-form-field>
+        <textarea matInput placeholder="Text message" [(ngModel)]="ttsCfg.msg" rows="3"></textarea>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="showNote">
+        <textarea matInput placeholder="Note" [(ngModel)]="note" disabled rows="3"></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="show-advance-btn">
+      <a *ngIf="!showAdvance" (click)="showAdvance = !showAdvance" href="javascript:void(0);">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>Advance</div>
+
+          <div><mat-icon>keyboard_arrow_down</mat-icon></div>
+        </div>
+      </a>
+
+      <a *ngIf="showAdvance" (click)="showAdvance = !showAdvance" href="javascript:void(0);">
+        <div fxLayout="row" fxLayoutAlign="center center">
+          <div>Simple</div>
+
+          <div><mat-icon>keyboard_arrow_up</mat-icon></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

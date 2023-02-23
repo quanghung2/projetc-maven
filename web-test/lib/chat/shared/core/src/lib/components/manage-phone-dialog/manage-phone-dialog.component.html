@@ -1,0 +1,59 @@
+<div class="container">
+  <ng-container class="container">
+    <div
+      *ngIf="callManagement$ | async as state"
+      class="manage-phone flex column justify-content-space-around align-items-center gap-16"
+    >
+      <div class="information flex column justify-content-center align-items-center gap-16">
+        <button mat-fab class="mat-elevation-z1 btn-fab btn-fab__group">
+          <mat-icon>{{ state.isRoom ? 'group' : 'person' }}</mat-icon>
+        </button>
+        <div class="room flex column justify-content-space-between align-items-center">
+          <div *ngIf="displayMember | async as displayMember" class="room-name">
+            <span *ngIf="state.isRoom"> Meeting Room: </span> {{ displayMember | replace: '+':' ' }}
+          </div>
+
+          <div *ngIf="displayStatus === 'Taking'" class="time-call">{{ state.timerCall.second | duration }}</div>
+          <div *ngIf="displayStatus !== 'Taking'" class="time-call">{{ displayStatus }}</div>
+        </div>
+      </div>
+      <div class="actions flex column justify-content-space-around align-items-center gap-40">
+        <div class="action flex justify-content-space-around align-items-center">
+          <mat-icon *ngIf="state.canHold && state.isHold" class="material-icons-outlined" (click)="toggleHold()"
+            >play_arrow</mat-icon
+          >
+          <mat-icon *ngIf="state.canHold && !state.isHold" class="material-icons-outlined" (click)="toggleHold()"
+            >pause</mat-icon
+          >
+          <mat-icon *ngIf="state.canDTMF" class="material-icons-outlined" (click)="dialpad()">dialpad</mat-icon>
+          <mat-icon *ngIf="state.canHold" class="material-icons-outlined" (click)="toggleMute()">
+            {{ state.isMute ? 'mic_off' : 'mic' }}</mat-icon
+          >
+        </div>
+        <div
+          *ngIf="state.isRemote && !state.canHold"
+          class="accept flex justify-content-space-between align-items-center"
+        >
+          <button mat-fab class="mat-elevation-z1 btn-fab btn-fab__call_end" (click)="ended()">
+            <mat-icon>call_end</mat-icon>
+          </button>
+          <button
+            *ngIf="state.isRemote && !state.canHold"
+            mat-fab
+            class="mat-elevation-z1 btn-fab btn-fab__call"
+            (click)="accept()"
+          >
+            <mat-icon>call</mat-icon>
+          </button>
+        </div>
+        <div *ngIf="!(state.isRemote && !state.canHold)" class="action flex justify-content-center align-items-center">
+          <button mat-mini-fab class="mat-elevation-z1 btn-fab btn-fab__call_end" (click)="ended()">
+            <mat-icon>call_end</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-icon (click)="zoomOut()" class="zoom-out">close</mat-icon>
+    </div>
+  </ng-container>
+</div>

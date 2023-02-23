@@ -1,0 +1,52 @@
+@import '../assets/scss/variables.scss';
+
+$sidenav_width: 55px;
+$sidebar_background_dark: #424242;
+$sidebar_background: #f8f8fa;
+$font_color: rgb(211, 212, 211);
+$font_color_dark: white;
+
+:host {
+  width: 100%;
+
+  .network-warning {
+    text-align: center;
+    height: var(--app__warning--height);
+    margin: 0;
+  }
+}
+
+.sidenav-container {
+  height: calc(100vh - var(--app__warning--height));
+
+  .sidenav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: center;
+    align-items: stretch;
+    width: $sidenav_width;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-right: 0;
+  }
+}
+
+::ng-deep {
+  .b3-dark-theme {
+    .sidenav-container {
+      .sidenav {
+        background-color: $sidebar_background_dark;
+        color: $font_color_dark;
+        .mat-icon {
+          color: $font_color_dark;
+        }
+        .svg-icon {
+          fill: $font_color_dark;
+        }
+        .mat-divider {
+          border-top-color: hsla(0, 0%, 100%, 0.12);
+        }
+      }
+    }
+  }
+}

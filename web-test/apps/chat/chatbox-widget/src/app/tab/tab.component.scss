@@ -1,0 +1,49 @@
+:host {
+  .icon-launcher {
+    // @include animation(0, 1.5s, slide-in);
+    background-color: #4781d9 !important;
+
+    mat-icon {
+      font-size: 35px;
+      width: 35px;
+      height: 35px;
+    }
+
+    ::ng-deep {
+      .mat-button-wrapper {
+        padding: 0;
+      }
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .chatbox {
+    // width: 336px;
+    // height: 676px;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .header {
+      position: relative;
+      background: #3f51b5;
+
+      .title {
+        font-size: 16px;
+        color: #fff;
+      }
+      .icon-close {
+        color: #fff;
+        position: absolute;
+        right: 1rem;
+        cursor: pointer;
+      }
+    }
+  }
+}

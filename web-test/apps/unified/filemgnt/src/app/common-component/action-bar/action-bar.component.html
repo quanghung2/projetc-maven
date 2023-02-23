@@ -1,0 +1,130 @@
+<mat-toolbar class="pt-16">
+  <mat-toolbar-row
+    fxLayoutGap="0.8rem"
+    [ngClass]="isFolder && !isTrashBin ? 'justify-content-space-between align-items-center' : 'justify-content-end'"
+  >
+    <ng-container *ngIf="actionMapping$ | async as actionMapping">
+      <mat-checkbox
+        *ngIf="!isTrashBin && (actionMapping['View'] || actionMapping['Manage']) && isFolder"
+        class="checkbox"
+        [disabled]="folders?.length === 0"
+        [checked]="selectedItems?.length > 0 && isAllChecked()"
+        [indeterminate]="selectedItems?.length > 0 && !isAllChecked()"
+        (change)="$event ? toggleAllFolder() : null"
+      >
+        Select All
+      </mat-checkbox>
+    </ng-container>
+    <ng-container>
+      <span class="spacer"></span>
+
+      <div *ngIf="!isTrashBin; else trashPage">
+        <button (click)="onPrev()" mat-icon-button color="primary">
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+        <mat-form-field *ngIf="isFolder">
+          <input
+            matInput
+            readonly
+            [matDatepicker]="picker"
+            [max]="toDay"
+            [(ngModel)]="date"
+            (dateChange)="onChangeMonth()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker type="month" startView="year"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field *ngIf="!isFolder">
+          <input
+            readonly
+            matInput
+            [matDatepicker]="picker"
+            (dateChange)="onChangeDate()"
+            [max]="toDay"
+            [(ngModel)]="date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <button (click)="onNext()" mat-icon-button color="primary" [disabled]="isMaxDay()">
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+
+        <span class="mr-10"></span>
+
+        <ng-container *ngIf="actionMapping$ | async as actionMapping">
+          <button
+            *ngIf="actionMapping['Manage'] || actionMapping['View']"
+            (click)="onDownload()"
+            mat-icon-button
+            color="primary"
+            matTooltip="Download"
+            [disabled]="selectedItems.length === 0"
+          >
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="actionMapping$ | async as actionMapping">
+          <button
+            *ngIf="isOwner || actionMapping['Manage']"
+            (click)="onDelete()"
+            mat-icon-button
+            color="warn"
+            matTooltip="Delete"
+            [disabled]="selectedItems.length === 0"
+          >
+            <mat-icon class="material-icons-outlined">delete</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            *ngIf="isOwner || actionMapping['Manage']"
+            matTooltip="More action"
+            [matMenuTriggerFor]="actionMenu"
+          >
+            <mat-icon class="icon">more_vert</mat-icon>
+          </button>
+        </ng-container>
+      </div>
+      <ng-template #trashPage>
+        <ng-container *ngIf="actionMapping$ | async as actionMapping">
+          <div *ngIf="actionMapping['Manage']">
+            <button mat-icon-button (click)="onRefresh()">
+              <mat-icon matTooltip="Reload">refresh</mat-icon>
+            </button>
+            <button
+              (click)="onRestore()"
+              [disabled]="selectedItems.length === 0"
+              mat-icon-button
+              matTooltip="Restore"
+              color="primary"
+            >
+              <mat-icon>restore_from_trash</mat-icon>
+            </button>
+            <button
+              (click)="onShred()"
+              [disabled]="selectedItems.length === 0"
+              mat-icon-button
+              matTooltip="Shred files"
+              color="warn"
+            >
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-menu #actionMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="onViewTrashBin()">
+      <mat-icon class="material-icons-outlined">delete_sweep</mat-icon>
+      <span>Trash</span>
+    </button>
+    <button mat-menu-item (click)="onViewPendingJob()">
+      <mat-icon>checklist</mat-icon>
+      <span>Job List</span>
+    </button>
+  </ng-template>
+</mat-menu>

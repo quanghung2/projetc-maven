@@ -1,0 +1,74 @@
+<div class="extensions">
+  <div *ngIf="hasCompliance" class="p-16 p-r-4 teal mb-16">
+    The compliance flag is turned on for this organization. Calls made by users with Bypass setting or don't have any
+    setting will still be checked DNC.
+  </div>
+  <div class="extensions__header"></div>
+  <div fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="0.8rem" class="extensions__actions">
+    <mat-form-field>
+      <input matInput type="text" [formControl]="searchQuery" placeholder="Search" />
+    </mat-form-field>
+
+    <span class="flex-spacer"></span>
+    <button mat-icon-button (click)="refresh()"><mat-icon>refresh</mat-icon></button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="totalDNCLicense <= provisionedDNCLicense"
+      (click)="addOrEditCompliance()"
+    >
+      Add compliance
+    </button>
+  </div>
+
+  <div *ngIf="pagination$ | async as pagination" class="extensions__content">
+    <table mat-table [dataSource]="pagination.data">
+      <ng-container matColumnDef="extension">
+        <th mat-header-cell *matHeaderCellDef>Extension</th>
+        <td mat-cell *matCellDef="let element">{{ element.displayText }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dnc">
+        <th mat-header-cell *matHeaderCellDef>DNC action</th>
+        <td mat-cell *matCellDef="let element">{{ element.dncAction | replaceSpecialCharacter }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="consent">
+        <th mat-header-cell *matHeaderCellDef>Consent action</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.consentAction | replaceSpecialCharacter }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="actions">
+            <button mat-icon-button>
+              <mat-icon class="material-icons-outlined" (click)="addOrEditCompliance(element)"> edit </mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="remove(element)">
+              <mat-icon>delete_outline </mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">
+          <div fxLayout="column" fxLayoutAlign="center center">No compliance found</div>
+        </td>
+      </tr>
+    </table>
+    <mat-paginator
+      [length]="pagination.total"
+      [pageIndex]="pagination.currentPage"
+      [pageSize]="pagination.perPage"
+      showFirstLastButtons
+      hidePageSize
+      (page)="changePage($event.pageIndex)"
+    ></mat-paginator>
+  </div>
+</div>

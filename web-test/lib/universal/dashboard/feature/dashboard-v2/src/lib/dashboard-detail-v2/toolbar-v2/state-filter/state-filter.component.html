@@ -1,0 +1,15 @@
+<ng-container [formGroup]="form" *ngIf="hasStateFilterV2">
+  <mat-form-field class="state-select__field">
+    <mat-label>State(s)</mat-label>
+    <mat-select formControlName="states" multiple #stateSelect>
+      <div class="states__all" [class.state-select__all]="selectAllStates">
+        <mat-checkbox color="primary" [checked]="selectAllStates" (change)="toggleselectAllStates($event.checked)">{{
+          selectAllStates ? 'Unselect All' : 'Select All'
+        }}</mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-select-trigger *ngIf="selectAllStates">All</mat-select-trigger>
+      <mat-option *ngFor="let state of states" [value]="state">{{ userStateMap[state].displayText }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

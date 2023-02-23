@@ -1,0 +1,148 @@
+<div class="header">Virtual Line Config</div>
+<div #contentElement class="content" *ngIf="!isAppV2">
+  <div *ngIf="config == undefined">
+    <div class="ui active centered inline loader app-loader"></div>
+  </div>
+  <div *ngIf="config != undefined && config.message != undefined">
+    <div class="ui warning message">
+      <p>{{ config.message }}</p>
+    </div>
+  </div>
+  <app-setting-config
+    [title]="'Recording Message'"
+    [config]="playMessageConfig"
+    *ngIf="config != undefined && config.message == undefined"
+  >
+    <div class="big underline title active">
+      <div class="ui two column grid">
+        <div class="column">
+          <i class="icon circle outline"></i>
+          <div class="header">Recording Extensions</div>
+        </div>
+        <div class="column">
+          <div class="right floated checkbox">
+            <label>
+              Select All
+              <input
+                class="right"
+                type="checkbox"
+                [checked]="checkRecordAll"
+                (change)="onCheckRecordAll($any($event.target).checked)"
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="content active" *ngIf="config.incomings != undefined">
+      <div class="ui divided grid">
+        <div class="six wide column">
+          <div class="ui vertical fluid secondary menu">
+            <a
+              class="active item"
+              *ngIf="config.incomings.OFFICE_HOURS != undefined"
+              (click)="activeExtensions($event, config.incomings.OFFICE_HOURS)"
+              >Office Hours</a
+            >
+            <a
+              class="item"
+              *ngIf="config.incomings.AFTER_OFFICE_HOURS != undefined"
+              (click)="activeExtensions($event, config.incomings.AFTER_OFFICE_HOURS)"
+              >After Office Hours</a
+            >
+            <a
+              class="item"
+              *ngIf="config.incomings.PUBLIC_HOLIDAY != undefined"
+              (click)="activeExtensions($event, config.incomings.PUBLIC_HOLIDAY)"
+              >Public Holidays</a
+            >
+          </div>
+        </div>
+
+        <div class="ten wide column" *ngIf="currentExtensions == undefined || currentExtensions.length == 0">
+          No Extensions
+        </div>
+        <div class="ten wide column" *ngIf="currentExtensions != undefined">
+          <div class="ui middle aligned divided very relaxed scrolling list" style="max-height: 18em">
+            <ng-container
+              *ngTemplateOutlet="extensionTemplate; context: { extensions: currentExtensions }"
+            ></ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </app-setting-config>
+</div>
+<div class="actions" *ngIf="!isAppV2">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button">Cancel</div>
+        <div
+          class="ui approve large primary button"
+          [ngClass]="{ disabled: config == undefined }"
+          (click)="onSave($event)"
+        >
+          Save
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #extensionTemplate let-extensions="extensions">
+  <ng-template ngFor let-extension [ngForOf]="extensions">
+    <div class="item">
+      <div class="right floated content">
+        <div class="checkbox">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="extension.needMonitor === 'RECORD_SPECIFIC' || extension.needMonitor === 'RECORD_ALL'"
+              (change)="toggleRecord(extension, $any($event.target).checked)"
+            />
+          </label>
+        </div>
+      </div>
+      <div class="content">
+        {{ extension.fullDigits }} - {{ extension.tag }}
+
+        <div class="divided relaxed list" *ngIf="extension.extensions != undefined">
+          <ng-container
+            *ngTemplateOutlet="extensionTemplate; context: { extensions: extension.extensions }"
+          ></ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<div class="content" *ngIf="isAppV2">
+  <div class="ui border segment">
+    <div class="switcher">
+      <input
+        class="toggle"
+        type="checkbox"
+        id="enable-call-recording"
+        [checked]="enableCallRecording"
+        (click)="updateEnableCallRecording()"
+      />
+      <label class="switcher label" for="enable-call-recording"></label>
+      <div class="box"></div>
+    </div>
+    <span *ngIf="!enableCallRecording">Click to enable Call Recording for Virtual Line</span>
+    <span *ngIf="enableCallRecording">Click to disable Call Recording for Virtual Line</span>
+  </div>
+</div>
+<div class="actions" *ngIf="isAppV2">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button">Cancel</div>
+        <div class="ui approve large primary button" [ngClass]="{ disabled: !config }" (click)="saveV2()">Save</div>
+      </div>
+    </div>
+  </div>
+</div>

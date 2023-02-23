@@ -1,0 +1,97 @@
+<div
+  #contextVar
+  *ngIf="optionForControl.dataType !== 'boolean' || (optionForControl.dataType === 'boolean' && !typeBooleanCheckbox)"
+>
+  <mat-form-field
+    hideRequiredMarker="true"
+    class="fake {{ optionForControl.disabled ? 'mat-form-field-disabled' : '' }}"
+  >
+    <mat-label>{{ optionForControl.title }}</mat-label>
+    <button
+      mat-icon-button
+      matPrefix
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+      [matMenuTriggerFor]="menu"
+      *ngIf="!optionForControl.disabled && isShowContextVar"
+    >
+      <mat-icon matTooltip="Use an output of previous action" [matTooltipPosition]="'above'">playlist_add</mat-icon>
+    </button>
+
+    <mat-chip-list
+      #chipList
+      [required]="!optionForControl.isOptional"
+      #triggerMenuValueList="matMenuTrigger"
+      [matMenuTriggerFor]="menuValueList"
+      (menuOpened)="(!dataSources || optionForControl.disabled) && triggerMenuValueList.closeMenu()"
+    >
+      <mat-chip
+        *ngFor="let value of selectValues"
+        (removed)="remove(value)"
+        [disabled]="optionForControl.disabled"
+        #triggerMenuValueList="matMenuTrigger"
+        [matMenuTriggerFor]="menuValueList"
+        (menuOpened)="(!dataSources || optionForControl.disabled) && triggerMenuValueList.closeMenu()"
+        [class.transparent]="chipType === 'valuelist'"
+      >
+        {{ value }}
+        <mat-icon matChipRemove *ngIf="!optionForControl.disabled && chipType !== 'valuelist'">cancel</mat-icon>
+      </mat-chip>
+      <ng-container *ngIf="selectValues.length === 0">
+        <input
+          *ngIf="isShowInputControl"
+          autocomplete="off"
+          matInput
+          [formControl]="inputCtrl"
+          [matChipInputFor]="chipList"
+          [readonly]="optionForControl.disabled ? 'readonly' : null"
+          [b3nRetrictInput]="getRegex()"
+        />
+        <!--fake input-->
+        <input *ngIf="!isShowInputControl" matInput [matChipInputFor]="chipList" [disabled]="true" />
+      </ng-container>
+    </mat-chip-list>
+    <mat-error *ngIf="chipList.errorState">{{ textError }}</mat-error>
+  </mat-form-field>
+</div>
+
+<div class="pt-14 pb-20" *ngIf="optionForControl.dataType === 'boolean' && typeBooleanCheckbox">
+  <mat-checkbox [formControl]="checkboxCtrl">{{ optionForControl.title }}</mat-checkbox>
+</div>
+
+<mat-menu #menu="matMenu" class="fif-menu dropdown-menu">
+  <ng-template matMenuContent>
+    <div
+      class="content-menu"
+      fxLayout="row"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="0px"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+    >
+      <div *ngIf="contextVariables?.length === 0" class="section" fxFlex>
+        <span>No applicable outputs</span>
+      </div>
+      <b3n-menu-variable
+        *ngIf="contextVariables?.length > 0"
+        [contextVariables]="contextVariables"
+        [keyForContextVar]="keyForContextVar"
+        [optionForControl]="optionForControl"
+        (selectProp)="selectProperty($event)"
+      >
+      </b3n-menu-variable>
+    </div>
+  </ng-template>
+</mat-menu>
+
+<mat-menu
+  #menuValueList="matMenu"
+  xPosition="after"
+  class="fif-menu dropdown-menu-value-list"
+  [class]="!dataSources || optionForControl.disabled ? 'hidden' : ''"
+>
+  <div *ngIf="dataSources" [style.width.px]="widthDropDownMenu">
+    <ng-container *ngFor="let ds of dataSources">
+      <button mat-menu-item (click)="onOptionSelected(ds)">{{ ds.label }}</button>
+    </ng-container>
+    <button mat-menu-item *ngIf="dataSources.length === 0" disabled>No items</button>
+  </div>
+</mat-menu>

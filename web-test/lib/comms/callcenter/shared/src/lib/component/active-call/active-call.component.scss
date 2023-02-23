@@ -1,0 +1,17 @@
+.action-bar {
+  padding: 0.8rem 1.6rem;
+}
+
+.active-calls-table {
+  &--not-found {
+    text-align: center;
+  }
+}
+
+.mat-column-action {
+  text-align: right;
+}
+
+.mat-table {
+  width: 100%;
+}

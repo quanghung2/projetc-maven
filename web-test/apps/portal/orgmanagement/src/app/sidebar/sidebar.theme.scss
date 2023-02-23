@@ -1,0 +1,15 @@
+@mixin sidebar-theme($theme) {
+  //   $primary: mat-get($theme, primary);
+
+  .pom-sidebar {
+    &__group {
+      .link {
+        &.link {
+          &.active {
+            // background-color: var(--primary-500);
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+<div class="convo-container flex column justify-content-end align-items-none">
+  <div class="header">
+    <b3n-conversation-header [channel]="channel$ | async"></b3n-conversation-header>
+    <mat-divider></mat-divider>
+  </div>
+  <div class="body" style="flex: 1 1 auto">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="footer">
+    <b3n-conversation-footer
+      [channel]="channel$ | async"
+      (uploadedFiles)="uploadFile($event, 0)"
+    ></b3n-conversation-footer>
+  </div>
+</div>
+
+<sui-template-portal [portalHostId]="RIGHT_SIDEBAR_ID">
+  <b3n-conversation-details [convo]="channel$ | async"></b3n-conversation-details>
+</sui-template-portal>

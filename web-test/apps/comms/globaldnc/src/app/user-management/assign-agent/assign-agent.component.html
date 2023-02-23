@@ -1,0 +1,49 @@
+<div sm-component modal-id="assign-agent-modal" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Assign {{ role === 'STAFF' ? 'Staff' : role === 'MANAGER' ? 'Manager' : role === 'DPO' ? 'DPO' : 'Agent' }}
+  </div>
+  <div class="content">
+    <div class="ui form">
+      <div class="field" *ngIf="role === 'STAFF' || role === 'MANAGER' || role === 'DPO'">
+        <div #dropdownMmeber class="member-select ui search selection dropdown" [class.loading]="isSearching">
+          <input type="hidden" name="member" (change)="onSelected($event.target['value'])" />
+          <div class="text">Select member</div>
+          <input
+            class="search"
+            [(ngModel)]="textInput"
+            (ngModelChange)="research($event)"
+            (click)="$event.stopPropagation(); onShowDropDown()"
+          />
+          <i class="dropdown icon"></i>
+        </div>
+      </div>
+      <div class="field" *ngIf="role === 'AGENT'">
+        <div class="required field">
+          <label>Enter email address</label>
+          <input type="text" placeholder="john@acme.com" [(ngModel)]="email" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block">
+        <div class="left"></div>
+      </div>
+      <div class="block">
+        <div class="right">
+          <div class="ui cancel link button">Cancel</div>
+          <div
+            class="ui approve large primary button"
+            [class.loading]="assigning"
+            [class.disabled]="role !== 'AGENT' && !this.selectedMember"
+            (click)="assign($event)"
+          >
+            Assign
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

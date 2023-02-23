@@ -1,0 +1,98 @@
+<div class="webhook" *ngIf="integration">
+  <section fxLayout="row" fxLayoutGap="1.6rem">
+    <mat-form-field>
+      <mat-label>URL</mat-label>
+      <input matInput [(ngModel)]="integration.commonParams.createTicketURL" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>User</mat-label>
+      <input matInput [(ngModel)]="integration.commonParams.username" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput [(ngModel)]="integration.commonParams.password" />
+    </mat-form-field>
+  </section>
+
+  <section>
+    <div class="params-title">Create ticket params</div>
+    <div fxLayout="row" fxLayoutGap="1.6rem">
+      <mat-form-field> <input matInput placeholder="Name" [(ngModel)]="name" /> </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Value" [(ngModel)]="value" (keyup.enter)="add(name, value)" />
+        <span matSuffix
+          ><button mat-button color="primary" class="suffix-icon" (click)="add(name, value)">Enter</button></span
+        >
+      </mat-form-field>
+    </div>
+
+    <table style="width: 100%" *ngIf="(integration.createTicketParams | json) != '{}'">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Value</td>
+          <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cr of integration.createTicketParams | keyvalue" style="background: white">
+          <td>{{ cr.key }}</td>
+          <td>{{ cr.value }}</td>
+          <td>
+            <span>
+              <button mat-icon-button><mat-icon (click)="remove(cr)">delete</mat-icon></button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <div class="params-title">Update ticket params</div>
+    <div fxLayout="row" fxLayoutGap="1.6rem">
+      <mat-form-field> <input matInput placeholder="Name" [(ngModel)]="nameUpdateParams" /> </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Value"
+          [(ngModel)]="valueUpdateParams"
+          (keyup.enter)="addUpdateTicketParams(nameUpdateParams, valueUpdateParams)"
+        />
+        <span matSuffix>
+          <button
+            class="suffix-icon"
+            mat-button
+            color="primary"
+            (click)="addUpdateTicketParams(nameUpdateParams, valueUpdateParams)"
+          >
+            Enter
+          </button>
+        </span>
+      </mat-form-field>
+    </div>
+
+    <table style="width: 100%" *ngIf="(integration.updateTicketParams | json) != '{}'">
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Value</td>
+          <td>Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cr of integration.updateTicketParams | keyvalue" style="background: white">
+          <td>{{ cr.key }}</td>
+          <td>{{ cr.value }}</td>
+          <td>
+            <span>
+              <button mat-icon-button><mat-icon (click)="removeUpdateParam(cr)">delete</mat-icon></button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -1,0 +1,33 @@
+<div mat-dialog-title>{{ data.action }} CAS Module</div>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+    <form [formGroup]="formGroup">
+      <mat-form-field>
+        <mat-label>Key</mat-label>
+
+        <input [readonly]="data.action === ACTION_CAS_CONFIG.Update" matInput type="text" formControlName="key" />
+      </mat-form-field>
+
+      <mat-form-field class="content-cas-module" appearance="outline">
+        <mat-label>Value</mat-label>
+
+        <textarea
+          matInput
+          formControlName="value"
+          cdkTextareaAutosize
+          [cdkAutosizeMinRows]="2"
+          [cdkAutosizeMaxRows]="6"
+        ></textarea>
+      </mat-form-field>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+
+  <button mat-raised-button color="primary" [disabled]="formGroup.invalid" (click)="submit()">
+    {{ data.action }}
+  </button>
+</div>

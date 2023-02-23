@@ -1,0 +1,49 @@
+.header {
+  position: fixed !important;
+  top: 0;
+  z-index: 2;
+  left: 0px;
+  font-size: 1rem;
+  font-weight: 600;
+
+  a {
+    color: white;
+    text-decoration: none;
+    padding-right: 1em;
+  }
+}
+
+.active {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+  border-radius: 0;
+}
+
+.mat-button {
+  color: white;
+}
+
+.hiden {
+  display: none;
+}
+.right-area {
+  height: 100%;
+}
+.material-icons {
+  vertical-align: middle !important;
+  border-radius: 15px;
+  background-color: #0f80f3;
+  margin-left: 5px;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+.title-name {
+  margin-right: 20px;
+  font-size: 20px;
+}
+
+// .button-link.active {
+//   border-bottom: 2px solid rgba(0, 0, 0, 0.6);
+//   border-radius: 0;
+// }

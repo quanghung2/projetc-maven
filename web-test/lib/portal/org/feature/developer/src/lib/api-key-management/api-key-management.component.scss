@@ -1,0 +1,111 @@
+:host {
+  display: block;
+  .spinner-container {
+    min-height: 400px;
+  }
+  .api-keys {
+    // max-width: 1200px;
+    margin: auto;
+
+    &__title {
+      color: rgba(0, 0, 0, 0.67);
+      margin-bottom: 1.6rem;
+    }
+    &__content {
+      .mat-row:hover {
+        background: var(--gray-100);
+      }
+      .mat-row:hover .copy-btn {
+        display: block !important;
+      }
+      .mat-column-actions {
+        width: 50px;
+      }
+      &__actions-bar {
+        margin-bottom: 1.6rem;
+      }
+      table {
+        width: 100% !important;
+        .copy-btn-container {
+          width: 30px;
+          .copy-btn {
+            color: rgba(0, 0, 0, 0.67) !important;
+            font-size: 20px !important;
+            width: 20px !important;
+            height: 20px !important;
+            margin-left: 5px;
+            cursor: pointer;
+            display: none;
+          }
+        }
+        .key-status {
+          &.active {
+            background: #c8e6c9;
+            padding: 2px 12px;
+            border-radius: 17px;
+            font-size: 13px;
+            color: #1b5e20;
+            width: fit-content;
+          }
+          &.disabled {
+            background: #ffcdd2;
+            padding: 2px 12px;
+            border-radius: 17px;
+            font-size: 13px;
+            color: #b71c1c;
+            width: fit-content;
+          }
+        }
+        .actions {
+          visibility: hidden;
+          width: 75px;
+        }
+        .mat-row:hover .actions {
+          visibility: visible;
+        }
+      }
+      &__no-key {
+        min-height: 500px;
+
+        &__icon {
+          width: 50px;
+          height: 50px;
+        }
+        &__message {
+          margin: 0.8rem 0 2rem;
+          color: var(--gray-700);
+          font-size: 20px;
+        }
+      }
+    }
+  }
+  .access-denied {
+    width: 930px;
+    margin: auto;
+    text-align: center;
+    height: 50vh;
+
+    i {
+      color: var(--primary-700);
+    }
+    &__title {
+      color: var(--primary-700);
+      font-weight: 500;
+      font-size: 30px;
+    }
+    &__message {
+      font-size: 18px;
+      color: var(--primary-700);
+      margin-top: 1.6rem;
+    }
+
+    mat-icon {
+      margin-bottom: 1.6rem;
+      width: 100px;
+      height: 100px;
+      ::ng-deep svg {
+        fill: var(--primary-700) !important;
+      }
+    }
+  }
+}

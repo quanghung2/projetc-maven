@@ -1,0 +1,44 @@
+<div class="header-info">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <h2>Numbers</h2>
+    <button mat-icon-button (click)="back()"><mat-icon>close</mat-icon></button>
+  </div>
+</div>
+<mat-divider></mat-divider>
+<div class="content">
+  <div
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap=".5rem"
+    *ngIf="subscription.countNumbers > pageable.perPage"
+  >
+    <mat-form-field fxFlexFill>
+      <input matInput type="text" placeholder="Search number" [formControl]="keyword" />
+      <button mat-button *ngIf="keyword.value" matSuffix mat-icon-button (click)="keyword.setValue('')">
+        <mat-icon>close</mat-icon>
+      </button>
+      <button mat-button *ngIf="!keyword.value" matSuffix mat-icon-button (click)="findNumber()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-spinner *ngIf="loading" diameter="30" fxFlexAlign="center"></mat-spinner>
+  </div>
+
+  <mat-list *ngIf="!loading">
+    <ng-container *ngFor="let n of data">
+      <mat-list-item>{{ n.number }}</mat-list-item>
+      <mat-divider></mat-divider>
+    </ng-container>
+  </mat-list>
+
+  <mat-paginator
+    *ngIf="!loading && totalCount > pageable.perPage"
+    [length]="totalCount"
+    [pageIndex]="pageable.page - 1"
+    [pageSize]="pageable.perPage"
+    (page)="changePage($event.pageIndex + 1)"
+    hidePageSize
+    showFirstLastButtons
+  >
+  </mat-paginator>
+</div>

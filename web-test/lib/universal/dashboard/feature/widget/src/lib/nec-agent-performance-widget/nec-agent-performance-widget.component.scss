@@ -1,0 +1,18 @@
+table {
+  .mat-cell,
+  .mat-header-cell {
+    padding: 16px;
+  }
+
+  .mat-header-cell {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+
+.no-data {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}

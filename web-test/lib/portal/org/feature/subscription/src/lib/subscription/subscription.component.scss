@@ -1,0 +1,19 @@
+.mat-drawer {
+  width: 400px;
+}
+
+.mat-drawer-backdrop.mat-drawer-shown {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.mat-drawer-container {
+  height: 100vh;
+}
+
+.container {
+  margin: auto;
+
+  &__spinner {
+    margin-top: 5rem;
+  }
+}

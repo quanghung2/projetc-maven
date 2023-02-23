@@ -1,0 +1,17 @@
+.action__wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+
+  mat-form-field {
+    width: 300px;
+  }
+}
+
+.liability__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}

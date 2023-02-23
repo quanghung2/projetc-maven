@@ -1,0 +1,22 @@
+:host {
+  .action {
+    cursor: pointer;
+    margin: 0 5px;
+    user-select: none !important;
+    border-radius: 50%;
+  }
+  .quantity {
+    width: 80px;
+    text-align: center;
+  }
+  .mat-form-field {
+    width: 100%;
+  }
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+  }
+}

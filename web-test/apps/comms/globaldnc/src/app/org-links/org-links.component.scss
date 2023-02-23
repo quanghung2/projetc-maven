@@ -1,0 +1,11 @@
+.empty {
+  color: #919191;
+  font-size: 14px;
+  margin-top: 30px;
+}
+.result-container {
+  position: relative;
+  .ui.inline.dropdown .dropdown.icon {
+    top: 0px;
+  }
+}

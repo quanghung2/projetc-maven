@@ -1,0 +1,21 @@
+:host {
+  .summary-message {
+    min-width: 400px;
+    max-width: 80%;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+
+    .header {
+      background-color: #dde2e6;
+    }
+
+    .body {
+      padding: 1rem 1.6rem;
+    }
+
+    .label {
+      color: #5a6976;
+      font-size: 14px;
+    }
+  }
+}

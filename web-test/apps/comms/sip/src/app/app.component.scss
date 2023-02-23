@@ -1,0 +1,17 @@
+header {
+  position: fixed;
+  width: 100%;
+  top: 0px;
+  z-index: 9999;
+}
+
+configure,
+landing {
+  position: absolute;
+  margin-top: 54px;
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}

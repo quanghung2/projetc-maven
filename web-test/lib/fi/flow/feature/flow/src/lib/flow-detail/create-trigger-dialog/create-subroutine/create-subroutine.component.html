@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+  <b3n-subroutine (changeConfig)="configs = $event" (invalid)="invalid = $event"></b3n-subroutine>
+
+  <div dir="rtl" class="mb-4">
+    <button mat-raised-button color="primary" [loading]="creating" [disabled]="invalid" (click)="createSubroutine()">
+      Create
+    </button>
+  </div>
+</div>

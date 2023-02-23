@@ -1,0 +1,15 @@
+:host {
+  .related-cases {
+    .related-case {
+      .button {
+        cursor: pointer;
+        visibility: hidden;
+      }
+      &:hover {
+        .button {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

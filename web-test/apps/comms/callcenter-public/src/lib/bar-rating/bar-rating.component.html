@@ -1,0 +1,11 @@
+<span>
+  <i
+    *ngFor="let item of ' '.repeat(max).split(''); let i = index"
+    class="material-icons pointer"
+    [style.fontSize]="starSize"
+    [class.active]="i < currentValue"
+    (click)="changeValue(i + 1)"
+  >
+    star
+  </i>
+</span>

@@ -1,0 +1,125 @@
+<ng-container *ngIf="isDomainB3">
+  <div class="content-container" *ngIf="!selectedSupplierUuid">
+    <div fxLayout="row" class="action-bar" fxLayoutGap="8px" fxLayoutAlign="end center">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Search by name"
+          [disabled]="isLoading"
+          [(ngModel)]="filterSetting.supplier"
+          (keyup.enter)="filterSuppliers()"
+        />
+        <mat-icon matSuffix (click)="filterSuppliers()">search</mat-icon>
+        <mat-icon
+          matSuffix
+          *ngIf="filterSetting.supplier !== ''"
+          (click)="filterSetting.supplier = ''; filterSuppliers()"
+          >clear</mat-icon
+        >
+      </mat-form-field>
+      <button mat-icon-button [loading]="isLoading" (click)="reload()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="onShowUpdateSupplier()">Create Supplier</button>
+    </div>
+    <div *ngIf="suppliersFiltered && suppliersFiltered.length > 0; else noData" class="supplier mat-elevation-z1">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="uuid">
+          <th mat-header-cell *matHeaderCellDef>UUID</th>
+          <td mat-cell *matCellDef="let element">
+            <div
+              class="uuid-column"
+              (cdkCopyToClipboardCopied)="copied()"
+              [cdkCopyToClipboard]="element.uuid"
+              mat-button
+              matTooltip="Click to copy"
+            >
+              {{ element?.uuid | slice: 0:8 }}
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{ element?.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="plan">
+          <th mat-header-cell *matHeaderCellDef>Plan</th>
+          <td mat-cell *matCellDef="let element">{{ element?.plan }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="visibilityType">
+          <th mat-header-cell *matHeaderCellDef>Visibility Type</th>
+          <td mat-cell *matCellDef="let element">{{ element?.visibilityType }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="updatedDate">
+          <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+          <td mat-cell *matCellDef="let element">{{ element?.updatedDate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="edit-supplier">
+              <button
+                mat-icon-button
+                matTooltip="Manage Default Supplier"
+                (click)="manageDefaultSupplier(element.uuid)"
+              >
+                <mat-icon>settings</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Manage Routing" (click)="manageRouting(element.uuid)">
+                <mat-icon>dashboard_customize</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Mapping Reference" (click)="setMappingRef(element.uuid)">
+                <mat-icon>tune</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Edit" (click)="onShowUpdateSupplier(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+    </div>
+    <ng-template #noData>
+      <div class="no-data" fxLayout="column" fxLayoutAlign="center center">
+        <h3 *ngIf="!isLoading" class="message">No record found</h3>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="content-container" *ngIf="selectedSupplierUuid && showMappingRef">
+    <div class="my-20" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <button mat-icon-button (click)="selectedSupplierUuid = ''; showMappingRef = false">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2 class="mb-0">Mapping Reference</h2>
+    </div>
+
+    <mat-tab-group mat-stretch-tabs animationDuration="0ms">
+      <mat-tab *ngFor="let param of paramForMapping">
+        <ng-template mat-tab-label>
+          <span [innerHTML]="param.title"></span>
+        </ng-template>
+        <b3n-mapping-reference [supplierUuid]="selectedSupplierUuid" [param]="param"></b3n-mapping-reference>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div class="content-container" *ngIf="selectedSupplierUuid && showRouting">
+    <div class="my-20" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <button mat-icon-button (click)="selectedSupplierUuid = ''; showRouting = false">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2 class="mb-0">Manage Routing</h2>
+    </div>
+    <b3n-routing [sellerUuid]="selectedSupplierUuid"></b3n-routing>
+  </div>
+</ng-container>

@@ -1,0 +1,46 @@
+.information {
+  width: fit-content;
+  margin: auto;
+  mat-toolbar {
+    margin: 0 !important;
+  }
+  // width: 43.75%;
+  // margin-left: 2em;
+  .detail {
+    .item {
+      display: flex;
+      margin-bottom: 1.5em;
+      .image {
+        margin-top: 1em;
+        img {
+          display: block;
+          border-radius: 0.125rem;
+          border: none;
+          max-width: 100px;
+          max-height: 100px;
+          height: auto;
+          width: auto;
+          align-self: center;
+          object-fit: contain;
+        }
+      }
+      .content {
+        padding-left: 1.5em;
+        margin-top: 0.6em;
+        p {
+          font-size: 13px;
+          line-height: 20px;
+        }
+      }
+    }
+    .btnUpdate {
+      ::ng-deep button {
+        width: 100px;
+      }
+    }
+  }
+
+  .formUpload {
+    display: none;
+  }
+}

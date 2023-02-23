@@ -1,0 +1,95 @@
+<div class="routing-config-content">
+  <div fxLayout="row" fxLayoutAlign="start baseline" class="ui grid action-bar-container">
+    <div class="left floated five wide column">
+      <div class="big-title">Routing Config</div>
+    </div>
+    <div class="item vertical filter right floated type-selection">
+      <label class="search-label">Filter by type</label>
+      <div sm-component class="ui underline selected dropdown" tabindex="0">
+        <i class="icon dropdown"></i>
+        <div class="text">All type</div>
+        <div class="menu" tabindex="-1">
+          <div (click)="changeType(EnumTypeRouting.all)" class="item" data-value="all">
+            All type
+          </div>
+          <div
+            (click)="changeType(EnumTypeRouting.isdn_incoming)"
+            class="item"
+            data-value="isdn_incoming"
+          >
+            ISDN Incoming
+          </div>
+          <div (click)="changeType(EnumTypeRouting.outgoing)" class="item" data-value="outgoing">
+            Outgoing
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item no-padding">
+      <div id="search" class="ui icon input">
+        <form autocomplete="off">
+          <input
+            [(ngModel)]="keyword"
+            name="searchNumber"
+            autocomplete="none"
+            type="text"
+            placeholder="Search"
+            OnlyNumber="true"
+            class="search-input"
+          />
+        </form>
+        <i
+          id="clearSearch"
+          class="cancel icon"
+          [style.display]="keyword ? 'inherit' : 'none'"
+          (click)="resetSearchQuery()"
+        ></i>
+      </div>
+    </div>
+    <div class="no-padding">
+      <div (click)="search()" class="ui primary button">Search</div>
+    </div>
+    <div class="right floated two wide column add-btn">
+      <div class="ui primary button" (click)="add()">Add</div>
+    </div>
+  </div>
+  <!-- <div class="ui divider"></div> -->
+  <div class="content">
+    <table class="ui page selectable unstackable table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Rule</th>
+          <th>Forward To</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="listViewData.length > 0; else noData">
+          <tr *ngFor="let item of listViewData">
+            <td class="type highlight">{{ item.type | typeRouting }}</td>
+            <td class="rule highlight">{{ item.rule || '_' }}</td>
+            <td class="forward-to highlight">{{ (item.forwardTo | formatForwardTo) || '_' }}</td>
+            <td>
+              <i class="delete icon" (click)="deleteRouting(item)"></i>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-template #noData>
+          <tr>
+            <td class="highlight" colspan="3" style="text-align: center">No Data Available</td>
+          </tr>
+        </ng-template>
+      </tbody>
+    </table>
+    <div *ngIf="listViewData.length > 0">
+      <pagination
+        [totalCount]="listRoutings.length"
+        [perPage]="perPage"
+        [currentPage]="page"
+        (pageChange)="onPageChanged($event)"
+        class="right aligned column right floated"
+      ></pagination>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<h1 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>{{ data.isCreate ? 'Create number setting' : 'Edit number setting' }}</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h1>
+<div
+  class="container-dialog"
+  [formGroup]="form"
+  mat-dialog-content
+  fxLayout="column"
+  fxLayoutAlign="start none"
+  fxLayoutGap="1.6rem"
+>
+  <mat-form-field>
+    <mat-label>Number</mat-label>
+    <input
+      matInput
+      type="number"
+      placeholder="Please enter your carrier number"
+      name="name"
+      formControlName="number"
+      [errorStateMatcher]="matcher"
+    />
+    <mat-hint>The number format is E164: {{ text }}</mat-hint>
+    <mat-error *ngIf="number.hasError('required')"> Number is required </mat-error>
+  </mat-form-field>
+
+  <!-- <ng-container *ngIf="data.isCreate; else editView">
+    <mat-form-field>
+      <mat-label>Forward To</mat-label>
+      <mat-select formControlName="type" [errorStateMatcher]="matcher">
+        <mat-option *ngFor="let type of typeRouting" [value]="type.key">
+          {{ type.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+  <ng-template #editView>
+    <mat-form-field>
+      <input matInput type="text" placeholder="Forward To" formControlName="type" />
+    </mat-form-field>
+  </ng-template> -->
+
+  <ng-conatiner [ngSwitch]="type.value">
+    <ng-container *ngSwitchCase="TypeForwardTo.SIP">
+      <mat-form-field appearance="outline" class="sip-chip-input">
+        <mat-label>SIP</mat-label>
+        <mat-chip-list #chipList>
+          <mat-chip
+            *ngFor="let item of forwardToArray.value; let i = index"
+            [selectable]="false"
+            [removable]="true"
+            (removed)="remove(i)"
+          >
+            {{ item }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            #inputChip
+            [matChipInputFor]="chipList"
+            placeholder="+ Ex: sip1234567@abc.xyz"
+            [formControl]="valueInputChip"
+            (paste)="onPaste($event)"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="true"
+            (matChipInputTokenEnd)="addSip($event)"
+          />
+
+          <mat-error *ngIf="!valueInputChip.value && forwardToArray.hasError('minLength')"> SIP is required </mat-error>
+          <mat-error *ngIf="valueInputChip.dirty && valueInputChip.hasError('formatSIP')">
+            Ex: sip1234567@abc.xyz!
+          </mat-error>
+        </mat-chip-list>
+      </mat-form-field>
+    </ng-container>
+    <ng-container *ngSwitchCase="TypeForwardTo.Extension">
+      <mat-form-field class="full-width" floatLabel="never">
+        <mat-label>Extension</mat-label>
+        <input
+          #inputNumber
+          placeholder="Enter extension"
+          formControlName="forwardTo"
+          [matAutocomplete]="auto"
+          matInput
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="extDisplayFn">
+          <mat-option *ngFor="let ext of extensions$ | async" [value]="ext">
+            <span [innerHTML]="ext.displayText | highlight: searchKey"></span>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="forwardTo.hasError('required')"> Extension is required </mat-error>
+      </mat-form-field>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <mat-form-field>
+        <mat-label>Number</mat-label>
+        <input matInput #inputNumber type="number" placeholder="Enter number" formControlName="forwardTo" />
+        <mat-error *ngIf="forwardTo.hasError('required')"> Number is required </mat-error>
+      </mat-form-field>
+    </ng-container>
+  </ng-conatiner>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [loading]="isProcessing"
+    (click)="onSave()"
+    [disabled]="invalidForm || !forwardTo?.value?.extKey || isProcessing"
+  >
+    <span *ngIf="!data.isCreate"> Update</span>
+    <span *ngIf="data.isCreate"> Create </span>
+  </button>
+</div>

@@ -1,0 +1,5 @@
+<mat-action-list *ngIf="convo" class="members">
+  <mat-list-item *ngFor="let member of members" class="member" (click)="onShowProfile($event, member)">
+    <csh-render-member [user]="member"></csh-render-member>
+  </mat-list-item>
+</mat-action-list>

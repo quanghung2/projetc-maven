@@ -1,0 +1,18 @@
+:host {
+  .attendent-table {
+    .mat-column-actions {
+      width: 150px;
+      > * {
+        display: none;
+      }
+    }
+    .mat-row:hover {
+      background-color: #fafafa;
+      .mat-column-actions {
+        > * {
+          display: flex;
+        }
+      }
+    }
+  }
+}

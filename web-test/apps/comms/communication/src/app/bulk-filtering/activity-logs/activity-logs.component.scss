@@ -1,0 +1,32 @@
+:host {
+  table {
+    width: 100%;
+
+    .action-visibility {
+      visibility: hidden;
+    }
+
+    tr {
+      &.mat-row {
+        &:hover {
+          background-color: var(--gray-100);
+          .action-visibility {
+            visibility: visible !important;
+          }
+        }
+
+        .mat-column-status {
+          &.Completed {
+            color: #36b37e;
+          }
+          &.Failed {
+            color: #ff5630;
+          }
+          &.Pending {
+            color: #00b8d9;
+          }
+        }
+      }
+    }
+  }
+}

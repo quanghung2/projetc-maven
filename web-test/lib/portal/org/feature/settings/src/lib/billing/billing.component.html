@@ -1,0 +1,121 @@
+<div class="container">
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" fxFlexFill>
+    <section>
+      <mat-toolbar class="p-0"> <h1>Billing Address</h1> </mat-toolbar>
+      <form [formGroup]="billingInfoForm" (submit)="update()" novalidate>
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap=".5rem">
+          <mat-form-field>
+            <input matInput placeholder="Billing Name" formControlName="billingName" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select placeholder="Country" [formControl]="countryCtrl" [compareWith]="compareCountry">
+              <mat-option>
+                <ngx-mat-select-search
+                  placeholderLabel="Search..."
+                  noEntriesFoundLabel="No countries found"
+                  [formControl]="countryFilterCtrl"
+                ></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let c of filteredCountries" [value]="c">{{ c.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Address 1" formControlName="addressLineOne" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Address 2" formControlName="addressLineTwo" />
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="City" formControlName="city" />
+          </mat-form-field>
+
+          <div fxLayout="row" fxLayoutGap="1.6rem">
+            <mat-form-field fxFlex>
+              <input matInput placeholder="State" formControlName="state" />
+            </mat-form-field>
+            <mat-form-field fxFlex>
+              <input matInput placeholder="Postal Code" formControlName="zip" />
+            </mat-form-field>
+          </div>
+
+          <div fxLayout="row">
+            <span class="spacer"></span>
+            <button
+              mat-raised-button
+              [loading]="updating"
+              [disabled]="updating"
+              dir="rtl"
+              type="submit"
+              color="primary"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </form>
+    </section>
+    <mat-divider></mat-divider>
+    <section>
+      <h2>Billing Email</h2>
+      <div class="list-email" *ngFor="let e of emailVerified">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="email">{{ e.email }} <label class="status verified">Verified</label></div>
+          <div class="button-fake"></div>
+          <div fxLayout="row" fxLayoutAlign="center center" *ngIf="emailVerified.length > 1">
+            <mat-spinner diameter="20" *ngIf="e.loading"></mat-spinner>
+            <button mat-icon-button *ngIf="!e.loading" (click)="removeEmail(e)">
+              <mat-icon class="list-email__delete-btn" matTooltip="Remove" matTooltipPosition="above"
+                >delete_outline</mat-icon
+              >
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+      <div class="list-email" *ngFor="let e of emailUnVerified">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="email">{{ e.email }} <label class="status unverified">Unverified</label></div>
+          <div class="button-fake"></div>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <mat-spinner diameter="20" *ngIf="e.loading"></mat-spinner>
+            <button mat-icon-button *ngIf="!e.loading" (click)="resentEmail(e)">
+              <mat-icon matTooltip="Resend" matTooltipPosition="above">autorenew</mat-icon>
+            </button>
+            <button mat-icon-button *ngIf="!e.loading" (click)="removeEmail(e)">
+              <mat-icon class="list-email__delete-btn" matTooltip="Remove" matTooltipPosition="above"
+                >delete_outline</mat-icon
+              >
+            </button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+      <div class="new-email" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap=".5rem">
+        <mat-form-field fxFlex>
+          <mat-label>Add email</mat-label>
+          <input
+            matInput
+            type="email"
+            placeholder="admin@acme.net"
+            [formControl]="newEmail"
+            required
+            (keyup.enter)="addEmail()"
+          />
+          <mat-error *ngIf="newEmail.invalid">{{ getErrorNewEmail() }}</mat-error>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          [loading]="adding"
+          [disabled]="newEmail.invalid || adding"
+          color="primary"
+          (click)="addEmail()"
+        >
+          Add
+        </button>
+      </div>
+    </section>
+  </div>
+</div>

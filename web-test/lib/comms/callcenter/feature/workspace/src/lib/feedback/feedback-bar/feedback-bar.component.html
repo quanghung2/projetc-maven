@@ -1,0 +1,87 @@
+<ng-container *ngIf="filter">
+  <div class="title-bar" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+    <span class="fill-remaining-space"></span>
+
+    <div class="advanced-search-trigger" (click)="isExpanded = !isExpanded" mat-icon-button>
+      <span> Advanced search </span> <i class="material-icons" *ngIf="isExpanded"> keyboard_arrow_down </i>
+      <i class="material-icons" *ngIf="!isExpanded"> keyboard_arrow_up </i>
+    </div>
+
+    <mat-form-field>
+      <mat-select
+        (selectionChange)="search()"
+        [compareWith]="compareCodeFn"
+        [(ngModel)]="filter.timeRange"
+        placeholder="Filter date"
+      >
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">{{ timeRange.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field (click)="selectedStartDate.open()" *ngIf="filter.timeRange == TimeRange.specific_date">
+      <input
+        (dateChange)="startDateChanged($event)"
+        [value]="filter.startDate"
+        [matDatepicker]="selectedStartDate"
+        [max]="maxStart"
+        [min]="minStart"
+        matInput
+        placeholder="Start date"
+        readonly
+      />
+      <mat-datepicker-toggle [for]="selectedStartDate" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #selectedStartDate></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field (click)="selectedEndDate.open()" *ngIf="filter.timeRange == TimeRange.specific_date">
+      <input
+        (dateChange)="endDateChanged($event)"
+        [value]="filter.endDate"
+        [matDatepicker]="selectedEndDate"
+        [max]="maxEnd"
+        [min]="minEnd"
+        matInput
+        placeholder="End date"
+        readonly
+      />
+      <mat-datepicker-toggle [for]="selectedEndDate" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #selectedEndDate></mat-datepicker>
+    </mat-form-field>
+
+    <button
+      (click)="onExport()"
+      [disabled]="filter.timeRange === TimeRange.specific_date && (!filter.startDate || !filter.endDate)"
+      class="export"
+      mat-stroked-button
+      matTooltip="Export"
+    >
+      Export
+    </button>
+    <button (click)="search()" mat-icon-button matTooltip="Refresh"><mat-icon>autorenew</mat-icon></button>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel [expanded]="isExpanded">
+      <div class="title-bar-expension" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem">
+        <mat-form-field>
+          <mat-select
+            [compareWith]="compareCodeFn"
+            [(ngModel)]="filter.filterByQueue"
+            (selectionChange)="search()"
+            placeholder="Filter by queue"
+          >
+            <mat-option value=""> All queues</mat-option>
+            <mat-option [value]="queue.uuid" *ngFor="let queue of queues"> {{ queue.label }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput placeholder="Customer number" [(ngModel)]="filter.customerNumber" (keyup.enter)="search()" />
+          <mat-icon *ngIf="filter.customerNumber" (click)="filter.customerNumber = ''" matSuffix>clear</mat-icon>
+        </mat-form-field>
+
+        <button (click)="search()" class="export" mat-stroked-button>Search</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>

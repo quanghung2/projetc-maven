@@ -1,0 +1,73 @@
+<div *ngIf="extension$ | async" class="container" [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'">
+  <b3n-settings-navigate class="w-100" title="Ring devices"></b3n-settings-navigate>
+  <div
+    *ngIf="extension && extension.ringConfig"
+    class="w-100 px-16"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="1.6rem"
+  >
+    <div class="w-100" fxLayout="column" fxLayoutAlign="start none">
+      <ng-container *ngIf="activatedDevices">
+        <mat-list class="m-0 p-0">
+          <h3 mat-subheader class="m-0 p-0" [style.color]="'#5f5f5f'">Select devices to receive an inbound call.</h3>
+        </mat-list>
+        <ng-container *ngIf="activatedDevices.length === 0; else loadList">
+          <mat-hint fxLayoutAlign="center"> No actived devices </mat-hint>
+        </ng-container>
+        <ng-template #loadList>
+          <div fxFlexAlign="stretch" class="item__rows w-100">
+            <div cdkDropList (cdkDropListDropped)="dropDispositionCodes($event)">
+              <ng-container *ngFor="let device of activatedDevices; let i = index">
+                <ng-container *ngIf="extension.ringConfig.activatedDevices.includes(device?.deviceType)">
+                  <div
+                    cdkDrag
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                    class="sortable-box"
+                    fxLayoutGap="7px"
+                  >
+                    <ng-container
+                      [ngTemplateOutlet]="deviceItemTmp"
+                      [ngTemplateOutletContext]="{ device: device, i: i, extension: extension }"
+                    ></ng-container>
+                  </div>
+
+                  <mat-divider *ngIf="i < activatedDevices.length - 1"></mat-divider>
+                </ng-container>
+              </ng-container>
+            </div>
+            <ng-container *ngFor="let device of activatedDevices; let i = index">
+              <ng-container *ngIf="!extension.ringConfig.activatedDevices.includes(device?.deviceType)">
+                <div
+                  fxLayout="row"
+                  fxLayoutAlign="space-between center"
+                  class="unsortable-box disabled"
+                  fxLayoutGap="1.6rem"
+                >
+                  <ng-container
+                    [ngTemplateOutlet]="deviceItemTmp"
+                    [ngTemplateOutletContext]="{ device: device, i: i, extension: extension }"
+                  ></ng-container>
+                </div>
+                <mat-divider *ngIf="i < activatedDevices.length - 1"></mat-divider>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #deviceItemTmp let-device="device" let-i="i" let-extension="extension">
+  <mat-slide-toggle
+    fxLayoutAlign="start center"
+    [checked]="extension.ringConfig.activatedDevices.includes(device?.deviceType)"
+    (change)="shiftChanged(device.deviceType)"
+  >
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="device__name">{{ device?.deviceType | extDevice }} </span>
+    </div>
+  </mat-slide-toggle>
+</ng-template>

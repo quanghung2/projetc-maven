@@ -1,0 +1,61 @@
+<div class="ui small modal">
+  <loader [loading]="saving"></loader>
+  <div class="header">Add country to whitelist</div>
+  <div class="content">
+    <div class="ui fluid selection dropdown">
+      <i *ngIf="!country" class="dropdown icon"></i>
+      <div *ngIf="!country" class="default text">Select countries</div>
+      <ng-container *ngIf="country">{{ country.name }}</ng-container>
+      <div class="menu">
+        <ng-container *ngIf="!country">
+          <div class="item" (click)="$event.stopPropagation(); select()">
+            <div class="ui checkbox">
+              <input type="checkbox" [(ngModel)]="selectAll" [checked]="selectAll" />
+            </div>
+            Select all
+          </div>
+          <div
+            *ngFor="let country of allCountries"
+            class="item"
+            [attr.data-value]="country.id"
+            (click)="$event.stopPropagation(); select(country)"
+          >
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="countriesStatus[country.id]"
+                [checked]="countriesStatus[country.id]"
+              />
+            </div>
+            {{ country.name }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <ng-container *ngIf="addable && !country">
+      <mat-checkbox [(ngModel)]="passcode" color="primary"> Passcode required </mat-checkbox>
+    </ng-container>
+    <ng-container *ngIf="addable || country">
+      <mat-slide-toggle [(ngModel)]="countryArea" color="primary"> Specific area </mat-slide-toggle>
+    </ng-container>
+    <ng-container *ngIf="countryArea">
+      <mat-form-field>
+        <mat-label>Area code</mat-label>
+        <input matInput [(ngModel)]="areaCode" type="text" pattern="[0-9]*" required #areaCodeValue="ngModel" />
+        <mat-error *ngIf="areaCodeValue.touched && areaCodeValue.hasError('required')">
+          Area code is required
+        </mat-error>
+        <mat-error *ngIf="areaCodeValue.touched && areaCodeValue.hasError('pattern')"> Area code is invalid </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Location name</mat-label>
+        <input matInput [(ngModel)]="areaLabel" required #areaLabelValue="ngModel" />
+        <mat-error *ngIf="areaLabelValue.touched && areaLabelValue.invalid"> Location name is required </mat-error>
+      </mat-form-field>
+    </ng-container>
+  </div>
+  <div class="actions">
+    <div class="ui deny button" (click)="addable = false; countryArea = false">Cancel</div>
+    <div class="ui primary button" [class.disabled]="!addable || !isValidateCountryArea()" (click)="save()">Add</div>
+  </div>
+</div>

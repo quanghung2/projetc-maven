@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>Export</h1>
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="flex-start" fxLayoutGap="0.8rem" #form="ngForm">
+    <mat-form-field>
+      <input matInput [(ngModel)]="email" required type="text" placeholder="Email" name="email" />
+      <mat-error>Email is required</mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    [loading]="progressing"
+    [disabled]="form.invalid || progressing"
+    color="primary"
+    (click)="export()"
+  >
+    Export
+  </button>
+</div>

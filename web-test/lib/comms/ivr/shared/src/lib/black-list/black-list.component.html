@@ -1,0 +1,67 @@
+<mat-toolbar *ngIf="blockedNumbers && blockedNumbers.length > 0">
+  <div class="toolbar-content" fxLayout>
+    <span class="fill-remaining-space"></span>
+    <button (click)="openAddBlacklistNumberDialog()" mat-raised-button><span>Block a number</span></button>
+  </div>
+</mat-toolbar>
+
+<div *ngIf="blockedNumbers" class="black-list-content">
+  <div *ngIf="blockedNumbers.length == 0" class="no-subscription">
+    <h1>You didn't block any number yet</h1>
+    <h3><button mat-raised-button color="primary" (click)="openAddBlacklistNumberDialog()">Block a number</button></h3>
+  </div>
+
+  <!--
+    <shc-resource-not-found
+      *ngIf="blockedNumbers && blockedNumbers.length == 0"
+      message="You have no blocked number"
+    ></shc-resource-not-found>
+  -->
+  <div *ngIf="blockedNumbers.length > 0" fxLayout>
+    <span class="fill-remaining-space"></span>
+    <span
+      ><mat-slide-toggle (change)="toggleBlockAnonymous($event)" [(ngModel)]="blockAnonymous"
+        >Block anonymous number</mat-slide-toggle
+      ></span
+    >
+  </div>
+  <div *ngIf="blockedNumbers.length == 0" class="center">
+    <span
+      ><mat-slide-toggle (change)="toggleBlockAnonymous($event)" [(ngModel)]="blockAnonymous"
+        >Block anonymous number</mat-slide-toggle
+      ></span
+    >
+  </div>
+  <table *ngIf="blockedNumbers.length > 0" [dataSource]="blockedNumbers" mat-table>
+    <ng-container matColumnDef="phonenumber">
+      <th mat-header-cell *matHeaderCellDef>Phone Number</th>
+      <td mat-cell *matCellDef="let element" class="nameField">{{ element.number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="countryCode">
+      <th mat-header-cell *matHeaderCellDef>Country Code</th>
+      <td mat-cell *matCellDef="let element">{{ element.countryCode }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>Blocked from</th>
+      <td mat-cell *matCellDef="let blockedNumber">
+        <span>{{ blockedNumber.createdAt | userDate }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete" class="delete-icon">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let blockedNumber">
+        <span class="gray">
+          <button mat-icon-button matTooltip="Delete this number" (click)="openDeleteNumberDialog(blockedNumber)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </span>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" class="table-header" mat-header-row></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

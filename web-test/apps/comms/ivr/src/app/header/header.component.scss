@@ -1,0 +1,17 @@
+:host {
+  display: block;
+  a {
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
+  }
+}
+
+.links {
+  margin-left: 2rem;
+}
+
+#header-actions {
+  display: flex;
+  margin-left: 2rem;
+  align-items: center;
+}

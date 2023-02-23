@@ -1,0 +1,29 @@
+<div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="1.6rem">
+  <mat-checkbox [formControl]="$any(isEnabledSendToEmail)">Notify to email</mat-checkbox>
+  <mat-form-field *ngIf="isEnabledSendToEmail.value">
+    <mat-label>Emails</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let item of emails.value; let i = index"
+        [selectable]="selectable"
+        [removable]="removable"
+        [attr.data-status]="item.statusError"
+        (removed)="remove(i)"
+      >
+        {{ item.name }}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        [matChipInputFor]="chipList"
+        [placeholder]="emails.value.length > 0 ? '' : 'Please enter emails'"
+        (paste)="onPaste($event)"
+        [formControl]="$any(valueInputChip)"
+        [matChipInputAddOnBlur]="addOnBlur"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addEmail($event)"
+      />
+    </mat-chip-list>
+    <mat-hint class="text-red" *ngIf="emails.hasError('FORMAT_EMAIL')"> Invaild email format </mat-hint>
+    <mat-hint class="text-red" *ngIf="valueInputChip.hasError('required')">Email is required </mat-hint>
+  </mat-form-field>
+</div>

@@ -1,0 +1,12 @@
+<div class="noData" *ngIf="hasQueueFilter && !queueUuids?.length && !includeNonQueueFilterHash">
+  <span>{{ questionV2.question?.messages?.noFilter }}</span>
+</div>
+
+<b3n-call-center-no-data
+  *ngIf="!chartDataRows.length && questionV2"
+  [questionV2]="questionV2"
+></b3n-call-center-no-data>
+
+<div class="chart_wrapper">
+  <div [id]="questionV2.uuid"></div>
+</div>

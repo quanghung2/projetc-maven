@@ -1,0 +1,23 @@
+<div class="mb-24" fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="16px">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+    <img src="assets/flow-shared/icons/electric_bolt.svg" class="w-40 h-40" />
+    <h3 class="mb-0" fxFlex><strong>1. Business action</strong></h3>
+  </div>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</div>
+<div mat-dialog-content>
+  <b3n-ba-creator [isEdit]="true" (changeInput)="parameters = $event" (invalid)="invalid = $event"></b3n-ba-creator>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    *ngIf="flow.editable"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="updating"
+    [disabled]="invalid"
+    (click)="update()"
+  >
+    Update
+  </button>
+</div>

@@ -1,0 +1,15 @@
+<ng-container [formGroup]="form" *ngIf="hasQueueFilterV2">
+  <mat-form-field class="queue-select__field">
+    <mat-label>Queue(s)</mat-label>
+    <mat-select formControlName="queues" multiple #queueSelect>
+      <div class="queues__all" [class.queue-select__all]="selectAllQueue">
+        <mat-checkbox color="primary" [checked]="selectAllQueue" (change)="toggleSelectAllQueue($event.checked)">{{
+          selectAllQueue ? 'Unselect All' : 'Select All'
+        }}</mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-select-trigger *ngIf="selectAllQueue">All</mat-select-trigger>
+      <mat-option *ngFor="let queue of allQueues" [value]="queue.uuid">{{ queue.label }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-container>

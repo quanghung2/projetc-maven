@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Manage license user</h2>
+<div mat-dialog-content>
+  <p *ngIf="!!license.identityUuid">
+    This license is currently assigned to <strong>{{ license.assignedUser }}</strong
+    >. Search the user you want to reassign it to {{ license.skuName }}.
+  </p>
+  <p *ngIf="!license.identityUuid" class="hint-text">Search the user you want to assign it to {{ license.skuName }}</p>
+  <mat-form-field appearance="outline">
+    <mat-label>Member</mat-label>
+    <input
+      #searchMemberInpt
+      matInput
+      [formControl]="searchMemberCtrl"
+      [matAutocomplete]="memberAuto"
+      placeholder="Enter member name"
+    />
+    <mat-autocomplete #memberAuto="matAutocomplete" [displayWith]="memberDisplayFn">
+      <ng-container *ngIf="members$ | async as members">
+        <mat-option *ngFor="let member of members$ | async" [value]="member">{{ member.displayName }}</mat-option>
+        <mat-option *ngIf="members.length == 0" disabled>No members available</mat-option>
+      </ng-container>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button *ngIf="!!license.identityUuid" mat-stroked-button color="warn" [loading]="unassigning" (click)="unassign()">
+    Unassign
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="assigning"
+    [disabled]="!selectedMember || selectedMember.uuid === license.identityUuid"
+    (click)="assign()"
+  >
+    {{ !!license.identityUuid ? 'Reassign' : 'Assign' }}
+  </button>
+</div>

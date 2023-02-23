@@ -1,0 +1,60 @@
+<ng-container>
+  <div class="pom-sidebar">
+    <div
+      *ngIf="organization$ | async as organization"
+      class="pom-sidebar__org-info"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="1.6rem"
+    >
+      <pos-photo (uploadPhotoEvent)="uploadPhotoEvent($event)" [organization]="organization"></pos-photo>
+      <mat-progress-bar
+        class="pom-sidebar__org-info__progress-bar"
+        *ngIf="uploadEvent && uploadEvent.status !== 'completed'"
+        mode="determinate"
+        [value]="uploadEvent.percentage"
+      ></mat-progress-bar>
+      <div
+        class="pom-sidebar__org-info__name"
+        fxLayout="row"
+        fxLayoutGap="0.8rem"
+        fxLayoutAlign="start center"
+        (click)="updateOrgName()"
+      >
+        <span> {{ organization.shortName || organization.name }} </span>
+        <mat-icon *ngIf="!!myInfo" class="verified">verified_user</mat-icon>
+      </div>
+      <div
+        class="pom-sidebar__org-info__time-display mat-caption"
+        fxLayout="row"
+        fxLayoutGap="0.8rem"
+        (click)="openTimeZoneSettings()"
+      >
+        <span
+          >{{
+            dateTime$ | async | userDate: (organization.timeFormat === 'yyyy-MM-dd HH:mm' ? 'hh:mm a' : 'hh:mm:ss a')
+          }}
+          ({{ organization.timezone?.slice(0, 6) }})</span
+        >
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <ng-container *ngIf="homeTabGroupOptions.length > 0">
+      <section
+        *ngFor="let option of homeTabGroupOptions"
+        fxLayout="column"
+        class="pom-sidebar__group"
+        [class.hidden-group]="option[1]?.length === 0"
+      >
+        <ng-container>
+          <!-- <div class="pom-sidebar__group__title">{{ option[0] | titlecase }}</div> -->
+          <div *ngFor="let link of option[1]" class="link" [routerLink]="link.key" routerLinkActive="active">
+            {{ link.value }}
+          </div>
+        </ng-container>
+      </section>
+    </ng-container>
+  </div>
+</ng-container>

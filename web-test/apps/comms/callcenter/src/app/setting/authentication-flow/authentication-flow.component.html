@@ -1,0 +1,25 @@
+<div class="container-authen" fxLayout="column" fxLayoutGap="1.6rem">
+  <ng-container>
+    <ng-container *ngFor="let item of listTransfer2GenieConfig; let i = index">
+      <b3n-authentication-detail
+        [skills]="skills"
+        [genieConfig]="item"
+        [index]="i"
+        [parentForm]="_formAll"
+        (onDeteled)="onDeletedItem($event)"
+      ></b3n-authentication-detail>
+    </ng-container>
+    <div class="no-data" *ngIf="listTransfer2GenieConfig.length === 0">No data Available</div>
+    <div class="add-more" fxLayout="row" fxLayoutAlign="end stretch">
+      <a href="javascript:void(0);" (click)="onAddMore()">
+        <div>Add More</div>
+      </a>
+    </div>
+
+    <div align="end">
+      <button (click)="update()" [disabled]="!isValid || progressing" color="primary" mat-raised-button>
+        <span *ngIf="!progressing">Update</span> <span *ngIf="progressing">Updating...</span>
+      </button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,89 @@
+<h1 mat-dialog-title>Create a <span *ngIf="!isPublic">private</span><span *ngIf="isPublic">public</span> channel</h1>
+
+<div mat-dialog-content>
+  <span class="desc">Channels are where your members communicate.</span>
+  <section class="example-section">
+    <mat-slide-toggle [disabled]="disableTypeChannel" color="primary" [(ngModel)]="isPublic">
+      <span *ngIf="isPublic"> Anyone in your workspace can view and join this channel. </span>
+      <span *ngIf="!isPublic"> This channel can only be joined or viewed by invite. </span>
+    </mat-slide-toggle>
+  </section>
+
+  <mat-form-field>
+    <mat-label>Channel name</mat-label>
+    <input
+      cdkFocusInitial
+      matInput
+      (keydown.space)="convertSpace()"
+      (keydown.enter)="nameControl.invalid || loading ? null : create()"
+      (paste)="onPaste($event)"
+      [maxlength]="MAX_LENGTH"
+      [formControl]="nameControl"
+      [errorStateMatcher]="matcher"
+    />
+    <mat-error *ngIf="nameControl.hasError('required')"> Channel is required </mat-error>
+    <mat-error *ngIf="nameControl.hasError('channel-existed')"> Channel already exists </mat-error>
+    <mat-error *ngIf="nameControl.hasError('invalid-name')">
+      Channel name can't contain spaces, periods, or most punctuation.
+    </mat-error>
+    <mat-hint>{{ nameControl.value.length }} / {{ MAX_LENGTH }}</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Channel description</mat-label>
+    <input matInput [(ngModel)]="description" />
+  </mat-form-field>
+
+  <mat-form-field *ngIf="hasHyperspace$ | async">
+    <mat-label>Hyperspace</mat-label>
+    <mat-select [(ngModel)]="selectHyper" (ngModelChange)="changeSelectHyperspace($event)">
+      <mat-option [value]="null">None</mat-option>
+      <mat-option *ngFor="let hyper of hyperspace$ | async" [value]="hyper.id">
+        {{ hyper.nameOtherOrg }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Invite members</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let member of sortBy(members); trackBy: trackBy"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(member)"
+      >
+        {{ member.displayName }}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        #memberInput
+        [formControl]="memberCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+      />
+    </mat-chip-list>
+    <mat-autocomplete class="autocomplete-member" #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let member of sortBy(filteredMembers | async); trackBy: trackBy" [value]="member">
+        <div fxLayoutAlign="space-between center">
+          <span [innerHTML]="member.displayName | highlight: key"></span>
+
+          <ng-container *ngIf="selectHyper">
+            <span *ngIf="member.isCurrentOrg" class="curent-org">{{ member.shortName }}</span>
+            <span *ngIf="!member.isCurrentOrg" class="other-org">{{ member.shortName }}</span>
+          </ng-container>
+        </div>
+      </mat-option>
+      <mat-option *ngIf="(filteredMembers | async).length === 0" disabled>No members available</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions class="flex justify-content-end align-items-center gap-8">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="create()" color="primary" [disabled]="nameControl.invalid || loading">
+    Create channel
+  </button>
+</div>

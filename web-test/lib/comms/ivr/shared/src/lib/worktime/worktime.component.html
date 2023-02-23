@@ -1,0 +1,127 @@
+<div class="container p-16" fxLayout="column" fxLayoutAlign="start none">
+  <ng-container *ngIf="loadingView; else scheduleView">
+    <div fxFill fxLayoutAlign="center center">
+      <mat-spinner diameter="35" strokeWidth="2"></mat-spinner>
+    </div>
+  </ng-container>
+
+  <ng-template #scheduleView>
+    <section fxFlex="auto" fxLayout="column" fxLayoutAlign="start center">
+      <div
+        class="working-schedule-form"
+        [formGroup]="workingSchedule"
+        fxLayout="column"
+        fxLayoutAlign="start none"
+        fxLayoutGap="1.6rem"
+      >
+        <div
+          formArrayName="shifts"
+          *ngFor="let shift of shiftsField.controls; let i = index"
+          fxLayout="row"
+          fxLayoutAlign="start center"
+          fxLayoutGap="1.6rem"
+        >
+          <ng-container [formGroupName]="i">
+            <mat-slide-toggle formControlName="enabled" (change)="shiftChanged($any(shift))">{{
+              shift['controls'].dayOfWeek.value | titlecase
+            }}</mat-slide-toggle>
+
+            <ng-container formArrayName="timeRanges">
+              <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+                <ng-container
+                  *ngFor="let timeRange of shift['controls'].timeRanges.controls; let timeIndex = index"
+                  [formGroupName]="timeIndex"
+                >
+                  <ng-container *ngIf="timeIndex === 0 || shift['controls'].enabled.value">
+                    <div class="item-range" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+                      <mat-form-field fxFlex="150px">
+                        <input
+                          matInput
+                          readonly
+                          [matDatepicker]="pickerTimeStart"
+                          placeholder="From"
+                          formControlName="from"
+                          (click)="pickerTimeStart.open()"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTimeStart type="time" [twelveHour]="false"></mat-datepicker>
+                      </mat-form-field>
+                      <mat-form-field fxFlex="150px">
+                        <input
+                          matInput
+                          readonly
+                          [matDatepicker]="pickerTimeEnd"
+                          placeholder="To"
+                          formControlName="to"
+                          (click)="pickerTimeEnd.open()"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="pickerTimeEnd"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTimeEnd type="time" [twelveHour]="false"></mat-datepicker>
+                      </mat-form-field>
+                      <mat-icon
+                        *ngIf="timeIndex === 0"
+                        [class.disable]="
+                          !shift['controls'].enabled.value ||
+                          !shift['controls'].timeRanges.controls[shift['controls'].timeRanges.controls.length - 1]?.get(
+                            'from'
+                          ).value ||
+                          !shift['controls'].timeRanges.controls[shift['controls'].timeRanges.controls.length - 1]?.get(
+                            'to'
+                          ).value
+                        "
+                        matTooltip="Add move ranges"
+                        fxFlexAlign="end"
+                        class="icon icon-add"
+                        (click)="addMoreRange(shift['controls'].timeRanges.controls)"
+                        >add
+                      </mat-icon>
+                      <mat-icon
+                        [hidden]="timeIndex === 0"
+                        [class.disable]="!shift['controls'].enabled.value"
+                        fxFlexAlign="end"
+                        class="icon icon-clear"
+                        (click)="shift['controls'].timeRanges?.removeAt(timeIndex)"
+                        >clear
+                      </mat-icon>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+
+              <a
+                [disabled]="!shift['controls'].enabled.value"
+                mat-stroked-button
+                (click)="format24Hours(shift['controls'].timeRanges)"
+                class="apply-btn"
+              >
+                24 hours
+              </a>
+            </ng-container>
+
+            <a
+              [disabled]="!shift['controls'].enabled.value"
+              mat-stroked-button
+              matTooltip="Apply this time to all work schedule"
+              (click)="applyWorkTimetoAll($any(shift))"
+              class="apply-btn"
+            >
+              Apply to all
+            </a>
+          </ng-container>
+        </div>
+
+        <div fxFlexAlign="end">
+          <button
+            mat-stroked-button
+            color="primary"
+            [loading]="progressing"
+            [disabled]="progressing"
+            (click)="progress()"
+          >
+            Apply
+          </button>
+        </div>
+      </div>
+    </section>
+  </ng-template>
+</div>

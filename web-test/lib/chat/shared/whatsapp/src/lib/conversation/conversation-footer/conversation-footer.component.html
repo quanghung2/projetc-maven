@@ -1,0 +1,66 @@
+<ng-container *ngIf="ticket">
+  <ng-container *ngIf="isMemberTxn && ticket.isOpen; else notParticipant">
+    <div class="quill conversation-group">
+      <div class="flex column justify-content-start align-items-none">
+        <ng-container *ngIf="validWhatsApp$ | async; else INVALID_WHATSAPP">
+          <div class="flex justify-content-space-between align-items-center gap-8">
+            <csh-quill-editor
+              [data]="quillEditorData"
+              (messaged)="handleEnterMessage($event)"
+              (uploadedFiles)="onUploadFile($event)"
+              (textChanged)="onTextChanged($event)"
+              (enterEditLastMessage)="handleEditLastMessage($event)"
+            ></csh-quill-editor>
+            <mat-icon
+              class="actions"
+              matTooltip="Canned Response"
+              [matMenuTriggerFor]="cannedResponseMenu"
+              *ngIf="(cannedResponsesWhatsapp$ | async).length > 0"
+              >assistant
+            </mat-icon>
+          </div>
+        </ng-container>
+        <ng-template #INVALID_WHATSAPP>
+          <div class="expired flex justify-content-space-between align-items-center">
+            <span>Session has expired. New messages cannot be sent</span>
+            <mat-icon
+              class="actions"
+              matTooltip="Template"
+              (click)="template()"
+              *ngIf="(templates$ | async).length > 0"
+            >
+              assistant_photo
+            </mat-icon>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notParticipant>
+    <div class="convo__footer notMember flex justify-content-center align-items-center gap-8">
+      <ng-container *ngIf="ticket?.isArchived; else assignCase">
+        <div class="warning-label flex justify-content-center align-items-center gap-16">
+          You are viewing , an archived channel
+          <ng-container *ngIf="archivedBy$ | async as archivedBy">
+            by
+            <pre class="message_mention">@{{ archivedBy?.displayName }}</pre>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-template #assignCase>
+        <div class="warning-label flex justify-content-center align-items-center gap-16">
+          <span>You are viewing</span>
+          <button *ngIf="!isMemberTxn" mat-raised-button (click)="assignToMe()">Join</button>
+          <button mat-raised-button color="primary" (click)="joinCaseWhatsapp()">Assign</button>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</ng-container>
+
+<mat-menu class="cannedResponseMenu" #cannedResponseMenu="matMenu">
+  <button mat-menu-item (click)="chooseResponse(item)" *ngFor="let item of cannedResponsesWhatsapp$ | async">
+    {{ item.name }}
+  </button>
+</mat-menu>

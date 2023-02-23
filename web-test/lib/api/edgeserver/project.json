@@ -1,0 +1,16 @@
+{
+  "name": "api-edgeserver",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/edgeserver/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/edgeserver/**/*.ts", "libs/api/edgeserver/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,21 @@
+<ng-container *ngIf="convo$ | async as convo">
+  <section class="convo flex column justify-content-none align-items-none">
+    <div class="convo__header flex justify-content-center align-items-center">
+      <div class="convo__header__name">{{ convo.name }}</div>
+      <span class="fill-remaing-space"></span>
+    </div>
+    <ng-container *ngIf="loading$ | async as loading">
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    </ng-container>
+    <mat-divider> </mat-divider>
+
+    <div class="convo__body">
+      <div #viewport class="messages-viewport">
+        <ng-container *ngFor="let message of messages$ | async as messages; let i = index">
+          <csv-message [id]="message.clientId" [convo]="convo" [message]="message" class="message-item"></csv-message>
+        </ng-container>
+      </div>
+    </div>
+    <div class="convo__footer flex justify-content-center align-items-center gap-8"></div>
+  </section>
+</ng-container>

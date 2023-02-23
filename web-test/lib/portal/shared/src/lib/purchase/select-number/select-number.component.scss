@@ -1,0 +1,37 @@
+:host {
+  ::ng-deep .mat-tab-body-wrapper {
+    padding-top: 1.6rem;
+  }
+
+  .numbers__list {
+    max-height: 336px;
+    overflow: auto;
+    margin: 0 -8px;
+    .number {
+      width: 157px;
+      text-align: center;
+      &:hover {
+        background-color: whitesmoke;
+      }
+      &.active {
+        background-color: teal;
+        color: white;
+        border-color: teal;
+      }
+    }
+    .no-number {
+      width: 100%;
+    }
+  }
+  .actions {
+    height: 64px;
+  }
+
+  .info {
+    margin-right: 16px;
+    width: 16px;
+    font-size: 16px;
+    height: 20px;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,152 @@
+.otp-verify__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 480px;
+
+  img {
+    height: 160px;
+    width: 200px;
+    margin: auto;
+    object-fit: contain;
+  }
+}
+
+.not-verified__wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .title {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .domain {
+    font-weight: 500;
+  }
+
+  .sub-title {
+    font-weight: 500;
+    color: var(--dashboard2-primary);
+  }
+}
+
+.otp__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-weight: 500;
+  color: var(--dashboard2-primary);
+
+  mat-form-field {
+    width: 32px;
+    text-align: center;
+
+    input {
+      text-transform: uppercase;
+    }
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+.hidden {
+  visibility: hidden;
+  height: 0;
+  flex-grow: 0;
+}
+
+.error__wrapper {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+
+  mat-icon {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+    color: #f44336;
+    font-size: 12px;
+  }
+}
+
+.action__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.verified__wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+
+  .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+    }
+
+    p {
+      margin: 0;
+      font-weight: 500;
+      color: var(--dashboard2-primary);
+    }
+  }
+
+  .verified__form {
+    width: 300px;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    p {
+      margin: 0;
+      font-size: 12px;
+      margin-top: -16px;
+      width: fit-content;
+      margin-left: auto;
+    }
+  }
+}

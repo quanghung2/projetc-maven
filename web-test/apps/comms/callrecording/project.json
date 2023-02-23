@@ -1,0 +1,89 @@
+{
+  "name": "comms-callrecording",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/comms/callrecording/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/comms/callrecording",
+        "index": "apps/comms/callrecording/src/index.html",
+        "main": "apps/comms/callrecording/src/main.ts",
+        "polyfills": "apps/comms/callrecording/src/polyfills.ts",
+        "tsConfig": "apps/comms/callrecording/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/comms/callrecording/src/favicon.ico", "apps/comms/callrecording/src/assets"],
+        "styles": ["apps/comms/callrecording/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "2mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/comms/callrecording/src/environments/environment.ts",
+              "with": "apps/comms/callrecording/src/environments/environment.prod.ts"
+            }
+          ],
+          "index": {
+            "input": "apps/comms/callrecording/src/index.prod.html",
+            "output": "index.html"
+          },
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "comms-callrecording:build:production"
+        },
+        "development": {
+          "browserTarget": "comms-callrecording:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "comms-callrecording:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/comms/callrecording/**/*.ts", "apps/comms/callrecording/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

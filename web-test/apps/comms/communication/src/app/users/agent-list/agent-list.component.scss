@@ -1,0 +1,58 @@
+.filter-bar mat-paginator {
+  display: inline-flex;
+  float: right;
+}
+
+.filter-bar mat-form-field {
+  margin-left: 15px;
+}
+
+.filter-bar button {
+  margin-left: 15px;
+}
+
+.pointer-region {
+  cursor: pointer;
+}
+
+.icon {
+  zoom: 0.7;
+  margin-right: 0.1em;
+}
+
+.agents-table {
+  &--not-found {
+    text-align: center;
+  }
+}
+
+.mat-column-action {
+  text-align: right;
+}
+
+.material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle !important;
+}
+.mat-table {
+  width: 100%;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.table-container {
+  max-height: calc(100vh - 64px - 64px - 74px);
+  overflow: auto;
+}

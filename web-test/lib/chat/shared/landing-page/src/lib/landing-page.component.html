@@ -1,0 +1,147 @@
+<div class="container flex column justify-content-start align-items-none">
+  <csh-menu-toggle></csh-menu-toggle>
+
+  <ng-container *ngIf="currentOrg$ | async as currentOrg">
+    <div
+      *ngIf="colorPallet$ | async as colorPallet"
+      [ngStyle]="{ background: colorPallet.bgColor }"
+      class="org-home-container p-32 py-0"
+    >
+      <div class="org-home pt-0">
+        <div class="org-home__header flex justify-content-start align-items-center">
+          <div *ngIf="me$ | async as me">
+            <div [ngStyle]="{ color: colorPallet.fontColor }" class="org-home__header__title">
+              Welcome, {{ me?.displayName }}!
+            </div>
+          </div>
+          <span class="fill-remaining-space"></span>
+          <div class="flex column justify-content-start align-items-end gap-5">
+            <div [ngStyle]="{ color: colorPallet.fontColor }" class="org-home__header__name">
+              {{ currentOrg.orgName }}
+            </div>
+            <div
+              (click)="copy()"
+              [cbContent]="currentOrg.orgUuid"
+              class="org-home__header__org-uuid"
+              matTooltip="Click to copy"
+              ngxClipboard
+            >
+              {{ currentOrg.orgUuid }}
+            </div>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div *ngIf="announcements$ | async as announcements" class="org-home__content">
+          <div *ngIf="announcements?.length > 0" class="mb-16 flex justify-content-space-between align-items-center">
+            <div [ngStyle]="{ color: colorPallet.fontColor }" class="announcement-title">ANNOUNCEMENTS</div>
+            <button
+              (click)="createAnnouncement()"
+              *ngIf="currentOrg.isUpperAdmin"
+              color="primary"
+              mat-raised-button
+              ngif
+            >
+              Create
+            </button>
+          </div>
+
+          <div *ngIf="announcements?.length > 0" class="announcement-container flex column gap-20">
+            <div *ngFor="let announcement of announcements" class="announcemnent mat-elevation-z1 flex column gap-10">
+              <div class="announcemnent-header flex justify-content-start align-items-center gap-15" fxFlex="100">
+                <div class="label mat-elevation-z1" fxFlex="74px">
+                  {{ announcement.displayDate }}
+                </div>
+
+                <div fxFlex="100" class="flex justify-content-space-between align-items-center">
+                  <div class="flex-column">
+                    <div class="title">{{ announcement.title }}</div>
+                    <div class="announcement-content">
+                      <ng-container *ngIf="announcement.editor && announcement.editor.name">
+                        <span class="secondary-text">by </span>
+                        <span class="creator">{{ announcement.editor.name }} </span>
+                        <span *ngIf="announcement.modifiedAt" class="secondary-text">
+                          at {{ announcement.modifiedAt * 1000 | date: 'HH:mm' }}
+                        </span>
+                      </ng-container>
+
+                      <ng-container *ngIf="!announcement.editor && announcement.creator && announcement.creator.name">
+                        <span class="secondary-text">by </span>
+                        <span class="creator">{{ announcement.creator.name }} </span>
+                        <span *ngIf="announcement.createdAt" class="secondary-text"
+                          >at {{ announcement.createdAt * 1000 | date: 'HH:mm' }}</span
+                        >
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div *ngIf="currentOrg.isUpperAdmin" class="edit-announcement">
+                    <button (click)="editAnnouncement(announcement)" mat-icon-button>
+                      <mat-icon class="edit-btn">edit</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="announcement-content flex justify-content-start align-items-center gap-15">
+                <div fxFlex="74px"></div>
+                <div>{{ announcement.content }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="announcements?.length === 0"
+            class="no-announcement flex column justify-content-center align-items-center gap-20"
+          >
+            <div>No announcement</div>
+            <button (click)="createAnnouncement()" *ngIf="currentOrg.isUpperAdmin" color="primary" mat-raised-button>
+              Create
+            </button>
+          </div>
+
+          <div class="float-btn-container flex justify-content-start align-items-center gap-8">
+            <div class="flex justify-content-start align-items-center">
+              <button
+                [class.hidden-change-bg]="!currentOrg.isOwner"
+                [matMenuTriggerFor]="menu"
+                class="change-bg-btn"
+                mat-icon-button
+                mat-raised-button
+                matTooltip="Change background"
+              >
+                <mat-icon class="palette-icon">palette</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <div
+                  class="select-background-color"
+                  fxLayout="column wrap"
+                  fxLayoutAlign="center center"
+                  fxLayoutGap="0.8rem"
+                >
+                  <div
+                    (click)="changeSidebarBackgroundColor(bg)"
+                    *ngFor="let bg of bgColors"
+                    [ngStyle]="{ background: bg }"
+                    class="mat-elevation-z1 color-item"
+                    fxFlex="50px"
+                  >
+                    <button
+                      [ngStyle]="{
+                        visibility: bg !== colorPallet.bgColor ? 'hidden' : 'visible',
+                        color: darkBgColor.includes(bg) ? '#ffffff' : '#000000'
+                      }"
+                      class="check-icon"
+                      mat-icon-button
+                    >
+                      <mat-icon>check</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-menu>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

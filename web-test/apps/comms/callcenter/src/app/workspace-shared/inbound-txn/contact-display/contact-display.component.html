@@ -1,0 +1,79 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <strong class="text-title">Contacts: </strong>
+  <button
+    *ngIf="contact.data.contacts.length === 1 && contact.code !== EnumTypeActionContact.DisplayTicket"
+    [disabled]="!contact.data.contacts[0].profileUrl"
+    mat-raised-button
+    (click)="directProfile(contact.data.contacts[0].profileUrl)"
+  >
+    Profile
+  </button>
+</div>
+<div class="crm-container">
+  <div *ngFor="let item of contact.data.contacts; let u = index" fxLayout="column" fxLayoutGap="0.8rem">
+    <div
+      class="title-contact"
+      *ngIf="contact.data.contacts.length > 1"
+      fxLayout="row"
+      fxLayoutAlign="space-between center"
+    >
+      <strong>Contact {{ u + 1 }}: </strong>
+      <button mat-raised-button [disabled]="!item.profileUrl" (click)="directProfile(item.profileUrl)">Profile</button>
+    </div>
+    <div class="prop-info" fxLayout="column" fxLayoutAlign="start">
+      <!-- display value -->
+      <ng-container *ngIf="!item.isEditing; else edit_component">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+          <span> Phone number:</span> <span class="mat-body-2"> {{ phoneNumber }}</span>
+        </div>
+        <ng-container *ngFor="let prop of item.properties">
+          <div
+            *ngIf="
+              prop.type === enumTypeInput.Checkbox || prop.type === enumTypeInput.Booleancheckbox;
+              else other_content
+            "
+          >
+            <b3n-dynamic-input [prop]="prop" [isViewing]="true" fxFlex></b3n-dynamic-input>
+          </div>
+          <ng-template #other_content>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <span>
+                {{ prop.label }}: <span class="display-value mat-body-2"> {{ prop | dynamicInput }}</span>
+              </span>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+      <!-- show edit -->
+      <ng-template #edit_component>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+          <span> Phone number:</span> <span class="mat-body-2"> {{ phoneNumber }}</span>
+        </div>
+        <ng-container *ngFor="let prop of item.properties">
+          <b3n-dynamic-input [prop]="prop" fxFlex></b3n-dynamic-input>
+        </ng-container>
+      </ng-template>
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+        <button mat-stroked-button *ngIf="item.isEditing" (click)="onCancel(item, u)" color="primary">Cancel</button>
+        <button
+          mat-raised-button
+          *ngIf="!item.isEditing && contact.code !== EnumTypeActionContact.DisplayTicket"
+          (click)="onEdit(item, u)"
+          color="primary"
+        >
+          Edit
+        </button>
+        <button
+          mat-raised-button
+          *ngIf="item.isEditing"
+          [disabled]="item.isSaving"
+          (click)="onSave(item, u)"
+          color="primary"
+        >
+          <span *ngIf="!item.isSaving">Save</span> <span *ngIf="item.isSaving">Saving...</span>
+        </button>
+      </div>
+    </div>
+    <div class="division" *ngIf="u !== contact.data.contacts.length - 1"></div>
+  </div>
+</div>

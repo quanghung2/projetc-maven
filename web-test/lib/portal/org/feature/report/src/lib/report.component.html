@@ -1,0 +1,112 @@
+<div class="container report-theme" *ngIf="showReport && codes.length > 0">
+  <mat-card>
+    <mat-card-title>Select Reports</mat-card-title>
+    <mat-card-content>
+      <div fxLayout="column" fxLayoutAlign="space-around stretch">
+        <div fxFlex class="item--inner">
+          <mat-form-field appearance="outline">
+            <mat-label>Template</mat-label>
+            <mat-select [(ngModel)]="code" required (selectionChange)="reportChanged()">
+              <mat-optgroup label="Analytics" *ngIf="hasAnalyticsReport">
+                <ng-container *ngFor="let c of codes">
+                  <mat-option *ngIf="(c.period && c.period !== 'dump') || (c.type && c.type !== 'dump')" [value]="c">
+                    {{ c.displayName }}
+                  </mat-option>
+                </ng-container>
+              </mat-optgroup>
+              <mat-optgroup label="History" *ngIf="hasHistoryReport">
+                <ng-container *ngFor="let c of codes">
+                  <mat-option *ngIf="c.period === 'dump' || c.type === 'dump'" [value]="c">
+                    {{ c.displayName }}
+                  </mat-option>
+                </ng-container>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="code && code.period !== Period['dump']" fxFlex class="item--inner">
+          <mat-form-field appearance="outline">
+            <mat-label>Aggregative Period</mat-label>
+            <mat-select [(ngModel)]="selectedInterval" (selectionChange)="onChangeAggregatevePeriod()">
+              <mat-option *ngFor="let interval of intervalOptions" [value]="interval.key">
+                {{ interval.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <mat-slide-toggle
+          *ngIf="code && hasAnalyticsReport && selectedInterval && ['1h', '1d', '1M'].includes(selectedInterval)"
+          [(ngModel)]="isSingleTimer"
+          class="single-timer"
+          >{{ toggleLabel }}</mat-slide-toggle
+        >
+
+        <div fxFlex class="item--inner">
+          <mat-form-field appearance="outline" (click)="pickerStart.open()">
+            <mat-label>{{ selectedSingleTimer ? 'Time' : 'From' }}</mat-label>
+            <input
+              matInput
+              required
+              readonly
+              [disabled]="!code"
+              [matDatepicker]="pickerStart"
+              [value]="startTime"
+              [(ngModel)]="startTime"
+              [min]="minStart"
+              [max]="maxStart"
+              (dateChange)="startTimeChanged()"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+            <mat-datepicker #pickerStart [type]="datePickerType" [twelveHour]="false" [clockStep]="clockStep">
+            </mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="!selectedSingleTimer" fxFlex class="item--inner">
+          <mat-form-field appearance="outline" (click)="pickerEnd.open()">
+            <mat-label>To</mat-label>
+            <input
+              matInput
+              required
+              readonly
+              [disabled]="!code || !startTime"
+              [matDatepicker]="pickerEnd"
+              [value]="endTime"
+              [(ngModel)]="endTime"
+              [min]="minEnd"
+              [max]="maxEnd"
+            />
+            <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEnd [type]="datePickerType" [twelveHour]="false" [clockStep]="clockStep">
+            </mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <div fxLayout="column" fxLayoutAlign="center stretch">
+        <button
+          mat-raised-button
+          color="primary"
+          [loading]="progressing"
+          [disabled]="!code || !startTime || (!endTime && !selectedSingleTimer) || progressing"
+          (click)="download()"
+        >
+          Download CSV
+        </button>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div
+  *ngIf="showReport && this.codes.length === 0"
+  class="report-not-found"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+>
+  <shc-resource-not-found message="You have no reports"></shc-resource-not-found>
+</div>

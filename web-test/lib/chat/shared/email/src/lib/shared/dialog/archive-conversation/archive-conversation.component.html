@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>{{ data.text | titlecase }} {{ data.conversationGroup.description }}</h1>
+<div mat-dialog-content>
+  <div><p *ngIf="data.conversationGroup.isCustomer">Are you sure you wish to {{ data.text }} the chat?</p></div>
+  <div><p *ngIf="data.conversationGroup.isEmail">Are you sure you wish to {{ data.text }} the conversation?</p></div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="submit()">{{ data.text | titlecase }}</button>
+</div>

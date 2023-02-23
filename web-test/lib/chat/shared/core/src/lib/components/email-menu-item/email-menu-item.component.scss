@@ -1,0 +1,34 @@
+.menu__item {
+  height: 32px;
+
+  &.active {
+    background: #3e7ce4 !important;
+    .menu__item__text, .menu__item__count {
+      color: white;
+    }
+    .menu__item__badge {
+      background: white;
+    }
+  }
+
+  ::ng-deep .mat-list-text {
+    padding-left: 10px;
+    font-size: 14px;
+    color: #686d72;
+  }
+
+  &__icon {
+    color: #8a8a8a;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__badge {
+    margin-right: 10px;
+    height: 12px;
+    width: 12px;
+    background: rgb(62, 124, 228);
+    border-radius: 50%;
+  }
+}

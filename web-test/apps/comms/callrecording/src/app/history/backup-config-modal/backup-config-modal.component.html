@@ -1,0 +1,75 @@
+<i class="close icon"></i>
+<div class="header">Backup Recordings</div>
+<div class="content">
+  <div id="backup-cfg">
+    <div class="enable-backup">
+      <div class="backup-switcher ui grid">
+        <div class="eight wide column">
+          <label>Enable backup</label>
+        </div>
+        <div class="eight wide column right aligned">
+          <div class="switcher">
+            <input
+              type="checkbox"
+              name="public"
+              id="enable-backup-switcher"
+              class="toggle"
+              [(ngModel)]="backupConfig.enableBackup"
+              (change)="changeBackupStatus($any($event.target).checked)"
+            />
+            <label class="switcher label" for="enable-backup-switcher"></label>
+            <div class="box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="ui info message">Zip files will be created at the end of the day when backup is enabled</div>
+    </div>
+    <div id="download-section">
+      <div class="ui grid">
+        <div class="eight wide column">
+          <!-- From Date-->
+          <div #fromDateElement class="item vertical filter">
+            <div class="ui calendar from-date" id="backup-from-date">
+              <div class="ui input right icon">
+                <i class="today icon"></i>
+                <input type="text" placeholder="From date" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="eight wide column">
+          <!-- To Date-->
+          <div #toDateElement class="item vertical filter">
+            <div class="ui calendar to-date">
+              <div class="ui input right icon">
+                <i class="today icon"></i>
+                <input type="text" placeholder="To date" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui grid">
+        <div class="eight wide column">
+          <button class="ui primary button" [class.loading]="fetchingUrls" (click)="fetchBackUpFiles()">
+            Get Download Links
+          </button>
+        </div>
+        <div class="eight wide column">
+          <button class="ui button" [class.loading]="deleting" (click)="deleteFiles()">Delete Files</button>
+        </div>
+      </div>
+      <div class="download-links" *ngIf="backupFiles.length > 0">
+        <div *ngFor="let backupFile of backupFiles">
+          {{ backupFile.dateStr }}:
+          <div *ngFor="let zipPart of backupFile.zipParts" style="display: inline-block">
+            <a href="{{ zipPart.url }}" target="_blank">part{{ zipPart.part }},&nbsp;&nbsp;</a>
+          </div>
+        </div>
+      </div>
+      <div class="download-links" *ngIf="backupFiles.length == 0">
+        <div class="backup-empty">No backup generated.</div>
+      </div>
+    </div>
+  </div>
+</div>

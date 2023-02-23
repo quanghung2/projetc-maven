@@ -1,0 +1,19 @@
+{
+  "name": "universal-dashboard-feature-dashboard-v2",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/universal/dashboard/feature/dashboard-v2/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/universal/dashboard/feature/dashboard-v2/**/*.ts",
+          "libs/universal/dashboard/feature/dashboard-v2/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

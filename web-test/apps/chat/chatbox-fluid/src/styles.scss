@@ -1,0 +1,9 @@
+// Custom Theming for Angular Material
+
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+body {
+  height: 100%;
+  width: 100%;
+}

@@ -1,0 +1,19 @@
+<div mat-dialog-title>Assign outbound rule</div>
+
+<div *ngIf="assignOutboundInput.outbountRule" fxLayout="column">
+  <mat-form-field *ngIf="assignOutboundInput.outbountRule.length" appearance="outline">
+    <mat-label>Select outbound rule</mat-label>
+    <mat-select [(ngModel)]="selectedOutgoingRule">
+      <mat-option *ngFor="let rule of assignOutboundInput.outbountRule" [value]="rule">{{ rule.name }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div *ngIf="assignOutboundInput.outbountRule.length === 0">No outbound rule found</div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="assign()" [loading]="progressing" [disabled]="!selectedOutgoingRule" mat-flat-button color="primary">
+    Assign
+  </button>
+</div>

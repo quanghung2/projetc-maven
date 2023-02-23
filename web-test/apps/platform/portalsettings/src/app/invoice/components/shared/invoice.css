@@ -1,0 +1,21 @@
+:host >>> .mce-tinymce {
+  height: calc(100% - 24px);
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+:host >>> .mce-tinymce > .mce-container-body {
+  height: 100%;
+}
+
+:host >>> .mce-tinymce .mce-container-body .mce-edit-area {
+  height: calc(100% - 107px) !important;
+}
+
+:host >>> .mce-tinymce .mce-container-body .mce-edit-area > iframe {
+  height: 100% !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}

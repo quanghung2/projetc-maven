@@ -1,0 +1,29 @@
+<h3 mat-dialog-title>Update pickup prefix</h3>
+<mat-dialog-content>
+  <mat-form-field floatLabel="always" fxFlexFill>
+    <mat-label>Pickup prefix</mat-label>
+    <strong matPrefix>*&nbsp;&nbsp;</strong>
+    <input
+      matInput
+      [formControl]="pickupPrefixCtrl"
+      onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+      (keyup.enter)="savePrefix()"
+      required
+      [errorStateMatcher]="matcher"
+    />
+    <mat-error *ngIf="pickupPrefixCtrl.hasError('required')"> Pickup prefix is required </mat-error>
+    <mat-error *ngIf="pickupPrefixCtrl.hasError('maxlength')"> From 1 to 2 digits </mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="saving"
+    [disabled]="pickupPrefixCtrl.invalid"
+    (click)="savePrefix()"
+  >
+    Update
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,401 @@
+<form [formGroup]="formAction" *ngIf="!actionDef?.subroutineUuid" novalidate>
+  <mat-horizontal-stepper
+    #stepper
+    [@.disabled]="true"
+    labelPosition="bottom"
+    (selectionChange)="stepIndexChanged(stepper)"
+  >
+    <mat-step *ngIf="!actionDef">
+      <ng-template matStepLabel>{{ selectedName ? selectedName : 'Basic info' }}</ng-template>
+
+      <div class="stepper-content">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
+            <img *ngIf="iconUrl.value" [src]="iconUrl.value" fxFlex="60px" />
+            <div class="mb-8" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px" fxFlex>
+              <p class="mb-8">Recommend size: 60 x 60 pixels. Images with smaller size will scale.</p>
+              <input
+                #uploadFile
+                type="file"
+                class="upload-file"
+                (change)="onFileChange($event, iconUrl)"
+                accept="image/*"
+              />
+              <button mat-stroked-button type="button" (click)="uploadFile.click()" [loading]="uploading">
+                Upload icon
+              </button>
+            </div>
+          </div>
+
+          <mat-form-field hideRequiredMarker="true">
+            <input matInput placeholder="Name" formControlName="name" required />
+            <mat-error *ngIf="name.invalid">{{ getErrorInput(name) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Description" formControlName="description" />
+            <mat-error *ngIf="formAction.get('description').invalid">
+              {{ getErrorInput(formAction.get('description')) }}
+            </mat-error>
+          </mat-form-field>
+
+          <section fxLayout="row" *ngIf="isShowVisibility">
+            <b3n-visibility-domain
+              fxFlex="50"
+              [domainVisibility]="$any(formAction.get('domainVisibility'))"
+            ></b3n-visibility-domain>
+          </section>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          matStepperNext
+          (click)="selectedName = name.value"
+          [disabled]="name.invalid || formAction.get('description').invalid"
+        >
+          Next
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Request</ng-template>
+      <div class="stepper-content" formGroupName="request">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+            <label class="title">Method</label>
+            <mat-radio-group color="primary" formControlName="httpVerb">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                <mat-radio-button value="GET">GET</mat-radio-button>
+                <mat-radio-button value="POST">POST</mat-radio-button>
+                <mat-radio-button value="PUT">PUT</mat-radio-button>
+                <mat-radio-button value="PATCH">PATCH</mat-radio-button>
+                <mat-radio-button value="DELETE">DELETE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <ng-container *ngIf="connectorType === 'INTERNAL'">
+            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+              <label class="title">Execution Mode</label>
+              <mat-radio-group color="primary" formControlName="executionMode">
+                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                  <mat-radio-button value="INSTANT_RESPONSE">Instant</mat-radio-button>
+                  <mat-radio-button value="POSTBACK_RESPONSE">Postback</mat-radio-button>
+                </div>
+              </mat-radio-group>
+            </div>
+
+            <div
+              *ngIf="executionMode.value === 'POSTBACK_RESPONSE'"
+              fxLayout="column"
+              fxLayoutAlign="start start"
+              fxLayoutGap="8px"
+            >
+              <label class="title">Postback Timeout (minute)</label>
+              <mat-form-field hideRequiredMarker="true">
+                <input matInput type="number" min="1" max="60" formControlName="postbackTimeout" required />
+                <mat-error *ngIf="postbackTimeout.invalid">{{ getErrorInput(postbackTimeout) }}</mat-error>
+              </mat-form-field>
+            </div>
+          </ng-container>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+            <section fxLayout="column">
+              <label class="title">Max retry</label>
+              <mat-form-field>
+                <mat-select formControlName="maxRetry">
+                  <mat-option [value]="0">0</mat-option>
+                  <mat-option [value]="1">1</mat-option>
+                  <mat-option [value]="2">2</mat-option>
+                  <mat-option [value]="3">3</mat-option>
+                  <mat-option [value]="4">4</mat-option>
+                  <mat-option [value]="5">5</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </section>
+
+            <section fxLayout="column">
+              <label class="title">Path</label>
+              <mat-form-field hideRequiredMarker="true" formGroupName="url">
+                <input matInput formControlName="template" required />
+                <mat-error *ngIf="requestUrlTemplate.invalid">{{ getErrorInput(requestUrlTemplate) }}</mat-error>
+              </mat-form-field>
+            </section>
+
+            <section formGroupName="headers" fxLayout="column" fxLayoutGap="8px">
+              <label class="title">Header template</label>
+              <ng-container formArrayName="templatesTemp">
+                <ng-container
+                  *ngFor="let header of requestHeaders.controls['templatesTemp']['controls']; let headerIndex = index"
+                  [formGroupName]="headerIndex"
+                >
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-form-field hideRequiredMarker="true" fxFlex="40">
+                      <input matInput placeholder="Key" formControlName="key" required />
+                      <mat-error *ngIf="header.get('key').invalid">{{ getErrorInput(header.get('key')) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field hideRequiredMarker="true" fxFlex>
+                      <input matInput placeholder="Value" formControlName="value" required />
+                      <mat-error *ngIf="header.get('value').invalid">
+                        {{ getErrorInput(header.get('value')) }}
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="onRemoveHeaderParam(requestHeaders.controls['templatesTemp'], headerIndex)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <p>
+                <a
+                  href="javascript:;"
+                  class="link"
+                  (click)="onEnterHeaderParam(requestHeaders.controls['templatesTemp'])"
+                >
+                  + Add
+                </a>
+              </p>
+            </section>
+
+            <section>
+              <label class="title">Body template</label>
+              <mat-form-field appearance="outline" formGroupName="body" id="body_template">
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  [cdkAutosizeMinRows]="5"
+                  [cdkAutosizeMaxRows]="10"
+                  formControlName="template"
+                  b3nFormatObjToJson
+                  id="body_template"
+                  [control]="requestBodyTemplate"
+                  [top]="'30'"
+                  [right]="'8'"
+                ></textarea>
+              </mat-form-field>
+              <mat-error *ngIf="requestBodyTemplate.invalid">{{ getErrorInput(requestBodyTemplate) }}</mat-error>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="importRequest()"
+          [disabled]="
+            requestUrlTemplate.invalid ||
+            requestHeaders.get('templatesTemp').invalid ||
+            postbackTimeout.invalid ||
+            requestBodyTemplate.invalid
+          "
+        >
+          Next
+        </button>
+        <button *ngIf="!actionDef" mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Fill parameters</ng-template>
+      <div class="stepper-content" *ngIf="stepper.selectedIndex === (actionDef ? 1 : 2)">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="48px">
+          <div
+            *ngIf="
+              requestUrl.get('parameters')['controls'].length > 0 ||
+                requestHeaders.get('parameters')['controls'].length > 0 ||
+                requestBody.get('parameters')['controls'].length > 0;
+              else parameterNotFound
+            "
+          >
+            <h3><strong>Request Parameters</strong></h3>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+              <b3n-fill-parameters
+                *ngIf="requestUrl.get('parameters')['controls'].length > 0"
+                [title]="'URL'"
+                [group]="requestUrl"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'action'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="requestHeaders.get('parameters')['controls'].length > 0"
+                [title]="'HEADER'"
+                [group]="requestHeaders"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'action'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="requestBody.get('parameters')['controls'].length > 0"
+                [title]="'BODY'"
+                [group]="requestBody"
+                [key]="'parameters'"
+                [isBody]="true"
+                [contextVariables]="contextVariables"
+                [type]="'action'"
+              ></b3n-fill-parameters>
+            </div>
+          </div>
+
+          <ng-template #parameterNotFound>
+            <span
+              fxFlexAlign="center"
+              *ngIf="
+                !requestUrl.get('parameters')['controls'].length &&
+                !requestHeaders.get('parameters')['controls'].length &&
+                !requestBody.get('parameters')['controls'].length
+              "
+            >
+              No parameters
+            </span>
+          </ng-template>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          matStepperNext
+          [disabled]="requestUrl.invalid || requestHeaders.invalid || requestBody.invalid"
+        >
+          Next
+        </button>
+
+        <button mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Response content</ng-template>
+      <div class="stepper-content" formGroupName="response">
+        <mat-form-field appearance="outline" id="response_actionDef">
+          <mat-label>Sample response content</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            [cdkAutosizeMinRows]="10"
+            [cdkAutosizeMaxRows]="20"
+            [formControl]="responseCtrl"
+            [control]="responseCtrl"
+            b3nFormatObjToJson
+            id="response_actionDef"
+            [top]="'12'"
+            [right]="'8'"
+          ></textarea>
+          <mat-error *ngIf="responseCtrl.invalid">{{ getErrorResponse() }}</mat-error>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          [loading]="extracting"
+          [disabled]="!responseCtrl.value"
+          (click)="extractJsonProps()"
+        >
+          Extract properties
+        </button>
+
+        <b3n-extract-json-prop
+          *ngIf="!extracting"
+          [formProperties]="response"
+          [key]="'properties'"
+        ></b3n-extract-json-prop>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          [loading]="submitting"
+          [disabled]="formAction.invalid"
+          (click)="submitAction()"
+        >
+          {{ actionDef ? 'Update' : 'Create' }}
+        </button>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</form>
+
+<!-- {{ formAction.value | json }} -->
+
+<div *ngIf="actionDef?.subroutineUuid" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="48px">
+  <div>
+    <h4 class="mb-0"><strong>Subroutine Input Parameters</strong></h4>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <div
+        *ngFor="let item of actionDef.request.parameters; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="8px"
+      >
+        <mat-form-field fxFlex="30">
+          <input matInput placeholder="Parameter Name" value="{{ item.title }}" disabled />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="20">
+          <input matInput placeholder="Data type" value="{{ item.dataType | titlecase }}" disabled />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Description" value="{{ item.description | titlecase }}" disabled />
+        </mat-form-field>
+      </div>
+
+      <p *ngIf="actionDef.request.parameters.length === 0"><i>No parameters</i></p>
+    </div>
+  </div>
+
+  <div>
+    <h4 class="mb-0"><strong>Subroutine Output Parameters</strong></h4>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <div
+        *ngFor="let item of actionDef.response.properties; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="8px"
+      >
+        <mat-form-field fxFlex="30">
+          <input matInput placeholder="Parameter Name" value="{{ item.title }}" disabled />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="20">
+          <input matInput placeholder="Data type" value="{{ item.dataType | titlecase }}" disabled />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="50">
+          <input matInput placeholder="Description" value="{{ item.description | titlecase }}" disabled />
+        </mat-form-field>
+      </div>
+
+      <p *ngIf="actionDef.response.properties.length === 0"><i>No parameters</i></p>
+    </div>
+  </div>
+
+  <div dir="rtl">
+    <button mat-raised-button color="primary" type="button" (click)="editFlow()">Edit</button>
+  </div>
+</div>

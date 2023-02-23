@@ -1,0 +1,64 @@
+<div mat-dialog-title>{{ ctaTitle }}</div>
+<div mat-dialog-content>
+  <form [formGroup]="form" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+    <ng-container [ngSwitch]="type">
+      <ng-container *ngSwitchCase="'create'">
+        <mat-form-field>
+          <mat-label>SIP</mat-label>
+          <mat-chip-list #chipList>
+            <mat-chip
+              *ngFor="let sipgw of selectedSipgws"
+              [selectable]="true"
+              [removable]="true"
+              (removed)="remove(sipgw)"
+            >
+              {{ sipgw.sipUsername }}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input
+              placeholder="New SIP..."
+              #sipGWInput
+              [formControl]="sipCtrl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+            />
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let sipgw of sipGws$ | async" [value]="sipgw">
+              {{ sipgw.sipUsername }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </ng-container>
+      <ng-container *ngSwitchCase="'edit'">
+        <div class="secondary-text">
+          Update compliance config for SIP <strong>{{ sipgw.sipUsername }}</strong>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" formGroupName="action">
+      <mat-form-field>
+        <mat-label>DNC</mat-label>
+        <mat-select formControlName="dnc">
+          <mat-option *ngFor="let action of complianceActions" [value]="action">
+            {{ action | replaceSpecialCharacter | sentenceCase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Consent</mat-label>
+        <mat-select formControlName="consent">
+          <mat-option *ngFor="let action of complianceActions" [value]="action">
+            {{ action | replaceSpecialCharacter | sentenceCase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [loading]="progressing" [disabled]="form.invalid" color="primary" (click)="update()">
+    {{ ctaAction }}
+  </button>
+</div>

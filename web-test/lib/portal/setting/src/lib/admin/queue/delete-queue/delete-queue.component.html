@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Delete a queue</h1>
+
+<div mat-dialog-content class="content" fxLayout="column" fxLayoutGap="0.5rem">
+  <div>
+    Are you sure to delete queue <strong>{{ data.label }}?</strong>
+  </div>
+  <div>This action cannot be recovered!</div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-flat-button (click)="delete()" [loading]="deleting" color="warn">Delete</button>
+</div>

@@ -1,0 +1,18 @@
+<audio
+  *ngIf="!noIntersectionObserver"
+  [intersectionObserverDom]="parentElr"
+  (render)="onRender()"
+  type="audio/mp3"
+  controls
+  preload="auto"
+>
+  <source *ngIf="src" [src]="src | safe: 'resourceUrl'" type="audio/mp3" />
+  <ng-container *ngTemplateOutlet="noSupport"></ng-container>
+</audio>
+
+<audio *ngIf="noIntersectionObserver" type="audio/mp3" controls preload="auto">
+  <source *ngIf="src" [src]="src | safe: 'resourceUrl'" type="audio/mp3" />
+  <ng-container *ngTemplateOutlet="noSupport"></ng-container>
+</audio>
+
+<ng-template #noSupport> Your browser does not support the <code>audio</code> element. </ng-template>

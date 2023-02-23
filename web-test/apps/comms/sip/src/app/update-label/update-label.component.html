@@ -1,0 +1,19 @@
+<i class="ui icon edit" id="update-label-popup-owner" (click)="updateLabel($event)"></i>
+<div
+  sm-component
+  class="ui popup"
+  id="update-label-popup"
+  popup-owner-id="update-label-popup-owner"
+  popup-position="bottom center"
+  (click)="stopPropagation($event)"
+>
+  <div class="content">
+    <div class="ui input">
+      <input type="text" [(ngModel)]="label" />
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui primary button" *ngIf="!updating" (click)="submit()">Submit</div>
+    <div class="ui primary button loading" *ngIf="updating">Submit</div>
+  </div>
+</div>

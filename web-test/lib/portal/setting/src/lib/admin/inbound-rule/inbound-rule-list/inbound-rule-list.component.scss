@@ -1,0 +1,61 @@
+:host {
+  display: block;
+
+  .inbound-rule-settings {
+    .mat-table {
+      .mat-column-actions {
+        width: 105px;
+      }
+
+      .actions-column {
+        display: none;
+      }
+      tr.mat-row:hover .actions-column {
+        display: block;
+      }
+      .mat-icon.actions-icon {
+        color: rgba(0, 0, 0, 0.67);
+        font-size: 22px;
+        height: 22px;
+        width: 22px;
+      }
+    }
+  }
+}
+
+.call-parking__container {
+  padding: 0 16px 16px;
+
+  h3,
+  p {
+    margin: 0;
+  }
+}
+
+.call-parking__card {
+  max-width: 40%;
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .content__row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      mat-icon {
+        font-size: 15px;
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+<mat-card class="card">
+  <mat-card-title class="card__header">
+    {{ card.name }}
+    <button (click)="remove()" *ngIf="editable" class="remove__button" mat-icon-button>
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </mat-card-title>
+
+  <mat-card-content
+    class="card__content"
+    [class.nec-ivr-active-calls]="question?.type === QuestionType.necIvrActiveCalls"
+    [class.current-agent-overview]="question?.type === QuestionType.necAgentLatestStatus"
+  >
+    <mat-divider></mat-divider>
+    <div *ngIf="!data" class="no-data white-box">Loading...</div>
+    <ng-container *ngIf="question && data" [ngSwitch]="question.type">
+      <b3n-sla-widget *ngSwitchCase="QuestionType.sla" [data]="data"></b3n-sla-widget>
+      <b3n-sla-widget *ngSwitchCase="QuestionType.geSLA" [type]="question.type" [data]="data"></b3n-sla-widget>
+      <b3n-abandoned-rate-widget *ngSwitchCase="QuestionType.abandonedRate" [data]="data"></b3n-abandoned-rate-widget>
+      <b3n-avg-widget
+        *ngSwitchCase="QuestionType.avgCallDuration"
+        [data]="data"
+        [questionType]="question.type"
+      ></b3n-avg-widget>
+      <b3n-avg-widget
+        *ngSwitchCase="QuestionType.avgWaitTime"
+        [data]="data"
+        [questionType]="question.type"
+      ></b3n-avg-widget>
+      <b3n-agent-statistic *ngSwitchCase="QuestionType.agentStatistic" [data]="data"></b3n-agent-statistic>
+      <b3n-agents-status *ngSwitchCase="QuestionType.agentStatus" [data]="data"></b3n-agents-status>
+      <b3n-call-statistic *ngSwitchCase="QuestionType.callStatistic" [data]="data"></b3n-call-statistic>
+      <b3n-call-statistic
+        *ngSwitchCase="QuestionType.geInboundStatistic"
+        [type]="question.type"
+        [data]="data"
+      ></b3n-call-statistic>
+      <b3n-call-statistic
+        *ngSwitchCase="QuestionType.geCallbackStatistic"
+        [type]="question.type"
+        [data]="data"
+      ></b3n-call-statistic>
+      <b3n-manual-ougoing-stat-widget
+        *ngSwitchCase="QuestionType.manOutCallStat"
+        [data]="data"
+      ></b3n-manual-ougoing-stat-widget>
+      <b3n-manual-ougoing-data-widget
+        *ngSwitchCase="QuestionType.manOutCallData"
+        [data]="data"
+      ></b3n-manual-ougoing-data-widget>
+      <b3n-agent-list *ngSwitchCase="QuestionType.agentList" [data]="data"></b3n-agent-list>
+      <b3n-agent-list *ngSwitchCase="QuestionType.agentList2" [data]="data" [isV2]="true"></b3n-agent-list>
+      <b3n-gojek-api-percentage
+        *ngSwitchCase="QuestionType.gojekAPIPercentage"
+        [data]="data"
+      ></b3n-gojek-api-percentage>
+      <b3n-ivr-active-calls-widget
+        *ngSwitchCase="QuestionType.necIvrActiveCalls"
+        [data]="data"
+      ></b3n-ivr-active-calls-widget>
+      <b3n-current-agent-overview-widget
+        *ngSwitchCase="QuestionType.necAgentLatestStatus"
+        [data]="data"
+      ></b3n-current-agent-overview-widget>
+      <b3n-nec-agent-performance-widget
+        *ngSwitchCase="QuestionType.necAgentPerformance"
+        [data]="data"
+      ></b3n-nec-agent-performance-widget>
+      <b3n-call-queue-summary-widget
+        *ngSwitchCase="QuestionType.necQueueSummary"
+        [data]="data"
+      ></b3n-call-queue-summary-widget>
+      <b3n-widget *ngSwitchDefault [data]="data" [filter]="filter" [type]="question.type"></b3n-widget>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

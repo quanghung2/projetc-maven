@@ -1,0 +1,148 @@
+<div class="main-section container-fluid container-limited flex column gap-16 p-16 mt-32 mat-elevation-z1">
+  <h2>Create case</h2>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+  <form *ngIf="caseFG" [formGroup]="caseFG" class="form flex column gap-40">
+    <div class="left-section container-fluid container-limited limit-container-width flex column gap-16">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter title" />
+      </mat-form-field>
+      <div>
+        <mat-form-field>
+          <mat-select formControlName="typeId" placeholder="Type">
+            <ng-container *ngIf="type$ | async as type">
+              <mat-option *ngFor="let m of type" [value]="m.id">{{ m.name | titlecase }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="flex wrap align-items-center gap-16">
+        <mat-form-field>
+          <mat-select formControlName="ownerUuid" placeholder="Submit to">
+            <ng-container *ngIf="suppliers$ | async as suppliers">
+              <mat-option [value]="CURRENT_ORG_UUID">My organization</mat-option>
+              <mat-option *ngFor="let m of suppliers" [value]="m.uuid">{{ m.name | titlecase }}</mat-option>
+            </ng-container>
+          </mat-select>
+          <mat-hint>Escalate to your supplier</mat-hint>
+        </mat-form-field>
+        <!-- <span class="p-8 teal mat-caption">Escalate to your supplier</span> -->
+      </div>
+
+      <b3n-editor
+        [content]="draftCase?.description"
+        [accessControlId]="draftCase?.accessControlId"
+        [ownerOrgUuid]="draftCase?.ownerOrgUuid"
+        (accessControlIdRequiredChange)="onAccessControlRequired()"
+      ></b3n-editor>
+
+      <mat-form-field>
+        <mat-select formControlName="relatedTos" placeholder="Related case" multiple>
+          <mat-option>
+            <ngx-mat-select-search
+              placeholderLabel="Search case"
+              noEntriesFoundLabel="No case found"
+              [formControl]="searchCaseFC"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let m of relatedCases$ | async; trackBy: tbRelatedCase" [value]="m">
+            <div class="flex gap-8">
+              <span> #{{ m.sid }} </span>
+              <span>{{ m.title }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="right-section flex column gap-16">
+      <div>
+        <mat-form-field class="fluid">
+          <input matInput [formControl]="searchOrgFC" placeholder="Enter organization UUID" />
+        </mat-form-field>
+        <div *ngIf="checkedOrgResult$ | async as organization; else orgNotFound" class="teal-200 p-8">
+          <h3>Organization Info</h3>
+          <div class="flex column gap-8">
+            <div class="flex gap-16"><span class="secondary-text">Name</span>{{ organization.name }}</div>
+            <div class="flex gap-16"><span class="secondary-text">Domain</span>{{ organization.domain }}</div>
+          </div>
+        </div>
+      </div>
+      <mat-form-field>
+        <mat-select formControlName="severityId" placeholder="Severity">
+          <mat-option *ngFor="let s of severity$ | async" [value]="s.id">
+            <div class="flex align-items-center">
+              <img *ngIf="s.name === 'general'" [src]="'assets/image/general.svg'" class="severity-logo" />
+              <img *ngIf="s.name === 'critical'" [src]="'assets/image/critical.svg'" class="severity-logo" />
+              <img *ngIf="s.name === 'urgent'" [src]="'assets/image/urgent.svg'" class="severity-logo" />
+              <span class="severity-content">{{ s.name | titlecase }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="productIds" placeholder="Products" multiple>
+          <mat-option>
+            <ngx-mat-select-search
+              placeholderLabel="Search..."
+              noEntriesFoundLabel="No product found"
+              [formControl]="productFC"
+            >
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let m of products$ | async" [value]="m.id">{{ m.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select formControlName="assignee" placeholder="Assign member">
+          <mat-option>
+            <ngx-mat-select-search
+              placeholderLabel="Search member"
+              noEntriesFoundLabel="No member found"
+              [formControl]="searchMemberFC"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngIf="me$ | async as me" [value]="me.uuid">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <img matListItemAvatar [src]="me.photoUrlOrDefault" class="avatar" />
+              <span>{{ me?.displayName }} (Me)</span>
+            </div>
+          </mat-option>
+          <mat-option *ngFor="let m of filteredMembers$ | async; trackBy: trackByMember" [value]="m.uuid">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <img matListItemAvatar [src]="m.photoUrlOrDefault" class="avatar" />
+              <span>{{ m.displayName }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Due date </mat-label>
+        <input matInput formControlName="dueDate" [matDatepicker]="picker" (focus)="picker.open()" [min]="minDate" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker type="date" #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </form>
+  <div class="container-fluid container-limited limit-container-width flex justify-content-end gap-16 m-0">
+    <button mat-button (click)="goToHome()">Cancel</button>
+    <button
+      *ngIf="caseFG"
+      [disabled]="caseFG.invalid || progressing"
+      mat-raised-button
+      color="primary"
+      (click)="createCase()"
+    >
+      Create
+    </button>
+  </div>
+</div>
+
+<ng-template #orgNotFound>
+  <div *ngIf="searchOrgFC.value" class="yellow p-8">Invalid Organization UUID</div>
+</ng-template>

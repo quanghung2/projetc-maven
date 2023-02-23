@@ -1,0 +1,19 @@
+<mat-tab-group class="settings-section">
+  <mat-tab label="Notification">
+    <div *ngIf="!loading">
+      <div>
+        <h4 class="description">
+          Description: Default notification setting when call has been hang up suddenly or not transferred to any
+          extensions/numbers.
+        </h4>
+        <div *ngIf="settings && flow">
+          <b3n-notification-setting
+            [setting]="setting"
+            [flow]="flow"
+            (refreshSettingsEvent)="onRefreshSettings($event)"
+          ></b3n-notification-setting>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

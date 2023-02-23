@@ -1,0 +1,119 @@
+<div
+  class="sidebar__container flex column justify-content-start align-items-none"
+  *ngIf="{ value: hasTeamChatLicense$ | async } as hasTeamChatLicense"
+>
+  <b3n-app-status [hasTeamChatLicense]="hasTeamChatLicense.value"></b3n-app-status>
+
+  <section class="body spacer flex column justify-content-start align-items-none">
+    <section class="sidebar__section spacer flex column justify-content-start align-items-none">
+      <ng-container *ngIf="sidebarTabActive$ | async as sidebarTabActive">
+        <ng-container *ngIf="sidebarTabActive === SidebarTabs.teamchat">
+          <div class="sidebar__title flex justify-content-space-between align-items-center">
+            <span> {{ ((profile$ | async)?.organizations)[0]?.orgShortName }}</span>
+
+            <button
+              *ngIf="hasTeamChatLicense.value"
+              class="toggle-view"
+              mat-flat-button
+              color="primary"
+              (click)="filterChannel()"
+            >
+              {{ isShowAllChannel ? 'All' : 'Unread' }}
+            </button>
+          </div>
+          <div class="sidebar__content scroller-firefox flex column justify-content-start align-items-none">
+            <b3n-teamchat
+              [isShowAllChannel]="isShowAllChannel"
+              [hasTeamChatLicense]="hasTeamChatLicense.value"
+              [hasExtCallcenter]="hasExtCallcenter"
+              [inbox]="inbox$ | async"
+              [inboxV2]="inboxV2$ | async"
+              [channelCs]="channelCs$ | async"
+              [channelDMs]="channelDMs$ | async"
+              [channelPersonals]="channelPersonals$ | async"
+              [timeZone]="timeZone"
+            ></b3n-teamchat>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="me$ | async as me">
+          <ng-container *ngIf="sidebarTabActive === SidebarTabs.team_inbox && isSupervisor">
+            <div class="flex column justify-content-start align-items-none">
+              <div class="sidebar__title flex justify-content-space-between align-items-center">
+                <span>Team Inbox</span>
+                <mat-form-field class="select-filter">
+                  <mat-select [(ngModel)]="selectedFiter">
+                    <mat-option [value]="TeamInboxFiter.Assigned">Assigned</mat-option>
+                    <mat-option [value]="TeamInboxFiter.Open">Open</mat-option>
+                    <mat-option [value]="TeamInboxFiter.Closed">Closed</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="sidebar__content scroller-firefox flex column justify-content-start align-items-none">
+              <b3n-team-inbox
+                [unassigned]="unassigned$ | async"
+                [assignedToOther]="assignedToOther$ | async"
+                [endChatOrg]="endChatOrg$ | async"
+                [selectedFiter]="selectedFiter"
+                [isLoadingMorePending]="isLoadingMorePending"
+                [isLoadingActiveTxn]="isLoadingActiveTxn"
+                (loadmoreEndtxn)="loadmoreEndtxn(true)"
+              ></b3n-team-inbox>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="sidebarTabActive === SidebarTabs.email && (isAgent$ | async)">
+          <div class="sidebar__title flex justify-content-space-between align-items-center">
+            <span>Email</span>
+            <div class="flex justify-content-end align-items-center gap-8">
+              <mat-icon (click)="openSearch()" svgIcon="email-search"></mat-icon>
+              <mat-icon (click)="composeEmail()" svgIcon="email-plus"></mat-icon>
+            </div>
+          </div>
+          <div class="list-email flex column justify-content-start align-items-none">
+            <b3n-email></b3n-email>
+          </div>
+        </ng-container>
+      </ng-container>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <div class="sidebar__tab">
+      <mat-button-toggle-group
+        #group="matButtonToggleGroup"
+        aria-label="Font Style"
+        [value]="sidebarTabActive$ | async"
+        (change)="changeSidebarTab(group.value)"
+        aria-label="Font Style"
+        class="app-toolbar"
+      >
+        <mat-button-toggle
+          matBadge="!"
+          matBadgeColor="warn"
+          matBadgePosition="below after"
+          matBadgeSize="small"
+          [matBadgeHidden]="!(selectUnreadBadge$ | async)"
+          [value]="SidebarTabs.teamchat"
+        >
+          <mat-icon matTooltip="Team" svgIcon="team_chat"></mat-icon>
+        </mat-button-toggle>
+
+        <!-- <ng-container *ngIf="me$ | async">
+          <mat-button-toggle *ngIf="this.isSupervisor" [value]="SidebarTabs.team_inbox">
+            <mat-icon matTooltip="Team inbox" svgIcon="team_inbox"></mat-icon>
+          </mat-button-toggle>
+        </ng-container> -->
+
+        <mat-button-toggle *ngIf="isAgent$ | async" [value]="SidebarTabs.email">
+          <mat-icon matTooltip="Email" svgIcon="email"></mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </section>
+</div>
+
+<!-- // dont remove, subscribe and unsubscribe when reconnected websocket  -->
+<ng-container *ngIf="onmessage$ | async"></ng-container>

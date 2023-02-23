@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-items: stretch;
+  height: 100%;
+  .form-section {
+    .form {
+      max-width: 800px;
+      min-width: 680px;
+      margin: 0 auto;
+      overflow: auto;
+      height: 100%;
+      padding: 0 24px;
+    }
+  }
+
+  .publish-checkbox {
+    margin-top: 1rem;
+  }
+
+  mat-divider {
+    height: 100%;
+  }
+
+  ::ng-deep {
+    .mat-dialog-content {
+      max-height: 100%;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<form class="dialog__wrapper" [formGroup]="form" (ngSubmit)="save()">
+  <h3 mat-dialog-title>{{ data.title }} inbound call filter</h3>
+  <mat-dialog-content class="dropdowns">
+    <mat-form-field appearance="fill">
+      <mat-label>Match pattern</mat-label>
+      <mat-select formControlName="matchPattern">
+        <mat-option value="startWith">Starts with</mat-option>
+        <mat-option value="exactMatch">Exact match</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Number</mat-label>
+      <input type="tel" pattern="[0-9+]*" matInput formControlName="number" (keydown)="srcPrefixKeyDown($event)" />
+      <mat-error>* Number is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" [class.mt-10]="number.touched && number.invalid">
+      <mat-label>Action</mat-label>
+      <mat-select formControlName="action">
+        <ng-container *ngFor="let action of ruleAction | keyvalue">
+          <mat-option *ngIf="actionMap[action.value]" [value]="action.value">{{ actionMap[action.value] }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" mat-raised-button color="primary" [loading]="loading" [disabled]="!form.valid">Save</button>
+  </mat-dialog-actions>
+</form>

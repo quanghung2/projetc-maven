@@ -1,0 +1,17 @@
+<div fxLayout="column" fxLayoutGap="8px" class="px-16">
+  <h3>Caller ID when transferring</h3>
+  <div class="form__wrapper" fxLayout="column" [formGroup]="form" *ngIf="form">
+    <mat-form-field>
+      <mat-select placeholder="Internal transfer CallerID" formControlName="internal">
+        <mat-option [value]="EnumTransferCallerIdOption.EXT_KEY">Ext Key</mat-option>
+        <mat-option [value]="EnumTransferCallerIdOption.CALLER_NUMBER">Caller Number</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="External transfer CallerID" formControlName="external">
+        <mat-option [value]="EnumTransferCallerIdOption.ASSIGNED_CALLERID">Assigned CallerID</mat-option>
+        <mat-option [value]="EnumTransferCallerIdOption.CALLER_NUMBER">Caller Number</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>

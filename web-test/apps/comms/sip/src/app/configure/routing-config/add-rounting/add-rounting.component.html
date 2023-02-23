@@ -1,0 +1,119 @@
+<div sm-component class="ui modal" modal-id="add-routing-modal">
+  <i class="close icon"></i>
+  <div class="header">Create routing config</div>
+
+  <div class="content">
+    <form class="ui form">
+      <div #typeInput class="field">
+        <label>Type</label>
+        <div sm-component class="ui selection dropdown">
+          <input type="hidden" (change)="ui.type = $event.target['value']" [value]="ui.type" />
+          <i class="dropdown icon"></i>
+          <div class="default text">{{ ui.type }}</div>
+          <div class="menu">
+            <div
+              class="item"
+              [ngClass]="{ 'active selected': ui.type === EnumTypeRouting.outgoing }"
+              [attr.data-value]="EnumTypeRouting.outgoing"
+            >
+              Outgoing
+            </div>
+            <div
+              class="item"
+              [ngClass]="{ 'active selected': ui.type === EnumTypeRouting.isdn_incoming }"
+              [attr.data-value]="EnumTypeRouting.isdn_incoming"
+            >
+              ISDN Incoming
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Rule</label>
+        <input type="text" name="rule" [(ngModel)]="ui.rule" placeholder="Rule" autofocus />
+      </div>
+      <div #forwardInput class="field">
+        <label>Forward To</label>
+        <div sm-component class="ui selection dropdown">
+          <input type="hidden" (change)="ui.forwardTo = $event.target['value']" [value]="ui.forwardTo" />
+          <i class="dropdown icon"></i>
+          <div class="default text">{{ ui.forwardTo }}</div>
+          <div class="menu">
+            <div
+              class="item"
+              [ngClass]="{ 'active selected': ui.forwardTo === EnumTypeForwardTo.sip }"
+              [attr.data-value]="EnumTypeForwardTo.sip"
+            >
+              {{ EnumTypeForwardTo.sip }}
+            </div>
+            <div
+              class="item"
+              [ngClass]="{ 'active selected': ui.forwardTo === EnumTypeForwardTo.extension }"
+              [attr.data-value]="EnumTypeForwardTo.extension"
+            >
+              {{ EnumTypeForwardTo.extension }}
+            </div>
+            <div
+              class="item"
+              [ngClass]="{ 'active selected': ui.forwardTo === EnumTypeForwardTo.e164 }"
+              [attr.data-value]="EnumTypeForwardTo.e164"
+            >
+              {{ EnumTypeForwardTo.e164 }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="ui.forwardTo === EnumTypeForwardTo.sip; else fieldExtension">
+        <div class="field">
+          <label>SIP</label>
+          <div class="my-tag">
+            <tag-input
+              name="sip-input"
+              #inputTag
+              [editable]="true"
+              [(ngModel)]="ui.sipValue"
+              [placeholder]="'+ Ex: sip1234567@abc.xyz'"
+              [secondaryPlaceholder]="'+ Ex: sip1234567@abc.xyz'"
+              [errorMessages]="errorMessages"
+              [validators]="$any(validators)"
+            >
+            </tag-input>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #fieldExtension>
+        <div *ngIf="ui.forwardTo === EnumTypeForwardTo.extension; else e164" class="field">
+          <label>Extension</label>
+          <input type="number" name="keyExtension" [(ngModel)]="ui.extValue" placeholder="Enter key extension" />
+        </div>
+      </ng-template>
+
+      <ng-template #e164>
+        <div class="field">
+          <label>Destination Number</label>
+          <input type="text" name="keyExtension" [(ngModel)]="ui.e164" placeholder="Enter E164 number" />
+        </div>
+      </ng-template>
+    </form>
+  </div>
+
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block"></div>
+      <div class="block">
+        <div class="right">
+          <div class="ui cancel link button">Cancel</div>
+          <div
+            class="ui large primary button"
+            [class.disabled]="isDisableForm"
+            *ngIf="!ui.isSaving"
+            (click)="onCreate()"
+          >
+            Create
+          </div>
+          <div class="ui large primary button loading" *ngIf="ui.isSaving">Creating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

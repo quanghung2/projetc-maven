@@ -1,0 +1,71 @@
+<ng-container *ngIf="authState$ | async as authState; else initView">
+  <div fxFill class="auth-google" fxLayout="column" fxLayoutAlign="start none">
+    <div fxFlex="auto" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1.6rem">
+      <img class="avarta" [src]="authState.photoUrl" />
+      <span class="title">{{ authState.name }}</span>
+      <div class="email" fxLayoutGap="1rem" fxLayoutAlign="center center">
+        <mat-icon>mail</mat-icon>
+        <span>{{ authState.email }}</span>
+      </div>
+      <button fxFlexAlign="none" mat-raised-button color="primary" [loading]="isLoading" (click)="startChat()">
+        Let's chat
+      </button>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="center none" fxLayoutGap="1.6rem">
+      <button mat-raised-button color="warn" (click)="loginWithGoogle()">Switch Google account</button>
+      <button mat-stroked-button (click)="logOut()">Use another account</button>
+    </div>
+  </div>
+</ng-container>
+<ng-template #initView>
+  <div
+    class="container"
+    fxFill
+    fxLayout="column"
+    fxLayoutAlign="start none"
+    fxLayoutGap="1.6rem"
+    [formGroup]="formGroup"
+  >
+    <div class="title" fxFlexAlign="center">Let's talk!</div>
+    <div fxFlexAlign="center" style="text-align: center">
+      Before we start, we'd like to know a few details about you.
+    </div>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input #inputName matInput placeholder="Enter your name" formControlName="name" [errorStateMatcher]="matcher" />
+      <mat-error *ngIf="name.hasError('required')">Name is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Enter your email" formControlName="email" [errorStateMatcher]="matcher" />
+      <mat-error *ngIf="email.hasError('required')">Email is required</mat-error>
+      <mat-error *ngIf="email.hasError('email') || email.hasError('errorEmail')">Invaild email format</mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isInboxFlow$ | async">
+      <mat-label>Number</mat-label>
+      <input
+        matInput
+        type="number"
+        placeholder="Enter your number"
+        formControlName="number"
+        [errorStateMatcher]="matcher"
+        (keyup.enter)="startChat()"
+      />
+      <mat-error *ngIf="number.hasError('errorPhoneNumber')">Invaild number format</mat-error>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      [loading]="isLoading"
+      (click)="startChat()"
+      [disabled]="formGroup.invalid"
+    >
+      Start chat
+    </button>
+
+    <button type="button" (click)="loginWithGoogle()" class="login-with-google-btn">Sign in with Google</button>
+  </div>
+</ng-template>

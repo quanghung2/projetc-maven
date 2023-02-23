@@ -1,0 +1,70 @@
+<div class="pt-16" fxLayout="column" class="container">
+  <div class="header" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search number" [formControl]="searchTextCtr" (keydown.enter)="onFilterChanged()" />
+      <button mat-icon-button matSuffix [loading]="searching">
+        <mat-icon (click)="onFilterChanged()" class="search-box-icon">search</mat-icon>
+      </button>
+      <button mat-icon-button matSuffix *ngIf="searchTextCtr.value" (click)="onFilterChanged()">
+        <mat-icon (click)="this.searchTextCtr.setValue(''); onFilterChanged()" class="search-box-icon">clear</mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="spacer"></div>
+    <button (click)="create()" mat-flat-button color="primary">Create</button>
+    <b3n-upload-bulk-routing [sip]="sip" (onData)="onReported($event)"></b3n-upload-bulk-routing>
+  </div>
+
+  <div class="body">
+    <table class="dnc-status" mat-table [dataSource]="rules">
+      <ng-container matColumnDef="rule">
+        <th mat-header-cell *matHeaderCellDef>Number</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.number }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="forwardTo">
+        <th mat-header-cell *matHeaderCellDef>Forward To</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.forwardTo }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="action-column"></th>
+        <td mat-cell *matCellDef="let element" class="action-column">
+          <div class="action-container" fxLayout="row" fxLayoutAlign="end center">
+            <!-- <button mat-icon-button matTooltip="Edit" (click)="edit(element)">
+              <mat-icon>edit</mat-icon>
+            </button> -->
+
+            <button mat-icon-button color="warn" matTooltip="Archive" (click)="delete(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="noData">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+          <div fxLayoutAlign="center center">
+            <span class="secondary-text">No Data Available</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="rules?.length > 0"></tr>
+    </table>
+    <mat-paginator
+      [length]="totalCount"
+      [pageIndex]="pageable.page - 1"
+      [pageSize]="pageable.perPage"
+      (page)="onChangePage($event.pageIndex + 1)"
+      hidePageSize
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

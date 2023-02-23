@@ -1,0 +1,343 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+<mat-toolbar>
+  <mat-toolbar-row><h1>Microsoft Teams</h1></mat-toolbar-row>
+</mat-toolbar>
+
+<div class="mx-16 alert alert-danger text-center" role="alert" *ngIf="errorMessageWhenInit">
+  {{ errorMessageWhenInit }}
+</div>
+
+<main [hidden]="isLoading || errorMessageWhenInit" class="container px-16">
+  <ng-container *ngIf="isDirectRouting; else operatorConnect">
+    <ng-container *ngIf="!enabledDirectRouting; else directRouting">
+      <div class="direct-routing-enable p-16" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="2.8rem">
+        <span class="secondary-text">
+          Your account has not been activated. Please select one of the below processes to start your account.
+        </span>
+        <div fxLayoutGap="0.3rem" fxLayout="column">
+          <mat-radio-group [(ngModel)]="directRoutingMode" fxLayout="row" fxLayoutGap="2.8rem">
+            <mat-radio-button value="connectWithMS">Connect with your Microsoft Account</mat-radio-button>
+            <mat-radio-button value="connectWithoutMS">Direct routing without Microsoft Account</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <div *ngIf="directRoutingMode == 'connectWithoutMS'" class="w-100" fxLayout="column" fxLayoutGap="1.8rem">
+          <mat-checkbox [(ngModel)]="usingDelecatedSBC">Using own dedicated SBC</mat-checkbox>
+
+          <div *ngIf="usingDelecatedSBC" fxLayout="column" fxLayoutGap="0rem" class="w-100">
+            <div fxLayout="row" fxLayoutGap="1.2rem">
+              <mat-form-field fxFlex="100">
+                <input matInput [(ngModel)]="sbcDomain" placeholder="SBC domain" required />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <button
+          color="primary"
+          fxFlexAlign="end"
+          mat-stroked-button
+          class="mt-16"
+          [disabled]="
+            !directRoutingMode || (directRoutingMode == 'connectWithoutMS' && usingDelecatedSBC && !sbcDomain)
+          "
+          [loading]="isEnblingDirectRouting"
+          (click)="enableDirectRouting()"
+        >
+          Enable
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #directRouting>
+      <ng-container></ng-container>
+      <ng-container *ngIf="hasConnectToMsPortal || usingConnectWithoutMS; else notEnable">
+        <ng-template #provision>
+          <div class="alert alert-danger text-center" role="alert" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <div class="alert alert-warning text-center" role="alert" *ngIf="warningMessage">
+            {{ warningMessage }}
+          </div>
+          <div fxLayoutAlign="center">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="verifyDomain()"
+              *ngIf="!isWaitingForVerifying && !isTryAgain"
+            >
+              Verify Domain
+            </button>
+            <button mat-raised-button color="primary" (click)="ngOnInit()" *ngIf="isWaitingForVerifying">
+              Check domain status
+            </button>
+            <button mat-raised-button color="primary" (click)="ngOnInit()" *ngIf="isTryAgain">Try again</button>
+          </div>
+        </ng-template>
+
+        <ng-container *ngIf="isVerifyFinish || usingConnectWithoutMS; else provision">
+          <div
+            class="alert alert-warning text-center"
+            role="alert"
+            *ngIf="(automatedActivationFailed && clientId) || !usingConnectWithoutMS"
+          >
+            <p>Sorry, we could not automatically activate subscription on this domain</p>
+            <p>
+              Please <a class="cursor-pointer" (click)="openAssignLicenseDialog()">click here</a> to manually activate
+              subscription
+            </p>
+          </div>
+
+          <mat-toolbar class="toolbar-container px-0">
+            <div fxLayout="row" fxLayoutGap="1.2rem" fxLayoutAlign="start center">
+              <mat-form-field class="search">
+                <mat-label>Search</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Search for team account or extension" />
+              </mat-form-field>
+            </div>
+
+            <span class="spacer"></span>
+            <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="end center">
+              <button
+                mat-flat-button
+                color="primary"
+                [disabled]="!checkedExtensions.length"
+                (click)="confirmProvisionDevice()"
+                [loading]="isProvisioningDevices"
+              >
+                Provision
+              </button>
+              <button (click)="openMassConfigDialog()" mat-button>Bulk assignment</button>
+
+              <button mat-icon-button [matMenuTriggerFor]="menu" class="ml-8">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="revoke()" *ngIf="clientId">Disconnect Microsoft Teams</button>
+                <button mat-menu-item (click)="enableMSConnector()" *ngIf="!clientId">Connect Microsoft Teams</button>
+                <button (click)="openProfileDialog()" mat-menu-item>View profile</button>
+                <button (click)="openPowerShellScriptDialog()" mat-menu-item>View script</button>
+              </mat-menu>
+            </div>
+          </mat-toolbar>
+
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="checked">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  (change)="selectAllExtensions($event)"
+                  [disabled]="directRoutingNotProvision?.length === 0"
+                  [checked]="isAllExtensionChecked"
+                >
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox
+                  class="number-checkbox"
+                  color="primary"
+                  [class.show-checked]="isExtensionChecked(element)"
+                  [checked]="isExtensionChecked(element)"
+                  (change)="selectExtension(element)"
+                  [disabled]="element.isProvisionedToAnynode"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Microsoft team user account</th>
+              <td mat-cell *matCellDef="let element">{{ element.teamUsername ? element.teamUsername : '-' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="extension">
+              <th mat-header-cell *matHeaderCellDef>Assigned extension</th>
+              <td mat-cell *matCellDef="let element">{{ element.device?.ext ? element.device?.ext : '-' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="DDI">
+              <th mat-header-cell *matHeaderCellDef>DDI numbers</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.didNumbers?.length ? element.didNumbers.toString() : '-' }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="provision">
+              <th mat-header-cell *matHeaderCellDef>Provision</th>
+              <th></th>
+              <td mat-cell *matCellDef="let element">
+                <div *ngIf="element.isProvisionedToAnynode" class="green-fg"><mat-icon>check</mat-icon></div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element" (click)="openLinkExtensionDialog(element)">
+                <mat-icon matTooltip="Link team account" class="cursor-pointer action-visibility">edit</mat-icon>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">
+                <div fxLayout="column" fxLayoutAlign="center center" class="no-data">No data</div>
+              </td>
+            </tr>
+          </table>
+
+          <mat-paginator
+            #msTeamPaginator
+            *ngIf="directRoutingExtensionsCount > pageableDirectRouting.perPage"
+            [length]="directRoutingExtensionsCount"
+            [pageIndex]="pageableDirectRouting.page - 1"
+            [pageSize]="pageableDirectRouting.perPage"
+            (page)="pageDRChanged($event)"
+            hidePageSize
+            showFirstLastButtons
+          ></mat-paginator>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #notEnable>
+        <div fxLayout="column" fxLayoutAlign="start center" class="container text-center mt-24">
+          <div fxFlexOffset="10%" class="mat-headline">
+            Microsoft account does not link yet. Please click the button below and verify your account to open this
+            feature.
+          </div>
+          <button mat-raised-button color="primary" (click)="enableMSConnector()">Connect Microsoft Teams</button>
+        </div>
+      </ng-template>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #operatorConnect>
+    <div class="upload-number" fxLayout="column" fxLayoutGap="1.5rem">
+      <mat-toolbar-row [formGroup]="filterForm" fxLayoutGap="0.8rem">
+        <mat-form-field>
+          <input matInput type="text" formControlName="keyword" placeholder="Search" />
+        </mat-form-field>
+        <mat-form-field class="fetchType">
+          <mat-select formControlName="fetchType" floatLabel="never" placeholder="Fetch type">
+            <mat-option *ngFor="let fetchType of lstFetchTypeNumber" [value]="fetchType.key">
+              {{ fetchType.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox *ngIf="checkedNumbers.length > 0" formControlName="numberSelected">Selected only</mat-checkbox>
+        <!-- <mat-checkbox formControlName="unassignedOnly">Unassigned</mat-checkbox> -->
+        <span class="flex-spacer"></span>
+        <div>
+          <button [loading]="isLoadingNumber" mat-icon-button (click)="getOperatorConnectNumbers()">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button
+            mat-stroked-button
+            [disabled]="checkedNumbers.length == 0 || isUploadingNumber"
+            fxFlexAlign="end"
+            color="primary"
+            (click)="confirmUploadNumbersMS()"
+          >
+            Provision number
+          </button>
+        </div>
+      </mat-toolbar-row>
+      <div *ngIf="dataSourceNumbers">
+        <table mat-table [dataSource]="dataSourceNumbers">
+          <ng-container matColumnDef="checked">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="selectAllNumbers($event)" [checked]="isAllNumberChecked"> </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-checkbox
+                class="number-checkbox"
+                color="primary"
+                [class.show-checked]="isNumberChecked(element)"
+                [checked]="isNumberChecked(element)"
+                (change)="selectNumber(element)"
+              >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assignedNumber">
+            <th mat-header-cell *matHeaderCellDef>Assigned Number</th>
+            <td mat-cell *matCellDef="let element">{{ element.extLabel }} (#{{ element.extKey }})</td>
+          </ng-container>
+
+          <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef>Number</th>
+            <td mat-cell *matCellDef="let element">{{ element.number }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="uploadedAt">
+            <th mat-header-cell *matHeaderCellDef>Uploaded At</th>
+            <td mat-cell *matCellDef="let element">{{ element.info?.uploadedAt | date: 'dd-MM-yyyy HH:mm' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="assignedAt">
+            <th mat-header-cell *matHeaderCellDef>Assigned At</th>
+            <td mat-cell *matCellDef="let element">{{ element.info.assignedAt | date: 'dd-MM-yyyy HH:mm' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let element">
+              <div
+                *ngIf="!(isUploadingNumber && checkNumberUploading(element.number))"
+                fxLayout="row"
+                fxLayoutAlign="start center"
+                fxLayoutGap="0.3rem"
+              >
+                <div *ngIf="element.info.uploadStatus == 'uploaded'" class="px-4 py-4 green-fg b border-radius-4">
+                  Uploaded
+                </div>
+
+                <div
+                  *ngIf="
+                    element.info.uploadStatus == 'failed' || (!element.info.uploadStatus && element.status === 'failed')
+                  "
+                  class="px-4 py-4 red-fg b border-radius-4"
+                >
+                  Failed
+                </div>
+                <span
+                  *ngIf="element.errorMessage"
+                  class="material-icons icon-help"
+                  [matTooltip]="element.errorMessage"
+                  [matTooltipClass]="'blocked-tooltip'"
+                >
+                  help_outline
+                </span>
+              </div>
+
+              <button
+                *ngIf="isUploadingNumber && checkNumberUploading(element.number)"
+                class="label box"
+                mat-button
+                [loading]="true"
+              ></button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsNumbers"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsNumbers"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" class="no-data" colspan="7">
+              <div fxLayout="column" fxLayoutAlign="center center" class="no-data">No data</div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator
+          #numbersPaginator
+          (page)="pageChanged($event)"
+          [length]="operatorConnectNumberslength"
+          [pageSizeOptions]="[10, 20, 50]"
+          showFirstLastButtons
+        ></mat-paginator>
+      </div>
+    </div>
+  </ng-template>
+</main>

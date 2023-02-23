@@ -1,0 +1,68 @@
+<div class="ui small modal dial-plans__modal">
+  <loader [loading]="saving"></loader>
+  <ng-container *ngIf="form">
+    <div class="header">{{ dialPlan ? 'Update' : 'New' }} Dial Plan</div>
+    <div class="content" [formGroup]="form">
+      <div class="dial-plans__container">
+        <h3>Matching pattern</h3>
+        <div class="input__wrapper">
+          <div class="ui input">
+            <input
+              type="text"
+              placeholder="Start with"
+              formControlName="startWith"
+              onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+            />
+          </div>
+          <div class="ui input">
+            <input
+              type="text"
+              placeholder="Number length"
+              formControlName="numberLength"
+              onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+            />
+          </div>
+        </div>
+        <p class="dial-plans__info" *ngIf="startWith.value || numberLength.value">
+          * Start with
+          <span>{{ startWith.value ? startWith.value : '-' }}</span>
+          and has length of
+          <span>{{ numberLength.value ? numberLength.value : '-' }}</span>
+        </p>
+      </div>
+      <div class="dial-plans__container">
+        <h3>Replacement</h3>
+        <div class="input__wrapper">
+          <div class="ui input">
+            <input
+              type="text"
+              placeholder="Remove prefix"
+              formControlName="removePrefix"
+              onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+            />
+          </div>
+          <div class="ui input">
+            <input
+              type="text"
+              placeholder="Append prefix"
+              formControlName="appendPrefix"
+              onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+            />
+          </div>
+        </div>
+        <p class="dial-plans__info" *ngIf="removePrefix.value || appendPrefix.value">
+          * Remove
+          <span>{{ removePrefix.value ? removePrefix.value : '-' }}</span>
+          leading digits and prepend
+          <span>{{ appendPrefix.value ? appendPrefix.value : '-' }}</span>
+        </p>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui deny button">Cancel</div>
+      <div class="ui primary button" [class.disabled]="!validForm" (click)="save()">
+        {{ dialPlan ? 'Update' : 'Add' }}
+      </div>
+    </div>
+  </ng-container>
+</div>

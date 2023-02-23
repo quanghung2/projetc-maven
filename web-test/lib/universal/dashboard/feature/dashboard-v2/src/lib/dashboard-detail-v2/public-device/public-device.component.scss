@@ -1,0 +1,29 @@
+::ng-deep .public-device__dashboard2 {
+  .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+  }
+
+  .mat-step-header {
+    margin-top: 16px;
+    height: 56px;
+  }
+
+  .mat-stepper-horizontal-line {
+    margin-top: 16px;
+  }
+
+  .mat-horizontal-content-container {
+    padding-bottom: 0 !important;
+  }
+}
+
+.public-device__container {
+  position: relative;
+
+  .close {
+    position: absolute;
+    right: -16px;
+    top: -16px;
+    cursor: pointer;
+  }
+}

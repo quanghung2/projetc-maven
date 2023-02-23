@@ -1,0 +1,32 @@
+<table mat-table *ngIf="finalAgents?.length; else noData" [dataSource]="finalAgents">
+  <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column.key">
+    <th mat-header-cell *matHeaderCellDef>{{ column.value }}</th>
+    <td mat-cell *matCellDef="let agent">
+      <ng-container [ngSwitch]="column.key">
+        <ng-container *ngSwitchCase="'status'">
+          <ng-container [ngSwitch]="agent[column.key]">
+            <ng-container *ngSwitchCase="agentStatus.dnd"> Away </ng-container>
+            <ng-container *ngSwitchCase="agentStatus.busy"> {{ agent.remark }} </ng-container>
+            <ng-container *ngSwitchDefault>
+              {{ agent[column.key] | capitalizeCase }}
+            </ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'firstLoginTime'">
+          {{ agent[column.key] ? agent[column.key] : 'N/A' }}
+        </ng-container>
+        <ng-container *ngSwitchCase="'lastLoginTime'">
+          {{ agent[column.key] ? agent[column.key] : 'N/A' }}
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          {{ agent[column.key] }}
+        </ng-container>
+      </ng-container>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsProps; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsProps"></tr>
+</table>
+<ng-template #noData>
+  <div class="no-data">No data</div>
+</ng-template>

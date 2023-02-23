@@ -1,0 +1,45 @@
+<div mat-dialog-title>Sample Config</div>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+      <mat-form-field>
+        <mat-label>SIP Credentials</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Domain</mat-label>
+        <input matInput formControlName="domain" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Label</mat-label>
+        <input matInput formControlName="label" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Timezone</mat-label>
+        <input matInput formControlName="timezone" />
+      </mat-form-field>
+      <mat-checkbox class="s-16" formControlName="tls">
+        <span>Enable TLS</span>
+      </mat-checkbox>
+      <mat-checkbox class="s-16" formControlName="stun">
+        <span>Enable STUN</span>
+      </mat-checkbox>
+      <mat-form-field>
+        <mat-label>Select codec</mat-label>
+        <mat-select formControlName="codec">
+          <mat-option *ngFor="let codec of codecList" [value]="codec.key">{{ codec.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="uploading" [disabled]="uploading" (click)="download()">
+    Download Configuration
+  </button>
+</div>

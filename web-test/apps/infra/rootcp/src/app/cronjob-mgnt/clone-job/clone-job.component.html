@@ -1,0 +1,16 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+  Clone Job from {{ ele.name }}
+  <mat-icon mat-button mat-dialog-close style="cursor: pointer">close</mat-icon>
+</div>
+<p style="margin-top: 20px">Name of new job</p>
+<div [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Job Name</mat-label>
+    <input matInput placeholder="Job Name" formControlName="name" />
+  </mat-form-field>
+</div>
+
+<div class="text-size" mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button (click)="clone()" [loading]="isLoading" color="primary">Clone!</button>
+</div>

@@ -1,0 +1,163 @@
+<h2 mat-dialog-title>{{ manipulationModalInput?.isEdit ? 'Update' : 'Add' }} Manipulation</h2>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" (submit)="onSave()">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.8rem">
+      <mat-form-field class="name">
+        <mat-label>Name</mat-label>
+        <input
+          matInput
+          placeholder="Ex: abc1_xyz"
+          formControlName="name"
+          [b3nRetrictInput]="'([a-zA-Z]+[\\d_]*)+$'"
+          required
+        />
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['required']">Name can't be empty</mat-error>
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['pattern']">
+          Name must be at least 2 characters and the first character must be characters includes(a-zA-Z)
+        </mat-error>
+      </mat-form-field>
+
+      <div formArrayName="conditions" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+        <h3 class="header">Conditions</h3>
+        <ng-container *ngFor="let consition of conditions.controls; index as idx">
+          <ng-container [formGroupName]="idx">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field>
+                <input matInput placeholder="Variable" formControlName="variable" required />
+                <mat-error *ngIf="conditions.controls[idx].get('variable')?.errors?.['required']">
+                  Variable can't be empty
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Pattern</mat-label>
+                <input matInput placeholder="^...$" formControlName="pattern" required />
+                <mat-error *ngIf="conditions.controls[idx].get('pattern')?.errors?.['required']">
+                  Pattern can't be empty
+                </mat-error>
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeFormGroup(idx, 'condition')">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+        <p class="m-0">
+          <a
+            href="javascript:;"
+            class="link"
+            *ngIf="conditions.length < limitation['max_conditions_size']"
+            (click)="addFormGroup('condition')"
+          >
+            + Add Conditions
+          </a>
+        </p>
+      </div>
+
+      <div formArrayName="statements" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+        <h3 class="header">Statements</h3>
+        <p class="sub-header">Do when matched conditions</p>
+        <ng-container *ngFor="let statement of statements.controls; index as idx">
+          <ng-container [formGroupName]="idx">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field>
+                <input matInput placeholder="Reference" formControlName="reference" />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Pattern</mat-label>
+                <input matInput placeholder="Ex:^...$" formControlName="pattern" />
+              </mat-form-field>
+              <mat-form-field>
+                <mat-label>Target</mat-label>
+                <input matInput placeholder="Ex: X-B3-...." formControlName="target" required />
+                <mat-error *ngIf="statements.controls[idx].get('target')?.errors?.['required']">
+                  Target can't be empty
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field class="chip-list">
+                <mat-chip-list #chipList aria-label="selection">
+                  <mat-chip
+                    *ngFor="let value of statement.value['values']"
+                    [selectable]="chipList_selectable"
+                    [removable]="chipList_removable"
+                    (removed)="removeValues(value, statement.value['values'])"
+                  >
+                    {{ value }}
+                    <mat-icon matChipRemove *ngIf="chipList_removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="Values ..."
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="chipList_addOnBlur"
+                    (matChipInputTokenEnd)="addValues($event, statement.value['values'])"
+                  />
+                </mat-chip-list>
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeFormGroup(idx, 'statement')">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+        <p class="m-0">
+          <a
+            href="javascript:;"
+            class="link"
+            *ngIf="statements.length < limitation['max_statements_size']"
+            (click)="addFormGroup('statement')"
+          >
+            + Add Statements
+          </a>
+        </p>
+      </div>
+
+      <div formArrayName="antiactions" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+        <h3 class="header">Else Statement</h3>
+        <p class="sub-header">Do when unmatched conditions</p>
+        <ng-container *ngFor="let antiaction of antiactions.controls; index as idx">
+          <ng-container [formGroupName]="idx">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+              <mat-form-field>
+                <mat-select formControlName="action" placeholder="Action" required>
+                  <mat-option *ngFor="let action of defined_antiactions" [value]="action">
+                    {{ action }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="antiactions.controls[idx].get('action')?.errors?.['required']">
+                  Action can't be empty
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput placeholder="Param" formControlName="param" required />
+                <mat-error *ngIf="antiactions.controls[idx].get('param')?.errors?.['required']">
+                  Param can't be empty
+                </mat-error>
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeFormGroup(idx, 'antiaction')">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </ng-container>
+        <p class="m-0">
+          <a
+            href="javascript:;"
+            class="link"
+            *ngIf="antiactions.length < limitation['max_antiactions_zize']"
+            (click)="addFormGroup('antiaction')"
+          >
+            + Add Antiactions
+          </a>
+        </p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="isLoading" [disabled]="formGroup.invalid" (click)="onSave()">
+    {{ manipulationModalInput?.isEdit ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>

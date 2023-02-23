@@ -1,0 +1,55 @@
+<div class="auto-topup" fxLayout="column" fxLayoutGap="1.6rem">
+  <h2>Auto Top-up Credits</h2>
+  <section fxLayout="column" fxLayoutGap="0.8rem">
+    <span *ngIf="settings.lowerLimit && settings.topupAmount"
+      >Whenever you are close to running out of credits (less than {{ settings.lowerLimit }}
+      {{ organization?.walletCurrencyCode }}), a payment will be automatically topped up with
+      {{ settings.topupAmount }} {{ organization?.walletCurrencyCode }} in your credits</span
+    >
+    <span *ngIf="!settings.lowerLimit && !settings.topupAmount"
+      >Whenever you are close to running out of credits, a payment will be automatically topped up</span
+    >
+    <div class="toggle">
+      <mat-slide-toggle
+        class="toggle-auto-topup"
+        color="primary"
+        [checked]="settings?.enable"
+        [disabled]="isNewUser"
+        (change)="onChangeTopUp($event)"
+      >
+        <span *ngIf="isNewUser">This function is not available. Please top up credits to enable this feature</span>
+        <span *ngIf="!isNewUser && settings?.enable">Toggle to turn off auto topup feature</span>
+        <span *ngIf="!isNewUser && !settings?.enable">Toggle to turn on auto topup feature</span>
+      </mat-slide-toggle>
+    </div>
+  </section>
+
+  <section *ngIf="paymentMethodToTopup" fxLayout="column" fxLayoutGap="0.8rem">
+    <span>Top-up method</span>
+    <div class="toggle">
+      <div class="toggle-auto-topup">{{ paymentMethodToTopup }}</div>
+    </div>
+  </section>
+
+  <section fxLayout="column" fxLayoutGap="1.6rem">
+    <h2>Subscription Renewal</h2>
+    <div class="toggle">
+      <mat-slide-toggle
+        class="toggle-auto-topup toggle-sub-renewal"
+        color="primary"
+        [checked]="!isBlockAutoTopUpSub && !isNewUser"
+        disabled
+      >
+        <span *ngIf="isNewUser">This function is not available. Please top up credits to enable this feature</span>
+        <span *ngIf="!isNewUser && !isBlockAutoTopUpSub">
+          Subscriptions will be renewed with Stored Card if usable credits are insufficient. If you want to disable it,
+          please contact your Service Provider.
+        </span>
+        <span *ngIf="!isNewUser && isBlockAutoTopUpSub">
+          Subscriptions are renewed with usable credits. If you want to back up with Credit Card, please contact your
+          Service Provider.
+        </span>
+      </mat-slide-toggle>
+    </div>
+  </section>
+</div>

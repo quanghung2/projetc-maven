@@ -1,0 +1,114 @@
+<div class="otp-verify__wrapper">
+  <img src="assets/otp.webp" loading="eager" />
+  <div [class.hidden]="!!verifiedDevice" class="not-verified__wrapper">
+    <div class="content__wrapper">
+      <p class="title">Access the TV application on your smart TV by entering this link in the browser</p>
+      <p class="title domain">{{ portalLink }}</p>
+      <p class="sub-title">Enter the OTP shown up on the TV screen</p>
+    </div>
+    <form class="otp__wrapper" autocomplete="off" [formGroup]="otpVerifyForm" [class.hidden]="loading">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit0"
+          #digit0
+          (keyup.arrowRight)="digit1.focus()"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit1"
+          #digit1
+          (keyup.arrowLeft)="digit0.focus()"
+          (keyup.arrowRight)="digit2.focus()"
+          (keyup.backspace)="focusDigitInput(0)"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit2"
+          #digit2
+          (keyup.arrowLeft)="digit1.focus()"
+          (keyup.arrowRight)="digit3.focus()"
+          (keyup.backspace)="focusDigitInput(1)"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit3"
+          #digit3
+          (keyup.arrowLeft)="digit2.focus()"
+          (keyup.arrowRight)="digit4.focus()"
+          (keyup.backspace)="focusDigitInput(2)"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit4"
+          #digit4
+          (keyup.arrowLeft)="digit3.focus()"
+          (keyup.arrowRight)="digit5.focus()"
+          (keyup.backspace)="focusDigitInput(3)"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          alphanumbericKeydown
+          formControlName="digit5"
+          #digit5
+          (keyup.arrowLeft)="digit4.focus()"
+          (keyup.backspace)="focusDigitInput(4)"
+        />
+      </mat-form-field>
+    </form>
+    <mat-spinner *ngIf="loading" [diameter]="50"></mat-spinner>
+    <div class="error__wrapper" *ngIf="invalid">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>OTP code is invalid</p>
+    </div>
+  </div>
+  <div class="verified__wrapper" [class.hidden]="!verifiedDevice">
+    <div class="content">
+      <mat-icon color="primary">verified_user</mat-icon>
+      <p>Verify successfully</p>
+    </div>
+    <form autocomplete="off" class="verified__form" [formGroup]="deviceVerifyForm">
+      <mat-form-field>
+        <mat-label>Device Name</mat-label>
+        <input matInput formControlName="name" #nameInput />
+      </mat-form-field>
+      <p>{{ remainNameChar }} character(s) left</p>
+    </form>
+  </div>
+  <div class="action__wrapper">
+    <button mat-button matStepperPrevious *ngIf="!verifiedDevice">Back</button>
+    <ng-container *ngIf="verifiedDevice">
+      <button mat-button matDialogClose>Close</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="deviceVerifyForm.invalid"
+        [loading]="updating"
+        (click)="updateDevice()"
+      >
+        Update
+      </button>
+    </ng-container>
+  </div>
+</div>

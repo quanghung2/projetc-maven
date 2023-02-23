@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .usage-hitory {
+    &__actions-bar {
+      &__search-btn {
+        margin-left: 0.8rem;
+      }
+      .form-container {
+        margin-left: 0.8rem;
+      }
+    }
+  }
+}

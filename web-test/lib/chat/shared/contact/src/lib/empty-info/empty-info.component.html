@@ -1,0 +1,97 @@
+<div class="empty-container flex column justify-content-end align-items-none">
+  <div fxFlex="64px" class="header">
+    <b3n-empty-header [contact]="contact" [user]="user"></b3n-empty-header>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div #viewport fxFlex="auto" class="body">
+    <div class="widget flex column justify-content-start align-items-center gap-10">
+      <ng-container *ngIf="!!type">
+        <ng-container *ngIf="type === TypeContact.User; else contactView">
+          <ng-container *ngIf="user">
+            <csh-render-member [user]="user" [showDisplayName]="false" [isLarge]="true"> </csh-render-member>
+            <span class="text__title">{{ user.displayName }}</span>
+
+            <div class="flex column justify-content-start align-items-start">
+              <ng-container *ngIf="user?.email">
+                <div class="phone-container flex justify-content-start align-items-center">
+                  <div fxFlex="50px" fxLayoutAlign="center center">
+                    <a href="mailTo:{{ user.email }}" fxLayoutAlign="center center">
+                      <mat-icon>mail</mat-icon>
+                    </a>
+                  </div>
+                  <div class="flex column justify-content-center align-items-none">
+                    <span>{{ user.email }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="selectExtension$ | async as extension">
+                <div class="phone-container flex justify-content-start align-items-center">
+                  <div fxFlex="50px" fxLayoutAlign="center center">
+                    <mat-icon (click)="makeCallTo(extension?.extKey, user)">phone</mat-icon>
+                  </div>
+                  <div class="flex column justify-content-center align-items-none">
+                    <span># {{ extension?.extKey }} </span>
+                    <span class="mat-caption">Extension</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="user?.mobileNumber">
+                <div class="phone-container flex justify-content-start align-items-center">
+                  <div fxFlex="50px" fxLayoutAlign="center center">
+                    <mat-icon (click)="makeCallTo(user.mobileNumber, user)">phone</mat-icon>
+                  </div>
+                  <div class="flex column justify-content-center align-items-none">
+                    <span> {{ user.mobileNumber }} </span>
+                    <span class="mat-caption">Work</span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-template #contactView>
+          <ng-container *ngIf="!!contact">
+            <span class="avarta-img">{{ contact.displayName | firstWord }}</span>
+            <span class="text__title">{{ contact.displayName }}</span>
+
+            <div class="flex column justify-content-start align-items-start">
+              <ng-container *ngIf="contact?.emails?.length > 0">
+                <div
+                  *ngFor="let email of contact?.emails"
+                  class="phone-container flex justify-content-start align-items-center"
+                >
+                  <div fxFlex="50px" fxLayoutAlign="center center">
+                    <a href="mailTo:{{ email }}" fxLayoutAlign="center center">
+                      <mat-icon>mail</mat-icon>
+                    </a>
+                  </div>
+                  <div class="flex column justify-content-center align-items-none">
+                    <span>{{ email.email }}</span>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="contact.numbers?.length > 0">
+                <div
+                  *ngFor="let number of contact?.numbers"
+                  class="phone-container flex justify-content-start align-items-center"
+                >
+                  <div fxFlex="50px" fxLayoutAlign="center center">
+                    <mat-icon (click)="makeCallTo(number.number, contact)">phone</mat-icon>
+                  </div>
+                  <div class="flex column justify-content-center align-items-none">
+                    <span>{{ number.number }} </span>
+                    <span class="mat-caption">Work</span>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

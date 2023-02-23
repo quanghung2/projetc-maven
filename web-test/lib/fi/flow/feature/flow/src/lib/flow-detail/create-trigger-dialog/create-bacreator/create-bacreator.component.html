@@ -1,0 +1,9 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+  <b3n-ba-creator (changeInput)="parameters = $event" (invalid)="invalid = $event"></b3n-ba-creator>
+
+  <div dir="rtl" class="mb-4">
+    <button mat-raised-button color="primary" [loading]="creating" [disabled]="invalid" (click)="createBac()">
+      Create
+    </button>
+  </div>
+</div>

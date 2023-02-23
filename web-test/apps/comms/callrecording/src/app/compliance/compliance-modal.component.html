@@ -1,0 +1,86 @@
+<i class="close icon"></i>
+<div class="header">Call Recording Compliance Management</div>
+
+<div class="content">
+  <div class="ui page control borderless menu">
+    <div class="menu">
+      <div class="item">
+        <h3>{{ complianceLicenseSize }} licenses</h3>
+      </div>
+    </div>
+    <div class="right menu">
+      <div class="item">
+        <div class="ui default button" (click)="openUpdateUserModal($event)">
+          <i class="icon person add"></i> Add user
+        </div>
+      </div>
+      <div class="item">
+        <div class="ui primary button" (click)="openSettingModal($event)"><i class="icon settings"></i> Setting</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ui centered grid">
+    <div #usersElement class="three column centered row">
+      <div class="column">
+        <div class="title">
+          Admins
+          <div class="ui default small button icon add user" (click)="openAddUserModal('ADMIN', $event)">
+            <i class="icon person add"></i>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="loadListOfUsers; context: { $implicit: users.admins }"></ng-container>
+      </div>
+      <div class="column">
+        <div class="title">
+          Managers
+          <div class="ui default small button icon add user" (click)="openAddUserModal('MANAGER', $event)">
+            <i class="icon person add"></i>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="loadListOfUsers; context: { $implicit: users.managers }"></ng-container>
+      </div>
+      <div class="column">
+        <div class="title">
+          Agents
+          <span *ngIf="managerCurrent != undefined">
+            of <b>{{ managerCurrent.givenName }} {{ managerCurrent.familyName }}</b></span
+          >
+          <div class="ui default small button icon add user" (click)="openAddUserModal('AGENT', $event)">
+            <i class="icon person add"></i>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="loadListOfUsers; context: { $implicit: users.agents }"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadListOfUsers let-users>
+  <div class="ui middle aligned divided list users">
+    <div class="item user" *ngFor="let user of users; let i = index" (click)="onSelectUser(user, $event)">
+      <div class="content">
+        {{ i + 1 }} - {{ user.givenName }} {{ user.familyName }}
+        <span>({{ user.phoneNumber }})</span>
+        <div class="ui inline right dropdown">
+          <i class="icon chevron right"></i>
+          <div class="menu">
+            <div class="item" (click)="openUpdateUserModal($event, user)">Update information</div>
+            <div class="item" (click)="openRemoveRoleModal($event, user)">Remove role</div>
+            <div class="item" (click)="openDeleteUserModal($event, user)">Delete user</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngTemplateOutlet="loadMore"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #loadMore>
+  <div class="loading" *ngIf="isLoading == true">
+    <div class="ui active centered inline loader app-loader"></div>
+  </div>
+  <div class="loadmore" *ngIf="canLoadMore == true && isLoading != true">
+    <div class="ui outlined small button" (click)="getUsers(pageCurrent + 1)">Loading More</div>
+  </div>
+</ng-template>

@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Average wait time</mat-card-title>
+    <span class="fill-remaining-space"></span>
+    <div *ngIf="loading">
+      <mat-progress-spinner strokeWidth="2" mode="indeterminate" diameter="25"></mat-progress-spinner>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-divider></mat-divider>
+    <div class="container">
+      <div fxLayout="column" class="container" *ngIf="queues && queues.length <= 1">
+        <div fxFlex class="item">
+          <span class="number">{{ queues[0]?.value > -1 ? (queues[0]?.value | duration) : '-' }}</span>
+        </div>
+      </div>
+      <mat-list *ngIf="queues && queues.length > 1">
+        <mat-list-item *ngFor="let queue of queues">
+          <div class="mat-list-text">
+            <h3 matLine>{{ queue.key }}</h3>
+          </div>
+          <div class="mat-list-appended">{{ queue.value > -1 ? (queue.value | duration) : '-' }}</div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>

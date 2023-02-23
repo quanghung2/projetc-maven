@@ -1,0 +1,28 @@
+mat-row,
+td.mat-cell {
+  border-bottom-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+.mat-row:hover {
+  background-color: #fafafa;
+
+  .mat-column-action button {
+    visibility: visible;
+  }
+}
+
+.mat-column-id {
+  width: 100px;
+}
+
+.mat-column-lastUpdatedAt {
+  width: 150px;
+}
+
+.mat-column-action {
+  width: 120px;
+
+  button {
+    visibility: hidden;
+  }
+}

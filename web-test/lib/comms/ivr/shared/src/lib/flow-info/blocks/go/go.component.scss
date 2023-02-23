@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+mat-form-field {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchBlock {
+  box-sizing: border-box;
+  width: 50% !important;
+  margin: 0.8rem 1.6rem;
+}
+
+label {
+  font-size: 13px;
+  color: gray;
+}
+
+.goTime {
+  margin-top: 1.6rem;
+}

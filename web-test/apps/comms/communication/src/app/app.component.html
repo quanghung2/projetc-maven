@@ -1,0 +1,8 @@
+<div class="container" fxFill fxLayout="column" fxLayoutAlign="start none">
+  <b3n-header fxFlex="64px"></b3n-header>
+  <div fxFlex="auto" class="content">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<ng-container *ngIf="socketStatus$ | async"></ng-container>

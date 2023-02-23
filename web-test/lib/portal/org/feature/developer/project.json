@@ -1,0 +1,16 @@
+{
+  "name": "portal-org-feature-developer",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/developer/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/org/feature/developer/**/*.ts", "libs/portal/org/feature/developer/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

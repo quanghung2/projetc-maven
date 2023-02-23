@@ -1,0 +1,11 @@
+:host {
+  .action__header {
+    border-bottom: 1px solid var(--general-border);
+    height: var(--header-height);
+    padding: 0 10px;
+
+    mat-icon {
+      color: var(--icon-background);
+    }
+  }
+}

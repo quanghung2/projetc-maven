@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-textarea-sms",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/textarea-sms/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/textarea-sms/**/*.ts", "libs/shared/ui/textarea-sms/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

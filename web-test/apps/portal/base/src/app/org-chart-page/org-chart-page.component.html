@@ -1,0 +1,22 @@
+<div
+  fxLayout="row"
+  fxLayoutGap="1.6rem"
+  fxLayoutAlign="center center"
+  class="view-not-found"
+  *ngIf="isPageNotFound; else pageFound"
+>
+  <div><mat-icon>warning</mat-icon></div>
+  <div>
+    <h1>Page not found</h1>
+    <div class="text">
+      <p class="general">
+        <span>Sorry, the page you are looking for does not exist. Please check the URL, otherwise, click </span>
+        <a [routerLink]="['/', 'home']">here</a> <span> to browse your home page.</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<ng-template #pageFound>
+  <b3n-org-chart [teamsData]="teamsData" [isLoading]="isLoading"></b3n-org-chart>
+</ng-template>

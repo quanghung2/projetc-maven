@@ -1,0 +1,32 @@
+<ng-container>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      opened
+      class="sidenav"
+      [fixedInViewport]="true"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
+    >
+      <mat-toolbar>
+        <div class="title">Root CP</div>
+      </mat-toolbar>
+
+      <mat-divider></mat-divider>
+
+      <ng-container *ngIf="menus?.length > 0">
+        <ng-container *ngFor="let menu of menus">
+          <div class="link" [routerLink]="[menu.url]" routerLinkActive="active">
+            {{ menu.title }}
+          </div>
+        </ng-container>
+      </ng-container>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>

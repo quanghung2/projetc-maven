@@ -1,0 +1,21 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1rem">
+  <h2 mat-dialog-title>Organization time format settings</h2>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap=".5rem">
+    <mat-form-field appearance="outline">
+      <mat-label>Time format</mat-label>
+
+      <mat-select [(ngModel)]="org.timeFormat">
+        <mat-option *ngFor="let option of timeFormatOptions" [value]="option">{{ option }}</mat-option>
+      </mat-select>
+      <mat-hint *ngIf="org.timeFormat === timeFormatOptions[0]">E.g: 2021-01-01 10:30</mat-hint>
+      <mat-hint *ngIf="org.timeFormat === timeFormatOptions[1]">E.g: 2021-01-01 10:30:03</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div align="end" mat-dialog-actions>
+    <span class="spacer"></span>
+    <button [mat-dialog-close]="true" mat-button>Cancel</button>
+    <button (click)="update()" [loading]="updating" color="primary" mat-raised-button>Update</button>
+  </div>
+</div>

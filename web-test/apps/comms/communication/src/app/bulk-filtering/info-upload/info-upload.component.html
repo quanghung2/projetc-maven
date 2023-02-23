@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Report Upload File</h1>
+<div mat-dialog-body class="container-dialog" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+  <mat-form-field>
+    <mat-label>Send to email</mat-label>
+    <input matInput type="text" [errorStateMatcher]="matcher" placeholder="Ex: abc@gmail.com" [formControl]="ctrl" />
+    <button *ngIf="ctrl.value" (click)="ctrl.setValue('')" mat-icon-button matSuffix>
+      <mat-icon class="search-box-icon">clear</mat-icon>
+    </button>
+    <mat-error *ngIf="ctrl.hasError('email')"> Not a valid email </mat-error>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px">Total: </label>
+    <span class="secondary-text">{{ ui.tottal }} numbers</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px" style="color: #36b37e">Valid: </label>
+    <span class="secondary-text">{{ ui.valid }} numbers</span>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px" style="color: #ff5630">Invalid: </label>
+    <span class="secondary-text">{{ ui.invalid }} numbers</span>
+    <div *ngIf="ui.invalid > 0" class="download-file">
+      <a (click)="download()"> Download </a>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="start center">
+    <label fxFlex="70px" style="color: #ff5630">Duplicate: </label>
+    <span class="secondary-text">{{ ui.duplicate }} numbers</span>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button (click)="done()" color="primary" [disabled]="ctrl.invalid" mat-raised-button>Scan</button>
+</div>

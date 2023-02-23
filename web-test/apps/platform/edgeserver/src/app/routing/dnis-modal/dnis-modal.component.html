@@ -1,0 +1,87 @@
+<h2 mat-dialog-title>{{ dnisModalInput.isEdit ? 'Update' : 'Create' }} DNIS</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup" fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="start stretch">
+    <mat-form-field>
+      <mat-label>DNIS</mat-label>
+      <input matInput placeholder="Enter DNIS" formControlName="dnis" type="number" required />
+      <mat-error *ngIf="dnis.errors?.['required']">DNIS can't be empty</mat-error>
+      <mat-error *ngIf="dnis.errors?.['isExistsDnis']">DNIS is existed</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span class="title">Matching</span>
+      <mat-radio-group
+        class="py-10"
+        formControlName="matching"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="16px"
+      >
+        <mat-radio-button *ngFor="let matching of matchings" [value]="matching.key">
+          {{ matching.value }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+      <span class="title">Type Peer</span>
+      <mat-radio-group
+        class="py-10"
+        formControlName="peerType"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="16px"
+        (change)="onChangeTypePeer($event)"
+      >
+        <mat-radio-button *ngFor="let peer of peerTypes || []" [value]="peer.key">
+          {{ peer.value }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="peerType.value === peerTypes[0].key" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Primary route" formControlName="peer1" required>
+          <mat-option *ngFor="let peer of dnisModalInput?.peers" [value]="peer?.name">
+            {{ peer?.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="peer1.invalid">Primary route can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="35">
+        <mat-select placeholder="Secondary route" formControlName="peer2" required>
+          <mat-option *ngFor="let peer of dnisModalInput?.peers" [value]="peer?.name">
+            {{ peer?.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="peer2.invalid">Secondary route can't be empty</mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="26.5">
+        <mat-label>Load</mat-label>
+        <input matInput placeholder="Enter load" formControlName="load" type="number" required />
+        <mat-error *ngIf="load.errors?.['required']">Load can't be empty</mat-error>
+        <mat-error *ngIf="load.errors?.['min'] || load.errors?.['max']">Load is invalid</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div *ngIf="peerType.value !== peerTypes[0].key">
+      <mat-form-field fxFlex>
+        <mat-select placeholder="Tag" formControlName="tag" required>
+          <mat-option *ngFor="let item of dnisModalInput?.clidsData" [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="tag.errors?.['required']">Tag can't be empty</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close cdkFocusInitial>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="isLoading" [disabled]="formGroup.invalid" (click)="onSave()">
+    {{ dnisModalInput?.isEdit ? 'Update' : 'Create' }}
+  </button>
+</div>

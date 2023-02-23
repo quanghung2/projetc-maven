@@ -1,0 +1,35 @@
+.mat-card-header {
+  display: flex;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  height: calc(33.3vh - 7px);
+  overflow-x: auto;
+  padding: 0;
+
+  .sla-one {
+    height: 100%;
+  }
+}
+
+.item2 {
+  display: table;
+}
+
+.number {
+  font-size: -webkit-xxx-large;
+}
+
+.mat-card {
+  border: thin solid #d3d3d3;
+}
+
+.mat-column-rate {
+  text-align: right;
+}

@@ -1,0 +1,15 @@
+.member {
+  padding-left: 16px;
+
+  .mat-icon-button {
+    visibility: hidden;
+  }
+
+  &:hover {
+    background: #f4f4f4;
+
+    .mat-icon-button {
+      visibility: visible;
+    }
+  }
+}

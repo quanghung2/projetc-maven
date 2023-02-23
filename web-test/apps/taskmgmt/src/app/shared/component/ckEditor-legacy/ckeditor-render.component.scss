@@ -1,0 +1,224 @@
+/*
+ * Remove template code below
+ */
+:root {
+  --ck-color-image-caption-background: hsl(0, 0%, 97%);
+  --ck-color-image-caption-text: hsl(0, 0%, 20%);
+  --ck-color-mention-background: hsla(341, 100%, 30%, 0.1);
+  --ck-color-mention-text: hsl(341, 100%, 30%);
+  --ck-color-table-caption-background: hsl(0, 0%, 97%);
+  --ck-color-table-caption-text: hsl(0, 0%, 20%);
+  --ck-highlight-marker-blue: hsl(201, 97%, 72%);
+  --ck-highlight-marker-green: hsl(120, 93%, 68%);
+  --ck-highlight-marker-pink: hsl(345, 96%, 73%);
+  --ck-highlight-marker-yellow: hsl(60, 97%, 73%);
+  --ck-highlight-pen-green: hsl(112, 100%, 27%);
+  --ck-highlight-pen-red: hsl(0, 85%, 49%);
+  --ck-image-style-spacing: 1.5em;
+  --ck-inline-image-style-spacing: calc(var(--ck-image-style-spacing) / 2);
+  --ck-todo-list-checkmark-size: 16px;
+}
+.ck-editor-container {
+  padding: 0 0 8px;
+  word-break: break-word;
+
+  blockquote {
+    overflow: hidden;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    border-left: solid 5px hsl(0, 0%, 80%);
+  }
+
+  code {
+    background-color: hsla(0, 0%, 78%, 0.3);
+    padding: 0.15em;
+    border-radius: 2px;
+  }
+
+  .ck-content .table .ck-content .table table {
+    overflow: hidden;
+  }
+  pre {
+    padding: 1em;
+    color: hsl(0, 0%, 20.8%);
+    background: hsla(0, 0%, 78%, 0.3);
+    border: 1px solid hsl(0, 0%, 77%);
+    border-radius: 2px;
+    text-align: left;
+    direction: ltr;
+    tab-size: 4;
+    white-space: pre-wrap;
+    font-style: normal;
+    min-width: 200px;
+    margin-bottom: 12px;
+    code {
+      background: unset;
+      padding: 0;
+      border-radius: 0;
+    }
+  }
+
+  hr {
+    margin: 15px 0;
+    height: 4px;
+    background: hsl(0, 0%, 87%);
+    border: 0;
+  }
+
+  .ck-dropdown {
+    .ck-list {
+      display: inline-block;
+      float: right;
+      max-height: 150px;
+      z-index: 999;
+      position: relative;
+      overflow: auto;
+    }
+  }
+  .mention {
+    background: var(--ck-color-mention-background);
+    color: var(--ck-color-mention-text);
+    height: 24px;
+    width: 65px;
+    border-radius: 6px;
+    padding: 2px 3px;
+    margin-right: 2px;
+  }
+
+  .image.image_resized img {
+    width: 100%;
+  }
+
+  .image {
+    display: table;
+    clear: both;
+    text-align: center;
+    margin: 0 0 16px 0 !important;
+    min-width: 50px;
+  }
+  .image img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 350px;
+    border: thin solid #d3d3d3;
+    border-radius: 8px;
+    background-size: cover;
+    object-fit: over;
+    overflow: hidden;
+  }
+  // .image-inline picture {
+  //   display: flex;
+  // }
+  // .image-inline picture,
+  // .image-inline img {
+  //   flex-grow: 1;
+  //   flex-shrink: 1;
+  //   max-width: 100%;
+  // }
+
+  table {
+    // float: left;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 0 16px 0 !important;
+    display: table;
+    width: 100%;
+    height: 100%;
+    border: 1px double hsl(0, 0%, 70%);
+    clear: both;
+    text-align: center;
+    .ck-table-resized {
+      table-layout: fixed;
+    }
+    th {
+      padding: 0.4em;
+      border: 1px solid hsl(0, 0%, 75%);
+      font-weight: bold;
+      background: hsla(0, 0%, 0%, 5%);
+      position: relative;
+      div {
+        display: inline-block;
+      }
+    }
+    td {
+      padding: 0.4em;
+      border: 1px solid hsl(0, 0%, 75%);
+      position: relative;
+      div {
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.custom-item {
+  display: block;
+}
+.ck-on {
+  background-color: #d3e1eb !important;
+}
+
+.ck-editor-container {
+  position: relative;
+  .action-edit {
+    position: absolute;
+    right: 0;
+    top: 0;
+    visibility: hidden;
+  }
+  &:hover {
+    .action-edit {
+      visibility: visible;
+    }
+  }
+}
+
+.ck-editor {
+  position: relative;
+  ::ng-deep {
+    .ck-toolbar {
+      padding-right: 40px;
+    }
+    .ck-content {
+      width: 100%;
+      background: #fff;
+      font-size: 1em;
+      line-height: 1.6em;
+      min-height: 150px;
+      padding: 1.5em 2em;
+      resize: vertical;
+      min-height: 2;
+    }
+  }
+  .tool {
+    position: absolute;
+    top: 10px;
+    right: 0.5rem;
+
+    .mat-icon {
+      cursor: pointer;
+      margin: 2px;
+      height: 20px;
+      width: 20px;
+      font-size: 16px;
+    }
+  }
+}
+
+.btn-action-header {
+  padding: 0.5rem;
+  line-height: 1rem;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  mat-icon {
+    font-size: 18px;
+    color: #7a7a7a;
+  }
+}

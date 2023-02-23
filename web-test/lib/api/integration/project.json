@@ -1,0 +1,16 @@
+{
+  "name": "api-integration",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/integration/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/integration/**/*.ts", "libs/api/integration/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,130 @@
+<ng-container *ngIf="settings$ | async as settings">
+  <mat-toolbar>
+    <div class="page-title">Active Calls</div>
+  </mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem" class="action-bar">
+    <span class="call-counter-text"> {{ callLog?.length || '0' }} call<span *ngIf="callLog?.length > 1">s</span> </span>
+
+    <button [loading]="fetching" mat-icon-button (click)="pollingData(settings)" matTooltip="Refresh">
+      <mat-icon>autorenew</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="callLog" class="callcenter px-16">
+    <table mat-table [dataSource]="callLog" class="active-calls-table">
+      <ng-container matColumnDef="txnUuid">
+        <th mat-header-cell *matHeaderCellDef>Txn UUID</th>
+        <td mat-cell *matCellDef="let call">
+          <button
+            class="label box"
+            mat-button
+            matTooltip="Click to copy"
+            ngxClipboard
+            [cbContent]="call.txnUuid"
+            (cbOnSuccess)="copied()"
+            (cbOnError)="copyFailed()"
+          >
+            {{ call.txnUuid | slice: 0:8 }}
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let call">
+          <span class="active-call-type" [class]="call.type">{{ call.type | camel2title }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startAt">
+        <th mat-header-cell *matHeaderCellDef>Start At</th>
+        <td mat-cell *matCellDef="let call">{{ call.startTime | userDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="caller">
+        <th mat-header-cell *matHeaderCellDef>Caller</th>
+        <td mat-cell *matCellDef="let call">
+          <ng-container *ngIf="call.from?.extensionKey; else fromNumber">
+            <span> {{ call.from?.extensionKey }} - {{ call.from?.extensionLabel }}</span>
+            <span *ngIf="call.from?.device"> &nbsp;- {{ call.from?.device | extDevice }} </span>
+          </ng-container>
+          <ng-template #fromNumber>
+            {{ call.from?.number === 'p' ? 'Private' : call.from?.number }}
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="to">
+        <th mat-header-cell *matHeaderCellDef>To</th>
+        <td mat-cell *matCellDef="let call">
+          <ng-container *ngIf="call?.to.extensionKey; else toNumber">
+            <span>{{ call.to?.extensionKey }} - {{ call.to?.extensionLabel }} </span>
+            <span *ngIf="call.to?.device">&nbsp;- {{ call.to?.device | extDevice }} </span>
+          </ng-container>
+          <ng-template #toNumber>
+            {{ call.to?.number }}
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef>State</th>
+        <td mat-cell *matCellDef="let call">
+          {{ call?.txnState | camel2title }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="talking-at">
+        <th mat-header-cell *matHeaderCellDef>Talking At</th>
+        <td mat-cell *matCellDef="let call">{{ call.talkingAt | userDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="queue">
+        <th mat-header-cell *matHeaderCellDef>Queue</th>
+        <td mat-cell *matCellDef="let call">{{ call?.callcenter?.queueName || '--' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="agent">
+        <th mat-header-cell *matHeaderCellDef>Current User</th>
+        <td mat-cell *matCellDef="let call">
+          <ng-container *ngIf="call.type === TxnType.incoming && call?.toLastAnswered?.extensionKey; else noUser">
+            <span>{{ call.toLastAnswered.extensionKey }} - {{ call.toLastAnswered.extensionLabel }} </span>
+          </ng-container>
+          <ng-template #noUser>--</ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let call">
+          <button mat-icon-button [matMenuTriggerFor]="actionMenu" [matMenuTriggerData]="{ call: call }">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr
+        mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: true"
+        [ngClass]="{ hide: callLog.length === 0 }"
+      ></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div fxLayout="column" fxLayoutAlign="center center">No active calls</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <mat-menu #actionMenu="matMenu">
+    <ng-template matMenuContent let-call="call">
+      <div *ngIf="call.txnState === 'talking'">
+        <button mat-menu-item *ngFor="let action of takeActions" (click)="doAgentAction(call, action, settings)">
+          {{ action.value }}
+        </button>
+      </div>
+      <button mat-menu-item (click)="doAgentAction(call, forceHangup, settings)">{{ forceHangup.value }}</button>
+    </ng-template>
+  </mat-menu>
+</ng-container>

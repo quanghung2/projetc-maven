@@ -1,0 +1,90 @@
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+/* You can add global styles to this file, and also import other style files */
+
+@import 'assets/styles/dialog.scss';
+@import 'assets/styles/header.scss';
+@import 'assets/styles/list.scss';
+@import 'assets/styles/loading.scss';
+@import 'assets/styles/scrollbar.scss';
+@import 'assets/styles/table.scss';
+@import 'assets/styles/sortable.scss';
+@import 'assets/styles/popup.scss';
+
+html,
+body {
+  height: 100vh;
+}
+
+// https://github.com/angular/components/issues/15880
+// https://github.com/angular/components/issues/14280
+.cdk-global-scrollblock {
+  position: initial !important;
+  overflow: hidden !important;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.hide {
+  display: none;
+}
+
+.mat-tooltip {
+  font-size: 12px !important;
+  white-space: pre-line !important;
+}
+
+.mat-tab-body-content {
+  overflow: inherit !important;
+}
+
+.fetching-icon {
+  width: 40px;
+  > * {
+    float: right;
+  }
+}
+
+.enable-toggle {
+  width: 100%;
+
+  :first-child {
+    float: left;
+  }
+
+  :last-child {
+    float: right;
+  }
+}
+
+.paginator {
+  text-align: right;
+  background: #ffffff;
+  padding: 0.8rem 2rem;
+  i {
+    width: 0.8rem;
+  }
+}
+
+.text-red {
+  color: red !important;
+}
+
+.mat-datepicker-content .mat-calendar {
+  height: auto !important;
+}
+
+.mat-checkbox {
+  font-size: 15px;
+}

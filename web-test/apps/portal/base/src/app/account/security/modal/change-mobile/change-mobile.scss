@@ -1,0 +1,21 @@
+.row {
+  mat-form-field {
+    width: 100%;
+    box-sizing: border-box;
+
+    &:first-child {
+      margin-bottom: 10px;
+    }
+  }
+  .field {
+    margin-bottom: 10px;
+    button {
+      width: 100%;
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}

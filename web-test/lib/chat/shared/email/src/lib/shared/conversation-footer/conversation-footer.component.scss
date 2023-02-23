@@ -1,0 +1,103 @@
+:host {
+  .convo__footer {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    .csh-quill-editor {
+      margin: 0 1.6rem 1.6rem;
+    }
+    .warning-label {
+      .icon {
+        font-size: 1.6rem;
+        display: inline;
+      }
+
+      // TODO: style common
+      pre.message_mention {
+        font-family: 'Open Sans', sans-serif;
+        max-width: 170px;
+        white-space: nowrap !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        margin: 0;
+        vertical-align: bottom;
+        color: #1264a3;
+        background-color: #1d9bd11a;
+        border-radius: 0.3em;
+        cursor: pointer;
+        font-weight: normal;
+      }
+    }
+  }
+  .notMember {
+    background-color: #efecec;
+  }
+  .quill {
+    margin: 8px 1.6rem 0;
+    font-size: 12px;
+
+    .expired {
+      border: 1px solid #80808085;
+      background-color: #c5c5c585;
+      border-radius: 4px;
+      padding: 12px;
+      padding-right: 0;
+      font-size: 15px;
+      // font-style: italic;
+    }
+
+    .actions {
+      transform: scale(0.7);
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &.conversation-group {
+      margin: 8px 1.6rem;
+    }
+
+    &.channel {
+      .user-typing {
+        font-style: italic;
+        opacity: 0.5;
+        .user {
+          font-weight: 600;
+          font-style: normal;
+        }
+        &:after {
+          overflow: hidden;
+          display: inline-block;
+          vertical-align: bottom;
+          animation: ellipsis steps(4, end) 2400ms infinite;
+          content: '\2026'; /* ascii code for the ellipsis character */
+          width: 0;
+        }
+
+        @keyframes ellipsis {
+          to {
+            width: 1em;
+          }
+        }
+
+        @-webkit-keyframes ellipsis {
+          to {
+            width: 1em;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .cannedResponseMenu {
+    .mat-menu-content {
+      height: 300px !important;
+    }
+  }
+}

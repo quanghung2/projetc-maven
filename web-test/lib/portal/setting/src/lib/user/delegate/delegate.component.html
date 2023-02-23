@@ -1,0 +1,182 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Delegate</h1>
+</sui-template-portal>
+
+<div *ngIf="extension" class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+  <div class="body" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <ng-container *ngIf="!delegatedDevices.length; else delegated">
+      <div fxLayout="row">
+        <span fxFlex="auto" class="secondary-text m-0">
+          This is the function to allow another person to answer and make calls on behalf of you.
+        </span>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+        <div fxLayout="row" class="mb-0">
+          <mat-form-field fxFlex="auto">
+            <mat-label>Add user</mat-label>
+            <input
+              placeholder="Enter new user..."
+              #extensionInput
+              matInput
+              [formControl]="extensionCtrl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let extension of extensions$ | async" [value]="extension.extKey">
+                {{ extension.displayText }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="isActiveExtensionInGroups" class="delegate-hint"
+              >User cannot delegate when being in a Call Group</mat-hint
+            >
+          </mat-form-field>
+        </div>
+
+        <div class="p-0 flex align-items-center justify-content-end">
+          <span class="secondary-text">
+            Selected user(s): {{ (extensionSelected || []).length }} | Total limit: {{ MAX_NUMBER_ADDED }}
+          </span>
+        </div>
+
+        <ng-container *ngIf="extensionSelected.length === 0; else loadList">
+          <mat-hint fxLayoutAlign="center"> No user </mat-hint>
+        </ng-container>
+        <ng-template #loadList>
+          <ng-container
+            *ngIf="
+              extension.cdConfig.ringMode === RingMode.sequential || extension.cdConfig.ringMode === RingMode.ringAll;
+              else viewList
+            "
+          >
+            <div
+              fxFlexAlign="stretch"
+              cdkDropList
+              class="item__rows"
+              (cdkDropListDropped)="dropDispositionCodes($event)"
+            >
+              <div
+                fxLayout="column"
+                fxLayoutAlign="start none"
+                class="sortable-box"
+                *ngFor="let extKey of extensionSelected; let i = index"
+                cdkDrag
+              >
+                <div class="item" fxLayout="row">
+                  <span class="spacer">{{ i + 1 }}. {{ (extKey | selectExtension | async)?.displayText }}</span>
+
+                  <mat-icon
+                    (click)="removeExtensionFromList(extKey)"
+                    class="code-option__btn-delete"
+                    matTooltip="Delele"
+                  >
+                    delete
+                  </mat-icon>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #viewList>
+            <div fxFlexAlign="stretch" class="item__rows">
+              <div
+                fxLayout="column"
+                fxLayoutAlign="start none"
+                class="unsortable-box"
+                *ngFor="let extKey of extensionSelected; let i = index"
+              >
+                <div class="item" fxLayout="row">
+                  <span class="spacer">{{ (extKey | selectExtension | async)?.displayText }}</span>
+                  <mat-icon
+                    (click)="removeExtensionFromList(extKey)"
+                    class="code-option__btn-delete"
+                    matTooltip="Delele"
+                  >
+                    delete
+                  </mat-icon>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </div>
+
+      <div fxLayout="row">
+        <mat-form-field fxFlex="auto">
+          <mat-label>Ring mode</mat-label>
+          <mat-select [(ngModel)]="extension.cdConfig.ringMode">
+            <mat-option [value]="RingMode.ringAll">Ring All</mat-option>
+            <mat-option [value]="RingMode.sequential">Sequential</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <b3n-ringme-form
+        *ngIf="extension.cdConfig.ringMode !== RingMode.sequential"
+        [extension]="extension"
+        class="full-width"
+      ></b3n-ringme-form>
+
+      <div fxLayout="row" *ngIf="extension.cdConfig.ringMode === RingMode.sequential">
+        <mat-form-field fxFlex="auto">
+          <mat-label>Per User Ring Time (seconds)</mat-label>
+          <mat-select [(ngModel)]="extension.cdConfig.ringTime">
+            <mat-option *ngFor="let opt of optRingTime" [value]="opt.key">
+              {{ opt.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button
+        fxFlexAlign="end"
+        mat-stroked-button
+        color="primary"
+        *ngIf="!delegatedDevices.length || extension.cdConfig.ringMode === RingMode.sequential"
+        [loading]="progressing"
+        [disabled]="progressing"
+        (click)="onSave()"
+      >
+        Apply
+      </button>
+    </ng-container>
+    <ng-template #delegated>
+      <p class="delegated__title">You have been assigned as a secretary and will handle calls for the below users</p>
+      <div class="delegated__toolbar">
+        <h3>Delegated from</h3>
+        <button mat-button class="refresh" [disabled]="loading" (click)="initDelegatedData()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      <ng-container *ngIf="!loading">
+        <mat-selection-list [multiple]="false">
+          <mat-list-option *ngFor="let delegate of delegatedDevices; let i = index">
+            <div class="extension__wrapper" *ngIf="delegate.delegatedFrom | selectExtension | async as extension">
+              <p>{{ extension.displayText }}</p>
+              <ng-container *ngIf="agents[extension.identityUuid]; let agent">
+                <div [ngSwitch]="agent.status" class="status__wrapper">
+                  <ng-container *ngSwitchCase="AgentStatus.available">
+                    <mat-icon class="available">lens</mat-icon>
+                    <div class="available">Available</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="AgentStatus.busy">
+                    <mat-icon class="busy">lens</mat-icon>
+                    <div class="busy">Busy</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="AgentStatus.offline">
+                    <mat-icon class="offline">lens</mat-icon>
+                    <div class="offline">Offline</div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="AgentStatus.dnd">
+                    <mat-icon class="dnd">do_not_disturb_on_total_silence</mat-icon>
+                    <div class="dnd">Do Not Disturb</div>
+                  </ng-container>
+                </div>
+              </ng-container>
+            </div>
+            <mat-divider *ngIf="i < delegatedDevices.length - 1"></mat-divider>
+          </mat-list-option>
+        </mat-selection-list>
+      </ng-container>
+    </ng-template>
+  </div>
+</div>

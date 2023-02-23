@@ -1,0 +1,25 @@
+<i class="close icon" (click)="openComplianceModal()"></i>
+<div class="header">Remove role</div>
+
+<div class="content" *ngIf="isLoading == true">
+  <div class="ui active centered inline loader app-loader"></div>
+</div>
+
+<div class="content" *ngIf="isLoading == false">
+  <p>
+    Are you sure want to delete <b>{{ agent.givenName }} {{ agent.familyName }}</b
+    >?
+  </p>
+</div>
+
+<div class="actions" *ngIf="isLoading == false">
+  <div class="middle aligned floating blocks">
+    <div class="block"></div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button" (click)="openComplianceModal()">Cancel</div>
+        <div class="ui large red button" (click)="onDelete()">Delete</div>
+      </div>
+    </div>
+  </div>
+</div>

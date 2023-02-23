@@ -1,0 +1,82 @@
+.bundle {
+  padding: 0;
+  width: 270px;
+  margin: 1.6rem auto;
+
+  &__container {
+    min-height: 450px;
+    max-height: 450px;
+    overflow: hidden;
+    &.view-full {
+      max-height: unset;
+      overflow: visible;
+    }
+  }
+
+  &__header {
+    padding: 24px;
+
+    &-description {
+      font-size: 13px;
+    }
+  }
+
+  &__pricing {
+    font-weight: 600;
+    &-unit {
+      font-size: 14px;
+      color: #8e8e8e;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  &__feat {
+    display: flex;
+    align-items: center;
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 17px;
+    }
+  }
+
+  .mat-card-content {
+    padding: 16px 24px;
+  }
+
+  .view-more {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    background: white;
+    padding-top: 4px;
+    width: 100%;
+    text-align: center;
+  }
+
+  ::ng-deep {
+    .mat-card-title {
+      font-size: 16px;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.loading-container {
+    width: 100%;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.8;
+    z-index: 999;
+    mat-spinner {
+      margin: 20px auto;
+    }
+}

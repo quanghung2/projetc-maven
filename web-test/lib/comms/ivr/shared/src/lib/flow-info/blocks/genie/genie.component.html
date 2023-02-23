@@ -1,0 +1,35 @@
+<div ngModelGroup="genieBlock" class="genie-block">
+  <mat-form-field class="genie-block__selected-skill">
+    <mat-select
+      name="selectSkill"
+      placeholder="Skills"
+      [(ngModel)]="selectedSkill"
+      (selectionChange)="onChangeSkill($event)"
+    >
+      <mat-option *ngFor="let option of skillOptions" [value]="option.key">
+        {{ option.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-divider></mat-divider>
+
+  <div *ngIf="selectedSkill" class="genie-block__params">
+    <div>Params</div>
+
+    <ng-container *ngFor="let param of skillMapping[selectedSkill].params; let index = index">
+      <mat-form-field class="genie-block__params__value">
+        <input
+          [required]="param.isRequired"
+          #paramValue="ngModel"
+          matInput
+          name="{{ index }}"
+          [(ngModel)]="block.data[index].fieldValue"
+          placeholder="{{ param.name }}"
+        />
+        <mat-error *ngIf="paramValue.invalid && (paramValue.touched || paramValue.dirty)"
+          >{{ param.name }} is required</mat-error
+        >
+      </mat-form-field>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,156 @@
+@mixin btn-filter {
+  position: relative;
+  cursor: pointer;
+  line-height: 22px;
+  font-size: 11px;
+  min-width: 0;
+  padding: 0 5px;
+  background-color: #e0e0e0 !important; // darkmode #gray
+  color: black !important; // darkmode #white
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+@mixin size-icon($size: 1.6rem) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+  line-height: $size;
+  cursor: pointer;
+  user-select: none;
+}
+
+:host {
+  .toggle-view {
+    @include btn-filter;
+
+    .mat-icon {
+      @include size-icon;
+    }
+
+    .mat-menu-trigger {
+      position: absolute;
+      top: 0;
+      right: -17px;
+    }
+  }
+
+  .inbox-view {
+    position: relative;
+    width: 1.6rem;
+    height: 1.6rem;
+    .mat-icon {
+      @include size-icon(20px);
+    }
+
+    .mat-menu-trigger {
+      position: absolute;
+      top: 0;
+      right: -17px;
+    }
+  }
+
+  .inbox-view,
+  .toggle-view {
+    ::ng-deep {
+      .mat-button-wrapper {
+        line-height: inherit !important;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  // overlay menu
+  .menu-quick-search {
+    height: 500px;
+    width: 300px;
+    min-width: none;
+    max-width: none;
+
+    .mat-menu-content,
+    .container {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      .action {
+        mat-form-field.input-search {
+          width: 100%;
+          font-size: 14px;
+          .mat-form-field-outline,
+          .mat-form-field-outline-thick {
+            color: transparent !important;
+          }
+
+          .mat-form-field-wrapper {
+            padding-bottom: 0;
+          }
+
+          input {
+            line-height: initial;
+          }
+        }
+
+        .create-session {
+          padding: 1rem 1rem;
+          cursor: pointer;
+          &:hover {
+            background: rgba(0, 0, 0, 0.04);
+          }
+        }
+
+        .filter {
+          padding: 1rem 1.1rem;
+          .toggle-view {
+            @include btn-filter;
+          }
+        }
+      }
+
+      .result {
+        overflow: overlay;
+
+        .mat-selection-list {
+          padding-top: 0 !important;
+
+          .mat-list-text {
+            padding: 0 !important;
+            .item-contact {
+              display: flex;
+              place-content: center space-between;
+              align-items: center;
+              justify-content: space-between;
+            }
+          }
+        }
+
+        .icon-channel {
+          width: 18px;
+          height: 18px;
+          font-size: 18px;
+        }
+
+        .text-channel {
+          font-size: 14px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+
+        .no-avatar-contact {
+          width: 32px;
+          height: 32px;
+          margin-right: 10px;
+          background: #cecece;
+          border: 1px solid #cecece;
+          border-radius: 50%;
+          text-align: center;
+          text-transform: uppercase;
+          line-height: 32px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}

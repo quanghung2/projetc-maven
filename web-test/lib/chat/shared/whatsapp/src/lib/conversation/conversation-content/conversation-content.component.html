@@ -1,0 +1,37 @@
+<ng-container *ngIf="loadingHistory$ | async">
+  <div class="ui-loading">
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  </div>
+</ng-container>
+
+<div *ngIf="!reloadView" #viewport class="messages-viewport" tabindex="0">
+  <div
+    *uiScroll="let message of datasource; let i = index"
+    class="msg-item"
+    [id]="message?.current?.clientId"
+    [attr.data-ts]="message?.current?.ts"
+  >
+    <div *ngIf="!message.isFake; else fakeMsg">
+      <div class="group-by-date" *ngIf="message.pre && message.isDiffDate">
+        <span>{{ message.current?.ts | viewDate }}</span>
+      </div>
+      <csh-chat-message
+        [message]="message.current"
+        [previousMessage]="message.pre"
+        [parentElr]="message.current.mt === MsgType.attachment ? viewport : null"
+        (showProfile)="onShowProfile($event)"
+        (edited)="focusQuillEditor()"
+      ></csh-chat-message>
+    </div>
+
+    <ng-template #fakeMsg>
+      <div style="height: 20px"></div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-container *ngIf="enableScrollBottom$ | async">
+  <button class="read-message" mat-mini-fab (click)="scrollToLastestMessage()">
+    <mat-icon>expand_more</mat-icon>
+  </button>
+</ng-container>

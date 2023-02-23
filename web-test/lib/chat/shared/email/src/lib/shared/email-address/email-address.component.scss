@@ -1,0 +1,10 @@
+.messageText {
+  color: var(--empty-color);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  margin: 1px 0;
+  .itemEmail {
+    margin: 0 2px;
+  }
+}

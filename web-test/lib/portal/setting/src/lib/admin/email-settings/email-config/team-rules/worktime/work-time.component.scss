@@ -1,0 +1,44 @@
+.worktime {
+  position: relative;
+  .working-schedule-form {
+    &__title {
+      margin-bottom: 0.75rem;
+      color: rgba(0, 0, 0, 0.87);
+
+      &.custom-day {
+        margin-top: -0.25rem;
+      }
+
+      & mat-spinner {
+        margin-left: 0.8rem;
+      }
+    }
+
+    padding: 1.6rem 0;
+
+    .working-time-table {
+      &__from,
+      &__to {
+        .mat-form-field-wrapper {
+          .mat-form-field-flex {
+            .mat-form-field-infix {
+              width: auto !important;
+            }
+          }
+        }
+      }
+      &__from {
+        margin-left: 2rem !important;
+        margin-right: 1.6rem !important;
+      }
+    }
+
+    &__picker {
+      visibility: hidden;
+    }
+  }
+}
+
+mat-icon {
+  font-size: 20px;
+}

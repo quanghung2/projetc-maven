@@ -1,0 +1,192 @@
+<h1 mat-dialog-title fxLayout="row" fxLayoutAlign="flex-end center">
+  <button mat-icon-button [mat-dialog-close]="{ cancel: true }" [disabled]="progressing">
+    <mat-icon>close</mat-icon>
+  </button>
+</h1>
+<div fxLayout="column" fxLayoutAlign="start center" class="topup">
+  <div *ngIf="loading" class="topup-loading" fxLayout="row" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+  <div class="topup-payment">
+    <h1 class="topup__header mb-24">{{ !wallet?.postpaid ? 'Top up credits' : 'Pay Amount Due' }}</h1>
+    <div class="content topup_content" fxLayout="column" fxLayoutGap="1.6rem">
+      <form [formGroup]="topupFG" fxLayout="column" fxLayoutGap="2rem">
+        <div class="topup-amount">
+          <mat-form-field appearance="outline" class="pb-0 full-width">
+            <mat-label>Amount ({{ wallet?.currency }})</mat-label>
+            <input matInput placeholder="Enter amount to top-up" type="number" formControlName="amount" />
+          </mat-form-field>
+        </div>
+        <div
+          class="topup-warning"
+          *ngIf="selectedGateway && amountFC.value < selectedGateway?.adminFeeThreshold && topupCreditFee > 0"
+        >
+          <span
+            >Your wallet will be charged<strong> {{ topupCreditFee }}{{ wallet?.currency }} </strong> for
+            <strong>Credit Card Top-up Fee</strong> when the top-up amount is less than
+            <strong>{{ selectedGateway?.adminFeeThreshold }}{{ wallet?.currency }} </strong>.
+            <a
+              href="javascript:void(0)"
+              (click)="amountFC.setValue(selectedGateway?.adminFeeThreshold)"
+              class="top-up-link"
+              >Top-up with
+              <strong
+                >{{ selectedGateway?.adminFeeThreshold }}<small>{{ wallet?.currency }}</small></strong
+              >
+            </a>
+            to avoid this fee.</span
+          >
+        </div>
+
+        <div *ngIf="gateways.length" class="payment-method">
+          <div class="sub-title">
+            <span>Payment Method</span>
+          </div>
+          <mat-radio-group
+            fxLayout="row"
+            fxLayoutAlign="strech center"
+            formControlName="paymentMethod"
+            class="full-width border-radius-4"
+          >
+            <ng-container>
+              <ng-container *ngFor="let method of supportedPaymentMethods">
+                <div class="radio">
+                  <mat-radio-button [value]="method.type">{{ method.title }}</mat-radio-button>
+                </div>
+              </ng-container>
+            </ng-container>
+          </mat-radio-group>
+        </div>
+
+        <div *ngIf="showAutoTopup" class="auto-topup-option">
+          <div fxLayout="row" class="sub-title" fxLayoutAlign="start center" fxLayoutGap="0.5rem">
+            <span>Auto-Topup Option </span>
+            <mat-icon
+              class="help-icon"
+              matTooltip="Turn on to override with new auto top-up config. Turn off to keep the previous one."
+              matTooltipPosition="right"
+              >info</mat-icon
+            >
+          </div>
+          <div
+            class="payment-auto-topup border-radius-4"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            fxLayoutGap="1.6rem"
+          >
+            <mat-slide-toggle color="primary" formControlName="enableAutoTopup">
+              <div *ngIf="selectedGateway?.isOnlineGateway">
+                Automatically top up using your credit card when the balance is below
+                <span class="lowLimit">{{ lowerLitmitForAutoTopup }} </span> credits.
+              </div>
+              <div *ngIf="selectedGateway?.isOfflineGateway">
+                Automatically send an invoice containing payment instruction to your billing email(s) when the balance
+                is below <span class="lowLimit">{{ lowerLitmitForAutoTopup }} </span> credits.
+              </div>
+            </mat-slide-toggle>
+          </div>
+        </div>
+
+        <ng-container *ngIf="toupStep === 'checkout'">
+          <div [hidden]="!selectedGateway?.isOnlineGateway" class="card">
+            <div class="credit-stored-card" *ngIf="hasStoredGateway && useStoredCard">
+              <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+                <span class="sub-title">My Stored Cards</span>
+                <button mat-button color="primary" (click)="switch2NewCreditCard()">Pay with new card</button>
+              </div>
+              <mat-radio-group
+                fxLayout="column"
+                fxLayoutGap="0.5rem"
+                [value]="selectedGateway?.code"
+                (change)="selectedGatewayChange($event)"
+              >
+                <ng-container *ngFor="let gateway of gateways">
+                  <mat-radio-button
+                    class="card-option-border"
+                    [class.checked]="true"
+                    *ngIf="gateway.stored && gateway.isOnlineGateway"
+                    [value]="gateway.code"
+                  >
+                    Card is used for purchases via <span class="medium">{{ gateway.description }}</span>
+                  </mat-radio-button>
+                </ng-container>
+              </mat-radio-group>
+              <div class="card-item active" [@openStoreCard]="stripeInfo?.paymentMethod">
+                <div class="card-background">
+                  <div class="card-background-content">
+                    <div class="card-content" fxLayout="column">
+                      <div class="number" fxLayout="column" fxLayoutGap="0.5rem">
+                        <span fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="end none">
+                          <span class="hidden_no">XXXX </span> <span class="hidden_no">XXXX </span>
+                          <span class="hidden_no">XXXX </span>
+                        </span>
+                        <span>{{ stripeInfo?.last4 }}</span>
+                      </div>
+                    </div>
+                    <div class="card-date" fxLayout>
+                      <div fxLayout="column">
+                        <span class="title">EXPIRES</span>
+                        <span>{{ stripeInfo?.expiry }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div [hidden]="useStoredCard" class="pay-new-card">
+              <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+                <span class="sub-title">Pay With New Card</span>
+                <button mat-button color="primary" *ngIf="hasStoredGateway" (click)="switch2StoredCreditCard()">
+                  My Stored Cards
+                </button>
+              </div>
+
+              <span class="secondary-text">
+                None of your credit card information is stored on our servers. We use
+                <a href="https://stripe.com" target="_blank">Stripe</a>, one of the most secure payment processors
+                available, to process the payment.
+              </span>
+
+              <div id="payment-element" class="pt-16">
+                <!-- Mount the Payment Element here -->
+              </div>
+            </div>
+          </div>
+          <div class="credit-cheque" *ngIf="selectedGateway?.isOfflineGateway">
+            <div class="header">
+              <span class="sub-title">Pay With New Card</span>
+            </div>
+            <div fxLayout="column" fxLayoutGap="1.6rem">
+              <div class="description secondary-text">
+                Please note that there are limitations when paying by Cheque or Telegraphic Transfer
+              </div>
+              <div fxLayout="row" fxLayoutGap="2rem" fxLayoutAlign="start center">
+                <img src="assets/svg/hourglass.svg" />
+                <span
+                  >It will take <span class="error">5 working days</span> to be processed (excluding check delivery
+                  time)</span
+                >
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </form>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem" class="topup_actions mt-16">
+      <button mat-stroked-button *ngIf="toupStep === 'checkout'" (click)="goback()" [disabled]="progressing">
+        Go back
+      </button>
+      <button
+        mat-raised-button
+        [loading]="progressing"
+        [disabled]="topupFG.invalid || progressing"
+        color="primary"
+        (click)="proceed()"
+      >
+        <span *ngIf="toupStep === 'inputAmount'">Next</span>
+        <span *ngIf="toupStep !== 'inputAmount'">Proceed</span>
+      </button>
+    </div>
+  </div>
+</div>

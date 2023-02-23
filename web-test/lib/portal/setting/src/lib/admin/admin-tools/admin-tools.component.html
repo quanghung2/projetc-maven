@@ -1,0 +1,58 @@
+<mat-toolbar><h1>Admin Tools</h1></mat-toolbar>
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <b3n-admin-tools-members (toggleNoMember)="toggleNoMember($event)"></b3n-admin-tools-members>
+  <div fxLayoutGap="0.8rem" class="mx-16" *ngIf="!noMember">
+    <button mat-stroked-button (click)="import()">
+      <span>Bulk configuration</span>
+    </button>
+    <button mat-stroked-button (click)="export()" [loading]="loadingExport">
+      <span>Export configuration</span>
+    </button>
+  </div>
+</div>
+
+<p class="mx-16" *ngIf="noMember">* No members available</p>
+
+<div
+  fxLayout="column"
+  fxLayoutGap="10px"
+  [formGroup]="form"
+  [style.maxWidth]="'550px'"
+  class="m-auto"
+  *ngIf="!noMember"
+>
+  <b3n-admin-tools-devices
+    [editingDevices]="editingDevices"
+    (setActivatedDevices)="setActivatedDevices($event)"
+    (setEditingDevices)="setEditingDevices($event)"
+    (setRingConfig)="setRingConfig($event)"
+  ></b3n-admin-tools-devices>
+  <b3n-admin-tools-forwarding [form]="form" [style.width.%]="70"></b3n-admin-tools-forwarding>
+  <b3n-admin-tools-transfer [form]="form" [style.width.%]="70"></b3n-admin-tools-transfer>
+  <b3n-admin-tools-rules [form]="form" [style.width.%]="70"></b3n-admin-tools-rules>
+  <b3n-admin-tools-caller-id
+    [extension]="extension"
+    (assignedNumbersChange)="updateAssignedNumbers($event)"
+  ></b3n-admin-tools-caller-id>
+  <b3n-admin-tools-public-holiday #publicHoliday> </b3n-admin-tools-public-holiday>
+
+  <div class="remarks" fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="column">
+      <h3 class="fw-500">Organization connects:</h3>
+      <p class="secondary-text">Grant permission to view contacts belonging to the below organizations.</p>
+    </div>
+    <button (click)="configPermission()" color="primary" mat-stroked-button>Config</button>
+  </div>
+
+  <button
+    (click)="apply()"
+    [loading]="loading"
+    [disabled]="form.invalid"
+    color="primary"
+    fxFlexAlign="end"
+    mat-stroked-button
+    class="mx-16 mb-16"
+  >
+    Apply
+  </button>
+</div>

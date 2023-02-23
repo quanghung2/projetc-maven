@@ -1,0 +1,62 @@
+:host {
+  .file_message {
+    display: flex;
+    margin-bottom: 6px;
+    position: relative;
+
+    .image-container {
+      position: relative;
+      max-height: 300px;
+      left: 0;
+      border: thin solid #d3d3d3;
+      border-radius: 8px;
+      background-size: cover;
+      object-fit: over;
+      overflow: hidden;
+
+      &:not(.noHover):hover {
+        cursor: zoom-in;
+      }
+
+      .not-loaded-image {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        line-height: 48px;
+        color: #808080;
+        cursor: default;
+      }
+    }
+
+    .attachment__avatar {
+      width: 32px;
+    }
+
+    .semi-bold {
+      font-weight: 600;
+      margin-right: 3em;
+      max-width: 500px;
+      word-break: break-word;
+    }
+
+    .description {
+      opacity: 0.7;
+    }
+
+    &__actions {
+      display: none;
+      position: absolute;
+      top: -9px;
+      right: -16px;
+      transform: scale(0.6);
+      background-color: #d3d3d394;
+      border-radius: 21px;
+    }
+
+    &:hover {
+      .file_message__actions {
+        display: block;
+      }
+    }
+  }
+}

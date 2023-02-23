@@ -1,0 +1,36 @@
+<b3n-email-conversation-list
+  [customHeaderTemplate]="sentHeader"
+  [customDisplayConvoTemplate]="customDisplayConvo"
+></b3n-email-conversation-list>
+
+<ng-template #sentHeader>
+  <div *ngIf="isOverModeLeftSidebar$ | async" class="action__header flex justify-content-start align-items-center">
+    <csh-menu-toggle></csh-menu-toggle>
+  </div>
+  <div class="date-range-container">
+    <b3n-email-date-range (changed)="criteriaChanged($event)"></b3n-email-date-range>
+  </div>
+</ng-template>
+
+<ng-template #customDisplayConvo>
+  <ng-container *ngIf="displayMessages.length; else noEmails">
+    <cdk-virtual-scroll-viewport itemSize="100" class="convo__scroll-viewport">
+      <mat-card
+        *cdkVirtualFor="let msg of displayMessages"
+        class="d-flex justify-content-between m-10 convo__item"
+        (click)="onSelectMessage(msg.convo, msg)"
+        [class.active]="selectedConversationGroup.id === msg.convo"
+      >
+        <div>
+          <b3n-email-sender-address [fromAddresses]="msg.body.data.fromAddresses[0]"></b3n-email-sender-address>
+          <b3n-email-address [addresses]="msg.body.data.toAddresses" [label]="'To'"></b3n-email-address>
+          <div>{{ msg.body.title }}</div>
+        </div>
+        <b3n-email-timeago [ts]="msg.ts"></b3n-email-timeago>
+      </mat-card>
+    </cdk-virtual-scroll-viewport>
+  </ng-container>
+  <ng-template #noEmails>
+    <p class="text-center">No emails</p>
+  </ng-template>
+</ng-template>

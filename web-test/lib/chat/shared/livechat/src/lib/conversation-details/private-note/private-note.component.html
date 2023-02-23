@@ -1,0 +1,48 @@
+<div class="private-note-content scroller-firefox hovered-scrollbar">
+  <div class="message-container hovered-scrollbar--content">
+    <ng-container *ngIf="privateNotes$ | async as privateNotes">
+      <div class="empty" *ngIf="privateNotes.length === 0">There is no private note</div>
+      <div class="message" *ngFor="let privateNote of privateNotes; trackBy: trackByPrivateNote">
+        <div class="message__container">
+          <div class="message__metadata flex justify-content-space-between align-items-end gap-8">
+            <pre *ngIf="privateNote.createdBy | selectUser: false | async as user" class="message_mention">
+              @{{ user?.displayName }}
+            </pre>
+            <small class="message__time">{{ privateNote.createdAt | date: 'dd MMM yyyy HH:mm' }}</small>
+          </div>
+
+          <ng-container *ngIf="privateNote.msgType === MsgType.message">
+            <div class="message__text" [innerHTML]="parseNote(privateNote)"></div>
+          </ng-container>
+
+          <div class="message__attachment" *ngIf="privateNote.msgType === MsgType.attachment">
+            <span [innerHtml]="parseNote(privateNote) | safe: 'html'"></span>
+            <div class="img_attachment" [id]="privateNote.noteId"></div>
+            <div class="right-actions">
+              <mat-icon (click)="download(privateNote)">save_alt</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+<ng-container *ngIf="uploading">
+  <mat-progress-bar mode="determinate" [value]="uploadPercentage"></mat-progress-bar>
+</ng-container>
+<!-- <div class="showMore" *ngIf="hasMore" fxLayoutAlign='center center'>
+  <ng-container *ngIf="isLoading$ | async as isLoading">
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+  </ng-container>
+
+  <small class="text" (click)="onScroll()" [ngStyle]="{ display: hasMore ? 'block' : 'none' }" style="cursor: pointer;">
+    <div style="color: #2196f3">Show more</div>
+  </small>
+</div> -->
+<div class="actions">
+  <button mat-flat-button color="primary" class="btnAction" (click)="addPrivateNote()">Add</button>
+  <button mat-flat-button color="primary" class="btnAction" (click)="fileUpload.click()">
+    Upload
+    <input #fileUpload type="file" id="fileInput" accept="image/*" (change)="upload($event)" />
+  </button>
+</div>

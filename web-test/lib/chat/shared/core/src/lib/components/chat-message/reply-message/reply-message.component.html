@@ -1,0 +1,42 @@
+<div class="reply-container flex justify-content-start align-items-center">
+  <ng-container *ngIf="!!user; else asyncUser">
+    <ng-container *ngTemplateOutlet="renderUser; context: { user: user }"></ng-container>
+  </ng-container>
+  <ng-template #asyncUser>
+    <ng-container *ngIf="user$ | async as user">
+      <ng-container *ngTemplateOutlet="renderUser; context: { user: user }"></ng-container>
+    </ng-container>
+  </ng-template>
+
+  <ng-container *ngIf="!builtTextMessage?.isTriggerDirective; else trigger">
+    <span
+      class="normal-text"
+      [innerHTML]="builtTextMessage?.text | safe: 'html'"
+      (click)="navigateMessage($event, msgReply)"
+    ></span>
+  </ng-container>
+  <ng-template #trigger>
+    <span
+      class="normal-text"
+      lazyloadUnknown
+      [text]="builtTextMessage.text"
+      [innerHTML]="builtTextMessage?.text | safe: 'html'"
+      (click)="navigateMessage($event, msgReply)"
+      (showProfile)="showProfile.emit($event)"
+    ></span>
+  </ng-template>
+</div>
+
+<ng-template #renderUser let-user="user">
+  <div
+    *ngIf="user.hasPhoto; else noAvatar"
+    class="avatar"
+    [style.background-image]="'url(\'' + user?.photoUrlOrDefault + '\')'"
+  ></div>
+  <ng-template #noAvatar>
+    <span class="no-avatar flex justify-content-center align-items-center">
+      {{ user.displayName | firstWord }}
+    </span>
+  </ng-template>
+  <span class="reply-avatar">{{ user.displayName + ': ' }}</span>
+</ng-template>

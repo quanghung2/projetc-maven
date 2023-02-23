@@ -1,0 +1,5 @@
+<iframe *ngIf="srcLink" [src]="srcLink" allowfullscreen height="100%" style="border: none" width="100%"></iframe>
+<div *ngIf="error" class="error">
+  {{ error }}
+  <button mat-raised-button color="primary" (click)="close()">Close</button>
+</div>

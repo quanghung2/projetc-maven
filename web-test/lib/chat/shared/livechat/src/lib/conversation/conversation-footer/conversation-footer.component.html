@@ -1,0 +1,36 @@
+<ng-container *ngIf="ticket">
+  <ng-container *ngIf="isMemberTxn && ticket.isOpen; else notParticipant">
+    <div class="quill conversation-group">
+      <div class="flex column justify-content-start align-items-none">
+        <div class="flex justify-content-space-between align-items-center gap-8">
+          <csh-quill-editor
+            [data]="quillEditorData"
+            (messaged)="handleEnterMessage($event)"
+            (uploadedFiles)="onUploadFile($event)"
+            (textChanged)="onTextChanged($event)"
+            (enterEditLastMessage)="handleEditLastMessage($event)"
+          ></csh-quill-editor>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #notParticipant>
+    <div class="convo__footer notMember flex justify-content-center align-items-center gap-8">
+      <ng-container *ngIf="ticket?.isArchived; else assignCase">
+        <div class="warning-label flex justify-content-center align-items-center gap-16">
+          You are viewing , an archived channel
+        </div>
+      </ng-container>
+      <ng-template #assignCase>
+        <div class="warning-label flex justify-content-center align-items-center gap-16">
+          <span>You are viewing</span>
+          <ng-container *ngIf="!isMemberTxn && !txn.inboxUuid">
+            <button mat-raised-button (click)="assignToMe()">Join</button>
+            <button mat-raised-button color="primary" (click)="joinCaseWhatsapp()">Assign</button>
+          </ng-container>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</ng-container>

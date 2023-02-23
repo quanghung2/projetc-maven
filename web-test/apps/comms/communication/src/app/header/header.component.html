@@ -1,0 +1,80 @@
+<mat-toolbar *ngIf="displayMenus.length > 0">
+  Communication Hub
+  <nav *ngIf="loaded" class="ml-24" mat-tab-nav-bar>
+    <a
+      (click)="navigateToLink(menu)"
+      *ngFor="let menu of displayMenus"
+      [active]="activeLink == menu"
+      class="link-menu"
+      mat-tab-link
+    >
+      {{ menu.displayText }}
+      <mat-icon *ngIf="menu.hasSubMenu">arrow_drop_down</mat-icon>
+      <div #users *ngIf="menu.urlPath === 'users'" [matMenuTriggerFor]="userMenu" class="menu-trigger"></div>
+      <div
+        #statistics
+        *ngIf="menu.urlPath === 'statistics'"
+        [matMenuTriggerFor]="statisticMenu"
+        class="menu-trigger"
+      ></div>
+      <div #calls *ngIf="menu.urlPath === 'calls'" [matMenuTriggerFor]="callMenu" class="menu-trigger"></div>
+      <div #chats *ngIf="menu.urlPath === 'chats'" [matMenuTriggerFor]="chatMenu" class="menu-trigger"></div>
+    </a>
+  </nav>
+
+  <mat-menu #userMenu="matMenu">
+    <button
+      (click)="navigateToUserMenu(userMenu)"
+      *ngFor="let userMenu of userMenus"
+      [ngClass]="{
+        'active-menu': lastestUserMenu === userMenu.key && activeLink === MENU_ROUTE_MAPS['users']
+      }"
+      class="unactive-menu"
+      mat-menu-item
+    >
+      {{ userMenu.value }}
+    </button>
+  </mat-menu>
+
+  <mat-menu #statisticMenu="matMenu">
+    <button
+      (click)="navigateStatisticMenu(menu)"
+      *ngFor="let menu of statisticMenus"
+      [ngClass]="{
+        'active-menu': lastestUserMenu === menu.key && activeLink === MENU_ROUTE_MAPS['statistics']
+      }"
+      class="unactive-menu"
+      mat-menu-item
+    >
+      {{ menu.value }}
+    </button>
+  </mat-menu>
+
+  <mat-menu #callMenu="matMenu">
+    <button
+      (click)="navigateToCallMenu(callMenu)"
+      *ngFor="let callMenu of callsMenus"
+      [ngClass]="{
+        'active-menu': selectedCallMenu === callMenu.key && activeLink === MENU_ROUTE_MAPS['calls']
+      }"
+      class="unactive-menu"
+      mat-menu-item
+    >
+      {{ callMenu.value }}
+    </button>
+  </mat-menu>
+
+  <mat-menu #chatMenu="matMenu">
+    <button
+      (click)="navigateToChatMenu(chatsMenu)"
+      *ngFor="let chatsMenu of chatsMenus"
+      [ngClass]="{
+        'active-menu': selectedChatMenu === chatsMenu.key && activeLink === MENU_ROUTE_MAPS['chats']
+      }"
+      class="unactive-menu"
+      mat-menu-item
+    >
+      {{ chatsMenu.value }}
+    </button>
+  </mat-menu>
+</mat-toolbar>

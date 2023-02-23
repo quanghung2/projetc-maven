@@ -1,0 +1,160 @@
+<div class="container">
+  <div *ngIf="loading" fxLayout="row" fxLayoutAlign="center center" fxFlexFill>
+    <div class="center">
+      <mat-spinner color="primary" strokeWidth="2" diameter="40"></mat-spinner>
+    </div>
+  </div>
+
+  <ng-container *ngIf="profileOrg$ | async as profileOrg">
+    <div *ngIf="!myInfo && !loading" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1.6rem" fxFlexFill>
+      <div class="center">
+        <h3>Your account is not verified.</h3>
+        <div *ngIf="!hasNoDigitalId; else message" class="verify-container" fxLayout="column" fxLayoutGap="1.6rem">
+          <div class="corppass mat-elevation-z1" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <div fxLayoutAlign="start start" class="logo-container">
+              <mat-icon svgIcon="corppass-logo" class="corpass-logo"></mat-icon>
+            </div>
+
+            <button
+              (click)="verify(VerifyType.CorpPass)"
+              [loading]="corpPassVerifying"
+              [disabled]="corpPassVerifying"
+              mat-icon-button
+              class="corppass-btn"
+            >
+              <mat-icon svgIcon="coprpass-btn" class="corppass-icon"></mat-icon>
+            </button>
+          </div>
+
+          <div class="singpass mat-elevation-z1" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <div fxLayoutAlign="end center" class="logo-container">
+              <mat-icon svgIcon="singpass-logo" class="singpass-logo"></mat-icon>
+            </div>
+            <button
+              (click)="verify(VerifyType.SingPass)"
+              [loading]="singPassVerifying"
+              [disabled]="singPassVerifying"
+              class="singpass-btn"
+              mat-icon-button
+            >
+              <mat-icon svgIcon="singpass-btn" class="singpass-icon"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <ng-template #message>
+          <div fxLayout="column" fxLayoutGap="0.25rem">
+            <div>Your domain administration needs to verify their account with MyInfo.</div>
+            <div>Please contact them for assistance.</div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="myInfo && !loading" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.5rem" fxFlexFill>
+    <ng-container *ngIf="verifyingStep == 'true'; else shortInfomation">
+      <section class="company-info" fxLayout="column" fxLayoutGap="0.25rem">
+        <h2>Company Information</h2>
+        <div class="list-info">
+          <div class="info" fxLayout="row" fxLayoutAlign="start start">
+            <label fxFlex="30">Name</label>
+            <span class="name-company" fxFlex>{{ myInfo.entity?.name }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">UEN</label>
+            <span fxFlex>{{ myInfo.entity?.uen }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Address</label>
+            <span fxFlex>{{ address?.displayStreet }} {{ address?.building }} {{ address?.postalSG }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Appointments</label>
+            <div *ngIf="myInfo.entity?.appointments.length > 0" fxLayout="column" fxLayoutGap="1rem">
+              <div fxLayout="column" *ngFor="let app of myInfo.entity?.appointments" class="appointment">
+                {{ app['person-reference']['person-name'] }} ({{ app['position-desc'] }},
+                {{ app['person-reference'].nationality }})
+              </div>
+            </div>
+            <div *ngIf="myInfo.entity?.appointments.length === 0">-</div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </section>
+
+      <section class="owner-info" fxLayout="column" fxLayoutGap="0.25rem">
+        <h2>Owner Information</h2>
+        <div class="list-info">
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Name</label>
+            <span fxFlex>{{ person?.name }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Email</label>
+            <span fxFlex>{{ person?.email }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Mobile Number</label>
+            <span fxFlex>{{ person?.mobileNumber }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">UIN / FIN</label>
+            <span fxFlex>{{ person?.uinfin }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Occupation</label>
+            <span fxFlex>{{ person?.occupation || '-' }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Employer</label>
+            <span fxFlex>{{ person?.employer || '-' }}</span>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </section>
+
+      <section class="additional-info" fxLayout="column" fxLayoutGap="0.25rem">
+        <h2>Additional Information</h2>
+        <div class="info" fxLayout="row" fxLayoutAlign="start center">
+          <label fxFlex="18rem">Request to purchase Singapore number:</label>
+          <span class="approved">{{ 'Approved' | titlecase }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="info" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+          <label>Status:</label>
+          <span class="approved">Active</span>
+        </div>
+      </section>
+    </ng-container>
+    <ng-template #shortInfomation>
+      <section class="company-info" fxLayout="column" fxLayoutGap="0.25rem">
+        <h2>Information</h2>
+        <div class="list-info">
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <label fxFlex="30">Name</label>
+            <span class="name-company" fxFlex>{{ myInfo.entity?.name }}</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="info" fxLayout="row" fxLayoutAlign="start center">
+            <span fxFlex="30"><label>Status</label> </span>
+            <span class="approved">{{ 'Verified' | titlecase }}</span>
+          </div>
+          <div *ngIf="myInfo.createdAt" fxLayout="row" fxLayoutAlign="start center" class="info">
+            <span fxFlex="30">
+              <label>Created date</label>
+            </span>
+            <div>{{ myInfo.createdAt | userDate }}</div>
+          </div>
+        </div>
+      </section>
+    </ng-template>
+  </div>
+</div>

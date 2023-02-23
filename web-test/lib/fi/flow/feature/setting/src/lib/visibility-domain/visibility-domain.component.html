@@ -1,0 +1,68 @@
+<div [formGroup]="domainVisibility" fxLayout="column" fxLayoutGap="10px">
+  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+    <strong>Visibility</strong>
+    <mat-checkbox
+      *ngIf="isShowVisibilityInherit"
+      formControlName="visibilityInherit"
+      (change)="onChangeVisibility($event)"
+    >
+      Inherit connector's visibility
+    </mat-checkbox>
+    <mat-radio-group color="primary" class="mb-10" formControlName="visibility">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+        <mat-radio-button value="PUBLIC">PUBLIC</mat-radio-button>
+        <mat-radio-button value="RESTRICTED">RESTRICTED</mat-radio-button>
+      </div>
+    </mat-radio-group>
+  </div>
+
+  <div
+    fxLayout="column"
+    fxLayoutAlign="start stretch"
+    *ngIf="visibility.value === 'RESTRICTED' && !visibilityInherit?.value"
+  >
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start start"
+      *ngIf="!isShowVisibilityInherit || (isShowVisibilityInherit && !visibilityInherit?.value)"
+    >
+      <mat-form-field hideRequiredMarker="true">
+        <input matInput placeholder="Org UUID" [formControl]="orgUuidCtrl" required />
+        <button
+          *ngIf="orgUuidCtrl.value?.trim().length"
+          mat-icon-button
+          matSuffix
+          type="button"
+          color="primary"
+          (click)="addOrg()"
+        >
+          <mat-icon style="font-size: 24px">add</mat-icon>
+        </button>
+        <mat-error *ngIf="orgUuidCtrl.invalid">{{ getErrorOrgUuidCtrl() }}</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div formArrayName="accessibleUsers" fxLayout="column" fxLayoutAlign="start stretch">
+      <div
+        *ngFor="let item of accessibleUsers.controls; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="16px"
+      >
+        <label fxFlex [class.disabled-label]="isShowVisibilityInherit && visibilityInherit?.value">
+          {{ item.value }}
+        </label>
+        <button
+          mat-icon-button
+          type="button"
+          color="warn"
+          [disabled]="isShowVisibilityInherit && visibilityInherit?.value"
+          (click)="removeOrg(i)"
+          fxFlex="32px"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

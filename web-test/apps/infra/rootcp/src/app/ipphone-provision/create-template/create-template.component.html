@@ -1,0 +1,70 @@
+<div mat-dialog-title>
+  {{
+    !data.isDuplicate
+      ? 'Create New Template'
+      : 'Duplicate Template ' + data.itemCLone?.brand + ' ' + data.itemCLone.model
+  }}
+</div>
+<div mat-dialog-content>
+  <form [formGroup]="formGroup">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="10px">
+      <mat-form-field *ngIf="!data.isDuplicate">
+        <mat-label>Brand</mat-label>
+        <mat-select formControlName="brand">
+          <mat-option *ngFor="let item of brands" [value]="item.key">
+            {{ item.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="data.isDuplicate">
+        <mat-label>Brand</mat-label>
+        <input matInput type="text" formControlName="brand" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Model</mat-label>
+        <input matInput formControlName="model" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Version</mat-label>
+        <input matInput formControlName="version" />
+      </mat-form-field>
+
+      <div *ngIf="!data.isDuplicate" fxLayout="column" fxLayoutAlign="start stretch">
+        <button mat-button color="primary" class="btnAction cursor-pointer" (click)="fileUpload.click()">
+          <span>{{ 'Upload Template' }}</span>
+          <input #fileUpload (change)="uploadFile($event)" hidden type="file" />
+        </button>
+
+        <div *ngIf="nameFile" fxLayoutAlign="center start" fxLayoutGap="0.5rem">
+          <a>{{ nameFile }} </a>
+          <mat-icon class="icon-clear" (click)="removeFile()">clear</mat-icon>
+        </div>
+
+        <mat-progress-bar
+          *ngIf="uploading"
+          [ngStyle]="{
+            opacity: uploadResp && uploadResp?.percentage <= 100 ? 1 : 0
+          }"
+          [value]="uploadResp?.percentage"
+          mode="determinate"
+        >
+        </mat-progress-bar>
+      </div>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="loading"
+    [disabled]="uploading || formGroup.invalid"
+    (click)="create()"
+  >
+    Create
+  </button>
+</div>

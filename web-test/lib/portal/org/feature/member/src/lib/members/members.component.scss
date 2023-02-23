@@ -1,0 +1,140 @@
+$white: #ffffff;
+$gray: #ddd;
+$blue: #2badd4;
+
+@mixin role($color) {
+  width: 65px;
+  color: $color;
+  border: 1px solid $color;
+  padding: 1px 5px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+:host {
+  .member-detail {
+    width: 480px;
+    position: fixed;
+    background: $white;
+    box-shadow: 0 0 20px $gray;
+    height: 100vh;
+  }
+  mat-drawer {
+    box-shadow: none !important;
+  }
+  mat-drawer-content {
+    margin-right: 0 !important;
+    min-height: 100vh;
+
+    .spinner-container {
+      height: 500px;
+    }
+
+    .notification {
+      position: relative;
+      padding: 1rem 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid transparent;
+      border-radius: 0.25rem;
+      margin: 0 1rem 1rem;
+      text-align: center;
+      background: #43a047;
+      color: #155724;
+      background-color: #d4edda;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .member-container {
+      margin: auto;
+      .mat-column-displayName {
+        mat-icon {
+          width: 30px;
+          height: 30px;
+          padding: 3px;
+          border-radius: 50%;
+          background: var(--gray-300);
+        }
+        img {
+          width: 30px;
+          height: 30px;
+          -webkit-border-radius: 50%;
+          -moz-border-radius: 50%;
+          border-radius: 50%;
+        }
+      }
+      .mat-column-role {
+        .OWNER {
+          @include role(#e95849);
+        }
+        .ADMIN {
+          @include role(#007be0);
+        }
+        .MEMBER {
+          @include role(#2badd4);
+        }
+      }
+      .mat-column-mobileNumber {
+        width: 100px;
+      }
+      .mat-column-reportsAccess {
+        width: 90px;
+        mat-icon {
+          color: var(--gray-700);
+        }
+      }
+      .mat-column-action {
+        width: 112px;
+        padding: 0 1.6rem !important;
+        .action {
+          visibility: hidden;
+          color: var(--gray-700);
+        }
+        .view-details {
+          visibility: hidden;
+        }
+      }
+      .mat-row:hover .action {
+        visibility: visible !important;
+      }
+      .mat-row:hover .mat-column-action .view-details {
+        visibility: visible !important;
+      }
+      .uuid-column {
+        background: var(--gray-300);
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        padding: 3px 6px;
+        width: fit-content;
+        font-size: 12px;
+        text-align: center;
+      }
+      table {
+        width: 100%;
+        tr {
+          &.mat-row {
+            height: 52px;
+            &:hover {
+              background-color: var(--gray-100);
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+  .no-member-found {
+    height: 500px;
+    font-size: 16px;
+    color: var(--gray-700);
+
+    .no-member-found-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 50px;
+      margin-bottom: 1.5rem;
+    }
+  }
+}

@@ -1,0 +1,121 @@
+<mat-drawer-container class="container">
+  <mat-drawer #sidenav mode="over" opened="false" position="end" class="team-detail">
+    <ng-container *ngIf="selectedTeam">
+      <b3n-profile-info [type]="'team'" [team]="selectedTeam" (closeSidenavEvent)="sidenav.close()"></b3n-profile-info>
+      <mat-divider></mat-divider>
+      <ng-container *ngIf="selectedTeam.active; else teamNotActive">
+        <div class="profile-tabs">
+          <mat-tab-group>
+            <mat-tab label="Manage Team">
+              <b3networks-manager-members [uuid]="selectedTeam.uuid"></b3networks-manager-members>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </ng-container>
+      <ng-template #teamNotActive>
+        <div class="alert alert-warning text-center" role="alert" style="margin: 2rem">
+          The team is already disabled. Please reactivate to manage.
+        </div>
+      </ng-template>
+    </ng-container>
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <mat-toolbar>
+      <mat-toolbar-row><h1>Teams</h1></mat-toolbar-row>
+      <mat-toolbar-row fxLayoutGap="0.8rem">
+        <mat-form-field>
+          <mat-label>Search team</mat-label>
+          <input matInput placeholder="Enter team name" [formControl]="searchTeam" />
+          <mat-icon *ngIf="!searchTeam.value" matSuffix>search</mat-icon>
+          <mat-icon *ngIf="searchTeam.value" matSuffix (click)="searchTeam.reset()">close</mat-icon>
+        </mat-form-field>
+
+        <span class="spacer"> </span>
+        <button mat-icon-button [loading]="isLoading" [disabled]="isLoading" (click)="refresh()" matTooltip="refresh">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button
+          *ngIf="isManageAll"
+          mat-raised-button
+          color="primary"
+          (click)="createTeam()"
+          class="action-bar__action-btn"
+        >
+          Create
+        </button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="team px-16">
+      <div class="container">
+        <div class="content">
+          <table mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="uuid">
+              <th mat-header-cell *matHeaderCellDef>Uuid</th>
+              <td mat-cell *matCellDef="let element">
+                <shc-copy-button [tooltip]="'Click to copy'" [text]="element.uuid"></shc-copy-button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element" (click)="openSideNav(element)" [class]="'cursor-pointer'">
+                {{ element.name }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element">
+                <div [class]="element.active ? 'team-active' : 'team-deactive'">
+                  {{ element.active ? 'active ' : 'disabled' }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let element">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <button
+                    mat-icon-button
+                    class="team-setting-action-button action-visibility"
+                    matTooltip="Edit team"
+                    (click)="editTeam(element)"
+                  >
+                    <mat-icon class="team-setting-action-button__edit">edit</mat-icon>
+                  </button>
+                  <button
+                    mat-icon-button
+                    [matTooltip]="element.active ? 'Disable team' : 'Activate team'"
+                    class="team-setting-action-button action-visibility"
+                    (click)="toggleTeamStatus(element)"
+                  >
+                    <mat-icon>{{ element.active ? 'clear' : 'done' }}</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+              <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                <div fxLayoutAlign="center center">
+                  <span class="mat-body-1">No Data Available</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+              mat-footer-row
+              *matFooterRowDef="['noData']"
+              [hidden]="dataSource?.filteredData?.length > 0 || isLoading"
+            ></tr>
+          </table>
+          <mat-paginator hidePageSize="true" pageSize="10" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

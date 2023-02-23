@@ -1,0 +1,16 @@
+table {
+  width: 100%;
+
+  tr:hover {
+    cursor: pointer;
+  }
+
+  .selected {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.no-subscription {
+  text-align: center;
+  padding-top: 2rem;
+}

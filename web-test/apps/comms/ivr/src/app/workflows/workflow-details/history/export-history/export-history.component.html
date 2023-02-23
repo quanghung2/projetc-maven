@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Export History</h1>
+<div mat-dialog-content class="export-history-content">
+  <p>
+    By default, histories will be exported to a CSV file and send to your registered email. If you want to receive by
+    other email, please key them in.
+  </p>
+  <div>
+    <mat-form-field>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let email of emails" [removable]="true" (removed)="remove(email)">
+          {{ email }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Enter email"
+          s
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)"
+          matChipInputAddOnBlur="true"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close [matDialogClose]="true">Close</button>
+  <button mat-raised-button color="primary" [disabled]="exporting" (click)="export()">
+    <span *ngIf="!exporting">Export</span> <span *ngIf="exporting">Exporting...</span>
+  </button>
+</div>

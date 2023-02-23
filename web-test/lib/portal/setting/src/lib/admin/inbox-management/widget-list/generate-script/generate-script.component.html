@@ -1,0 +1,23 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span> Generate Script</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+  <pre><code [highlight]="script" [languages]="['javascript']" [lineNumbers]="true" ></code></pre>
+  <mat-icon
+    class="icon-copy"
+    matTooltip="Copy"
+    ngxClipboard
+    [cbContent]="script"
+    (cbOnSuccess)="copied()"
+    (cbOnError)="copyFailed()"
+    (click)="$event.stopPropagation()"
+  >
+    content_copy
+  </mat-icon>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+</div>

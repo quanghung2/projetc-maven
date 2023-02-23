@@ -1,0 +1,37 @@
+<ng-container *ngIf="agents">
+  <mat-list *ngIf="agents.length > 0">
+    <mat-list-item *ngFor="let agent of agents">
+      <div class="mat-list-text">
+        <h3 matLine>{{ agent.displayText }}</h3>
+        <p matLine>
+          <span>{{ agent.statusDuration | duration: 'millisecond' }} </span>
+        </p>
+      </div>
+      <div class="mat-list-appended">
+        <ng-container *ngIf="agent.systemStatus === SystemStatusCode.talking; else wrapup">
+          <span class="talking agent-status">Talking</span>
+        </ng-container>
+        <ng-template #wrapup>
+          <ng-container *ngIf="agent.systemStatus === SystemStatusCode.acw; else busy">
+            <span class="wrapup agent-status">Wrapup</span>
+          </ng-container>
+        </ng-template>
+        <ng-template #busy>
+          <ng-container *ngIf="agent.status === AgentStatus.busy; else offline">
+            <span class="busy agent-status">{{ agent.status | titlecase }}</span>
+          </ng-container>
+        </ng-template>
+        <ng-template #offline>
+          <ng-container *ngIf="agent.status === AgentStatus.offline; else available">
+            <span class="offline agent-status">{{ agent.status | titlecase }}</span>
+          </ng-container>
+        </ng-template>
+        <ng-template #available>
+          <span class="available agent-status">{{ agent.status | titlecase }}</span>
+        </ng-template>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+  <div *ngIf="agents.length == 0" class="no-data white-box">No data</div>
+</ng-container>

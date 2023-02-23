@@ -1,0 +1,33 @@
+<div mat-dialog-title>Edit device</div>
+<mat-dialog-content *ngIf="extensions$ | async as extensions">
+  <div *ngIf="deviceFg" [formGroup]="deviceFg" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+    <mat-form-field>
+      <input matInput formControlName="name" placeholder="Device name" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Extension</mat-label>
+      <mat-select formControlName="ext">
+        <mat-option *ngFor="let ext of extensions" [value]="ext">
+          {{ ext.displayText }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        matInput
+        [type]="viewPassword ? 'text' : 'password'"
+        formControlName="securityPassword"
+        placeholder="Device Login Password"
+      />
+      <mat-icon matSuffix (click)="viewPassword = !viewPassword">{{
+        viewPassword ? 'visibility_off' : 'visibility'
+      }}</mat-icon>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [disabled]="deviceFg.invalid" [loading]="updating" color="primary" (click)="update()">
+    Save
+  </button>
+</div>

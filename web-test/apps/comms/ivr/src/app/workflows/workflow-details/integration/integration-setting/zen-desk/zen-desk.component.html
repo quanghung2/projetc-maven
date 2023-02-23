@@ -1,0 +1,49 @@
+<div class="zen-desk-content">
+  <mat-form-field>
+    <mat-label>subdomain</mat-label>
+    <input matInput [(ngModel)]="integration.subDomain" /> <span matPrefix>https://</span>
+    <span matSuffix>.zendesk.com/</span>
+    <mat-hint
+      >Enter the subdomain of your Zendesk account. It is the unique web address you chose when you setup the account.
+      You can see it on your address bar when you login.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email Address</mat-label>
+    <input matInput [(ngModel)]="integration.registeredEmail" />
+    <mat-hint
+      >Enter the email address that was used to create this Zendesk account. You can check with your admin.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>API Token</mat-label>
+    <input matInput [(ngModel)]="integration.apiKey" />
+    <mat-hint
+      >From your Zendesk portal, click on Admin (the last icon on the left). Under Channels, click on API. Enable Token
+      Access and a unique API token will be generated. Copy and paste the token.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field floatLabel="always">
+    <mat-label>Type</mat-label>
+    <mat-select placeholder="Choose type" [(ngModel)]="integration.extra.type">
+      <mat-option *ngFor="let type of types" [value]="type.key">{{ type.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field floatLabel="always">
+    <mat-label>Priority</mat-label>
+    <mat-select placeholder="Choose priority" [(ngModel)]="integration.extra.priority">
+      <mat-option *ngFor="let priority of priorities" [value]="priority.key">{{ priority.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="agile-status" floatLabel="always">
+    <mat-label>Status</mat-label>
+    <mat-select placeholder="Choose status" [(ngModel)]="integration.extra.status">
+      <mat-option *ngFor="let status of statuses" [value]="status.key">{{ status.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

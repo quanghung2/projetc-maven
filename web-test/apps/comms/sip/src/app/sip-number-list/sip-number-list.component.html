@@ -1,0 +1,15 @@
+<div sm-component class="ui modal small" modal-id="sip-number-list-modal">
+  <div class="content">
+    <div *ngIf="!loading">
+      <div class="ui column grid">
+        <div *ngFor="let item of sipNumbers; let i = index" class="left aligned eight wide column">
+          <img
+            class="dropdown-icon pull-left"
+            src="https://d1fnpdk9svbocx.cloudfront.net/img/flags/{{ item | country | lowercase }}.gif"
+          />
+          {{ item }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

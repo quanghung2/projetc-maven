@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-sass",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/sass/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/sass/**/*.ts", "libs/shared/ui/sass/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

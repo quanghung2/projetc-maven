@@ -1,0 +1,148 @@
+<div mat-dialog-title>{{ ctaTitle }}</div>
+<div fxFlex="1 1 auto" mat-dialog-content fxLayout="row" fxLayoutGap="2.4rem">
+  <section fxFlex="1 1 auto" class="form-section">
+    <form #formEle fxLayout="column" [formGroup]="bundleFG" fxLayoutGap="0.8rem" class="form">
+      <!-- <h3>Base information</h3> -->
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Bundle name" />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" cols="5"></textarea>
+      </mat-form-field>
+
+      <h3>Product</h3>
+
+      <mat-form-field>
+        <mat-label>Select types</mat-label>
+        <mat-select formControlName="type" (selectionChange)="typeChanged($event.value)">
+          <mat-option *ngFor="let type of productTypes" [value]="type">
+            {{ type.label | capitalizeCase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select products</mat-label>
+        <mat-select formControlName="product" (selectionChange)="productChanged($event.value)">
+          <mat-option *ngFor="let product of productsFilter" [value]="product">
+            {{ product.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select number product</mat-label>
+        <mat-select formControlName="numberProduct" (selectionChange)="numberProductChanged()">
+          <mat-option *ngFor="let product of numberProducts" [value]="product.productId">
+            {{ product.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Select base license</mat-label>
+        <mat-select formControlName="base" (selectionChange)="baseSkuChanged($event.value)">
+          <ng-container *ngIf="bundleFG.get('product').value">
+            <mat-option *ngFor="let sku of skuMap[bundleFG.get('product').value.productId + '_base']" [value]="sku">
+              {{ sku.name }}
+            </mat-option>
+          </ng-container>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-label class="secondary-text">Sale models</mat-label>
+      <mat-radio-group formControlName="saleModel">
+        <mat-radio-button [disabled]="!hasMonthly" value="monthly" class="mr-16"
+          >Monthly Recurring Charge</mat-radio-button
+        >
+        <mat-radio-button [disabled]="!hasYearly" value="yearly" class="mr-16"
+          >Annual Recurring Charge</mat-radio-button
+        >
+        <mat-radio-button [disabled]="!hasOneOff" value="one_off">One Time Charge</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-checkbox formControlName="published" class="publish-checkbox">Publish to store</mat-checkbox>
+
+      <ng-container>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+          <h3>Addon licenses</h3>
+        </div>
+        <div
+          *ngIf="!!addonErrorMessage"
+          [innerHtml]="addonErrorMessage"
+          class="yellow-100 p-16 mb-16 border-radius-4"
+        ></div>
+
+        <ng-container *ngFor="let addonForm of addonsFA.controls">
+          <div fxLayout="row" [formGroup]="$any(addonForm)" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <mat-checkbox fxFlex="80%" formControlName="selected" class="text-truncate">
+              <span>{{ addonForm.get('skuName').value }}</span>
+            </mat-checkbox>
+            <mat-form-field fxFlex="20%">
+              <mat-label>Quantity</mat-label>
+              <input matInput type="number" formControlName="quantity" placeholder="Quantity" />
+              <mat-error>{{ addonForm.errors }}</mat-error>
+            </mat-form-field>
+          </div>
+        </ng-container>
+
+        <div *ngIf="!addonsFA.length" class="p-16 text-center secondary-text">Not available items</div>
+      </ng-container>
+      <ng-container *ngIf="numberItem">
+        <mat-checkbox formControlName="enabledNumber">
+          <span>{{ numberItem.name }}</span>
+        </mat-checkbox>
+        <div *ngIf="bundleFG.get('enabledNumber').value" class="ml-32">
+          <ng-container *ngFor="let numberForm of numbersFA.controls">
+            <div fxLayout="row" [formGroup]="$any(numberForm)" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <mat-checkbox fxFlex="80%" formControlName="selected" class="text-truncate">
+                <span>{{ numberForm.get('skuName').value }}</span>
+              </mat-checkbox>
+              <mat-form-field fxFlex="20%">
+                <mat-label>Quantity</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="quantity"
+                  placeholder="Quantity"
+                  (keyup.enter)="addNumber()"
+                />
+              </mat-form-field>
+            </div>
+          </ng-container>
+
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <mat-form-field fxFlex="80%">
+              <mat-label>Select country</mat-label>
+              <input
+                #searchNumberCountryInp
+                type="text"
+                placeholder="Enter number country"
+                aria-label="Number"
+                matInput
+                [formControl]="searchNumberCtr"
+                [matAutocomplete]="auto"
+                autofocus
+              />
+              <mat-autocomplete #auto="matAutocomplete" [displayWith]="skuDisplay">
+                <mat-option *ngFor="let number of filteredNumberSkus$ | async" [value]="number">
+                  {{ number.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+            <button type="button" fxFlex="20%" mat-button color="primary" (click)="addNumber()">Add</button>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </section>
+
+  <mat-divider vertical="true" class=""></mat-divider>
+  <section fxFlex="400px" [ngStyle]="{ overflow: 'auto' }">
+    <h2 class="mt-0">Bundle summary</h2>
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem" [innerHtml]="summaryHtml"></div>
+  </section>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [disabled]="bundleFG.invalid" color="primary" (click)="process()">{{ ctaButton }}</button>
+</div>

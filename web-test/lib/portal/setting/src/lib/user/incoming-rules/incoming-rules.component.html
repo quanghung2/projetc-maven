@@ -1,0 +1,79 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Inbound Call</h1>
+</sui-template-portal>
+
+<ng-container *ngIf="extension">
+  <div *ngIf="form" [formGroup]="form" class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+    <div fxLayout="column" fxLayoutGap="20px">
+      <mat-tab-group mat-stretch-tabs animationDuration="0" (selectedTabChange)="tabChanged($event)">
+        <mat-tab *ngFor="let item of inboundCallDuringOptions" [label]="item.value">
+          <ng-template [ngTemplateOutlet]="this[item.key]" [ngTemplateOutletContext]="context"></ng-template>
+        </mat-tab>
+      </mat-tab-group>
+      <button
+        (click)="onSave()"
+        [disabled]="isDisabledBtn()"
+        [loading]="saving"
+        color="primary"
+        fxFlexAlign="end"
+        mat-stroked-button
+      >
+        <span>Apply</span>
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #workingHours let-available="available" let-busy="busy" let-dnd="dnd" let-offline="offline">
+  <div fxLayout="column" fxLayoutGap="20px" class="pt-10">
+    <b3n-call-duration
+      title="Available"
+      [fg]="available"
+      [actions]="availableActions"
+      [hasTts]="false"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Busy"
+      [fg]="busy"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Away"
+      [fg]="dnd"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+      [selectUpward]="true"
+    ></b3n-call-duration>
+
+    <b3n-call-duration
+      title="Offline"
+      [fg]="offline"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+      [selectUpward]="true"
+    ></b3n-call-duration>
+  </div>
+</ng-template>
+
+<ng-template #nonOfficeHours let-nonOfficeHours="nonOfficeHours">
+  <div class="pt-20">
+    <b3n-call-duration
+      [fg]="nonOfficeHours"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+    ></b3n-call-duration>
+  </div>
+</ng-template>
+
+<ng-template #publicHoliday let-publicHoliday="publicHoliday">
+  <div class="pt-20">
+    <b3n-call-duration
+      [fg]="publicHoliday"
+      [actions]="allActions"
+      (ttsChanged)="ttsChanged($event)"
+    ></b3n-call-duration>
+  </div>
+</ng-template>

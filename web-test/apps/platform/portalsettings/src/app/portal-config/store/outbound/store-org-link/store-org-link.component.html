@@ -1,0 +1,49 @@
+<div class="ui small modal dial-plans__modal">
+  <loader [loading]="saving"></loader>
+  <ng-container *ngIf="form">
+    <div class="header">{{ orgLinkConfig ? 'Update' : 'New' }} organization link</div>
+    <div class="content" [formGroup]="form">
+      <div class="ui form group">
+        <div class="field">
+          <label>Group</label>
+          <select class="ui selection dropdown group" formControlName="linkUuid">
+            <option class="item" [value]="orgLink.uuid" *ngFor="let orgLink of orgLinks">
+              {{ orgLink.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="ui form org">
+        <div class="field">
+          <label>Organization</label>
+          <select class="ui selection dropdown org" formControlName="targetOrgUuid">
+            <option class="item" [value]="orgMember.uuid" *ngFor="let orgMember of currentLink.organizations">
+              {{ orgMember.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="ui form">
+        <div class="field required" [class.error]="prefix.invalid && (prefix.touched || prefix.dirty)">
+          <label>Prefix</label>
+          <div class="ui fluid input">
+            <input
+              type="text"
+              formControlName="prefix"
+              onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+            />
+          </div>
+          <div class="ui message small error">
+            <p>Prefix is required</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="ui deny button">Cancel</div>
+      <div class="ui primary button" [class.disabled]="form.invalid" (click)="storeOrgLinkConfig()">
+        {{ orgLinkConfig ? 'Update' : 'Add' }}
+      </div>
+    </div>
+  </ng-container>
+</div>

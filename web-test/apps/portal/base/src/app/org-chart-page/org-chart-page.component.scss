@@ -1,0 +1,11 @@
+@import '../../assets/scss/variables.scss';
+
+.view-not-found {
+  margin-top: 3rem;
+
+  .mat-icon {
+    font-size: 5rem;
+    width: 5rem;
+    color: $warning-color;
+  }
+}

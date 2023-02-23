@@ -1,0 +1,17 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="32px" class="mb-16">
+  <h1>Inbox Management</h1>
+  <nav mat-tab-nav-bar *ngIf="tabs?.length > 0">
+    <a
+      mat-tab-link
+      *ngFor="let tab of tabs"
+      [routerLink]="[tab.key]"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive"
+    >
+      {{ tab.value }}
+    </a>
+  </nav>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

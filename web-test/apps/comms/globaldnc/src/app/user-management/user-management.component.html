@@ -1,0 +1,190 @@
+<ng-container *ngIf="loading || isFetchingMember; else loadView">
+  <div class="ui active inverted dimmer inner-dimmer">
+    <div class="ui text loader"></div>
+  </div>
+</ng-container>
+<ng-template #loadView>
+  <div class="ui page content container management-container">
+    <div class="ui page control borderless menu control-container">
+      <div class="item search filter">
+        <div class="ui search">
+          <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="Search users" [(ngModel)]="searchStr" />
+            <i class="search icon"></i>
+          </div>
+          <div class="results"></div>
+        </div>
+      </div>
+      <div class="right menu">
+        <div class="item">
+          <div class="ui primary button" (click)="exportAgent()">Export</div>
+        </div>
+      </div>
+    </div>
+    <div class="ui grid">
+      <div class="four column row">
+        <div class="column list-container">
+          <div class="title">DPOs</div>
+          <div class="count">{{ dpoList.length }} / {{ subscriptionInfo.dpoSubscription.numberOfDpo }}</div>
+          <div class="ui primary button floatright" (click)="openAssignDpoModal()">Assign</div>
+          <div class="clearfix"></div>
+          <div>
+            <div class="header">
+              <div class="column-1">Name</div>
+              <div class="column-2">Status</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="list">
+              <div
+                class="row"
+                [class.hidden]="dpo.displayName.toLowerCase().indexOf(searchStr.toLowerCase()) == -1"
+                *ngFor="let dpo of dpoList"
+              >
+                <div sm-component class="column-1" [attr.data-content]="dpo.displayName">
+                  {{ dpo.displayName | subString: 20:'...' }}
+                </div>
+                <div class="column-2" *ngIf="dpo.agentType">
+                  <div class="floatleft">{{ dpo.status }}</div>
+                  <div sm-component class="ui inline dropdown">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="resendMagicLink(dpo)">Resend Invitation</div>
+                      <div class="item" (click)="unassignAgent(dpo)">Unassign</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column list-container">
+          <div class="title">Managers</div>
+          <div class="count">{{ managerList.length }} / {{ subscriptionInfo.dpoSubscription.numberOfManager }}</div>
+          <div class="ui primary button floatright" (click)="openAssignManagerModal()">Assign</div>
+          <div class="clearfix"></div>
+          <div>
+            <div class="header">
+              <div class="column-1">Name</div>
+              <div class="column-2">Status</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="list">
+              <div
+                class="row"
+                [class.hidden]="manager.displayName.toLowerCase().indexOf(searchStr.toLowerCase()) == -1"
+                *ngFor="let manager of managerList"
+              >
+                <div sm-component class="column-1" [attr.data-content]="manager.displayName">
+                  {{ manager.displayName | subString: 20:'...' }}
+                </div>
+                <div class="column-2" *ngIf="manager.agentType">
+                  <div class="floatleft">{{ manager.status }}</div>
+                  <div sm-component class="ui inline dropdown" *ngIf="manager.status != 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="resendMagicLink(manager)">Resend Invitation</div>
+                      <div class="item" (click)="unassignAgent(manager)">Unassign</div>
+                    </div>
+                  </div>
+                  <div sm-component class="ui inline dropdown" *ngIf="manager.status == 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="convertLegacyAgent(manager)">Convert to new licence</div>
+                      <div class="item" (click)="unassignAgent(manager)">Unassign</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column list-container">
+          <div class="title">Staff</div>
+          <div class="count">{{ staffList.length }} / {{ subscriptionInfo.dpoSubscription.numberOfStaff }}</div>
+          <div class="ui primary button floatright" (click)="openAssignStaffModal()">Assign</div>
+          <div class="clearfix"></div>
+          <div>
+            <div class="header">
+              <div class="column-1">Name</div>
+              <div class="column-2">Status</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="list">
+              <div
+                class="row"
+                [class.hidden]="staff.displayName.toLowerCase().indexOf(searchStr.toLowerCase()) == -1"
+                *ngFor="let staff of staffList"
+              >
+                <div sm-component class="column-1" [attr.data-content]="staff.displayName">
+                  {{ staff.displayName | subString: 20:'...' }}
+                </div>
+                <div class="column-2">
+                  <div class="floatleft">{{ staff.status }}</div>
+                  <div sm-component class="ui inline dropdown" *ngIf="staff.status != 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="resendMagicLink(staff)">Resend Invitation</div>
+                      <div class="item" (click)="unassignAgent(staff)">Unassign</div>
+                    </div>
+                  </div>
+                  <div sm-component class="ui inline dropdown" *ngIf="staff.status == 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="convertLegacyAgent(staff)">Convert to new licence</div>
+                      <div class="item" (click)="unassignAgent(staff)">Unassign</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column list-container">
+          <div class="title">Agents</div>
+          <div class="count">{{ nonStaffList.length }}</div>
+          <div class="ui primary button floatright" (click)="openAssignAgentModal()">Assign</div>
+          <div class="clearfix"></div>
+          <div>
+            <div class="header">
+              <div class="column-1">Name</div>
+              <div class="column-2">Status</div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="list">
+              <div
+                class="row"
+                [class.hidden]="agent.displayName.toLowerCase().indexOf(searchStr.toLowerCase()) == -1"
+                *ngFor="let agent of nonStaffList"
+              >
+                <div sm-component class="column-1" [attr.data-content]="agent.displayName">
+                  {{ (agent.displayName ? agent.displayName : agent.agentUuid) | subString: 13:'...' }}
+                </div>
+                <div class="column-2">
+                  <div class="floatleft">{{ agent.status }}</div>
+                  <div sm-component class="ui inline dropdown" *ngIf="agent.status != 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="resendMagicLink(agent)">Resend Invitation</div>
+                      <div class="item" (click)="unassignAgent(agent)">Unassign</div>
+                    </div>
+                  </div>
+                  <div sm-component class="ui inline dropdown" *ngIf="agent.status == 'legacy'">
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                      <div class="item" (click)="convertLegacyAgent(agent)">Convert to new licence</div>
+                      <div class="item" (click)="unassignAgent(agent)">Unassign</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,65 @@
+<div class="general-report">
+  <div *ngIf="loading" class="general-report__spinner" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="40" [strokeWidth]="2" mode="indeterminate"></mat-spinner>
+  </div>
+  <table
+    *ngIf="
+      (!loading && !collectFromFileModule && data.fileUrl.length > 0) ||
+      (!loading && collectFromFileModule && reportFiles.length > 0)
+    "
+    mat-table
+    [dataSource]="reportFiles"
+    class="general-report__table"
+  >
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let fileInfo">
+        <div *ngIf="!collectFromFileModule">
+          {{ getDisplayName() }}
+        </div>
+        <div *ngIf="collectFromFileModule">
+          {{ fileInfo.displayName }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let fileInfo">
+        <div *ngIf="!collectFromFileModule">
+          {{ getDisplayDate(data.lastModified) }}
+        </div>
+        <div *ngIf="collectFromFileModule">
+          {{ fileInfo.last_modified }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="file">
+      <th mat-header-cell *matHeaderCellDef>File</th>
+      <td mat-cell *matCellDef="let fileInfo">
+        <div *ngIf="!collectFromFileModule">
+          <a mat-stroked-button [href]="data.fileUrl" target="_blank">Download</a>
+        </div>
+        <div *ngIf="collectFromFileModule">
+          <a mat-stroked-button (click)="downloadReport(fileInfo)">Download</a>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <h3
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    class="no-general-report"
+    *ngIf="
+      (!loading && !collectFromFileModule && data.fileUrl.length == 0) ||
+      (!loading && collectFromFileModule && reportFiles.length == 0)
+    "
+  >
+    No usage history on this month
+  </h3>
+</div>

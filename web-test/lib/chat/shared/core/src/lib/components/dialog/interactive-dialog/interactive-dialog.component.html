@@ -1,0 +1,19 @@
+<div class="mb-0" mat-dialog-title fxLayoutAlign="space-between start">
+  <h3>{{firstComponents?.[0]?.title ||  'New request'}}</h3>
+  <mat-icon mat-dialog-close>close</mat-icon>
+</div>
+<div mat-dialog-body>
+  <ng-container *ngIf="errorFormat; else load">
+    <span class="normal-text red-fg">{{ errorFormat }}</span>
+  </ng-container>
+  <ng-template #load>
+    <csh-interactive-loop
+      [messageId]="data.message.id"
+      [components]="firstComponents"
+      [isDialog]="true"
+      [parent]="null"
+      (showProfile)="onShowProfile($event)"
+      (closeDialog)="onCloseDialog($event)"
+    ></csh-interactive-loop>
+  </ng-template>
+</div>

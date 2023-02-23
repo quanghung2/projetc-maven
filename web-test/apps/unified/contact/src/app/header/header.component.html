@@ -1,0 +1,28 @@
+<!-- <mat-toolbar fxLayout="column" fxLayoutAlign="start none">
+  <div class="title">Contact</div>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+
+<ng-container>
+  <ng-container *ngFor="let menu of displayMenus">
+    <div class="link" [routerLink]="menu.urlPath" routerLinkActive="active" (click)="selectMenu(menu)">
+      {{ menu.displayText }}
+    </div>
+  </ng-container>
+</ng-container> -->
+
+<mat-toolbar *ngIf="displayMenus.length > 0">
+  Contact
+  <nav class="ml-24" mat-tab-nav-bar>
+    <a
+      (click)="selectMenu(menu)"
+      *ngFor="let menu of displayMenus"
+      [active]="activeLink == menu"
+      class="link-menu"
+      mat-tab-link
+    >
+      {{ menu.displayText }}
+    </a>
+  </nav>
+</mat-toolbar>

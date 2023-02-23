@@ -1,0 +1,19 @@
+<div mat-dialog-title>Config default supplier</div>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="16px" class="dialog-content-container">
+    <mat-form-field>
+      <mat-select [(ngModel)]="defaultSupplierUuid" placeholder="Supplier">
+        <mat-option *ngFor="let product of supportedSuppliers" [value]="product.supplierUuid">
+          {{ product.name }} - {{ product.supplierUuid | slice: 0:8 }}
+        </mat-option>
+      </mat-select>
+      <mat-spinner *ngIf="isLoading" [diameter]="20" class="loading">Loading...</mat-spinner>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="changing" (click)="showConfirm()">Change</button>
+</div>

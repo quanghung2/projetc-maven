@@ -1,0 +1,35 @@
+<div mat-dialog-title>
+  Update SMS Blacklist
+  <ng-container *ngIf="updating">({{ progress | percent }})</ng-container>
+</div>
+<div mat-dialog-content>
+  <p *ngFor="let k of keywords; let i = index">{{ i + 1 }}. {{ k }}</p>
+  <p class="text-danger">
+    *Notes: Select *.xlsx file with keywords to
+    <ng-container *ngIf="inputAction === 'add'">add to</ng-container>
+    <ng-container *ngIf="inputAction === 'remove'">remove from</ng-container>
+    blacklist sms.
+  </p>
+  <p>
+    <button mat-stroked-button color="primary" (click)="fileInput.click()" [loading]="importing">Choose file</button>
+    <input
+      #fileInput
+      type="file"
+      (change)="uploadFile($event)"
+      accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      hidden
+    />
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="update()"
+    [loading]="updating"
+    [disabled]="keywords.length == 0 || importing"
+  >
+    Update
+  </button>
+</div>

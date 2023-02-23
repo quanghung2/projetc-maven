@@ -1,0 +1,30 @@
+<div class="account__wrapper">
+  <div class="account__sidebar">
+    <div class="avatar__wrapper" fxLayoutAlign="center center" fxLayoutGap="1.6rem" fxLayout="column">
+      <div class="avatar__file">
+        <input type="file" #personalUpload (change)="onFileChange($event)" class="personalUpload" accept="image/*" />
+      </div>
+      <div class="avatar__upload">
+        <a>
+          <img [src]="photoUrl" data-pin-nopin="true" />
+          <mat-icon (click)="personalUpload.click()" *ngIf="!uploadIndicator" svgIcon="photo"></mat-icon>
+        </a>
+      </div>
+      <mat-progress-bar
+        class="account__progress"
+        mode="determinate"
+        [value]="uploadEvent.percentage"
+        *ngIf="uploadIndicator"
+      ></mat-progress-bar>
+      <h1>{{ displayName }}</h1>
+    </div>
+    <mat-divider></mat-divider>
+    <div *ngFor="let link of links" class="link" [routerLink]="link.key" routerLinkActive="active">
+      {{ link.value }}
+    </div>
+  </div>
+
+  <div style="width: 100%">
+    <router-outlet></router-outlet>
+  </div>
+</div>

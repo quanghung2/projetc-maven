@@ -1,0 +1,44 @@
+:host {
+  display: block;
+
+  .spinner-container {
+    min-height: 400px;
+  }
+
+  .ms-data {
+    margin: auto;
+
+    &__content {
+      table {
+        width: 100%;
+
+        .uuid-column {
+          background: var(--gray-300);
+          -webkit-border-radius: 3px;
+          -moz-border-radius: 3px;
+          border-radius: 3px;
+          padding: 3px 6px;
+          width: fit-content;
+          font-family: monospace;
+          font-size: 12px;
+          text-align: center;
+        }
+
+        .action {
+          color: rgba(0, 0, 0, 0.67);
+          visibility: hidden;
+        }
+
+        tr {
+          &:hover {
+            background-color: #f0f0f0;
+
+            .action {
+              visibility: visible !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

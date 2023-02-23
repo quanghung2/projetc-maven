@@ -1,0 +1,168 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>{{ connectorUuid ? 'Update' : 'Create' }} Connector</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <form [formGroup]="formConnector" (submit)="submitConnector()" novalidate>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px" class="mb-16">
+      <div *ngIf="allowChooseType" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+        <label>Type</label>
+        <mat-radio-group color="primary" formControlName="type">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+            <mat-radio-button value="INTERNAL">INTERNAL</mat-radio-button>
+            <mat-radio-button value="EXTERNAL">EXTERNAL</mat-radio-button>
+          </div>
+        </mat-radio-group>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
+        <img [src]="iconUrl.value" fxFlex="60px" />
+        <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px" fxFlex>
+          <p class="mb-8">Recommend size: 60 x 60 pixels. Images with smaller size will scale.</p>
+          <input #uploadFile type="file" class="upload-file" (change)="onFileChange($event)" accept="image/*" />
+          <button mat-stroked-button type="button" (click)="uploadFile.click()" [loading]="uploading">
+            Upload icon
+          </button>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <mat-form-field hideRequiredMarker="true">
+        <input matInput placeholder="Connector name" formControlName="name" required />
+        <mat-error *ngIf="name.invalid">{{ getErrorInput(name) }}</mat-error>
+      </mat-form-field>
+
+      <ng-container *ngIf="type.value === 'INTERNAL'">
+        <mat-form-field hideRequiredMarker="true">
+          <input matInput placeholder="Vip Address" [formControl]="vipAddressCtrl" required />
+          <span matSuffix>{{ suffixVipAddress }}</span>
+          <mat-error *ngIf="vipAddressCtrl.invalid">{{ getErrorInput(vipAddressCtrl) }}</mat-error>
+        </mat-form-field>
+      </ng-container>
+
+      <ng-container *ngIf="type.value === 'EXTERNAL'" [formGroup]="formConfigExternal">
+        <mat-form-field hideRequiredMarker="true">
+          <input matInput placeholder="Base URL" formControlName="baseURL" required />
+          <mat-error *ngIf="baseURL.invalid">{{ getErrorInput(baseURL) }}</mat-error>
+        </mat-form-field>
+
+        <ng-container formGroupName="globalAuthConfig">
+          <mat-form-field hideRequiredMarker="true">
+            <mat-select placeholder="Authentication Type" formControlName="type" required>
+              <mat-option [value]="AuthenticationType.NO_AUTH">No Auth</mat-option>
+              <mat-option [value]="AuthenticationType.API_KEY_QUERY">Api Key Query</mat-option>
+              <mat-option [value]="AuthenticationType.API_KEY_HEADERS">Api Key Headers</mat-option>
+              <mat-option [value]="AuthenticationType.BEARER_TOKEN">Bearer Token</mat-option>
+              <mat-option [value]="AuthenticationType.BASIC_AUTH">Basic Auth</mat-option>
+            </mat-select>
+            <mat-error *ngIf="authType.hasError('required')">This field is required</mat-error>
+          </mat-form-field>
+
+          <ng-container
+            *ngIf="
+              authType.value === AuthenticationType.API_KEY_QUERY ||
+              authType.value === AuthenticationType.API_KEY_HEADERS
+            "
+          >
+            <mat-form-field hideRequiredMarker="true">
+              <input matInput placeholder="Key" formControlName="key" required />
+              <mat-error *ngIf="key.invalid">{{ getErrorInput(key) }}</mat-error>
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <b3n-visibility-domain
+        *ngIf="isShowDomainVisibility"
+        [domainVisibility]="$any(formConnector.get('domainVisibility'))"
+        [isShowVisibilityInherit]="false"
+      ></b3n-visibility-domain>
+
+      <section fxLayout="column" fxLayoutAlign="start stretch" *ngIf="type.value === 'INTERNAL'">
+        <h3 class="mb-8"><strong>License skus</strong></h3>
+
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <mat-form-field hideRequiredMarker="true">
+            <input matInput placeholder="Enter license sku to add" [formControl]="licenseSkuCtrl" required />
+            <button
+              *ngIf="licenseSkuCtrl.value?.trim().length"
+              mat-icon-button
+              matSuffix
+              type="button"
+              color="primary"
+              (click)="addLicenseSku()"
+            >
+              <mat-icon style="font-size: 24px">add</mat-icon>
+            </button>
+            <mat-error *ngIf="licenseSkuCtrl.invalid">{{ getErrorLicenseSkuCtrl() }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div formArrayName="licenseSkus" fxLayout="column" fxLayoutAlign="start stretch">
+          <div
+            *ngFor="let item of licenseSkus.controls; let i = index"
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+          >
+            <label>{{ item.value }}</label>
+            <button mat-icon-button type="button" color="warn" (click)="removeLicenseSku(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section *ngIf="type.value !== 'SUBROUTINE'">
+        <h3 class="mb-8"><strong>Parameters</strong></h3>
+        <div formGroupName="userParams" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" fxFlexFill>
+          <ng-container formArrayName="parameters">
+            <div
+              [formGroupName]="i"
+              *ngFor="let item of parameters.controls; let i = index"
+              fxLayout="row"
+              fxLayoutAlign="start center"
+              fxLayoutGap="8px"
+            >
+              <mat-form-field hideRequiredMarker="true" fxFlex="30">
+                <input matInput placeholder="Parameter Name" formControlName="title" required />
+                <mat-error *ngIf="item.get('title').invalid">{{ getErrorInput(item.get('title')) }}</mat-error>
+              </mat-form-field>
+              <mat-form-field hideRequiredMarker="true" fxFlex="20">
+                <mat-select placeholder="Data type" formControlName="dataType" required>
+                  <mat-option value="string">String</mat-option>
+                  <mat-option value="number">Number</mat-option>
+                  <mat-option value="boolean">Boolean</mat-option>
+                </mat-select>
+                <mat-error *ngIf="item.get('dataType').hasError('required')">This field is required</mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="50">
+                <input matInput placeholder="Description" formControlName="description" />
+                <mat-error *ngIf="item.get('description').invalid">
+                  {{ getErrorInput(item.get('description')) }}
+                </mat-error>
+              </mat-form-field>
+              <div fxFlex="40px">
+                <button mat-icon-button type="button" color="warn" (click)="removeParam(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <a href="javascript:;" class="link" (click)="addParam()">+ Add more paramaters</a>
+      </section>
+    </div>
+  </form>
+  <!-- {{ formConnector.value | json }} -->
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="submitting"
+    [disabled]="disabledSubmit()"
+    (click)="submitConnector()"
+  >
+    {{ connectorUuid ? 'Update' : 'Create' }}
+  </button>
+</div>

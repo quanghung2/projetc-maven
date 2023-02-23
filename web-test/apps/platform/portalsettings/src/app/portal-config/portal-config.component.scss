@@ -1,0 +1,45 @@
+.actions.row {
+  padding-bottom: 1rem !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .primary.button {
+    margin-right: 0;
+  }
+}
+
+.switcher.disabled {
+  opacity: 0.5;
+  cursor: none;
+  pointer-events: none;
+}
+
+span.disabled {
+  opacity: 0.5;
+}
+
+.ui.grid .row:not(.actions) {
+  padding-top: 0.74rem;
+  padding-bottom: 0.74rem;
+}
+
+.ui.grid .child.row {
+  padding-top: 0.24rem;
+}
+
+.fluid.accordion {
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  .indent {
+    padding-left: 2rem;
+    width: 100%;
+  }
+
+  ::ng-deep {
+    tag {
+      padding: 0 0.5rem !important;
+    }
+  }
+}

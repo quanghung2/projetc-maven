@@ -1,0 +1,16 @@
+{
+  "name": "api-partner",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/partner/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/partner/**/*.ts", "libs/api/partner/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

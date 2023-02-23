@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .number {
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  ::ng-deep .mat-list-item-disabled {
+    color: #41414180;
+  }
+}

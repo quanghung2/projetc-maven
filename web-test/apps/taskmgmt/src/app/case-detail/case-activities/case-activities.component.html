@@ -1,0 +1,19 @@
+<div class="activities flex column gap-20">
+  <div class="flex align-items-center gap-16">
+    <h3 class="m-0 flex-spacer secondary-text">Activities</h3>
+    <mat-form-field class="filter">
+      <mat-label>Activity type</mat-label>
+      <mat-select [formControl]="filterFC">
+        <mat-option *ngFor="let filter of filters" [value]="filter.key">{{ filter.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="activities__content flex column gap-16">
+    <div *ngFor="let activity of activities$ | async; trackBy: trackByItem">
+      <b3n-case-activity [me]="me" [case]="case" [activity]="activity"></b3n-case-activity>
+    </div>
+  </div>
+  <div class="activities__new-comment">
+    <b3n-new-comment [case]="case"></b3n-new-comment>
+  </div>
+</div>

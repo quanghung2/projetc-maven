@@ -1,0 +1,23 @@
+<div *ngIf="!fetching; else spinner">
+  <h2 mat-dialog-title>Delete Block</h2>
+  <mat-dialog-content class="mat-typography">
+    <div>
+      <p [innerHTML]="message"></p>
+      <div *ngIf="!leafNode && !multipleBranchNode">
+        <div><mat-slide-toggle (click)="toggleDeleteAll()">Delete all the blocks behind.</mat-slide-toggle></div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="true">Cancel</button>
+    <button mat-raised-button color="warn" [disabled]="deleting" (click)="delete()">
+      <span *ngIf="!deleting">Confirm</span> <span *ngIf="deleting">Deleting...</span>
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<ng-template #spinner>
+  <div class="spinner" fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="35" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>

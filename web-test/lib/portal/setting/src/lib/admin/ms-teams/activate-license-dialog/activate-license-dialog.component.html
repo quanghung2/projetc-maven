@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Activate subscription</h1>
+<div mat-dialog-content class="d-flex flex-column">
+  <div class="alert alert-danger text-center mb-20" role="alert" *ngIf="errorMessage">
+    <p>Sorry, this subscription cannot be activated.</p>
+    <p>Please select another one or configure a new license in Microsoft Teams Portal.</p>
+  </div>
+  <div class="d-flex justify-content-between license-container" >
+    <mat-form-field appearance="outline">
+      <mat-label>Please select a subscription</mat-label>
+      <mat-select [(ngModel)]="selectedSKUIds">
+        <mat-option *ngFor="let sku of data.subscriptions" [value]="sku.skuId">{{ sku.skuPartNumber }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="assignLicense()" [loading]='isLoading'>Activate</button>
+</div>

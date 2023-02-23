@@ -1,0 +1,73 @@
+<div class="codec-modal">
+  <h2 mat-dialog-title>{{ codecModalInput?.isEdit ? 'Update' : 'Add' }} Codec</h2>
+  <div mat-dialog-content>
+    <form [formGroup]="formGroup" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="0.8rem">
+      <mat-form-field>
+        <mat-label>Name*</mat-label>
+        <input matInput placeholder="Ex: abc1_xyz" formControlName="name" [b3nRetrictInput]="'([a-zA-Z]+[\\d_]*)+$'" />
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['required']">Name can't be empty</mat-error>
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['pattern']"
+          >Name must be at least 2 characters and the first character must be characters includes(a-zA-Z)</mat-error
+        >
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['isExistsCodec']">Codec is existed</mat-error>
+      </mat-form-field>
+
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxLayoutGap="0.8rem">
+        <span class="title">Codecs*</span>
+        <div cdkDropListGroup fxLayout="row" fxLayoutAlign="start stretch" class="select-none">
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="codecsSource"
+              class="codec-modal__codec-list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <div
+                class="codec-modal__codec-box"
+                *ngFor="let item of codecsSource; let idx = index"
+                [class.codec-modal--codec-box-border-top]="idx >= 1"
+                cdkDrag
+              >
+                {{ item }}
+              </div>
+            </div>
+          </div>
+
+          <div fxFlexAlign="center">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="selectedDropCodecs"
+              class="codec-modal__codec-list"
+              (cdkDropListDropped)="drop($event)"
+            >
+              <div
+                class="codec-modal__codec-box"
+                *ngFor="let item of selectedDropCodecs; let idx = index"
+                [class.codec-modal--codec-box-border-top]="idx >= 1"
+                cdkDrag
+              >
+                {{ item }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [loading]="isLoading"
+      [disabled]="formGroup.invalid || !selectedDropCodecs.length"
+      (click)="onSave()"
+    >
+      {{ codecModalInput?.isEdit ? 'Update' : 'Create' }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<mat-toolbar>
+  <div [id]="USER_HEADER_LEFT_SECTION_ID"></div>
+</mat-toolbar>
+<ng-container *ngIf="selectedExtension$ | async as extension; else noExtension">
+  <router-outlet> </router-outlet>
+</ng-container>
+
+<ng-template #noExtension>
+  <div class="p-16 text-center teal-200 mx-16 my-32">Please select a extension to configuration</div>
+</ng-template>

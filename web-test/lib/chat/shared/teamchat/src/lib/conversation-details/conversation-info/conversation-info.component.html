@@ -1,0 +1,35 @@
+<ng-container *ngIf="convo" class="convo_info">
+  <ng-container *ngIf="convo.isGroupChat; else directInfo">
+    <div class="description_info flex column justify-content-start align-items-start gap-3">
+      <label>Description</label>
+      <div style="word-break: break-word">{{ convo.description }}</div>
+    </div>
+    <div class="owner_info flex justify-content-start align-items-center gap-8">
+      <img *ngIf="user$ | async as user" [src]="user.photoUrlOrDefault" />
+      <span class="owner_info__description">Created on {{ convo.createdAt | date: 'mediumDate' }}</span>
+    </div>
+  </ng-container>
+
+  <ng-template #directInfo>
+    <div *ngIf="user$ | async as user" class="user_info">
+      <div class="info_row">
+        <div class="info_row__label mat-caption">Display name</div>
+        <div class="info_row__value">
+          {{ user.displayName }}
+        </div>
+      </div>
+      <div *ngIf="!!user.mobileNumber" class="info_row">
+        <div class="info_row__label mat-caption">Phone</div>
+        <div class="info_row__value">
+          <a href="tel:{{ user.mobileNumber }}">{{ user.mobileNumber }}</a>
+        </div>
+      </div>
+      <div *ngIf="!!user.email" class="info_row">
+        <div class="info_row__label mat-caption">Email</div>
+        <div class="info_row__value">
+          <a href="mailTo:{{ user.email }}">{{ user.email }}</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

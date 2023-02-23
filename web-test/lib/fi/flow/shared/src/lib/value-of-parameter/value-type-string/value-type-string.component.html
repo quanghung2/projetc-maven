@@ -1,0 +1,44 @@
+<mat-form-field floatLabel="always" hideRequiredMarker="true">
+  <mat-label>{{ quill?.quillEditor?.getContents().length() > 1 ? optionForControl.title : '' }}</mat-label>
+  <button
+    type="button"
+    mat-icon-button
+    matPrefix
+    [matMenuTriggerFor]="menu"
+    (click)="$event.stopPropagation(); $event.preventDefault()"
+    *ngIf="!optionForControl.disabled && contextVariables?.length > 0"
+  >
+    <mat-icon matTooltip="Select initial value" [matTooltipPosition]="'above'">playlist_add</mat-icon>
+  </button>
+
+  <mat-chip-list #chipList [required]="optionForControl.required"> </mat-chip-list>
+  <quill-editor
+    #quill
+    matInput
+    [modules]="modules"
+    [placeholder]="optionForControl.title"
+    (onEditorCreated)="onCreatedQuill($event)"
+  ></quill-editor>
+  <mat-error *ngIf="chipList.errorState">{{ textError }}</mat-error>
+</mat-form-field>
+
+<mat-menu #menu="matMenu" class="fif-menu dropdown-menu">
+  <ng-template matMenuContent>
+    <div
+      class="content-menu"
+      fxLayout="row"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="0px"
+      (click)="$event.stopPropagation(); $event.preventDefault()"
+    >
+      <b3n-context-menu
+        *ngIf="contextVariables?.length > 0"
+        [contextVariables]="contextVariables"
+        [optionForControl]="optionForControl"
+        (selectProp)="selectProperty($event)"
+        (selectFunc)="selectFunction($event)"
+      >
+      </b3n-context-menu>
+    </div>
+  </ng-template>
+</mat-menu>

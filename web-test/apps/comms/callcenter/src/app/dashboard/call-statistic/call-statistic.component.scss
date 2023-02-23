@@ -1,0 +1,21 @@
+.mat-card-header {
+  display: flex;
+}
+
+.container {
+  height: calc(33.3vh - 7px);
+}
+
+.item {
+  display: flex;
+  justify-content: left;
+  overflow: auto;
+}
+
+.number {
+  font-size: -webkit-xxx-large;
+}
+
+.mat-card {
+  border: thin solid #d3d3d3;
+}

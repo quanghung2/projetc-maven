@@ -1,0 +1,31 @@
+$avatar-background: #f0b3fc;
+$icon-background: #888;
+$empty-color: #888;
+$header-color: #5a6976;
+$white: #fff;
+$light-white: rgba(255, 255, 255, 0.8);
+$customer-background: #3e7ce4;
+$primary-background: rgb(62, 124, 228);
+$sidebar-background: #292929;
+$team-background: #e8eaec;
+$expansion-header-background: #f0f0f0;
+$conversation-selected-background: #ddd;
+$header-color-black: rgba(0, 0, 0, 0.7);
+$header-color-light-black: rgba(0, 0, 0, 0.5);
+$conversation-hover-background: rgba(0, 0, 0, 0.04);
+$install-icon-background: #03b8e5;
+$general-border: #ddd;
+$error-color: #e95849;
+$default-text: rgba(0, 0, 0, 0.87);
+$default-background-basic-button: rgba(0, 0, 0, 0.12);
+$success-color: #28a745;
+
+.loading-container {
+  mat-spinner {
+    margin: 20px auto;
+  }
+}
+
+.settings__header {
+  margin-right: 32px;
+}

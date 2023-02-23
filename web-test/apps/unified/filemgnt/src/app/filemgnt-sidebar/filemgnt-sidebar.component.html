@@ -1,0 +1,23 @@
+<mat-toolbar>
+  <div class="title">File Explorer</div>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+
+<ng-container>
+  <div
+    *ngFor="let menu of menus"
+    class="link"
+    [routerLink]="[menu.urlPath]"
+    routerLinkActive="active"
+    (click)="selectMenu(menu)"
+  >
+    {{ menu.value }}
+  </div>
+  <div class="permission link" *ngIf="hasPermissionGroup" [routerLink]="['permission']" routerLinkActive="active">
+    <div class="permission-item">
+      <mat-icon class="material-icons-outlined color-permission">admin_panel_settings</mat-icon>
+      <span class="ml-10 color-permission">Permission </span>
+    </div>
+  </div>
+</ng-container>

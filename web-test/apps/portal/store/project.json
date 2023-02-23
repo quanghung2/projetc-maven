@@ -1,0 +1,123 @@
+{
+  "name": "portal-store",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/portal/store/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/portal/store",
+        "index": "apps/portal/store/src/index.html",
+        "main": "apps/portal/store/src/main.ts",
+        "polyfills": "apps/portal/store/src/polyfills.ts",
+        "tsConfig": "apps/portal/store/tsconfig.app.json",
+        "aot": true,
+        "assets": [
+          "apps/portal/store/src/favicon.ico",
+          "apps/portal/store/src/assets",
+          {
+            "input": "libs/portal/shared/src/assets",
+            "glob": "**/*",
+            "output": "portal/assets"
+          }
+        ],
+        "styles": ["apps/portal/store/src/styles.scss"],
+        "scripts": ["node_modules/jquery/dist/jquery.min.js"],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        },
+        "allowedCommonJsDependencies": ["crypto-js/enc-hex", "crypto-js/sha512", "date-fns-tz", "lodash"]
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/portal/store/src/environments/environment.ts",
+              "with": "apps/portal/store/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb"
+            }
+          ]
+        },
+        "uat": {
+          "fileReplacements": [
+            {
+              "replace": "apps/portal/store/src/environments/environment.ts",
+              "with": "apps/portal/store/src/environments/environment.uat.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true,
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "6kb"
+            }
+          ]
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "portal-store:build:production"
+        },
+        "development": {
+          "browserTarget": "portal-store:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "portal-store:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/portal/store/**/*.ts", "apps/portal/store/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+
+  mat-sidenav {
+    background: #fafafa;
+    left: 0 !important;
+    width: 280px;
+
+    ::ng-deep {
+      .mat-drawer-inner-container {
+        overflow: hidden;
+      }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+<div *ngIf="flowConfig.enabled" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+  <mat-form-field>
+    <mat-label *ngIf="key === enumActionEvent.maxQueueSizeThreshold">When a call reached max queue size</mat-label>
+    <mat-label *ngIf="key === enumActionEvent.maxWaitingTimeThreshold">When a call reached max waiting time</mat-label>
+    <mat-label *ngIf="key === enumActionEvent.dialingThreshold"
+      >When a call reached max dialing threshold time</mat-label
+    >
+    <mat-select [(ngModel)]="flowConfig.action">
+      <mat-option *ngFor="let action of thresholdActions" [value]="action.key"> {{ action.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="flowConfig.action === enumAction.hangup">
+    <b3n-tts-mp3-msg-cfg [ttsCfg]="hangupMessage" [showPlay]="true" [showNote]="false"></b3n-tts-mp3-msg-cfg>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="flowConfig.action === enumAction.redirect">
+    <mat-tab-group [(selectedIndex)]="tab" (selectedTabChange)="tabChange($event)">
+      <mat-tab *ngFor="let type of redirectTypes" [label]="type.value">
+        <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="type.key === 'number'">
+          <mat-form-field>
+            <mat-label>Enter a phone number</mat-label>
+            <input matInput [(ngModel)]="flowConfig.redirectTo.number" />
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="type.key === 'extension'">
+          <mat-form-field>
+            <mat-label>Select extension</mat-label>
+            <mat-select [(ngModel)]="flowConfig.redirectTo.extKey">
+              <mat-option *ngFor="let extension of extensions" [value]="extension.extKey">
+                {{ extension.displayText }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="type.key === 'queue'">
+          <mat-form-field>
+            <mat-label>Select queue</mat-label>
+            <mat-select [(ngModel)]="flowConfig.redirectTo.queueUuid">
+              <mat-option *ngFor="let queue of queues" [value]="queue.uuid"> {{ queue.label }} </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="flowConfig.action === enumAction.genie">
+    <b3n-genie-config
+      [formParents]="formParents"
+      [skills]="skills"
+      [genieConfig]="flowConfig.genieConfig"
+    ></b3n-genie-config>
+  </div>
+</div>

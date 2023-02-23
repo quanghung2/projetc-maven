@@ -1,0 +1,19 @@
+{
+  "name": "comms-callcenter-feature-workspace",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/comms/callcenter/feature/workspace/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/comms/callcenter/feature/workspace/**/*.ts",
+          "libs/comms/callcenter/feature/workspace/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

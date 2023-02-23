@@ -1,0 +1,18 @@
+<h1 *ngIf="!!data.title" mat-dialog-title>{{ data.title || 'Confirm modal' }}</h1>
+<div mat-dialog-body>
+  <div [innerHtml]="data.message"></div>
+  <mat-form-field class="width-full" [hidden]="!data.textConfirm">
+    <input matInput placeholder="" type="text" ngModel #textValue="ngModel" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button *ngIf="!data.hideCancel" mat-button [mat-dialog-close]="false">{{ data.cancelLabel || 'Cancel' }}</button>
+  <button
+    (click)="confirm()"
+    [color]="data.color || 'primary'"
+    mat-raised-button
+    [disabled]="data.textConfirm && textValue.value !== data.textConfirm"
+  >
+    {{ data.confirmLabel || 'Confirm' }}
+  </button>
+</div>

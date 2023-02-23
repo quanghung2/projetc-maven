@@ -1,0 +1,102 @@
+<div class="flex column justify-content-start align-items-none">
+  <section class="product case-item">
+    <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+      <div class="title">Products</div>
+      <div class="case-item__action">
+        <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchProduct">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="case-item__content">
+      <div class="item flex gap-16">
+        <ng-container *ngIf="productsDisplay$ | async as products; else none">
+          <div *ngIf="products.length > 0; else none" class="item__title">
+            {{ products }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="type case-item">
+    <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+      <div class="title">Type</div>
+      <div class="case-item__action">
+        <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchType">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="case-item__content">
+      <div class="item flex gap-16">
+        <ng-container *ngIf="typeDisplay$ | async as type; else none">
+          <div class="item__title">
+            {{ type.name | titlecase }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="severity case-item">
+    <div class="case-item__header flex align-items-center justify-content-space-between gap-16">
+      <div class="title">Severity</div>
+      <div class="case-item__action">
+        <button mat-icon-button class="material-icons-outlined" [matMenuTriggerFor]="searchSeverity">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="case-item__content">
+      <div class="item flex gap-16">
+        <ng-container *ngIf="severityDisplay$ | async as severity; else none">
+          <div class="item__title">
+            {{ severity.name | titlecase }}
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </section>
+</div>
+
+<mat-menu #searchType="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search type</mat-label>
+      <mat-select [formControl]="typeId" (valueChange)="onTypeChange($event)">
+        <mat-option *ngFor="let type of type$ | async" [value]="type.id">{{ type.name | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #searchSeverity="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search severity</mat-label>
+      <mat-select [formControl]="severityId" (valueChange)="onSeverityChange($event)">
+        <mat-option *ngFor="let item of severity$ | async" [value]="item.id">{{ item.name | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #searchProduct="matMenu" xPosition="before">
+  <div class="search-group">
+    <mat-form-field class="search-box" appearance="outline">
+      <mat-label>Search product</mat-label>
+      <mat-select [formControl]="productIds" multiple="true" (valueChange)="onProductChange($event)">
+        <mat-option *ngFor="let item of products$ | async" [value]="item.id">{{ item.name | titlecase }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<ng-template #none>
+  <div class="item__title secondary-text">None</div>
+</ng-template>

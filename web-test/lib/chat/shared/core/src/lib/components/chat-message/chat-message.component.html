@@ -1,0 +1,252 @@
+<div class="container flex column justify-content-start align-items-none" (contextmenu)="onRightClick($event)">
+  <div class="header-reply" *ngIf="position === MessagePosition.first && msgReply">
+    <csh-reply-message
+      [msgReply]="msgReply"
+      (jumpToMessage)="jumpToMessage.emit($event)"
+      (showProfile)="showProfile.emit($event)"
+    ></csh-reply-message>
+  </div>
+
+  <div
+    id="{{ message.id }}"
+    class="chat_message flex justify-content-start align-items-start gap-8"
+    [class.no-hover]="configMessageOption.noHoverAffect"
+  >
+    <div *ngIf="position === MessagePosition.first && message.mt !== MsgType.system" class="chat_message__avatar">
+      <ng-container *ngIf="user; else asyncUser">
+        <ng-container [ngTemplateOutlet]="avatarUser" [ngTemplateOutletContext]="{ member: user }"> </ng-container>
+      </ng-container>
+      <ng-template #asyncUser>
+        <ng-container *ngIf="user$ | async as user">
+          <ng-container [ngTemplateOutlet]="avatarUser" [ngTemplateOutletContext]="{ member: user }"> </ng-container>
+        </ng-container>
+      </ng-template>
+    </div>
+
+    <div class="chat_message__row flex justify-content-start align-items-center gap-8">
+      <div class="chat_message__time" *ngIf="position === MessagePosition.middle">
+        <!-- // clipboard use time_msg -->
+        <small class="time_msg">
+          {{ messageRender.ts | date: 'HH:mm' }}
+        </small>
+      </div>
+      <div class="chat_message__content flex column justify-content-start align-items-start gap-3">
+        <div
+          *ngIf="position === MessagePosition.first"
+          class="content_header flex justify-content-start align-items-center gap-3"
+        >
+          <ng-container *ngIf="message.mt !== MsgType.system">
+            <ng-container *ngIf="user; else asyncUser">
+              <div
+                class="content_header__title"
+                [ngClass]="{ disabled: message.ct === ConvoType.direct }"
+                (click)="onShowProfile($event, user)"
+              >
+                {{ user.displayName }}
+              </div>
+            </ng-container>
+            <ng-template #asyncUser>
+              <ng-container *ngIf="user$ | async as user">
+                <div
+                  class="content_header__title"
+                  [ngClass]="{ disabled: message.ct === ConvoType.direct }"
+                  (click)="onShowProfile($event, user)"
+                >
+                  {{ user.displayName }}
+                </div>
+              </ng-container>
+            </ng-template>
+
+            <ng-container *ngIf="configMessageOption?.isBookmarkChannel">
+              <ng-container *ngIf="nameConvo; else asyncConvo">
+                <div class="content_header__convo">- {{ nameConvo }}</div>
+              </ng-container>
+              <ng-template #asyncConvo>
+                <ng-container *ngIf="nameConvo$ | async as name">
+                  <div class="content_header__convo">- {{ name }}</div>
+                </ng-container>
+              </ng-template>
+            </ng-container>
+          </ng-container>
+
+          <small
+            class="content_header__time time_msg"
+            [matTooltip]="message.ts | date: 'medium'"
+            *ngIf="message.mt !== MsgType.system"
+          >
+            {{ message.ts | date: 'HH:mm' }}
+            <ng-container *ngIf="configMessageOption.fullDate">
+              {{ message.ts | viewDate }}
+            </ng-container>
+            <span
+              *ngIf="
+                (message.ct === ConvoType.whatsapp || message.ct === ConvoType.sms) && message.ut !== UserType.Agent
+              "
+            >
+              &ndash; Customer
+            </span>
+          </small>
+        </div>
+        <div class="content_body">
+          <ng-container *ngIf="!isDeletedMessage; else deletedMessage">
+            <ng-container [ngSwitch]="messageRender.mt">
+              <csh-attachment-message
+                *ngSwitchCase="MsgType.attachment"
+                [parentElr]="parentElr"
+                [message]="messageRender"
+                [isHideAction]="configMessageOption.isHideAction"
+              ></csh-attachment-message>
+              <ng-container *ngSwitchCase="MsgType.imess">
+                <csh-interactive-message
+                  *ngIf="isInteractiveV2; else webhook"
+                  [message]="messageRender"
+                  (showProfile)="showProfile.emit($event)"
+                ></csh-interactive-message>
+                <ng-template #webhook>
+                  <csh-webhook-message [message]="messageRender"></csh-webhook-message>
+                </ng-template>
+              </ng-container>
+              <csh-pre-chat-survey-message
+                *ngSwitchCase="MsgType.prechatsurvey"
+                [message]="messageRender"
+              ></csh-pre-chat-survey-message>
+              <csh-summary-message *ngSwitchCase="MsgType.summary" [message]="messageRender"></csh-summary-message>
+              <csh-normal-message
+                *ngSwitchDefault
+                [message]="messageRender"
+                [isEditing]="isEditing"
+                [isExpand]="isExpand"
+                [configMessageOption]="configMessageOption"
+                (edited)="onEditedMessage($event)"
+                (mentionsChanged)="onMentionsChanged($event)"
+                (showProfile)="showProfile.emit($event)"
+                (expandMsg)="onExpandMsg($event)"
+              ></csh-normal-message>
+            </ng-container>
+
+            <div
+              class="actions-container flex justify-content-end align-items-center"
+              [style.top]="positionAction"
+              [class.visibility]="isShowingMenu"
+              *ngIf="
+                !isEditing &&
+                (message.ct === ConvoType.personal ||
+                  isAllowUseBookmark ||
+                  allowUseReplyAction ||
+                  (allowUseAction && withinLimit))
+              "
+            >
+              <div
+                *ngIf="allowUseReplyAction"
+                class="actions-container__item"
+                matTooltip="Reply"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                (click)="replyMessage()"
+              >
+                <mat-icon>reply</mat-icon>
+              </div>
+
+              <div
+                *ngIf="configMessageOption.isBookmarkChannel && canJumpChannel"
+                class="actions-container__item"
+                matTooltip="Jump to channel"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                (click)="jumpChannel()"
+              >
+                <mat-icon>move_up</mat-icon>
+              </div>
+
+              <ng-container *ngIf="message.ct === ConvoType.personal; else normalConvo">
+                <div
+                  *ngIf="isAllowUseBookmark"
+                  class="actions-container__item"
+                  matTooltip="Remove bookmark"
+                  matTooltipPosition="above"
+                  matTooltipShowDelay="500"
+                  (click)="deleteBookmark()"
+                >
+                  <mat-icon>bookmark_remove</mat-icon>
+                </div>
+              </ng-container>
+              <ng-template #normalConvo>
+                <div
+                  *ngIf="isAllowUseBookmark"
+                  class="actions-container__item"
+                  matTooltip="Add to Bookmark"
+                  matTooltipPosition="above"
+                  matTooltipShowDelay="500"
+                  (click)="addBookmark()"
+                >
+                  <mat-icon>bookmark_add</mat-icon>
+                </div>
+              </ng-template>
+
+              <div
+                *ngIf="!configMessageOption.isBookmarkChannel && message.ct === ConvoType.groupchat && message.id"
+                class="actions-container__item"
+                matTooltip="Copy link to message"
+                matTooltipPosition="above"
+                matTooltipShowDelay="500"
+                (click)="copyLinkMessage()"
+              >
+                <mat-icon>link</mat-icon>
+              </div>
+
+              <div
+                *ngIf="allowUseAction && withinLimit"
+                [matMenuTriggerFor]="menu"
+                class="actions-container__item"
+                matTooltipPosition="above"
+                matTooltipShowDelay="1000"
+                matTooltip="More actions"
+                matTooltipShowDelay="500"
+                (menuOpened)="isShowingMenu = true"
+                (menuClosed)="isShowingMenu = false"
+              >
+                <mat-icon> more_horiz </mat-icon>
+              </div>
+
+              <mat-menu #menu="matMenu" class="custom">
+                <ng-container *ngIf="allowUseAction && withinLimit">
+                  <button mat-menu-item (click)="edit()" *ngIf="message.mt === MsgType.message">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit message</span>
+                  </button>
+
+                  <button mat-menu-item (click)="delete()" class="delete-message">
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Delete message</span>
+                  </button>
+                </ng-container>
+              </mat-menu>
+            </div>
+          </ng-container>
+          <ng-template #deletedMessage>
+            <div class="flex justify-content-start align-items-none">
+              <span class="deleted-msg" [innerHTML]="messageRender?.body?.text"></span>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #avatarUser let-member="member">
+  <div
+    class="container-avatar flex justify-content-start align-items-center gap-8"
+    [ngClass]="{
+      disabled: this.message.ct !== ConvoType.groupchat
+    }"
+    (click)="onShowProfile($event, member)"
+  >
+    <span *ngIf="!member.hasPhoto; else hasAvatar" class="no-avatar flex justify-content-center align-items-center">
+      {{ member.displayName | firstWord }}
+    </span>
+    <ng-template #hasAvatar>
+      <div class="avatar" [style.background-image]="'url(\'' + member.photoUrlOrDefault + '\')'"></div>
+    </ng-template>
+  </div>
+</ng-template>

@@ -1,0 +1,11 @@
+<div class="ui right floated pagination menu" *ngIf="totalPages > 1">
+  <a class="icon item" (click)="changePage(1)" [class.disabled]="isFirstPage()">
+    <i class="icon chevron left"></i>
+  </a>
+  <a class="item" *ngFor="let page of pages" (click)="changePage(page)" [class.active]="currentPage == page">{{
+    page
+  }}</a>
+  <a class="icon item" (click)="changePage(totalPages)" [class.disabled]="isLastPage()">
+    <i class="icon chevron right"> </i>
+  </a>
+</div>

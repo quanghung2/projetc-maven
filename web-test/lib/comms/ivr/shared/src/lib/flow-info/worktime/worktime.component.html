@@ -1,0 +1,137 @@
+<h1 mat-dialog-title>Settings</h1>
+<div mat-dialog-content>
+  <ng-container *ngIf="loaded">
+    <div fxLayout="row" class="worktime">
+      <mat-tab-group>
+        <mat-tab label="Work schedule">
+          <form [formGroup]="workingSchedule" class="working-schedule-form">
+            <section>
+              <table class="working-time-table">
+                <tbody>
+                  <tr formArrayName="shifts" *ngFor="let shift of shiftsField.controls; let i = index">
+                    <ng-container [formGroupName]="i">
+                      <td>
+                        <mat-slide-toggle formControlName="enabled" (change)="shiftChanged($any(shift))">{{
+                          shift['controls'].dayOfWeek.value | titlecase
+                        }}</mat-slide-toggle>
+                      </td>
+                      <ng-container
+                        formArrayName="timeRanges"
+                        *ngFor="let timeRange of shift['controls'].timeRanges.controls; let timeIndex = index"
+                      >
+                        <td [formGroupName]="timeIndex">
+                          <div fxLayout="row" fxLayoutGap="1.6rem" class="time-range">
+                            <mat-form-field class="working-time-table__from">
+                              <input
+                                matInput
+                                readonly
+                                [matDatepicker]="pickerTimeStart"
+                                placeholder="From"
+                                formControlName="from"
+                                (click)="pickerTimeStart.open()"
+                                [required]="timeIndex === 0"
+                              />
+                              <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+                              <mat-datepicker #pickerTimeStart type="time" [twelveHour]="false"></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="working-time-table__to">
+                              <input
+                                matInput
+                                readonly
+                                [matDatepicker]="pickerTimeEnd"
+                                placeholder="To"
+                                formControlName="to"
+                                (click)="pickerTimeEnd.open()"
+                                [required]="timeIndex === 0"
+                              />
+                              <mat-datepicker-toggle matSuffix [for]="pickerTimeEnd"></mat-datepicker-toggle>
+                              <mat-datepicker #pickerTimeEnd type="time" [twelveHour]="false"></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                      </ng-container>
+                      <td>
+                        <button
+                          mat-icon-button
+                          (click)="applyWorkTimetoAll(shift)"
+                          matTooltip="Apply this time to all work schedule"
+                          [disabled]="!shift['controls'].enabled.value"
+                        >
+                          <mat-icon [style.color]="shift.value.enabled ? '' : '#d9d9d9'">sync</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          </form>
+        </mat-tab>
+
+        <mat-tab *ngIf="!licenseEnabled" label="Public holiday">
+          <form [formGroup]="workingSchedule" class="working-schedule-form">
+            <section>
+              <div fxLayout="row" fxLayoutGap="1.6rem">
+                <mat-form-field>
+                  <mat-select
+                    formControlName="holidayCode"
+                    (selectionChange)="onCalendarChanged($event)"
+                    placeholder="Select public holiday calendar"
+                    required="true"
+                  >
+                    <mat-option value="none">None</mat-option>
+                    <mat-option *ngFor="let calendar of holidayCountries$ | async" [value]="calendar.code">{{
+                      calendar.name
+                    }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="working-schedule-form__holidays" *ngIf="selectedCalendarCode !== 'none'">
+                <div fxLayout="row" fxLayoutAlign="start center" class="working-schedule-form__title">
+                  Public holiday ({{ holidays.length }})
+                  <mat-spinner *ngIf="loadingPublicHoliday" [diameter]="18"></mat-spinner>
+                </div>
+                <mat-chip-list class="working-schedule-form__default-holidays">
+                  <mat-chip *ngFor="let holiday of holidays">{{ holiday.date | date: 'mediumDate' }} </mat-chip>
+                </mat-chip-list>
+              </div>
+
+              <div
+                class="working-schedule-form__holidays"
+                fxLayout="row"
+                fxLayoutAlign="center"
+                *ngIf="selectedCalendarCode === 'none'"
+              >
+                No public holidays.
+              </div>
+            </section>
+          </form>
+        </mat-tab>
+
+        <mat-tab *ngIf="!licenseEnabled" label="Custom Holiday">
+          <b3n-worktime-custom [workflow]="workflow"></b3n-worktime-custom>
+        </mat-tab>
+      </mat-tab-group>
+
+      <mat-form-field class="worktime__timezone">
+        <mat-select (ngModelChange)="onChangeTimezone($event)" [(ngModel)]="data.rule.timezone">
+          <mat-option
+            *ngFor="let timezone of timeZones"
+            [value]="timezone.uuid"
+            class="timezone"
+            matTooltip="{{ timezone.uuid }} ({{ timezone.country }})"
+          >
+            {{ timezone.uuid }} ({{ timezone.country }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </ng-container>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-stroked-button color="primary" [disabled]="progressing || workingSchedule.invalid" (click)="progress()">
+    <span *ngIf="!progressing">Save</span> <span *ngIf="progressing">Saving...</span>
+  </button>
+</div>

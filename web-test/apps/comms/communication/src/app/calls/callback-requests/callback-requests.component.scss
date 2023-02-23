@@ -1,0 +1,46 @@
+:host {
+  display: block;
+
+  .action-bar {
+    padding: 0.8rem 1.6rem;
+  }
+
+  .callback-requests-table {
+    .mat-table {
+      width: 100%;
+    }
+
+    button.label {
+      padding: 0;
+      line-height: 25px;
+    }
+
+    .box {
+      background: #e6e6e6 !important;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #424242 !important;
+      height: 25px;
+      padding: 0 8px;
+      white-space: nowrap;
+    }
+
+    .callback-result-column {
+      &.failed,
+      &.blocked,
+      &.cancel,
+      &.unanswered {
+        color: #ff5630;
+      }
+
+      &.forwarding,
+      &.busy {
+        color: #ff991f;
+      }
+
+      &.answered {
+        color: #36b37e;
+      }
+    }
+  }
+}

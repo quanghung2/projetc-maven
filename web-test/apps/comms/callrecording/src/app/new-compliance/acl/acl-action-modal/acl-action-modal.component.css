@@ -1,0 +1,19 @@
+.members {
+  position: relative;
+}
+.find-member {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50% !important;
+  height: 30px;
+}
+.search {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  font-size: 14px;
+}
+.content {
+  padding-bottom: 0px !important;
+}

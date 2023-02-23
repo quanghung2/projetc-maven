@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .sso-idp {
+    height: 100vh;
+    width: 100vw;
+
+    .ssoidp-error-message {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #424242;
+    }
+  }
+}

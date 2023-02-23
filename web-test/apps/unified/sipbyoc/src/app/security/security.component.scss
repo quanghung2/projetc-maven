@@ -1,0 +1,14 @@
+:host {
+  .container {
+    max-width: 400px;
+    margin: auto;
+
+    .action {
+      visibility: hidden;
+    }
+
+    mat-list-option:hover .action {
+      visibility: visible;
+    }
+  }
+}

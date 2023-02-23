@@ -1,0 +1,17 @@
+<div mat-dialog-title>{{ server.nodeName }}</div>
+<div mat-dialog-content>
+  <ul>
+    <li>Domain: {{ server.domain }}</li>
+    <li>Cluster: {{ server.cluster }}</li>
+    <li>IP: {{ server.ip }}</li>
+    <li>Advertise IP: {{ server.advertiseIp }}</li>
+    <li>Version: {{ server.version }}</li>
+    <li>Management IP: {{ server.mgntIp }}</li>
+    <li>Port: {{ server.apiPort }}</li>
+    <li>Protocol: {{ server.apiProtocol }}</li>
+    <li>Certificate verification: {{ server.apiSecure }}</li>
+  </ul>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+</div>

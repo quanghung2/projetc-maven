@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+  <img [src]="icon" class="w-40 h-40" />
+  <h3 *ngIf="!editingName" class="mb-0" fxFlex>
+    <strong *ngIf="number">{{ number }}. {{ name }}</strong>
+    <strong *ngIf="!number">{{ name }}</strong>
+    <button mat-icon-button *ngIf="allowEdit" (click)="edit()"><mat-icon>edit</mat-icon></button>
+  </h3>
+  <mat-form-field *ngIf="editingName" hideRequiredMarker="true" class="h-40" fxFlex>
+    <input
+      matInput
+      #txtName
+      [formControl]="nameCtrl"
+      placeholder="Action name"
+      (blur)="save()"
+      (keyup.enter)="save()"
+      required
+    />
+    <mat-error *ngIf="nameCtrl.invalid">{{ getErrorName() }}</mat-error>
+  </mat-form-field>
+</div>

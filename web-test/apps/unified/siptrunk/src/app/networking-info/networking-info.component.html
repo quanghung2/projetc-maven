@@ -1,0 +1,46 @@
+<mat-toolbar><h1>Networking Info</h1></mat-toolbar>
+
+<div *ngIf="!isLoading">
+  <div fxLayout="column" class="container" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">Codecs</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.codecSupported }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">Dial Pattern</div>
+      <span>Country Code + Area Code + Phone Number (e.g. 8498765432, 16505300061)</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">SIP Protocol</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.protocol }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">SSL/TLS Protocol Method</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.protocolMethod }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">SIP Registration Period</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.registrationPeriod }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">Audio Format</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.audioFormat }}</span>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="4px">
+      <div class="item-left">DTMF</div>
+      <span>{{ ui.pbxConfig.basicSipConfiguration.dtmf }}</span>
+    </div>
+  </div>
+</div>

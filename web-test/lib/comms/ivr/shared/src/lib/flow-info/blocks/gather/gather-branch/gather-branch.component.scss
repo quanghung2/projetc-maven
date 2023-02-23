@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.gather-section {
+  mat-form-field,
+  .mat-form-field-infix,
+  .mat-form-field {
+    width: 100% !important;
+  }
+  .download-button {
+    min-width: 130px;
+  }
+
+  &__upload {
+    &__card {
+      padding: 16px 0 !important;
+    }
+  }
+}
+
+.gather-section-multiple {
+  display: initial !important;
+  mat-form-field,
+  .mat-form-field-infix,
+  .mat-form-field {
+    width: 100% !important;
+  }
+  .download-button {
+    min-width: 130px;
+    float: right;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    margin-top: 10px;
+  }
+
+  mat-card {
+    width: 100%;
+  }
+}
+
+.download-sample-file {
+  width: auto;
+}
+
+.upload-button {
+  width: auto;
+}
+
+.filename {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.67);
+}

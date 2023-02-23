@@ -1,0 +1,16 @@
+{
+  "name": "portal-org-feature-history",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/history/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/portal/org/feature/history/**/*.ts", "libs/portal/org/feature/history/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,268 @@
+<div *ngIf="formConfigs" [formGroup]="formConfigs" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <strong>Paths</strong>
+    <mat-checkbox color="primary" formControlName="hasDefaultPathCtrl" (change)="onChangeDefaultPath($event.checked)">
+      Has default path
+    </mat-checkbox>
+  </div>
+
+  <div
+    fxLayout="column"
+    formArrayName="expressionMappings"
+    cdkDropList
+    class="drop-list"
+    (cdkDropListDropped)="drop($event)"
+    fxLayoutGap="8px"
+  >
+    <div
+      class="path-item"
+      fxLayout="column"
+      cdkDrag
+      cdkDragLockAxis="y"
+      [cdkDragDisabled]="!editable"
+      [formGroupName]="expressionMappingIdx"
+      *ngFor="let expressionMapping of expressionMappings.controls; let expressionMappingIdx = index"
+    >
+      <div class="cdk-drag-placeholder" *cdkDragPlaceholder></div>
+
+      <!-- Path -->
+      <div
+        class="path-item__header"
+        fxLayout="row"
+        fxLayoutGap="4px"
+        fxLayoutAlign="space-between center"
+        (click)="onExpanded($any(expressionMapping))"
+      >
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex>
+          <mat-icon fxFlex="24px" *ngIf="editable" cdkDragHandle>drag_handle</mat-icon>
+          <mat-icon fxFlex="24px">call_split</mat-icon>
+          <ng-container *ngIf="!expressionMapping.get('isEdit').value; else inputField">
+            <strong class="name">{{ expressionMapping.get('title').value }}</strong>
+            <mat-icon
+              *ngIf="editable"
+              class="edit"
+              matTooltip="Edit"
+              [matTooltipPosition]="'right'"
+              (click)="editPathName($event, $any(expressionMapping), $any(expressionMappingIdx))"
+            >
+              edit
+            </mat-icon>
+          </ng-container>
+
+          <ng-template #inputField>
+            <mat-form-field hideRequiredMarker="true" fxFlex>
+              <input
+                id="{{ expressionMappingIdx }}"
+                matInput
+                placeholder="Path Name"
+                formControlName="temptitle"
+                (blur)="doneEditPathName($any(expressionMapping))"
+              />
+              <mat-error *ngIf="expressionMapping.get('temptitle').invalid">
+                {{ getErrorInput(expressionMapping.get('temptitle')) }}
+              </mat-error>
+            </mat-form-field>
+          </ng-template>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="start center">
+          <mat-icon
+            class="remove-path"
+            *ngIf="(expressionMappings.length > 1 || expressionMappingIdx !== 0) && editable"
+            matTooltip="Remove path"
+            [matTooltipPosition]="'below'"
+            (click)="$event.stopPropagation(); removePath(expressionMappingIdx)"
+          >
+            delete
+          </mat-icon>
+          <mat-icon>{{ expressionMapping.get('isExpanded').value ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </div>
+      </div>
+
+      <ng-container formArrayName="expressions">
+        <mat-expansion-panel
+          class="mat-elevation-z0"
+          [expanded]="expressionMapping.get('isExpanded').value"
+          (opened)="collapseAll(expressionMappingIdx)"
+        >
+          <div class="path-item__body" fxLayout="column" fxLayoutGap="4px">
+            <div
+              [formGroupName]="expressionIdx"
+              [class.or-operator]="expressionIdx !== 0"
+              *ngFor="let expression of expressionMapping.get('expressions')['controls']; let expressionIdx = index"
+            >
+              <div class="py-10">
+                <h4 class="mt-0 mb-10">
+                  <strong>{{ expressionIdx === 0 ? 'Only continue if…' : 'Or continue if…' }}</strong>
+                </h4>
+
+                <div
+                  fxLayout="row"
+                  fxLayoutGap="4px"
+                  fxLayoutAlign="start end"
+                  class="expression-group-item"
+                  [formGroupName]="controlIdx"
+                  *ngFor="let control of expression.controls; let controlIdx = index"
+                >
+                  <b3n-context-variable
+                    fxFlex
+                    [optionForControl]="control.get('argument1').value"
+                    [isMultiple]="false"
+                    [keyForContextVar]="'switching'"
+                    [isShowInputControl]="false"
+                    [contextVariables]="contextVariables"
+                    (selectedValue)="selectFirstParams(control, $event)"
+                  ></b3n-context-variable>
+
+                  <mat-form-field fxFlex="20">
+                    <mat-select
+                      placeholder="Operator"
+                      formControlName="type"
+                      (selectionChange)="onChangeOperator(control, $event)"
+                    >
+                      <mat-option *ngFor="let operator of control.get('operator').value" [value]="operator.token">
+                        {{ operator.name }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="control.get('type').invalid">This field is required</mat-error>
+                  </mat-form-field>
+
+                  <div fxFlex>
+                    <b3n-context-variable
+                      *ngIf="
+                        control.get('type').value &&
+                        control.get('type').value !== typeOperator.isNull &&
+                        control.get('type').value !== typeOperator.isNotNull &&
+                        control.get('type').value !== typeOperator.isTrue &&
+                        control.get('type').value !== typeOperator.isFalse
+                      "
+                      fxFlex
+                      [isMultiple]="false"
+                      [optionForControl]="control.get('argument2').value"
+                      [contextVariables]="control.get('contextVariablesArgument2').value"
+                      [renderDirective]="
+                        control.get('selectionDataSourceUuidArgument2').value
+                          ? {
+                              type: RenderDirectiveType.SingleSelect,
+                              valueListUuid: control.get('selectionDataSourceUuidArgument2').value
+                            }
+                          : null
+                      "
+                      (selectedValue)="selectSecondParams(control, $event)"
+                    ></b3n-context-variable>
+                  </div>
+
+                  <button
+                    class="remove-condition"
+                    *ngIf="
+                      (expression.value.length > 1 || expressionMapping.get('expressions').value.length > 1) && editable
+                    "
+                    mat-icon-button
+                    matTooltip="Remove"
+                    [matTooltipPosition]="'above'"
+                    (click)="
+                      removeConditional(
+                        expression,
+                        controlIdx,
+                        $any(expressionMapping.get('expressions')),
+                        expressionIdx
+                      )
+                    "
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px" *ngIf="editable">
+                  <button mat-stroked-button color="primary" (click)="addConditional(typeOperator.and, expression)">
+                    AND
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    *ngIf="
+                      expressionMapping.get('expressions')['controls']?.length - 1 === expressionIdx ||
+                      expressionIdx !== 0
+                    "
+                    (click)="addConditional(typeOperator.or, $any(expressionMapping.get('expressions')))"
+                  >
+                    OR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </ng-container>
+      <!-- End path -->
+    </div>
+  </div>
+
+  <div *ngIf="hasDefaultPathCtrl.value" formGroupName="defaultPath" fxLayout="column" class="path-item">
+    <div
+      class="path-item__header"
+      fxLayout="row"
+      fxLayoutGap="4px"
+      fxLayoutAlign="space-between center"
+      (click)="onExpanded(defaultPath)"
+    >
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex>
+        <mat-icon fxFlex="24px">call_split</mat-icon>
+        <ng-container *ngIf="!defaultPath.get('isEdit').value; else inputFieldDefault">
+          <strong class="name">{{ defaultPath.get('title').value }}</strong>
+          <mat-icon
+            *ngIf="editable"
+            class="edit"
+            matTooltip="Edit"
+            [matTooltipPosition]="'right'"
+            (click)="editPathName($event, defaultPath, 'defaultPath')"
+          >
+            edit
+          </mat-icon>
+        </ng-container>
+
+        <ng-template #inputFieldDefault>
+          <mat-form-field hideRequiredMarker="true" fxFlex>
+            <input
+              id="defaultPath"
+              matInput
+              placeholder="Path Name"
+              formControlName="temptitle"
+              (blur)="doneEditPathName(defaultPath)"
+            />
+            <mat-error *ngIf="defaultPath.get('temptitle').invalid">
+              {{ getErrorInput(defaultPath.get('temptitle')) }}
+            </mat-error>
+          </mat-form-field>
+        </ng-template>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="start center">
+        <mat-icon
+          *ngIf="editable"
+          class="remove-path"
+          matTooltip="Remove path"
+          [matTooltipPosition]="'below'"
+          (click)="$event.stopPropagation(); onChangeDefaultPath(false)"
+        >
+          delete
+        </mat-icon>
+        <mat-icon>{{ defaultPath.get('isExpanded').value ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </div>
+    </div>
+
+    <mat-expansion-panel
+      class="mat-elevation-z0"
+      [expanded]="defaultPath.get('isExpanded').value"
+      (opened)="collapseAll(-1)"
+    >
+      <div class="path-item__body">
+        <h4 class="mt-10"><strong>When all else fails</strong></h4>
+      </div>
+    </mat-expansion-panel>
+  </div>
+
+  <p>
+    <a class="link" href="javascript:;" *ngIf="editable" (click)="addNewPath()">+ Add new path</a>
+  </p>
+</div>

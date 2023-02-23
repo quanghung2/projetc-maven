@@ -1,0 +1,20 @@
+<h1 class="header" mat-dialog-title>
+  Wildcard reference
+  <mat-icon (click)="close()" class="close-icon">close</mat-icon>
+</h1>
+
+<div mat-dialog-content>
+  <ng-container *ngIf="placeholderSettings">
+    <p fxLayout="row"><span fxFlex="150px">Wildcard</span> <span>Explains</span></p>
+    <mat-divider></mat-divider>
+    <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="1.6rem" class="table-data">
+      <div *ngFor="let setting of placeholderSettings.data.placeHolderMap | keyvalue">
+        <strong fxFlex="150px"
+          >{{<span>{{ setting.key }}</span
+          >}}
+        </strong>
+        <div>{{ setting.value }}</div>
+      </div>
+    </div>
+  </ng-container>
+</div>

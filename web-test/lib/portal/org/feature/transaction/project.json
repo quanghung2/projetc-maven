@@ -1,0 +1,19 @@
+{
+  "name": "portal-org-feature-transaction",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/portal/org/feature/transaction/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/portal/org/feature/transaction/**/*.ts",
+          "libs/portal/org/feature/transaction/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

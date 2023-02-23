@@ -1,0 +1,38 @@
+<ng-container *ngIf="records">
+  <table *ngIf="records.length > 0" [dataSource]="records" mat-table>
+    <ng-container matColumnDef="time">
+      <th *matHeaderCellDef mat-header-cell>Time</th>
+      <td *matCellDef="let row" mat-cell>{{ row.time | date: 'shortTime' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalCall">
+      <th *matHeaderCellDef mat-header-cell>Total</th>
+      <td *matCellDef="let row" mat-cell>{{ row.totalCall }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="answered">
+      <th *matHeaderCellDef mat-header-cell>Answered</th>
+      <td *matCellDef="let row" mat-cell>{{ row.answered | number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="unanswered">
+      <th *matHeaderCellDef mat-header-cell>Unanswered</th>
+      <td *matCellDef="let row" mat-cell>{{ row.unanswered }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="busy">
+      <th *matHeaderCellDef mat-header-cell>Busy</th>
+      <td *matCellDef="let row" mat-cell>{{ row.busy }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="failed">
+      <th *matHeaderCellDef mat-header-cell>Failed</th>
+      <td *matCellDef="let row" mat-cell>{{ row.failed }}</td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayColumns" mat-row></tr>
+  </table>
+
+  <div *ngIf="records.length == 0" class="no-data white-box">No data</div>
+</ng-container>

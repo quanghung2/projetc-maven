@@ -1,0 +1,63 @@
+.contact {
+  font-size: 14px;
+  &__title {
+    overflow: hidden;
+    flex-direction: row;
+    box-sizing: border-box;
+    display: flex;
+    place-content: center flex-start;
+    align-items: center;
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-right: 10px;
+      display: inline-block;
+    }
+    .no-avatar {
+      @extend .avatar;
+      background: #cecece;
+      border: 1px solid #cecece;
+      border-radius: 50%;
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 32px;
+      font-weight: bold;
+    }
+  }
+  &__email,
+  &__number {
+    @extend .contact__title;
+    > span {
+      display: inline-block;
+    }
+    mat-icon {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .phone_button {
+      background: #039be5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-left: 20px;
+      mat-icon {
+        color: #fff;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+:host {
+  ::ng-deep {
+    csh-render-member {
+      .displayName {
+        width: 100px;
+      }
+    }
+  }
+}

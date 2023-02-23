@@ -1,0 +1,93 @@
+<h1 mat-dialog-title>Callback call</h1>
+
+<div mat-dialog-content>
+  <form #form="ngForm" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+    <div>
+      <strong>UUID:</strong>
+      {{ _me.assignedTxn.txnUuid }}
+    </div>
+
+    <div>
+      <strong>Queue:</strong>
+      {{ _me.assignedTxn.queue.label }}
+    </div>
+
+    <div>
+      <strong>Status:</strong>
+      {{ _me.assignedTxn.status }}
+    </div>
+
+    <div class="customer-info info">
+      <div><strong>Customer Info</strong></div>
+
+      <ul>
+        <li>Number: {{ _me.assignedTxn.customerNumber }}</li>
+      </ul>
+    </div>
+
+    <div
+      *ngIf="_me.assignedTxn.displayData && ObjectKeys(_me.assignedTxn.displayData).length > 0"
+      class="customer-info info"
+    >
+      <div><strong>Other Info</strong></div>
+
+      <ul>
+        <li *ngFor="let key of ObjectKeys(_me.assignedTxn.displayData)">
+          {{ key }}: {{ _me.assignedTxn.displayData[key] }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="full-width">
+      <strong>Answer script:</strong>
+
+      <textarea
+        matInput
+        class="script-text-color"
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        [value]="_me.assignedTxn.queue.agentWorkflowConfig.script"
+        disabled
+      ></textarea>
+    </div>
+
+    <mat-form-field>
+      <mat-select
+        placeholder="Disposition Code"
+        [(value)]="request.code"
+        [disabled]="_me.assignedTxn.status === 'transfering' || _me.assignedTxn.status === 'waiting'"
+      >
+        <mat-option [value]="code" *ngFor="let code of _me.assignedTxn.queue.agentWorkflowConfig.codeOptions">
+          {{ code }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!_me.assignedTxn.queue.agentWorkflowConfig.disableNotes">
+      <textarea
+        matInput
+        placeholder="Note"
+        cdkTextareaAutosize
+        [cdkAutosizeMinRows]="2"
+        [cdkAutosizeMaxRows]="6"
+        [(ngModel)]="request.note"
+        [disabled]="_me.assignedTxn.status === 'transfering' || _me.assignedTxn.status === 'waiting'"
+        name="note"
+      ></textarea>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions>
+  <span class="fill-remaining-space"></span>
+
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!endedStatuses.includes(_me.assignedTxn.status) && _me.systemStatus !== SystemStatusCode.acw"
+    (click)="finishAcw()"
+  >
+    Finish call
+  </button>
+</div>

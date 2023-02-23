@@ -1,0 +1,63 @@
+:host {
+  .consent-container {
+    height: 100vh;
+    overflow: hidden;
+
+    &__header {
+      background-color: inherit;
+      height: 64px;
+    }
+
+    &__body {
+      padding: 0 1.6rem 1.6rem 1.6rem;
+      overflow: overlay;
+
+      table {
+        width: 100%;
+        min-width: 800px;
+
+        button.label {
+          padding: 0;
+          line-height: 25px;
+        }
+
+        td {
+          .column-action {
+            visibility: hidden;
+            mat-icon {
+              color: gray;
+            }
+          }
+        }
+
+        tr {
+          &:hover {
+            background: whitesmoke;
+            .column-action {
+              visibility: visible !important;
+            }
+          }
+
+          &.no-data-table {
+            &.hidden {
+              display: none;
+            }
+          }
+
+          td,
+          th {
+            padding-right: 1.6rem;
+          }
+
+          .footer-table {
+            margin-right: 1.6rem;
+
+            button {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}

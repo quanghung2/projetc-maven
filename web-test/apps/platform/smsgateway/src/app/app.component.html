@@ -1,0 +1,12 @@
+<div class="sms__container">
+  <mat-toolbar class="sms__header" color="primary">
+    Sms Gateway
+    <nav mat-tab-nav-bar class="sms__nav">
+      <a mat-tab-link *ngFor="let link of links; let idx = index" [routerLink]="link.link" routerLinkActive="active">
+        {{ link.label }}
+      </a>
+    </nav>
+  </mat-toolbar>
+
+  <router-outlet></router-outlet>
+</div>

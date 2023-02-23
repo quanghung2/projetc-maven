@@ -1,0 +1,38 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<!-- <ng-container *ngIf="isLoggedIn && isSupportWs">
+  <ng-container *ngIf="socketStatus$ | async as socketStatus">
+    <ng-container
+      *ngIf="socketStatus !== SocketStatus.opened && socketStatus !== SocketStatus.none && warningBlockHeight > 0"
+    >
+      <div fxLayout="row" fxLayoutAlign="center center" class="alert alert-warning network-warning">
+        <ng-container *ngIf="socketStatus === SocketStatus.connecting">
+          Your computer seems to be offline. We'll keep trying to reconnect.
+        </ng-container>
+        <ng-container *ngIf="socketStatus === SocketStatus.closed">
+          Your computer already offline. Please check your network and click
+          <span> <button mat-button color="primary" (click)="manualConnect()">Reconnect</button> </span> manually.
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container> -->
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    [opened]="showSidebar"
+    class="sidenav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    [fixedBottomGap]="0"
+    [disableClose]="true"
+  >
+    <b3n-sidebar></b3n-sidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

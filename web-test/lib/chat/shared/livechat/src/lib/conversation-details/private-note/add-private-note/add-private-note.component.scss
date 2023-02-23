@@ -1,0 +1,19 @@
+:host {
+  .privateNote {
+    width: 100%;
+  }
+
+  .right-floated {
+    padding: 8px 0;
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 52px;
+    align-items: center;
+    margin-bottom: -24px;
+    justify-content: flex-end;
+
+    .btnCancel {
+      margin-right: 10px;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+textarea {
+  white-space: break-spaces;
+  padding: 8px;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-size: 12px;
+}
+mat-slide-toggle {
+  margin-left: 10px;
+  margin-top: -3px;
+}
+.iam {
+  margin-bottom: 1.6rem;
+  mat-checkbox {
+    margin-top: -3px;
+    margin-left: 5px;
+  }
+}

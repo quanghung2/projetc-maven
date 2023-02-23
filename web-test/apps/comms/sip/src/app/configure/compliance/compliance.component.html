@@ -1,0 +1,75 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Compliance</div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="fourteen wide column">
+          <div class="ui grid two column form">
+            <div class="row">
+              <div class="five wide column right aligned">Default action</div>
+              <div class="eleven wide column">
+                <div class="field">
+                  <select sm-component class="ui dropdown" [ngModel]="action" (change)="action = $event.target.value">
+                    <option value="bypass_all" [value]="'bypass_all'">Bypass Compliance filter</option>
+                    <option value="check_and_ask" [value]="'check_and_ask'">
+                      Ask me what to do when number is blocked
+                    </option>
+                    <option value="check_and_block" [value]="'check_and_block'">
+                      Terminate the call when number is blocked
+                    </option>
+                    <option value="bypass_dnc" [value]="'bypass_dnc'">Only check Black List</option>
+                    <option value="bypass_consent" [value]="'bypass_consent'">Only check DNC registry</option>
+                  </select>
+                </div>
+                <div class="help-block" *ngIf="action == 'bypass_all'">
+                  Note: By opting to bypass Compliance's blacklist and DNC, you are expressing that you have obtained
+                  clear and unambiguous consent from all destination of outgoing calls. Your action will be tracked and
+                  you will assume all responsibility in the event of a violation.
+                </div>
+                <div class="help-block" *ngIf="action == 'check_and_ask'">
+                  When number is blocked by Compliance filter for company blacklist and DNC, you will have an option to
+                  bypass by pressing key 1. Nevertheless, please note that, your action will be tracked and you will
+                  assume all responsibility in the event of a violation.
+                </div>
+                <div class="help-block" *ngIf="action == 'check_and_block'">
+                  When number is blocked by Compliance filter for company blacklist and DNC. The call will be
+                  terminated.
+                </div>
+                <div class="help-block" *ngIf="action == 'bypass_dnc'">
+                  When number is blocked by company black list, the call will be terminated. Please note that, this
+                  option will not check destinatio number with DNC registry.
+                </div>
+                <div class="help-block" *ngIf="action == 'bypass_consent'">
+                  When number is blocked by DNC registry, the call will be terminated.
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="action == 'bypass_all'">
+              <div class="five wide column right aligned">Bypass reason</div>
+              <div class="eleven wide column">
+                <div class="field">
+                  <textarea rows="2" [(ngModel)]="remark"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--<div class="five wide column">
+					<img *ngIf="action == 'bypass_all'" src="https://s3.amazonaws.com/apps-sip/images/sg_bypass.png">
+					<img *ngIf="action == 'check_and_ask'" src="https://s3.amazonaws.com/apps-sip/images/sg_check_and_ask.png">
+					<img *ngIf="action == 'check_and_block'" src="https://s3.amazonaws.com/apps-sip/images/sg_check_and_block.png">
+					<img *ngIf="action == 'bypass_dnc'" src="https://s3.amazonaws.com/apps-sip/images/sg_check_and_block.png">
+					<img *ngIf="action == 'bypass_consent'" src="https://s3.amazonaws.com/apps-sip/images/sg_check_and_block.png">
+				</div>-->
+      </div>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+  <div class="field right aligned">
+    <div class="ui primary submit button" (click)="saveChanges()">Save changes</div>
+  </div>
+</div>
+<div *ngIf="isSaving" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

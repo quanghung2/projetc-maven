@@ -1,0 +1,22 @@
+<div id="new-compliance">
+  <div class="ui page content container small">
+    <div class="ui page tabular expand menu">
+      <a
+        class="item"
+        *ngFor="let feature of complianceFeatures"
+        [ngClass]="{ active: feature.key == selectedFeature }"
+        (click)="selectedFeature = feature.key"
+      >
+        {{ feature.label }}
+      </a>
+    </div>
+
+    <div class="ui page segments" *ngIf="selectedFeature == 'acl'">
+      <app-acl></app-acl>
+    </div>
+
+    <div class="ui page segments" *ngIf="selectedFeature == 'encryption'">
+      <app-encrypt></app-encrypt>
+    </div>
+  </div>
+</div>

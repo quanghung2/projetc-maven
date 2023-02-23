@@ -1,0 +1,107 @@
+<div sm-component modal-id="add-consent-number-modal" class="ui modal">
+  <i class="close icon"></i>
+  <div class="header">Import Consent</div>
+  <div class="content">
+    <div class="ui form">
+      <div class="ui tabular expand menu">
+        <a class="item" [class.active]="!bulkImport" (click)="bulkImport = false">Single Entry</a>
+        <a class="item" [class.active]="bulkImport" (click)="bulkImport = true">Mutilple Entries</a>
+      </div>
+      <div [class.hidden]="bulkImport">
+        <div class="required field">
+          <label>Number</label>
+          <input placeholder="+65xxxxxxx" [(ngModel)]="form.number" />
+        </div>
+        <div class="field">
+          <label>Voice</label>
+          <div sm-component class="ui fluid search selection dropdown">
+            <input type="hidden" name="member" (change)="form.voice = $event.target['value']" />
+            <i class="dropdown icon"></i>
+            <div class="default text">Select action</div>
+            <div class="menu">
+              <div class="item" data-value="notRecorded">Not Recorded</div>
+              <div class="item" data-value="blacklist">Black List</div>
+              <div class="item" data-value="whitelist">White List</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Fax</label>
+          <div sm-component class="ui fluid search selection dropdown">
+            <input type="hidden" name="member" (change)="form.fax = $event.target['value']" />
+            <i class="dropdown icon"></i>
+            <div class="default text">Select action</div>
+            <div class="menu">
+              <div class="item" data-value="notRecorded">Not Recorded</div>
+              <div class="item" data-value="blacklist">Black List</div>
+              <div class="item" data-value="whitelist">White List</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>SMS</label>
+          <div sm-component class="ui fluid search selection dropdown">
+            <input type="hidden" name="member" (change)="form.sms = $event.target['value']" />
+            <i class="dropdown icon"></i>
+            <div class="default text">Select action</div>
+            <div class="menu">
+              <div class="item" data-value="notRecorded">Not Recorded</div>
+              <div class="item" data-value="blacklist">Black List</div>
+              <div class="item" data-value="whitelist">White List</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div [class.hidden]="!bulkImport">
+        <div class="upload-container" [class.havefile]="tempKey || uploading">
+          <div [class.hidden]="tempKey || uploading" class="browse-container">
+            <label class="ui button primary" for="file">Browse CSV</label>
+            <form id="upload" class="hidden">
+              <input type="file" id="file" class="hidden" (change)="upload($event)" accept=".csv, text/csv" />
+            </form>
+          </div>
+          <div [class.hidden]="!tempKey" class="file-container">
+            <i class="icon insert drive file"></i>
+            <div class="file">
+              <div class="file-name">{{ tempKey.split('/')[tempKey.split('/').length - 1] }}</div>
+              <div class="clearfix"></div>
+              <div [class.hidden]="!uploading" class="ui active blue progress">
+                <div class="bar">
+                  <div class="progress"></div>
+                </div>
+              </div>
+            </div>
+            <i class="close icon" (click)="clearFile()"></i>
+          </div>
+
+          <div [class.hidden]="tempKey" class="down-csv-template">
+            <a
+              class="label"
+              href="https://d1fnpdk9svbocx.cloudfront.net/template/import_consent_template.csv"
+              target="_blank"
+              >Download CSV Template</a
+            >
+          </div>
+
+          <!-- <div [class.hidden]="!fileUrl" class="down-csv-template">
+						<a class="label" href="{{fileUrl}}" target="_blank">Browse CSV</a>
+					</div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block">
+        <div class="left"></div>
+      </div>
+      <div class="block">
+        <div class="right">
+          <div class="ui cancel link button">Cancel</div>
+          <div [class.hidden]="adding" class="ui approve large primary button" (click)="add($event)">Add</div>
+          <div [class.hidden]="!adding" class="ui approve large primary button loading">Add</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

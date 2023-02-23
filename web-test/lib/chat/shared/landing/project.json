@@ -1,0 +1,16 @@
+{
+  "name": "chat-shared-landing",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/chat/shared/landing/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/chat/shared/landing/**/*.ts", "libs/chat/shared/landing/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,12 @@
+<b3n-email-conversation-list
+  [convo]="conversation$ | async"
+  [loadMoreTemplate]="loadMoreTemplate"
+></b3n-email-conversation-list>
+
+<ng-template #loadMoreTemplate>
+  <div fxLayoutAlign="center center">
+    <button mat-raised-button (click)="loadMore()" [loading]="isLoadingMore" color="primary" class="mx-16">
+      Load more
+    </button>
+  </div>
+</ng-template>

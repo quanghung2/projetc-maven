@@ -1,0 +1,64 @@
+.title {
+  background: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 8px;
+
+  label {
+    font-size: 16px;
+    margin-bottom: 0;
+    padding-top: 4px;
+  }
+}
+
+.content {
+  h4 {
+    color: #2196f3;
+
+    &.error-msg {
+      color: red;
+    }
+  }
+
+  .empty-text {
+    margin: 4px 0 0 24px;
+    color: #999;
+  }
+
+  .mat-expansion-panel-header:not(.mat-expanded):hover {
+    background: #f2f7fd;
+  }
+
+  .mat-expansion-panel-header-title,
+  .mat-expansion-panel-header-description {
+    flex-basis: 0;
+  }
+
+  .mat-expansion-panel-header-description {
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  .label-status {
+    align-self: center;
+  }
+
+  .mat-row {
+    height: 32px;
+  }
+
+  .mat-column-title {
+    width: 224px;
+  }
+
+  .mat-column-value {
+    padding: 0;
+    word-break: break-word;
+  }
+
+  .fake-expansion {
+    background: white;
+    font-size: 15px;
+    padding: 11px 24px;
+  }
+}

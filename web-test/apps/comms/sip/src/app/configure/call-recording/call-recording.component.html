@@ -1,0 +1,61 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Call Recording</div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column form">
+      <div class="row">
+        <div class="five wide column right aligned">Record Incoming Call</div>
+        <div class="ten wide column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="toggle1"
+              [checked]="recordIncoming.record"
+              (change)="$event.target['checked'] ? (recordIncoming.record = true) : (recordIncoming.record = false)"
+            />
+            <label class="switcher label" for="toggle1"></label>
+            <div class="box"></div>
+          </div>
+          <div class="content" *ngIf="recordIncoming.record">
+            <ivr-message [model]="recordIncoming"></ivr-message>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="five wide column right aligned">Record Outgoing Call</div>
+        <div class="ten wide column">
+          <div class="switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="toggle2"
+              [checked]="recordOutgoing.record"
+              (change)="$event.target['checked'] ? (recordOutgoing.record = true) : (recordOutgoing.record = false)"
+            />
+            <label class="switcher label" for="toggle2"></label>
+            <div class="box"></div>
+          </div>
+          <div class="content" *ngIf="recordOutgoing.record">
+            <ivr-message [model]="recordOutgoing"></ivr-message>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="currentAccount.features.custom_storage_for_call_recording">
+        <div class="five wide column right aligned">Custom Storage</div>
+        <div class="ten wide column">
+          <div class="field">
+            <button class="ui submit button" (click)="showCustomStorageConfig()">Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+  <div class="field right aligned">
+    <div class="ui primary submit button" (click)="saveChanges()">Save changes</div>
+  </div>
+</div>
+<div *ngIf="isSaving" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

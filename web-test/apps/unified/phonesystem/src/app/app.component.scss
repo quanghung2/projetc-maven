@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    width: 100%;
+  
+    mat-sidenav {
+      background: #fafafa;
+      left: 0px !important;
+      width: var(--left-sidebar-width);
+  
+      ::ng-deep {
+        .mat-drawer-inner-container {
+          overflow: hidden;
+        }
+      }
+    }
+  
+    mat-toolbar {
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem 1.5rem 0;
+    }
+  }
+  

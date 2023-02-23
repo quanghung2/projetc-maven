@@ -1,0 +1,64 @@
+<h3 class="ui dividing header">Login Page Preview</h3>
+
+<div class="preview-box">
+  <ul class="tabs">
+    <li>
+      <img *ngIf="faviconUrl" [src]="faviconUrl | safe" />
+      <i *ngIf="!faviconUrl" class="web asset icon"></i>
+      <span>{{ title }}</span>
+      <i class="close icon pull-right"></i>
+    </li>
+  </ul>
+
+  <div class="search-bar">
+    <div class="left-buttons">
+      <i class="icon arrow back"></i>
+      <i class="icon arrow forward"></i>
+      <i class="icon refresh"></i>
+    </div>
+    <div class="search-box">
+      <i class="icon lock text-success"></i>
+      <span class="text-success">https</span>://{{ domain }}
+      <i class="icon star border pull-right"></i>
+    </div>
+    <div class="right-buttons">
+      <img src="assets/biz.png" class="ext" />
+      <i class="icon menu"></i>
+    </div>
+  </div>
+
+  <div class="document">
+    <div class="login-screen">
+      <div [ngStyle]="{ 'background-color': headerBackgroundColor }" class="logo">
+        <img [src]="logoUrl | safe" *ngIf="logoUrl" />
+      </div>
+
+      <h3 class="ui bold header">Sign in</h3>
+
+      <form class="ui small form">
+        <div class="field">
+          <label>Sign-in ID</label>
+          <input type="text" readonly value="+65" />
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="text" readonly placeholder="Minimum of 6 characters" />
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" onclick="return false;" />
+          <label>Remember me</label>
+        </div>
+
+        <div [ngStyle]="{ 'background-color': buttonBackgroundColor }" class="ui fluid primary button login">
+          Sign in
+        </div>
+
+        <div class="center">
+          <div class="anchor">Forgot Password?</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

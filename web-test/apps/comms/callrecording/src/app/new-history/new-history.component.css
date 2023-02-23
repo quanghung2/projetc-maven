@@ -1,0 +1,104 @@
+.hidden {
+  display: none;
+}
+.history .note.update,
+.history:hover .note.text {
+  display: none;
+}
+.history .note.text,
+.history:hover .note.update {
+  display: block;
+}
+
+.note.update {
+  cursor: pointer;
+}
+
+.history .action a {
+  color: rgba(0, 0, 0, 0.87);
+}
+.history .action i {
+  cursor: pointer;
+  margin: auto;
+}
+.ui.calendar input {
+  border: 0;
+  background: transparent;
+  border-bottom: 1px solid #ddd;
+  padding: 5px 0;
+  border-radius: 0;
+}
+
+.backup-btn {
+  margin-left: 5px !important;
+}
+
+#history-table tbody tr td:nth-child(1) {
+  min-width: 130px;
+  width: 150px;
+}
+
+#history-table tbody tr td:nth-child(2) {
+  width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#history-table tbody tr td:nth-child(3) {
+  width: 300px;
+  max-width: 350px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+#history-table tbody tr td:nth-child(4) {
+  width: 300px;
+  max-width: 350px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+#history-table tbody tr td:nth-child(5) {
+  width: 240px;
+}
+
+#history-table tbody tr td:nth-child(6) {
+  width: 150px;
+}
+
+@media only screen and (max-width: 1024px) {
+  .ui.container {
+    width: 98%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .ui.page.control.menu .item.filter input,
+  .selected.dropdown {
+    width: 100px;
+    min-width: auto !important;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1378px) {
+  .ui.container {
+    width: 95%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .ui.page.control.menu .item.filter input,
+  .selected.dropdown {
+    width: 130px;
+    min-width: auto !important;
+  }
+}
+
+@media only screen and (min-width: 1378px) {
+  .ui.page.control.menu .item.filter input,
+  .selected.dropdown {
+    width: 200px;
+    min-width: auto !important;
+  }
+}

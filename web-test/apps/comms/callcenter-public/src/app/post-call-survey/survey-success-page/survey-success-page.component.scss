@@ -1,0 +1,37 @@
+:host {
+  section {
+    background: rgba(0, 0, 0, 0.03);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .mat-card {
+    min-width: 35%;
+
+    .title {
+      padding: 1rem 3rem;
+      font-size: 2rem;
+      text-align: center;
+      color: #6c7275;
+    }
+
+    .check-icon {
+      text-align: center;
+      i {
+        font-size: 7rem;
+        color: #c1c3c7;
+      }
+    }
+
+    .btn {
+      padding: 1rem;
+      text-align: center;
+      a {
+        background: #25d366;
+        color: #ffffff;
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<mat-form-field floatLabel="always">
+  <mat-select placeholder="Cluster" [(ngModel)]="curCluster" (selectionChange)="onChangeCluster()">
+    <mat-option *ngFor="let cluster of clusters$ | async as clusters" [value]="cluster">
+      {{ cluster.cluster }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-tab-group animationDuration="0ms">
+  <mat-tab label="Codec">
+    <ng-template matTabContent>
+      <b3n-codec [cluster]="curCluster.cluster"></b3n-codec>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Capacity">
+    <ng-template matTabContent>
+      <b3n-capacity [cluster]="curCluster.cluster"></b3n-capacity>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Translation">
+    <ng-template matTabContent>
+      <b3n-translation [cluster]="curCluster.cluster"></b3n-translation>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Manipulation">
+    <ng-template matTabContent>
+      <b3n-manipulation [cluster]="curCluster.cluster"></b3n-manipulation>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Header Relay">
+    <ng-template matTabContent>
+      <b3n-header-relay [cluster]="curCluster.cluster"></b3n-header-relay>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

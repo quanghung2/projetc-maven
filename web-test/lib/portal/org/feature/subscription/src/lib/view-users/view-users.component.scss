@@ -1,0 +1,25 @@
+.header-info {
+  padding: 1.5rem;
+
+  h2 {
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+.content {
+  padding: 1.5rem;
+
+  .user {
+    width: 100%;
+  }
+
+  button {
+    min-height: 2.25rem !important;
+  }
+
+  .users-assign {
+    max-width: 280px;
+  }
+}

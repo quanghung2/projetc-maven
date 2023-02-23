@@ -1,0 +1,47 @@
+<quill-editor
+  customToolbarPosition="bottom"
+  trackChanges="all"
+  [modules]="modules"
+  [formats]="formats"
+  [placeholder]="data.placeholder"
+  [preserveWhitespace]="true"
+  (onEditorCreated)="onCreatedQuill($event)"
+  [sanitize]="false"
+  class="editor"
+>
+</quill-editor>
+<div class="toolbar flex justify-content-end align-items-center gap-8">
+  <input
+    type="file"
+    id="fileInput"
+    multiple
+    style="display: none"
+    [(ngModel)]="file"
+    (change)="upload($event)"
+    #fileUpload
+  />
+  <button
+    mat-icon-button
+    *ngIf="data.enableEmoji"
+    [disabled]="websocketStatus !== SocketStatus.opened"
+    (click)="triggerShowEmojiBox()"
+  >
+    <mat-icon matTooltip="Emoji">sentiment_satisfied_alt</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    *ngIf="data.enableUpload"
+    [disabled]="websocketStatus !== SocketStatus.opened"
+    (click)="fileUpload.click()"
+  >
+    <mat-icon matTooltip="Upload">attach_file</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    *ngIf="data.showSendButton"
+    [disabled]="websocketStatus !== SocketStatus.opened || emptyEditor"
+    (click)="handleEnterMessage()"
+  >
+    <mat-icon matTooltip="Send message">send </mat-icon>
+  </button>
+</div>

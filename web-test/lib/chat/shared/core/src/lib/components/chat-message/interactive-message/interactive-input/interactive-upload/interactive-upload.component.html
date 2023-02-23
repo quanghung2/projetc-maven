@@ -1,0 +1,59 @@
+<ng-container *ngIf="errorText; else render">
+  <span class="normal-text red-fg">{{ errorText }}</span>
+</ng-container>
+<ng-template #render>
+  <div class="container flex column justify-content-start align-items-none">
+    <div class="flex justify-content-start align-items-center gap-16">
+      <label>{{ component?.label?.text }}</label>
+
+      <div
+        *ngIf="control?.value"
+        class="spacer flex justify-content-start align-items-center gap-8"
+        style="position: relative"
+      >
+        <img class="attachment-avatar" [src]="logoFileType" />
+        <div class="name-container flex column justify-content-start align-items-none" *ngIf="control?.value">
+          <div
+            [style.color]="
+              uploadStatusMap?.[component?.element?.id] === true
+                  ? 'green' :  uploadStatusMap?.[component?.element?.id] === false
+                  ? 'red' : undefined
+              
+            "
+            [attr.data-elementId]="component.element.id"
+          >
+            {{ nameFile }}
+          </div>
+          <span class="mat-caption">{{ sizeFile }}</span>
+        </div>
+
+        <mat-progress-bar
+          class="progress"
+          mode="determinate"
+          *ngIf="uploadPercentage > 0 && uploadPercentage < 100"
+          [value]="uploadPercentage"
+        ></mat-progress-bar>
+      </div>
+
+      <ng-container *ngIf="control?.value">
+        <button class="clear-btn" [loading]="isSubmiting" mat-icon-button (click)="control.setValue(null)">
+          <mat-icon class="material-icons-outlined">clear</mat-icon>
+        </button>
+      </ng-container>
+      <button *ngIf="!control?.value" mat-stroked-button color="primary" (click)="uploadMoh?.click()">
+        Upload file
+      </button>
+    </div>
+  </div>
+
+  <form id="uploadMoh" hidden>
+    <input
+      #uploadMoh
+      type="file"
+      id="file-csv"
+      hidden
+      [disabled]="backgroundUploading"
+      (change)="onBackgroundFileChange($event)"
+    />
+  </form>
+</ng-template>

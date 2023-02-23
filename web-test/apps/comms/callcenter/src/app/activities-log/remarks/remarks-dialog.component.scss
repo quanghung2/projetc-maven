@@ -1,0 +1,23 @@
+.agent__rows {
+  border: solid thin lightgray;
+  padding-top: 0;
+  margin-top: 10px;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.agent__rows .agent__row {
+  font-size: 14px;
+  cursor: move;
+}
+
+.agent__rows .agent__row:hover {
+  background: #f4f4f4;
+}
+
+.agent__rows .agent__row mat-icon {
+  font-size: 21px;
+  color: gray;
+  cursor: no-drop;
+}

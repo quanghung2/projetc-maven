@@ -1,0 +1,37 @@
+<!-- <sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+    <h1 class="settings__header">Email Configuration</h1>
+    <nav mat-tab-nav-bar>
+      <a
+        mat-tab-link
+        *ngFor="let link of links"
+        [routerLink]="[link.key]"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [active]="rla.isActive"
+      >
+        {{ link.value }}
+      </a>
+    </nav>
+  </div>
+</sui-template-portal> -->
+
+<mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+    <h1 class="settings__header">Email Configuration</h1>
+    <nav mat-tab-nav-bar>
+      <a
+        mat-tab-link
+        *ngFor="let link of links"
+        [routerLink]="[link.key]"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [active]="rla.isActive"
+      >
+        {{ link.value }}
+      </a>
+    </nav>
+  </div>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

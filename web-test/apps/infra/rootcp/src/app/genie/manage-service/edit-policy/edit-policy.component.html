@@ -1,0 +1,12 @@
+<div mat-dialog-title>Update Manage Service</div>
+
+<div mat-dialog-content class="container-dialog">
+  <mat-checkbox class="s-16" [formControl]="manageServiceCrtl">
+    <span>Enable Managed Service</span>
+  </mat-checkbox>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="processing" (click)="save()">Save</button>
+</div>

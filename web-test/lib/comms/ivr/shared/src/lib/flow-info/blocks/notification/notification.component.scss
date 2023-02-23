@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.searchBlock {
+  margin: 0.8rem 0 0 1.6rem !important;
+}
+.notification-section {
+  & > * {
+    margin: 1.6rem 0;
+  }
+  .sms-select {
+    margin-top: 0.8rem;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+
+  .child-component {
+    padding: 1.2em;
+    position: relative;
+    background-color: #fafafa;
+    border: 1px solid #e3e3e3;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+  }
+
+  .child-component.pointer-right {
+    &:before {
+      position: absolute;
+      content: '';
+      width: 1em;
+      height: 1em;
+      z-index: 2;
+      box-shadow: #e3e3e3 1px 1px 0 0;
+      background: #fafafa;
+      right: 3em;
+      -webkit-transform: rotate(-135deg);
+      transform: rotate(-135deg);
+      top: -6px;
+    }
+  }
+}

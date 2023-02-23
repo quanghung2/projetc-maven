@@ -1,0 +1,80 @@
+<ng-container *ngIf="!!sip; else noSip">
+  <div class="p-16" fxLayout="column" class="container">
+    <div fxLayout="column" fxLayoutGap="2rem" fxLayoutAlign="start none">
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">SIP Username</div>
+        <span>{{ sip.sipAccount?.username }}</span>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">Authentication Mode</div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+          <span> {{ sip?.detail?.config.authenticationMode === AuthenticationMode.IP ? 'IP' : 'Account' }}</span>
+          <mat-icon class="icon-action" (click)="editIpSip()">edit</mat-icon>
+        </div>
+      </div>
+
+      <ng-container *ngIf="sip.detail?.config.authenticationMode != AuthenticationMode.IP; else viewIp">
+        <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+          <div fxFlex="30%" fxLayoutAlign="end center">SIP Password</div>
+          <a href="javascript:void(0)" (click)="resetPassword(sip)">Reset</a>
+        </div>
+      </ng-container>
+
+      <ng-template #viewIp>
+        <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+          <div fxFlex="30%" fxLayoutAlign="end center">Authentication</div>
+          <span> IP Based</span>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+          <div fxFlex="30%" fxLayoutAlign="end center">Transport protocol</div>
+          <span> {{ updateIpPeerReq.protocol?.toUpperCase() || 'Not set' }}</span>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+          <div fxFlex="30%" fxLayoutAlign="end center">IP Peers</div>
+          <span> {{ updateIpPeerReq.ip || 'Not set' }}</span>
+        </div>
+
+        <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+          <div fxFlex="30%" fxLayoutAlign="end center">Port</div>
+          <span> {{ updateIpPeerReq.port || 'Not set' }}</span>
+        </div>
+      </ng-template>
+
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">Server Location</div>
+        <span> {{ ui.pbxConfig?.serverLocation }}</span>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">SIP Server</div>
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <span>
+            <span *ngFor="let ip of ui.pbxConfig.firewallConfig.signaling.ip">{{ ip }}</span> ({{ ui.subSipDomain }})
+          </span>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">CA Certificate</div>
+        <div fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+          <a href="javascript:void(0)" (click)="getTLSKey(sip)">Get certificate</a>
+        </div>
+      </div>
+
+      <div fxLayout="row" fxLayoutGap="3.2rem" fxLayoutAlign="start center">
+        <div fxFlex="30%" fxLayoutAlign="end center">Basic SIP Configuration</div>
+        <div fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+          <a href="javascript:void(0)" (click)="detailAccount(sip)">View detail</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #noSip>
+  <div fxLayout="column" class="container" fxLayoutAlign="center center">
+    <h3>No Available SIP</h3>
+  </div>
+</ng-template>

@@ -1,0 +1,17 @@
+<div fxLayout="column" class="topup-fail" fxLayoutAlign="center center" fxLayoutGap="1.6rem">
+  <img src="assets/svg/compilation-fail.svg" alt="" />
+  <div class="msg">This payment didn’t go through</div>
+  <div class="desc" *ngIf="!message">Sorry, an error has occurred when we try to fulfill your request.</div>
+  <div class="desc" *ngIf="message">{{ message }}</div>
+  <div *ngIf="source">
+    <h3>Technique details:</h3>
+    <ul>
+      <li>Source ID: {{ source['id'] }}</li>
+      <li>Status: {{ source['status'] }}</li>
+      <li *ngIf="source['redirect']['failure_reason']">
+        Redirect failure reason: {{ source['redirect']['failure_reason'] }}
+      </li>
+    </ul>
+  </div>
+  <button mat-raised-button color="primary" (click)="goBack()">Go back</button>
+</div>

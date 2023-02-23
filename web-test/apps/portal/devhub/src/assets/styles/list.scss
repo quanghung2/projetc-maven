@@ -1,0 +1,39 @@
+.list {
+  height: 100%;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.list.list--empty {
+  width: 100%;
+  padding: 24px 16px;
+}
+
+.code-option__rows {
+  margin-top: 10px;
+  border: solid thin lightgray;
+  padding: 0;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.code-option__rows .code-option__row {
+  font-size: 14px;
+  cursor: move;
+}
+
+.code-option__rows .code-option__row:hover {
+  background: #f4f4f4;
+}
+
+.code-option__rows .code-option__row mat-icon {
+  font-size: 21px;
+  color: gray;
+  cursor: no-drop;
+}
+
+.code-option__rows .code-option__row .code-option__btn-delete {
+  font-size: 21px;
+  color: gray;
+}

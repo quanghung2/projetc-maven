@@ -1,0 +1,139 @@
+@import '../../assets/scss/variables.scss';
+
+$security-width: 500px;
+
+.security {
+  margin: 24px auto;
+  width: $security-width;
+  padding: 3em 0;
+  position: relative;
+  .area {
+    border: 1px solid #ddd;
+    border-radius: 0.59259259rem;
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.23);
+    background-color: white;
+    .headerSection {
+      text-align: center;
+      padding: 20px 0;
+      .iconContainer {
+        mat-icon {
+          font-size: 5em;
+          height: auto;
+          width: auto;
+          &.error-icon {
+            color: $error-color;
+          }
+          &.invalid {
+            color: $warning-color;
+          }
+          &.valid {
+            color: $success-color;
+          }
+        }
+      }
+      .hint {
+        font-size: 16px;
+      }
+    }
+    .issueSection {
+      .item {
+        &__header {
+          mat-icon {
+            font-size: 24px;
+            align-self: center;
+            text-align: left;
+            width: 40px;
+            &.error-icon {
+              color: $error-color;
+            }
+            &.invalid {
+              color: $warning-color;
+            }
+            &.valid {
+              color: #0f9d58;
+            }
+          }
+          .header__title {
+            font-size: 1.21428571em;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.87) !important;
+          }
+          .header__sub-title {
+            font-size: 1em;
+            line-height: 1.57142857em;
+            color: $hint-color;
+          }
+        }
+      }
+      .section {
+        border: none;
+        margin: 0px;
+        .item {
+          border-top: 1px solid #ddd;
+          padding: 1.07142857rem 40px !important;
+          margin: 0px !important;
+          display: flex;
+          &.allowToggle:hover,
+          &.hover {
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.03);
+          }
+
+          .header {
+            font-size: 1.21428571em;
+            font-weight: 500;
+          }
+          .description {
+            font-size: 1em;
+            line-height: 1.57142857em;
+            color: $hint-color;
+          }
+          .content {
+            max-width: $security-width - 130px;
+          }
+        }
+        .passwordContent,
+        .tfaContent {
+          display: none;
+          padding: 1.07142857rem 40px !important;
+          border-top: 1px solid #ddd;
+        }
+        .passwordContent {
+          mat-form-field {
+            width: 100%;
+            box-sizing: border-box;
+          }
+          ::ng-deep .mat-button {
+            width: 100%;
+            margin: 10px 0px;
+          }
+        }
+        .tfaContent {
+          .status-container {
+            line-height: 36px;
+            margin: 0 0 1.5em 0;
+            .content {
+              p {
+                font-size: 14px;
+                line-height: 22px;
+                color: $empty-color;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .actions {
+    margin: 20px 0px;
+    float: right;
+    button {
+      margin: 0px;
+      width: 90px;
+      height: 38px;
+      mat-spinner {
+        margin: 0 auto;
+      }
+    }
+  }
+}

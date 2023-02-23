@@ -1,0 +1,98 @@
+<form #storeForm="ngForm">
+  <h1 mat-dialog-title>{{ isCreate ? 'Create Number List' : 'Edit Number List' }}</h1>
+
+  <div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+    <mat-form-field class="mb-0">
+      <input
+        matInput
+        type="text"
+        placeholder="Name"
+        name="name"
+        [(ngModel)]="requestData.name"
+        #name="ngModel"
+        required
+      />
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="mb-0">
+      <mat-label>Select a queue</mat-label>
+      <mat-select
+        name="queue"
+        #queue="ngModel"
+        [(ngModel)]="queueSelected"
+        (selectionChange)="showConcurrentCall($event.value)"
+        required
+      >
+        <mat-select-trigger *ngIf="queueSelected" value="queueSelected"> {{ queueSelected.label }} </mat-select-trigger>
+        <mat-option
+          [disabled]="queue.numberOfAssignedAgents == 0 && !queue.callflowConfig.genieCode"
+          *ngFor="let queue of queues"
+          [value]="queue"
+        >
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+            <span>{{ queue.label }}</span> <span class="fill-remaining-space"></span>
+            <span class="agent-info">
+              <span *ngIf="queue.numberOfAssignedAgents > 0">{{ queue.numberOfAssignedAgents }}</span>
+              <span *ngIf="queue.numberOfAssignedAgents === 0">No assigned agent</span>
+              <span *ngIf="queue.numberOfAssignedAgents === 1"> Agent</span>
+              <span *ngIf="queue.numberOfAssignedAgents > 1"> Agents</span>
+            </span>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="queue.invalid && (queue.dirty || queue.touched)">Queue is required</mat-error>
+    </mat-form-field>
+
+    <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.8rem">
+      <label class="mat-caption field">Mode</label>
+      <mat-radio-group class="pl-1" name="mode" [(ngModel)]="requestData.mode">
+        <div fxFlex="1 1 0"><mat-radio-button [value]="Mode.progressive">Progressive</mat-radio-button></div>
+        <div fxFlex="1 1 0"><mat-radio-button [value]="Mode.preview">Preview</mat-radio-button></div>
+      </mat-radio-group>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.8rem">
+      <label class="mat-caption field">CallerID</label>
+      <mat-radio-group class="pl-1" name="callerIdMode" [(ngModel)]="requestData.callerIdMode">
+        <div fxFlex="1 1 0"><mat-radio-button value="fixed">Single caller ID</mat-radio-button></div>
+        <div fxFlex="1 1 0">
+          <mat-radio-button value="dynamic">Respective extension's caller ID</mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field class="mb-0">
+      <mat-label>Default caller ID</mat-label>
+      <mat-select
+        name="callerId"
+        [(ngModel)]="requestData.callerId"
+        #callerId="ngModel"
+        [disabled]="requestData.callerIdMode === 'dynamic'"
+        required
+      >
+        <mat-option *ngFor="let callerId of callerIds" value="{{ callerId }}">{{ callerId }} </mat-option>
+      </mat-select>
+      <mat-error *ngIf="callerId.invalid && (callerId.dirty || callerId.touched)">Caller ID is required</mat-error>
+    </mat-form-field>
+
+    <mat-checkbox
+      *ngIf="isCreate && storeNumberListData.globalDncSubs && storeNumberListData.globalDncSubs.length > 0"
+      [(ngModel)]="requestData.checkDnc"
+      name="globalDnc"
+      >Check Global DNC checklist
+    </mat-checkbox>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button [mat-dialog-close]="false">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="storeForm.invalid || isProcessing">
+      <span *ngIf="!isCreate">
+        <span *ngIf="!isProcessing">Save</span> <span *ngIf="isProcessing">Saving...</span>
+      </span>
+      <span *ngIf="isCreate">
+        <span *ngIf="!isProcessing">Create</span> <span *ngIf="isProcessing">Creating...</span>
+      </span>
+    </button>
+  </div>
+</form>

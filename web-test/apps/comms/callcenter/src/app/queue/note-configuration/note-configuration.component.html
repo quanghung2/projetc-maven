@@ -1,0 +1,131 @@
+<h1 mat-dialog-title>Note Configuration</h1>
+
+<div mat-dialog-content style="padding-bottom: 1.6rem">
+  <div fxLayout="column" fxLayoutGap="1.6rem" class="dialog-content-container agent-config">
+    <ng-container *ngIf="!loading">
+      <section fxLayout="column" fxLayoutAlign="start none">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <mat-label class="title-header"> Disposition codes </mat-label>
+          <mat-slide-toggle (toggleChange)="onChangeView()" color="primary" [checked]="isShowDespositionCode">
+          </mat-slide-toggle>
+        </div>
+
+        <ng-container *ngIf="isShowDespositionCode">
+          <mat-form-field>
+            <mat-label>Disposition code</mat-label>
+            <input
+              type="text"
+              matInput
+              #codeOption
+              (keyup.enter)="addCodeOption(codeOption.value)"
+              placeholder="Enter disposition code"
+            />
+          </mat-form-field>
+
+          <ng-container *ngIf="queue.agentWorkflowConfig.codeOptions?.length === 0; else loadList">
+            <mat-hint fxLayoutAlign="center"> No disposition code </mat-hint>
+          </ng-container>
+          <ng-template #loadList>
+            <mat-hint fxLayoutAlign="end">
+              <span [ngPlural]="queue.agentWorkflowConfig.codeOptions.length">
+                <ng-template ngPluralCase="=1">1 disposition code</ng-template>
+                <ng-template ngPluralCase="other">
+                  {{ queue.agentWorkflowConfig.codeOptions.length }} disposition codes
+                </ng-template>
+              </span>
+            </mat-hint>
+
+            <div cdkDropList class="item__rows" (cdkDropListDropped)="dropDispositionCodes($event)">
+              <div
+                class="sortable-box"
+                *ngFor="let option of queue.agentWorkflowConfig.codeOptions; let i = index"
+                cdkDrag
+              >
+                <span>{{ i + 1 }}. {{ option }}</span> <span class="fill-remaining-space"></span>
+                <mat-icon (click)="deleteCodeOption(option)" class="code-option__btn-delete" matTooltip="Delele">
+                  delete
+                </mat-icon>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </section>
+
+      <mat-divider></mat-divider>
+
+      <section class="custom-field-container" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.8rem">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <mat-label class="title-header"> Custom fields </mat-label>
+          <mat-slide-toggle (toggleChange)="onChangeView()" color="primary" [checked]="isShowDespositionCode === false">
+          </mat-slide-toggle>
+        </div>
+
+        <ng-container *ngIf="!isShowDespositionCode">
+          <section fxLayout="column" fxLayoutAlign="start none">
+            <mat-form-field>
+              <mat-select placeholder="Type" [(ngModel)]="typeSelect">
+                <mat-option *ngFor="let type of types" [value]="type.key">{{ type.value }} </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <b3n-form-custom-field
+              *ngIf="!!typeSelect"
+              [customFields]="customFields"
+              [type]="typeSelect"
+              (add)="addMoreCustomField($event)"
+            ></b3n-form-custom-field>
+          </section>
+
+          <ng-container *ngIf="customFields?.length === 0; else loadListCustomField">
+            <mat-hint fxLayoutAlign="center"> No custom field </mat-hint>
+          </ng-container>
+          <ng-template #loadListCustomField>
+            <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+              <mat-hint>
+                <span [ngPlural]="customFields.length">
+                  <ng-template ngPluralCase="=1">1 custom field</ng-template>
+                  <ng-template ngPluralCase="other"> {{ customFields.length }} custom fields </ng-template>
+                </span>
+              </mat-hint>
+              <button mat-flat-button class="position-mode" *ngIf="!isPositionMode" (click)="isPositionMode = true">
+                Close
+              </button>
+              <button mat-flat-button class="position-mode" *ngIf="isPositionMode" (click)="isPositionMode = false">
+                Edit
+              </button>
+            </div>
+            <div
+              cdkDropList
+              class="list-custom-field"
+              [cdkDropListData]="customFields"
+              fxLayout="column"
+              fxLayoutAlign="start none"
+              (cdkDropListDropped)="dropCustomFields($event)"
+              [class.cursor-drop]="isPositionMode"
+            >
+              <b3n-custom-field
+                cdkDrag
+                [cdkDragDisabled]="!isPositionMode"
+                *ngFor="let item of customFields; let i = index; let last = last"
+                [detailField]="item"
+                [index]="i"
+                [last]="last"
+                [isPositionMode]="isPositionMode"
+                [customFields]="customFields"
+                (valueEdit)="editChanged($event)"
+                (delete)="onDeleteField($event)"
+              ></b3n-custom-field>
+            </div>
+          </ng-template>
+        </ng-container>
+      </section>
+    </ng-container>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end" *ngIf="!loading">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button [disabled]="isDisableSave" (click)="save()" color="primary">
+    <span *ngIf="!saving">Save</span> <span *ngIf="saving">Saving...</span>
+  </button>
+</div>

@@ -1,0 +1,140 @@
+<div class="ui compact accordion" style="margin-top: 0">
+  <div class="big underline title" [ngClass]="{ active: isShow }">
+    <div class="ui two column grid">
+      <div class="column" *ngIf="title != undefined">
+        <i class="icon circle outline"></i>
+        <div class="header">{{ title }}</div>
+      </div>
+      <div class="column">
+        <div class="floated field" [ngClass]="{ right: title != undefined }">
+          <div class="small switcher">
+            <input
+              class="toggle"
+              type="checkbox"
+              id="playMessage-{{ randomKey }}"
+              [checked]="config.isPlayMessage"
+              (change)="config.isPlayMessage = $any($event.target).checked"
+            />
+            <label class="switcher label" for="playMessage-{{ randomKey }}"></label>
+            <div class="box"></div>
+          </div>
+          Play Message
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content" [ngClass]="{ disabled: !config.isPlayMessage, active: isShow }">
+    <div class="ui form">
+      <!--<div class="inline fields">
+        <label>Message Type</label>
+        <div class="field">
+          <div class="checkbox">
+            <label>
+              <input type="radio" name="playtype-{{randomKey}}" [checked]="config.playType == 'TTS'" (change)="setPlayType('TTS')"/>Text to speech
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="checkbox">
+            <label>
+              <input type="radio" name="playtype-{{randomKey}}" [checked]="config.playType == 'MP3'" (change)="setPlayType('MP3')"/>Recording
+            </label>
+          </div>
+        </div>
+      </div>-->
+
+      <div [ngClass]="{ hidden: config.playType !== 'TTS' }">
+        <div class="field">
+          <label>Language</label>
+          <div
+            #languageElement
+            class="ui fluid search selection dropdown"
+            [ngClass]="config.isPlayMessage ? '' : 'disabled'"
+          >
+            <input type="hidden" name="country" [(ngModel)]="config.languageCode" />
+            <i class="dropdown icon"></i>
+            <div class="text">Select Country</div>
+            <div class="menu">
+              <ng-template ngFor let-language [ngForOf]="languages">
+                <div
+                  class="item"
+                  [ngClass]="{ active: language.code == config.languageCode }"
+                  [attr.data-value]="language.code"
+                >
+                  {{ language.display }}
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Message</label>
+          <textarea
+            [disabled]="!config.isPlayMessage"
+            [(ngModel)]="config.message"
+            rows="4"
+            placeholder="This call will be recorded for training and quality purpose"
+          ></textarea>
+        </div>
+      </div>
+      <div class="field" [ngClass]="{ hidden: config.playType !== 'MP3' }">
+        <label>Upload file</label>
+        <div class="messages">
+          <div class="ui icon message choose file" [ngClass]="{ hidden: config.mp3Url == undefined }">
+            <i class="icon voicemail"></i>
+            <div class="content">
+              <div class="header">Current recording file:</div>
+              <p>{{ getFileName(config.mp3Url) }}</p>
+            </div>
+            <i class="icon close" (click)="clearMp3Files()"></i>
+          </div>
+          <div
+            class="ui icon message choose file"
+            [ngClass]="{
+              hidden: config.mp3Url != undefined || mp3Files.length > 0
+            }"
+          >
+            <i class="icon file upload"></i>
+            <div class="content">
+              <div class="header">Upload your recording message now!</div>
+              <p>Only allow mp3 file format.</p>
+            </div>
+            <input class="files" type="file" accept="audio/mpeg" (change)="onFileChange($event)" />
+          </div>
+          <div
+            class="ui info message importing"
+            [ngClass]="{
+              hidden: config.mp3Url != undefined || mp3Files.length == 0,
+              info: file.percent < 100,
+              positive: file.completed
+            }"
+            *ngFor="let file of mp3Files"
+          >
+            <i class="icon close" (click)="clearMp3Files()"></i>
+            <div class="content">
+              <div class="ui column grid">
+                <div class="fifteen wide column row">
+                  <div class="sixteen wide column row">
+                    <div class="name">
+                      {{ file.name }}
+                      <span class="info">( {{ parseFileSize(file.size) }} )</span>
+                    </div>
+                  </div>
+                  <div class="sixteen wide column row">
+                    <div
+                      class="ui blue tiny progress"
+                      [ngClass]="{ success: file.completed }"
+                      data-percent="file.percent"
+                    >
+                      <div class="bar" style="transition-duration: 300ms" [style.width]="file.percent + '%'"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

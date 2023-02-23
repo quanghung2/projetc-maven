@@ -1,0 +1,50 @@
+.no__data {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+}
+
+.user-state__wrapper {
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, max-content));
+  grid-gap: 16px;
+  justify-content: center;
+  max-height: calc(100% - 64px);
+  overflow: scroll;
+
+  p {
+    margin: 0;
+  }
+
+  .text__overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+.user-state__block {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  min-width: 250px;
+  max-width: 250px;
+  text-align: center;
+}
+
+.block__header {
+  padding: 5px 16px;
+  color: white;
+  background: black;
+}
+
+.block__body {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid;
+}

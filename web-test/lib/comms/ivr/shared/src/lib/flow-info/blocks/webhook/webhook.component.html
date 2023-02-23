@@ -1,0 +1,149 @@
+<div class="webhook-block" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" ngModelGroup="block">
+  <mat-form-field>
+    <mat-label>URL</mat-label>
+    <input
+      #commandUrl="ngModel"
+      [(ngModel)]="block.webHookCommand.url"
+      matInput
+      name="commandUrl"
+      placeholder="Enter webhook url"
+      required
+    />
+    <mat-error *ngIf="commandUrl.invalid && (commandUrl.dirty || commandUrl.touched)">URL is required</mat-error>
+  </mat-form-field>
+  <div fxLayout="row" fxLayoutGap="10px">
+    <div fxFlex="40">
+      <mat-form-field>
+        <mat-select [(ngModel)]="block.webHookCommand.method" name="commandMethod" placeholder="Method">
+          <mat-option *ngFor="let method of ['post', 'get', 'put', 'delete']" [value]="method">
+            {{ method }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="">
+      <mat-form-field>
+        <mat-select [(ngModel)]="contentType" name="contentType" placeholder="Content type">
+          <mat-option
+            *ngFor="let item of ['application/json', 'application/x-www-form-urlencoded']"
+            (click)="selectContentType(item)"
+            [value]="item"
+          >
+            {{ item }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <mat-card>
+    <div>
+      <h3>Headers</h3>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <mat-form-field fxFlex="38">
+          <input (keyup.enter)="addHeader()" [(ngModel)]="headerName" matInput name="headerName" placeholder="Name" />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="38">
+          <input
+            (keyup.enter)="addHeader()"
+            [(ngModel)]="headerValue"
+            matInput
+            name="headerValue"
+            placeholder="Value"
+          />
+        </mat-form-field>
+        <button (click)="addHeader()" [ngClass]="{ disabled: !headerName || !headerValue }" mat-stroked-button>
+          Enter
+        </button>
+      </div>
+      <p class="mat-small">
+        Use <a (click)="openPlaceholderDialog()" color="primary" href="javascript:void(0)">Wildcard</a> on the value
+        field
+      </p>
+    </div>
+    <div *ngIf="addedHeaders.length > 0">
+      <div>
+        <div>
+          <p fxLayout="row">
+            Added headers <span class="fill-remaining-space"></span> <a (click)="deleteHeader('all')">Delete all</a>
+          </p>
+        </div>
+        <mat-divider></mat-divider>
+        <div
+          *ngFor="let header of addedHeaders"
+          class="webhook-block__added-header-params"
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+        >
+          <span class="webhook-block__added-header-params__content" fxFlex="80"
+            >{{ header.key }} : {{ header.value }}
+          </span>
+          <span class="fill-remaining-space"></span>
+          <button (click)="deleteHeader(header.key)" fxFlex="20" mat-icon-button><mat-icon>close</mat-icon></button>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card>
+    <div class="field">
+      <h3>Parameters</h3>
+      <div class="fields" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <mat-form-field fxFlex="38">
+          <input
+            (keyup.enter)="addParameter()"
+            [(ngModel)]="parameterName"
+            matInput
+            name="parameterName"
+            placeholder="Name"
+          />
+        </mat-form-field>
+
+        <mat-form-field fxFlex="38">
+          <input
+            (keyup.enter)="addParameter()"
+            [(ngModel)]="parameterValue"
+            matInput
+            name="parameterValue"
+            placeholder="Value"
+          />
+        </mat-form-field>
+        <button (click)="addParameter()" [ngClass]="{ disabled: !parameterName || !parameterValue }" mat-stroked-button>
+          Enter
+        </button>
+      </div>
+      <p class="mat-small">
+        Use <a (click)="openPlaceholderDialog()" color="primary" href="javascript:void(0)">Wildcard</a> on the value
+        field
+      </p>
+    </div>
+    <div *ngIf="addedParameters.length > 0">
+      <div class="data-list__header" fxLayout="row">
+        Added parameters <span class="fill-remaining-space"></span> <a (click)="deleteParameter('all')">Delete all</a>
+      </div>
+      <div
+        *ngFor="let parameter of addedParameters"
+        class="webhook-block__added-parameter-params"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+      >
+        <span class="webhook-block__added-parameter-params__content" fxFlex="80"
+          >{{ parameter.key }} : {{ parameter.value }}
+        </span>
+        <span class="fill-remaining-space"></span>
+        <button (click)="deleteParameter(parameter.key)" fxFlex="20" mat-icon-button><mat-icon>close</mat-icon></button>
+      </div>
+    </div>
+  </mat-card>
+
+  <div *ngIf="block.webHookCommand.contextParameters.length > 0">
+    <div class="data-list__header" fxLayout="row">
+      Added placeholders <span class="fill-remaining-space"></span>
+      <div><a (click)="deleteContextParameter('all')">Delete all</a></div>
+    </div>
+    <div *ngFor="let parameter of block.webHookCommand.contextParameters" fxLayout="row" fxLayoutAlign="start center">
+      {{ parameter.context }}: {{ parameter.asKey }}: {{ parameter.script }} <span class="fill-remaining-space"></span>
+      <button (click)="deleteContextParameter(parameter.asKey)" mat-icon-button><mat-icon>close</mat-icon></button>
+    </div>
+  </div>
+</div>

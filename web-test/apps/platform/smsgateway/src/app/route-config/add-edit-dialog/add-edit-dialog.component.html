@@ -1,0 +1,101 @@
+<form class="dialog__wrapper" [formGroup]="form" (ngSubmit)="save()" autocomplete="off">
+  <h3 mat-dialog-title>{{ data.title }} Routing Rule</h3>
+  <mat-dialog-content class="dropdowns">
+    <mat-form-field appearance="fill">
+      <mat-label>Organization</mat-label>
+      <input matInput formControlName="organization" [matAutocomplete]="autoOrg" />
+      <mat-autocomplete [displayWith]="displayOrgFn" #autoOrg="matAutocomplete">
+        <mat-option *ngFor="let org of organizations$ | async" [value]="org">
+          {{ org.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Sender</mat-label>
+        <mat-select formControlName="srcMatchingType">
+          <mat-option value="PREFIX">Number</mat-option>
+          <mat-option value="EXACT">Name</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="srcMatchingType.value === 'PREFIX'">
+        <mat-label>Src Prefix</mat-label>
+        <input
+          matInput
+          formControlName="srcPrefix"
+          type="text"
+          inputNumberKeydown
+          replacedKey="*"
+          [inputFormControl]="srcPrefix"
+        />
+        <mat-error>* Src Prefix is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" *ngIf="srcMatchingType.value === 'EXACT'">
+        <mat-label>Src Prefix</mat-label>
+        <mat-select formControlName="srcPrefix">
+          <mat-option *ngIf="senders.length === 0">No valid sender name</mat-option>
+          <mat-option *ngFor="let sender of senders" [value]="sender">{{ sender }}</mat-option>
+        </mat-select>
+        <mat-error>* No valid sender name</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill" [class.mt-10]="srcPrefix.touched && srcPrefix.invalid">
+      <mat-label>Destination Prefix</mat-label>
+      <input
+        matInput
+        formControlName="destPrefix"
+        type="text"
+        inputNumberKeydown
+        replacedKey="*"
+        [inputFormControl]="destPrefix"
+      />
+      <mat-error>* Destination Prefix is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="destPrefix.touched && destPrefix.invalid">
+      <mat-label>Vendor</mat-label>
+      <mat-select formControlName="vendor">
+        <mat-option *ngFor="let vendor of vendors" [value]="vendor.name">{{ vendor.label }}</mat-option>
+      </mat-select>
+      <mat-error>* Vendor is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="vendor.touched && vendor.invalid" *ngIf="enableMnpCheck.value">
+      <mat-label>Fallback Vendor</mat-label>
+      <mat-select formControlName="backupVendor">
+        <mat-option *ngFor="let vendor of vendors" [value]="vendor.name">{{ vendor.label }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="backupVendor.hasError('required')">* Fallback Vendor is required</mat-error>
+      <mat-error *ngIf="backupVendor.hasError('duplicated')">* Fallback Vendor must be different from Vendor</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" [class.mt-10]="backupVendor.touched && backupVendor.invalid">
+      <mat-label>Product</mat-label>
+      <mat-select formControlName="product">
+        <mat-option *ngFor="let product of products" [value]="product.productId"
+          >{{ product.name }} ({{ product.productId }})</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>SKU</mat-label>
+      <mat-select formControlName="sku">
+        <mat-option *ngFor="let sku of skus" [value]="sku.sku">{{ sku.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="enableMnpCheck">Enable MNP</mat-checkbox>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="buttons">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid" [loading]="progressing">
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>

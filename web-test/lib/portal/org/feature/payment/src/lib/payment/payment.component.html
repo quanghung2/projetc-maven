@@ -1,0 +1,81 @@
+<div class="payment">
+  <mat-toolbar class="header"
+    ><h1>Payment</h1>
+    <span class="flex-spacer"></span>
+    <button mat-button (click)="reloadData()" matTooltip="Refresh credits">
+      <mat-icon>refresh</mat-icon>
+      Refresh page
+    </button>
+  </mat-toolbar>
+  <ng-container *ngIf="portalConfig && sellerOrgs" [ngSwitch]="sellerOrgs.length">
+    <div class="payment-content p-16">
+      <ng-container *ngSwitchCase="0" [ngTemplateOutlet]="noWalletInfo"> </ng-container>
+      <ng-container *ngSwitchCase="1" [ngTemplateOutlet]="oneSeller"> </ng-container>
+      <ng-container *ngSwitchDefault>
+        <mat-tab-group animationDuration="0ms" (selectedTabChange)="onOrgChanged($event)">
+          <mat-tab *ngFor="let org of sellerOrgs" [label]="org.name">
+            <mat-template [ngTemplateOutlet]="oneSeller"> </mat-template>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #oneSeller>
+  <ng-container *ngIf="wallets$ | async as wallets">
+    <ng-container [ngSwitch]="wallets.length">
+      <ng-container *ngSwitchCase="0" [ngTemplateOutlet]="noWalletInfo"> </ng-container>
+      <ng-container
+        *ngSwitchCase="1"
+        [ngTemplateOutlet]="oneWallet"
+        [ngTemplateOutletContext]="{ $implicit: wallets[0] }"
+      >
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <mat-tab-group animationDuration="0ms">
+          <mat-tab *ngFor="let wallet of wallets" [label]="wallet.currency">
+            <mat-template [ngTemplateOutlet]="oneWallet" [ngTemplateOutletContext]="{ $implicit: wallet }">
+            </mat-template>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #noWalletInfo>
+  <div class="teal-color p-32 text-center">You have no wallet</div>
+</ng-template>
+
+<ng-template #loading>
+  <div fxLayout="row" fxLayoutAlign="center center" class="p-32 text-center mx-a">
+    <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-template #oneWallet let-wallet>
+  <ng-container *ngIf="!isLoading; else loading">
+    <div fxLayout="column" fxLayoutGap="1.6rem">
+      <pop-balance-info
+        [portalConfig]="portalConfig"
+        [organization]="organization"
+        [wallet]="wallet"
+        (topuped)="onTopupResponse($event)"
+      ></pop-balance-info>
+      <div class="divider"></div>
+      <pop-auto-topup-config
+        [settings]="autoTopupSettings"
+        [isBlockAutoTopUpSub]="isBlockAutoTopUpSub"
+        [organization]="organization"
+      ></pop-auto-topup-config>
+      <div class="divider" *ngIf="portalConfig.allowTopup"></div>
+      <pop-stored-card
+        *ngIf="portalConfig.allowTopup || organization.isPartner"
+        [settings]="autoTopupSettings"
+        [wallet]="wallet"
+        (changedSettings)="changedPaymentSettings()"
+      ></pop-stored-card>
+    </div>
+  </ng-container>
+</ng-template>

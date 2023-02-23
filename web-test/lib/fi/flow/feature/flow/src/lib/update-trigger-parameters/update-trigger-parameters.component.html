@@ -1,0 +1,47 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+  <b3n-mappings
+    [isOptional]="false"
+    [formMappings]="triggerConfigs"
+    [isShowContextVar]="false"
+    [editable]="editable"
+    [dataSourceUuids]="dataSourceUuids"
+  ></b3n-mappings>
+
+  <div class="option-param" *ngIf="showOptionalParam">
+    <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="expandOptionalParam.toggle()">
+      <span *ngIf="!expandOptionalParam.expanded">Show optional params</span>
+      <span *ngIf="expandOptionalParam.expanded">Hide optional params</span>
+      <mat-icon>{{ expandOptionalParam.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+    </a>
+
+    <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+      <b3n-mappings
+        [isOptional]="true"
+        [formMappings]="triggerConfigs"
+        [isShowContextVar]="false"
+        [editable]="editable"
+        [dataSourceUuids]="dataSourceUuids"
+      ></b3n-mappings>
+    </mat-expansion-panel>
+  </div>
+</div>
+
+<b3n-extend-trigger
+  #extendTrigger
+  *ngIf="trigger.extensionConfig.extendable"
+  [editable]="editable"
+></b3n-extend-trigger>
+
+<div dir="rtl" class="mb-2">
+  <button
+    *ngIf="editable"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="updating"
+    [disabled]="disableSubmit()"
+    (click)="update()"
+  >
+    Update
+  </button>
+</div>

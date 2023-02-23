@@ -1,0 +1,52 @@
+<div [formGroup]="formConfigs" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <b3n-context-variable
+    *ngIf="contextVariablesArray"
+    [optionForControl]="
+      $any({
+        title: 'List',
+        key: 'arrayExpression',
+        isOptional: false,
+        dataType: 'array',
+        disabled: !editable || actionDetail,
+        expressionTree: formConfigs.get('arrayExpression').value
+      })
+    "
+    [contextVariables]="contextVariablesArray"
+    [isMultiple]="false"
+    (selectedValue)="selectValue($event)"
+    (selectedProp)="selectProp($event)"
+  ></b3n-context-variable>
+
+  <mat-form-field hideRequiredMarker="true">
+    <mat-select placeholder="Iterated Action" [formControl]="actionDefCtrl" required>
+      <mat-option *ngFor="let a of actionDefs" [value]="a.uuid">{{ a.name }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="actionDefCtrl.invalid">This field is required</mat-error>
+  </mat-form-field>
+
+  <ng-container formArrayName="subroutineMappings">
+    <ng-container [formGroupName]="i" *ngFor="let item of subroutineMappings.controls; let i = index">
+      <b3n-context-variable
+        *ngIf="contextVariablesNotArray?.length"
+        [optionForControl]="item.value"
+        [contextVariables]="contextVariablesNotArray"
+        [keyForContextVar]="'looping'"
+        [typeBooleanCheckbox]="false"
+        (selectedValue)="selectValueMapping($event, $any(item))"
+      ></b3n-context-variable>
+    </ng-container>
+  </ng-container>
+
+  <mat-form-field hideRequiredMarker="true" *ngIf="propOfArrayExpression && actionDef">
+    <input
+      matInput
+      type="number"
+      min="1"
+      max="100"
+      placeholder="Max Allowed Iteration"
+      formControlName="maxAllowedIteration"
+      required
+    />
+    <mat-error *ngIf="maxAllowedIteration.invalid">{{ getErrorMaxAllowedIteration() }}</mat-error>
+  </mat-form-field>
+</div>

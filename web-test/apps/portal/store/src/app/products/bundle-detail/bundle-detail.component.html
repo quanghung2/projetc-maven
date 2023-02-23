@@ -1,0 +1,46 @@
+<div *ngIf="isLoading" class="loading-container" fxLayout="row" fxLayoutAlign="center center">
+  <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+</div>
+<ng-container *ngIf="bundle">
+  <mat-card class="bundle">
+    <div #bundleCard class="bundle__container" [class.view-full]="isViewFull">
+      <div class="bundle__header text-center">
+        <mat-card-title class="">{{ bundle.name | capitalizeCase }}</mat-card-title>
+        <div class="bundle__header-description text-truncate" [matTooltip]="bundle.description">
+          {{ bundle.description }}
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <section fxLayout="column wrap" fxLayoutAlign="center center">
+          <h1 class="bundle__pricing">
+            {{ totalPrice | currency: currency }}
+          </h1>
+          <div>
+            <span class="bundle__pricing-unit">{{ parseBillingCycle() }}</span>
+          </div>
+        </section>
+        <button class="bundle__button" mat-flat-button color="primary" (click)="purchase()">Purchase</button>
+        <div>
+          <ng-container *ngFor="let item of bundle.items">
+            <p *ngIf="priceMap[item.sku]?.skuName" class="bundle__feat">
+              <mat-icon class="mr-4 text-success">add</mat-icon>
+              {{ priceMap[item.sku]?.skuName }}
+            </p>
+          </ng-container>
+          <ng-container *ngIf="isOverFlow">
+            <div class="view-more">
+              <mat-icon (click)="toggleViewFull()" class="cursor-pointer">expand_more</mat-icon>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="isViewFull">
+            <div class="view-more">
+              <mat-icon (click)="toggleViewFull()" class="cursor-pointer">expand_less</mat-icon>
+            </div>
+          </ng-container>
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</ng-container>

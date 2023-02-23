@@ -1,0 +1,14 @@
+<header *ngIf="!loading"></header>
+
+<router-outlet></router-outlet>
+
+<contact-us></contact-us>
+
+<assign-agent></assign-agent>
+<add-consent-number></add-consent-number>
+<export-consent></export-consent>
+<confirmation></confirmation>
+
+<div *ngIf="loading" class="ui active inverted dimmer inner-dimmer">
+  <div class="ui text loader"></div>
+</div>

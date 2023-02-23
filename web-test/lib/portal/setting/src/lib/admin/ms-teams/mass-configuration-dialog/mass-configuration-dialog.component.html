@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Bulk Assignment</h2>
+<p class="text-muted pb-0">Massive mapping Microsoft Teams accounts with Extension by uploading CSV file.</p>
+
+<div mat-dialog-content *ngIf="isUploadingCSV; else content">
+  <mat-progress-bar mode="determinate" [value]="progressPercentage" *ngIf="!isUploadingCSV"></mat-progress-bar>
+  <div class="mt-8">Processing... {{ progressPercentage | number }}%</div>
+</div>
+
+<ng-template #content>
+  <div mat-dialog-content class="d-flex flex-column" *ngIf="!isConfigureCompleted">
+    <button mat-stroked-button class="mb-8 p-0">
+      <label for="file" class="upload__label">Upload CSV (5MB)</label>
+      <input
+        (change)="uploadCSV($event)"
+        id="file"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+        style="display: none"
+        type="file"
+      />
+    </button>
+    <a
+      href="https://ui.b3networks.com/samples/sample_ms_teams_extension_user.csv?t=timestamp"
+      target="_blank"
+      color="primary"
+      mat-button
+      >Download sample file</a
+    >
+  </div>
+  <mat-card class="mt-8" *ngIf="file">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+      <img class="attachment__avatar" [src]="logoFileType" alt="" />
+      <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.3rem">
+        <h5 class="semi-bold mt-0">{{ file.name }}</h5>
+        <h6 class="description">{{ sizeFile }} | {{ file.type | uppercase }}</h6>
+      </div>
+    </div>
+  </mat-card>
+  <ng-container *ngIf="isConfigureCompleted">
+    <h4>Configure MS Teams completed</h4>
+    <h5 class="text-success">Number of record(s) succeeded: {{ numberSuccessReq }}</h5>
+    <h5 class="text-danger d-flex justify-content-between">
+      <span> Number of record(s) failed: {{ numberFailedReq }} </span>
+      <a (click)="export()" class="cursor-pointer" *ngIf="failedRecords.length">Download failed records </a>
+    </h5>
+  </ng-container>
+
+  <div mat-dialog-actions class="justify-content-end">
+    <ng-container *ngIf="isConfigureCompleted; else uploadButtons">
+      <button mat-raised-button color="primary" (click)="done()">Done</button>
+    </ng-container>
+    <ng-template #uploadButtons>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-raised-button color="primary" [disabled]="!file" (click)="configure()">Submit</button>
+    </ng-template>
+  </div>
+</ng-template>

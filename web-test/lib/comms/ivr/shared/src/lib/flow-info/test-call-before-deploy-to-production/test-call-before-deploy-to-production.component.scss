@@ -1,0 +1,14 @@
+:host {
+  display: block;
+
+  .test-call-info {
+    &__content {
+      &__number {
+        margin-bottom: 0.8rem;
+      }
+      mat-form-field {
+        width: 100%;
+      }
+    }
+  }
+}

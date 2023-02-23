@@ -1,0 +1,38 @@
+<mat-form-field>
+  <mat-label>Invite members</mat-label>
+  <mat-chip-list #chipList>
+    <mat-chip *ngFor="let member of members" (removed)="remove(member)">
+      <b3n-agent-avatar [user]="member"></b3n-agent-avatar>
+      {{ member.displayName }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+    <input
+      #memberInput
+      [formControl]="memberCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    />
+  </mat-chip-list>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+    <mat-option
+      *ngFor="let member of filteredMembers | async"
+      [value]="member"
+      [class.hide]="!getUserNameFromMail(member.email) || member.memberStatus === 'DISABLED'"
+      [class.disabled]="member.memberStatus === 'DISABLED'"
+    >
+      {{ member.displayName }}
+      <div
+        *ngIf="member.memberStatus !== 'DISABLED'"
+        class="indicator"
+        [class.online]="member.status === 'online'"
+        [class.offline]="member.status === 'offline'"
+      ></div>
+      <div class="triangle" *ngIf="member.memberStatus === 'DISABLED'"></div>
+      <small class="ql-mention-desc" *ngIf="getUserNameFromMail(member.email)">
+        {{ getUserNameFromMail(member.email) }}
+      </small>
+      <span *ngIf="member.memberStatus === 'DISABLED'">&nbsp;({{ member.memberStatus }})</span>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

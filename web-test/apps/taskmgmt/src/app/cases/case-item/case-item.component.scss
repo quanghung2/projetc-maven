@@ -1,0 +1,154 @@
+/*
+ * Remove template code below
+ */
+
+:host {
+  .issuable-main-info {
+    .issue-title {
+      font-weight: 600 !important;
+      font-size: 15px;
+      a {
+        color: rgb(97, 97, 97) !important;
+        cursor: pointer;
+      }
+    }
+    .issuable-info {
+      font-weight: 400;
+      color: #666;
+      .issuable-reference {
+        white-space: nowrap;
+      }
+      // font-size: 14px;
+    }
+    .issuable-due-date {
+      mat-icon {
+        font-size: 15px !important;
+        width: 18px !important;
+        height: 18px !important;
+      }
+    }
+
+    .issuable-product {
+      background-color: #00b8d9;
+      color: #dff3f9;
+
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      padding: 0px 6px;
+      line-height: 16px;
+    }
+    .issuable-type {
+      color: white;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      padding: 0px 6px;
+      line-height: 16px;
+    }
+    .type-bug {
+      background-color: #cb2500;
+      color: #fbdad7;
+    }
+    .type-tech {
+      background-color: #ff9933;
+      color: #fff6ec;
+    }
+    .type-genaral {
+      background-color: #36b37e;
+      color: #e5f9de;
+    }
+    .type-finance {
+      color: #fdfafb;
+      background-color: #a6768c;
+    }
+    .type-request {
+      color: #e6f3fb;
+      background-color: #50bfbf;
+    }
+    .type-orther {
+      color: #e6f3fb;
+      background-color: #51c8ff;
+    }
+  }
+
+  .unassigned {
+    color: white;
+    mat-icon {
+      font-size: 12px;
+      margin-top: 10px;
+    }
+  }
+}
+
+.severity-logo {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+.title-search {
+  padding: 0px 10px;
+  display: block;
+}
+
+mat-form-field.input-search {
+  width: 100%;
+  font-size: 14px;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+
+  .mat-form-field-outline,
+  .mat-form-field-outline-thick {
+    color: transparent !important;
+  }
+
+  ::ng-deep {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
+
+  input {
+    line-height: initial;
+  }
+}
+
+.search-input {
+  width: 300px;
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.issue-avatar {
+  margin-top: 2px;
+}
+
+mat-selection-list {
+  max-height: 300px;
+  overflow: scroll;
+}
+
+.text-red {
+  color: #dd2b0e !important;
+  font-weight: 400;
+}
+
+.icon-share {
+  font-size: 18px !important;
+  color: #7a7a7a;
+  width: 18px;
+  height: 18px;
+}
+
+.unassigned {
+  color: white;
+  mat-icon {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+}
+
+.group-avatar {
+  width: 32px !important;
+  height: 32px !important;
+}

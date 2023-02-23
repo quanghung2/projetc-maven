@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'scss/core';
+
+:root {
+  --dashboard2-primary: #00897b;
+  --dashboard2-primary__1: #00897bad;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-button {
+  width: 4px;
+  height: 0;
+}
+
+::-webkit-scrollbar-track {
+  background: 0 0;
+  border: none;
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border: thin solid #ccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7d7d7d;
+}
+
+a {
+  text-decoration: none;
+}

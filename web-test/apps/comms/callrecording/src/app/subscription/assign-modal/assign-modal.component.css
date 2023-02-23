@@ -1,0 +1,24 @@
+.hidden {
+  display: none;
+}
+
+.labeled.inside.input {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.labeled.inside.input {
+  cursor: pointer;
+}
+
+.sub-name {
+  border: 0 !important;
+}
+
+.numbers-space {
+  max-height: 10rem;
+  overflow: auto;
+}

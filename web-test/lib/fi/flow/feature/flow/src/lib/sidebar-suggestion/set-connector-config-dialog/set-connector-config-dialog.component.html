@@ -1,0 +1,24 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Connector Configuration</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <b3n-connector-config
+    #config
+    [connector]="inputDialog.connector"
+    (invalid)="configInvalid = $event"
+  ></b3n-connector-config>
+  <p *ngIf="!inputDialog.isEdit"><strong>Note: </strong>You can change these settings later in the sidebar</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button
+    mat-raised-button
+    color="primary"
+    type="button"
+    [loading]="config.setting"
+    [disabled]="configInvalid"
+    (click)="setConfig()"
+  >
+    Set
+  </button>
+</div>

@@ -1,0 +1,131 @@
+:host {
+  display: block;
+  width: 100%;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.keypad {
+  &__input {
+    width: 100%;
+    text-align: center;
+    margin: 1.5rem auto 1.5rem;
+
+    ::ng-deep {
+      .mat-input-element {
+        caret-color: #000000;
+      }
+      .mat-form-field-label {
+        opacity: 0.4;
+      }
+    }
+    input {
+      text-align: center;
+      background-color: inherit;
+      font-size: 3rem;
+      min-width: 0;
+    }
+  }
+
+  &__numbers,
+  &__actions {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  &__numbers {
+    .number-region {
+      margin-bottom: 1.6rem;
+    }
+    .num {
+      border: 1px solid #0000;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      cursor: pointer;
+      background-color: #d3d3d3;
+
+      .digit {
+        font-size: 24px;
+      }
+
+      .digit-only {
+        font-size: 24px;
+        font-weight: 340;
+      }
+
+      .text {
+        font-size: 1em;
+        letter-spacing: 4px;
+        margin-top: 15px;
+        margin-left: 5px;
+        display: none;
+      }
+    }
+  }
+
+  &__actions {
+    .phone-icon {
+      position: relative;
+
+      .num-call {
+        background-color: #039be5;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        mat-icon {
+          color: white;
+        }
+      }
+
+      .menu-delegate {
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+      }
+    }
+  }
+}
+
+.num-call {
+  background-color: #039be5;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  mat-icon {
+    color: white;
+  }
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
+}
+
+.contact__search {
+  ::ng-deep {
+    .mat-tab-body {
+      padding: 8px 0;
+    }
+    .mat-list-item-content {
+      padding: 8px 0;
+    }
+  }
+}
+
+::ng-deep {
+  .phone_button {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(0, 0, 0, 0.12) !important;
+
+    &.mat-button-disabled {
+      cursor: none;
+      mat-icon {
+        color: #bfbfbf;
+      }
+    }
+  }
+}

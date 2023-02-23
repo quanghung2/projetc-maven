@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Test Descriptor</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutGap="50px"></div>
+  <div fxLayout="column" fxFlex="40" fxLayoutAlign="start stretch" class="dialog-content-container">
+    <mat-form-field>
+      <input disabled="true" [(ngModel)]="newSource.descriptor" matInput placeholder="Descriptor Code" required />
+    </mat-form-field>
+
+    <span class="title">Query Statment <span class="mini-title">(ready only)</span> </span>
+    <div class="statement test">{{ newSource.statement }}</div>
+    <span class="title request-body">Request Body</span>
+    <textarea class="test" [(ngModel)]="text" matInput placeholder="Query Statment" [rows]="10"></textarea>
+  </div>
+  <div fxLayout="column" fxFlex="60" fxLayoutAlign="start stretch" class="dialog-content-container response">
+    <span class="title"
+      >Response Status: <b [class]="statusCode == '200' ? 'ok' : 'error'">{{ statusCode }}</b></span
+    >
+    <span class="title">Response Body</span>
+    <textarea
+      class="test response-body"
+      [(ngModel)]="responseData"
+      matInput
+      placeholder="Response Body"
+      [rows]="25"
+    ></textarea>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="TestDescriptor()">
+    {{ ctaActionName }}
+  </button>
+</div>

@@ -1,0 +1,127 @@
+@keyframes chipHighlight {
+  0% {
+    background: #e0e0e0;
+  }
+  25% {
+    background: #ffcc80;
+  }
+  50% {
+    background: #ffa726;
+  }
+  75% {
+    background: #ffcc80;
+  }
+
+  100% {
+    background: #e0e0e0;
+  }
+}
+$timepicker-color: #ffa726;
+
+.worktime {
+  .mat-tab-group {
+    width: 100%;
+  }
+  .highlight {
+    animation: chipHighlight 1800ms 1 0s linear;
+  }
+  &__checkbox {
+    margin-top: -0.8rem;
+  }
+  position: relative;
+  .mat-tab-body-wrapper {
+    .mat-tab-body-content {
+      overflow: hidden !important;
+    }
+  }
+
+  &__timezone {
+    .mat-form-field-wrapper {
+      .mat-form-field-flex {
+        .mat-form-field-infix {
+          padding-bottom: 10px;
+        }
+      }
+    }
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+  }
+  .working-schedule-form {
+    &__title {
+      margin-bottom: 0.75rem;
+      color: rgba(0, 0, 0, 0.87);
+
+      &.custom-day {
+        margin-top: -0.25rem;
+      }
+
+      & mat-spinner {
+        margin-left: 0.8rem;
+      }
+    }
+
+    &__default-holidays {
+      .mat-chip-list-wrapper {
+        width: 100% !important;
+      }
+    }
+    padding: 1.6rem 0;
+
+    .working-time-table {
+      &__from,
+      &__to {
+        .mat-form-field-wrapper {
+          .mat-form-field-flex {
+            .mat-form-field-infix {
+              width: auto !important;
+            }
+          }
+        }
+      }
+      &__from {
+        margin-left: 2rem !important;
+        margin-right: 1.6rem !important;
+      }
+    }
+
+    .default-holidays-title {
+      font-weight: 500;
+      margin-top: 1.6rem;
+    }
+
+    &__holidays {
+      background: #fafafa;
+      border: 1px solid #eeeeee;
+      border-radius: 5px;
+      margin-bottom: 1.6rem;
+      padding: 1.6rem;
+      &__add-icon {
+        color: gray;
+        margin-left: 1.6rem;
+        cursor: pointer;
+      }
+    }
+    &__picker {
+      visibility: hidden;
+    }
+  }
+}
+
+.public-holidays {
+  width: 100%;
+  .mat-chip-list-wrapper {
+    width: 100% !important;
+  }
+}
+
+mat-icon {
+  font-size: 20px;
+}
+.custom-datePicker {
+  position: absolute;
+  left: 0;
+  background: white;
+  width: 100%;
+}

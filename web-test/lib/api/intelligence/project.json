@@ -1,0 +1,16 @@
+{
+  "name": "api-intelligence",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/intelligence/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/intelligence/**/*.ts", "libs/api/intelligence/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

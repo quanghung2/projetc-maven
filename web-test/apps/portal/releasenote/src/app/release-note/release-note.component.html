@@ -1,0 +1,78 @@
+<ng-container>
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      opened
+      class="sidenav"
+      [fixedInViewport]="true"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
+      fxHide.lt-sm
+    >
+      <mat-toolbar>
+        <h1>Releases</h1>
+      </mat-toolbar>
+
+      <mat-divider></mat-divider>
+
+      <ng-container *ngIf="menus?.length > 0">
+        <ul class="menus">
+          <li *ngFor="let menu of menus; let i = index">
+            <a [class.active]="selectedIndex === i" (click)="filterReleases(menu, i)">{{
+              menu | date: 'MMM dd, yyyy'
+            }}</a>
+          </li>
+        </ul>
+      </ng-container>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <mat-toolbar fxHide.lt-sm
+        ><h1>{{ menus[selectedIndex] | date: 'MMM dd, yyyy' }}</h1></mat-toolbar
+      >
+      <div fxHide.gt-xs class="releases-selected" fxlayout="column" fxFlexAlign="start start" fxLayoutGap="1.2rem">
+        <span class="title">Releases:</span>
+        <mat-form-field *ngIf="menus.length > 0">
+          <mat-select [(ngModel)]="releaseSelected" (ngModelChange)="filterReleases(releaseSelected)">
+            <mat-option *ngFor="let menu of menus; let i = index" [value]="menu">{{
+              menu | date: 'MMM dd, yyyy'
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="release-container">
+        <div *ngIf="releasesFiltered?.length > 0" class="announcement-container" fxLayout="column" fxLayoutGap="2rem">
+          <div *ngFor="let release of releasesFiltered" class="release" fxLayout="column" fxLayoutGap="1rem">
+            <div class="release-header" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.8rem">
+              <div class="header-title">{{ release.title }}</div>
+              <div fxLayout="column" fxLayoutGap="0rem">
+                <span class="header-time"
+                  ><strong>Published on:</strong> {{ release.publishedAt * 1000 | date: 'MMM dd yyyy HH:mm ' }}</span
+                >
+                <!-- <span class="header-time"
+                  ><strong>Last modified on:</strong> {{ release.modifiedAt * 1000 | date: 'MMM dd yyyy HH:mm ' }}</span
+                > -->
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="release-content" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.5rem">
+              <ng-container *ngIf="!release?.isQuill; else loadQuill">
+                <div lazyload [innerHTML]="release?.content | safe: 'html'"></div>
+              </ng-container>
+              <ng-template #loadQuill>
+                <div lazyload [innerHTML]="release?.quillHTML | safe: 'html'"></div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="releases?.length == 0" class="no-release">
+          <div>No release</div>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>

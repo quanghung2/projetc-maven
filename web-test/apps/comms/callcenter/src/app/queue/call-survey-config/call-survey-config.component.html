@@ -1,0 +1,71 @@
+<h1 mat-dialog-title>Post-call survey configuration</h1>
+
+<form #form="ngForm">
+  <div class="enable-toggle" fxLayoutGap="1.6rem" fxLayoutAlign="space-between center" *ngIf="senderNumbers.length > 0">
+    <h3>Enable Post-call survey</h3>
+    <mat-slide-toggle
+      fxLayoutGap="1.6rem"
+      [checked]="isEnablePostCallSurvey"
+      (change)="changeEnablePostCallSurveyStt($event)"
+    ></mat-slide-toggle>
+  </div>
+
+  <div *ngIf="senderNumbers.length === 0">You don't have any verified sender name. Please contact admin.</div>
+  <div
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="1.6rem"
+    *ngIf="queueConfig && isEnablePostCallSurvey && senderNumbers.length > 0"
+    class="post-call-survey-info"
+  >
+    <mat-form-field fxLayoutGap="1.6rem">
+      <mat-select
+        placeholder="Sender"
+        [(ngModel)]="queueConfig.postCallConfig.senderNumber"
+        name="sender"
+        #sender="ngModel"
+        required
+      >
+        <mat-option *ngFor="let senderNumber of senderNumbers" [value]="senderNumber">{{ senderNumber }}</mat-option>
+      </mat-select>
+      <mat-error class="sms-warning" *ngIf="sender.invalid && (sender.dirty || sender.touched)"
+        >The message is required.
+      </mat-error>
+    </mat-form-field>
+
+    <div class="sms-area">
+      <b3n-textarea-sms
+        [sms]="queueConfig.postCallConfig.message"
+        (updateValue)="onUpdateValue($event)"
+        (isValid)="validForm($event)"
+      >
+      </b3n-textarea-sms>
+    </div>
+
+    <div mat-dialog-actions align="end" fxLayoutGap="0.8rem">
+      <button mat-button mat-dialog-close>Close</button>
+
+      <button
+        mat-raised-button
+        *ngIf="senderNumbers.length > 0"
+        (click)="update()"
+        [disabled]="!isValid || sender.invalid"
+        color="primary"
+      >
+        <span *ngIf="!updating">Update</span> <span *ngIf="updating">Updating...</span>
+      </button>
+    </div>
+  </div>
+
+  <div
+    mat-dialog-actions
+    align="end"
+    fxLayoutGap="0.8rem"
+    *ngIf="!isEnablePostCallSurvey || senderNumbers.length === 0"
+  >
+    <button mat-button mat-dialog-close>Close</button>
+    <button mat-raised-button (click)="update()" color="primary" *ngIf="senderNumbers.length > 0">
+      <span *ngIf="!updating">Update</span> <span *ngIf="updating">Updating...</span>
+    </button>
+  </div>
+</form>

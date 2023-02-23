@@ -1,0 +1,16 @@
+<ng-container *ngIf="txn; else empty">
+  <ng-container *ngIf="members$ | async as members; else empty">
+    <mat-action-list class="members">
+      <mat-list-item *ngFor="let member of members" class="member">
+        <csh-render-member [user]="member"></csh-render-member>
+      </mat-list-item>
+    </mat-action-list>
+    <ng-container *ngIf="members?.length === 0">
+      <ng-container *ngTemplateOutlet="empty"></ng-container>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <small fxLayoutAlign="center center">Empty</small>
+</ng-template>

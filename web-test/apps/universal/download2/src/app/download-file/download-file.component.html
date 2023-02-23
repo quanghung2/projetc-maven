@@ -1,0 +1,23 @@
+<div class="download-page" fxLayout="column" fxLayoutAlign="center center">
+  <div *ngIf="file && !isInvalidURL" fxLayout="column" fxLayoutAlign="center center">
+    <mat-icon svgIcon="downloadFile"></mat-icon>
+
+    <div class="download-page__title">{{ file.fileName }}</div>
+    <div class="download-page__size">{{ file.fileSize }}</div>
+
+    <button class="download-page__downloaded-btn" disabled mat-stroked-button *ngIf="downloaded">
+      File is being downloaded...
+    </button>
+    <button mat-button *ngIf="downloaded" (click)="goToPortal()">Go back to Portal</button>
+  </div>
+  <shc-resource-not-found
+    message="Invalid URL"
+    *ngIf="isInvalidURL"
+    class="resource-not-found"
+  ></shc-resource-not-found>
+
+  <h3 *ngIf="unauthentiated" class="b border-radius-4 yellow p-16">
+    Unauthenticated. Please wait for the redirect to the login page...
+  </h3>
+  <shc-resource-not-found *ngIf="isInvalidOrgUuid"></shc-resource-not-found>
+</div>

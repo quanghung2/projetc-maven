@@ -1,0 +1,37 @@
+.block-container {
+  width: 600px;
+
+  .label-status {
+    min-width: 0;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 0px 8px;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mat-card {
+    background: #f2f7fd;
+  }
+
+  .mat-stroked-button {
+    padding: 4px 4px 4px 8px;
+    line-height: 1 !important;
+
+    mat-icon {
+      font-size: 20px !important;
+      width: 20px !important;
+      height: 20px !important;
+      line-height: 1 !important;
+    }
+  }
+
+  .resolve-deprecate-done {
+    color: #28a745;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+}

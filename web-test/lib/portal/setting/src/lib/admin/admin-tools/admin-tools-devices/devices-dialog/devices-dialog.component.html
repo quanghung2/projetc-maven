@@ -1,0 +1,75 @@
+<div mat-dialog-title fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+  <span> Configure {{ device.deviceType | extDevice }} Device</span> <span class="fill-remaining-space"></span>
+</div>
+
+<div fxLayout="column" fxLayoutGap="2rem">
+  <div *ngIf="[DeviceType.IP_PHONE, DeviceType.DELEGATED].includes(device?.deviceType)">
+    <div fxLayout="column" fxLayoutGap="2rem">
+      <div *ngIf="device?.isDelegated" class="secondary-text">
+        Configure for Delegated {{ device?.deviceType | extDevice }}
+        {{ device?.isDelegated ? 'from ' + (device.delegatedFrom | selectExtension | async)?.displayText : '' }}
+      </div>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div>SIP Credentials:</div>
+        <div>{{ device.sipAccount.username }}</div>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div>Domain:</div>
+        <div>
+          {{ device.sipAccount?.domain.substr(0, device.sipAccount.domain.indexOf('.')) || '' }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div>Password:</div>
+        <div>
+          <button (click)="resetSipPassword()" class="actions" title="Reset your SIP password">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px" class="tls-info mat-caption cursor-pointer">
+    <mat-checkbox class="s-16" [checked]="device.sipAccount.isEnabledTLS" (change)="toggleTLS(device)">
+      <span>Enable TLS</span>
+    </mat-checkbox>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px" class="tls-info mat-caption cursor-pointer">
+    <mat-checkbox class="s-16" [checked]="device.sipAccount.isEnabledSTUN" (change)="toggleSTUN(device)"
+      ><span>Enable STUN</span></mat-checkbox
+    >
+  </div>
+
+  <div
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="4px"
+    class="tls-info mat-caption cursor-pointer"
+    *ngIf="[DeviceType.MOBILE, DeviceType.DESKTOP].includes(device?.deviceType)"
+  >
+    <mat-checkbox class="s-16" [checked]="device.sipAccount.enableIpv6" (change)="toggleIPv6(device)"
+      ><span>Enable IPv6</span></mat-checkbox
+    >
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-form-field fxFlex>
+      <mat-label>Select codec</mat-label>
+      <mat-select [(ngModel)]="device.sipAccount.codec">
+        <mat-option *ngFor="let codec of codecList" [value]="codec.key">{{ codec.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="update()">Update</button>
+</mat-dialog-actions>

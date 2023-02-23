@@ -1,0 +1,17 @@
+.definition {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  padding: 24px 16px;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 300;
+  }
+
+  &:hover {
+    border: 1px solid #007be0 !important;
+  }
+}

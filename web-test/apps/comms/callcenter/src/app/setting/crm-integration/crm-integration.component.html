@@ -1,0 +1,85 @@
+<form #form="ngForm" fxLayout="column" fxLayoutGap="1.6rem">
+  <ng-container *ngIf="crmIntegration">
+    <mat-form-field>
+      <mat-label>Url</mat-label>
+      <input [(ngModel)]="crmIntegration.url" matInput matInput name="crmUrl" required type="text" />
+    </mat-form-field>
+    <section class="crm-headers">
+      <h3>Headers</h3>
+      <div
+        *ngFor="let header of crmIntegration.headerFields; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="0.8rem"
+      >
+        <mat-form-field fxFlex="">
+          <mat-label>Name</mat-label>
+          <input
+            [(ngModel)]="crmIntegration.headerFields[i].fieldName"
+            matInput
+            matInput
+            name="headerFieldName{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <mat-form-field fxFlex="70">
+          <mat-label>Value</mat-label>
+          <input
+            [(ngModel)]="crmIntegration.headerFields[i].fieldValue"
+            matInput
+            matInput
+            name="headerFieldValue{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <button (click)="crmIntegration.headerFields.splice(i, 1)" mat-icon-button tabindex="-1">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <a (click)="addMoreHeader()" class="add-more-button" href="javascript:void(0)">Add more</a>
+    </section>
+    <section class="crm-fields">
+      <h3>Fields</h3>
+      <div
+        *ngFor="let field of crmIntegration.fields; let i = index"
+        fxLayout="row"
+        fxLayoutAlign="space-between center"
+        fxLayoutGap="0.8rem"
+      >
+        <mat-form-field fxFlex="">
+          <mat-label>Name</mat-label>
+          <input
+            [(ngModel)]="crmIntegration.fields[i].fieldName"
+            matInput
+            matInput
+            name="fieldName{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <mat-form-field fxFlex="70">
+          <mat-label>Value</mat-label>
+          <input
+            [(ngModel)]="crmIntegration.fields[i].fieldValue"
+            matInput
+            matInput
+            name="fieldValue{{ i }}"
+            required
+            type="text"
+          />
+        </mat-form-field>
+        <button (click)="crmIntegration.fields.splice(i, 1)" mat-icon-button tabindex="-1">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <a (click)="addMoreField()" class="add-more-button" href="javascript:void(0)">Add more</a>
+    </section>
+    <div align="end">
+      <button (click)="update()" [disabled]="progressing || form.invalid" color="primary" mat-raised-button>
+        <span *ngIf="!progressing">Update</span> <span *ngIf="progressing">Updating...</span>
+      </button>
+    </div>
+  </ng-container>
+</form>

@@ -1,0 +1,226 @@
+<div class="container" *ngIf="!loadingPM">
+  <div class="purchase__body py-16" [formGroup]="formPM">
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="40px" class="purchase__details">
+      <div fxFlex="300px" fxFlexFill>
+        <h3 class="d-flex justify-content-between title">
+          <span>{{ hardwareProduct ? hardwareProduct.name : 'SUBSCRIPTION PLAN' }}</span>
+        </h3>
+
+        <ng-container *ngIf="type === 'APP'">
+          <div
+            fxLayoutAlign="start center"
+            class="d-flex secondary-text"
+            [hidden]="product.appId === 'tzHCQsWV5usSaUVB'"
+          >
+            <mat-form-field class="w-100">
+              <mat-select formControlName="subscriptionPlans">
+                <mat-option *ngFor="let item of purchaseSelectPlan.skuList" [value]="item">
+                  {{ item.skuName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayoutAlign="start center" class="feature__item d-flex secondary-text">
+            <span class="spacer">Billed</span>
+            <mat-radio-group fxLayoutGap="24px" formControlName="billed" aria-label="Billed">
+              <ng-container *ngFor="let bill of billeds">
+                <mat-radio-button *ngIf="getBillingCycle(bill.key)" [value]="bill.key">{{
+                  bill.value
+                }}</mat-radio-button></ng-container
+              >
+            </mat-radio-group>
+          </div>
+          <mat-divider></mat-divider>
+          <div
+            class="feature__item d-flex bb secondary-text"
+            fxLayoutAlign="center center"
+            *ngIf="product.appId !== 'tzHCQsWV5usSaUVB'"
+          >
+            <span class="spacer"> Base price </span>
+            <span class="ml-auto">{{ purchaseSelectPlan.selectedPlan.selectedSaleModel.price }}</span>
+          </div>
+
+          <ng-container *ngFor="let item of KEYS(numberSkuMapping)">
+            <div
+              class="feature__item d-flex bb secondary-text"
+              fxLayoutAlign="center center"
+              [hidden]="product.appId === 'tzHCQsWV5usSaUVB'"
+              *ngIf="
+                purchaseSelectPlan.selectedPlan.hasNumberRequire() && numberSkuMapping[item].selectedNumbers.length
+              "
+            >
+              <span class="spacer">
+                <strong>{{ numberSkuMapping[item].name }}</strong> number x
+                {{ numberSkuMapping[item].selectedNumbers.length }}</span
+              >
+              <span class="ml-auto">{{
+                numberSkuMapping[item].price * numberSkuMapping[item].selectedNumbers.length
+              }}</span>
+            </div>
+          </ng-container>
+
+          <div
+            class="feature__item d-flex bb secondary-text"
+            fxLayoutAlign="center center"
+            *ngIf="selectedAddon.getTotalQuota() > 0"
+          >
+            <span class="spacer"> Add-ons x {{ selectedAddon.getTotalQuota() }} </span>
+            <span class="ml-auto">{{ selectedAddon.totalPrice }}</span>
+          </div>
+
+          <ng-container *ngIf="product.appId === 'tzHCQsWV5usSaUVB' && purchaseSelectPlan?.skuList?.length">
+            <table mat-table [dataSource]="dataSource" [hidden]="!dataSource?.paginator">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let sku">{{ sku.skuName }} ({{ sku.selectedSaleModel.price }})</td>
+              </ng-container>
+
+              <ng-container matColumnDef="details">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let sku">
+                  <div class="details">
+                    <mat-icon (click)="changeQuantity(sku, -1)">remove</mat-icon>
+                    <span>{{ sku.quantity }}</span>
+                    <mat-icon (click)="changeQuantity(sku, 1)">add</mat-icon>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <mat-paginator pageSize="5" hidePageSize showFirstLastButtons> </mat-paginator>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="type !== 'APP' && !!hardwareProduct && hardwareProduct.skus?.length">
+          <div fxLayoutAlign="start center" class="feature__item d-flex secondary-text">
+            <span class="spacer">Billed</span>
+            <mat-radio-group fxLayoutGap="24px" formControlName="billed" aria-label="Billed">
+              <ng-container *ngFor="let bill of billeds">
+                <mat-radio-button *ngIf="getHardwareBillingCycle(bill.key)" [value]="bill.key">{{
+                  bill.value
+                }}</mat-radio-button></ng-container
+              >
+            </mat-radio-group>
+          </div>
+          <table mat-table [dataSource]="hardwareDataSource" [hidden]="!hardwareDataSource?.paginator">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let sku">{{ sku.name }} ({{ sku.salesModels[0].amount }})</td>
+            </ng-container>
+
+            <ng-container matColumnDef="details">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let sku">
+                <div class="details">
+                  <mat-icon (click)="changeHardwareQuantity(sku.code, -1)">remove</mat-icon>
+                  <span>{{ hardwareQuantityHash[sku.code] }}</span>
+                  <mat-icon (click)="changeHardwareQuantity(sku.code, 1)">add</mat-icon>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <mat-paginator pageSize="5" hidePageSize showFirstLastButtons> </mat-paginator>
+        </ng-container>
+
+        <div *ngIf="trial" class="secondary-text py-10" fxLayout="column" fxLayoutAlign="center center">
+          <p class="m-0">Price is shown for reference only.</p>
+          <p class="m-0">You won't be charged.</p>
+        </div>
+      </div>
+      <div fxFlex="1 1 auto" fxFlexFill>
+        <ng-container *ngFor="let step of steps; let i = index">
+          <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="step.active">
+            <div fxLayout="row" fxLayoutAlign="stretch center" class="step__header">
+              <h3 class="spacer title">{{ step.id.toString() | titlecase }}</h3>
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                <span
+                  *ngFor="let item of steps; let ix = index"
+                  [class.blue-500]="i === ix"
+                  [class.grey-400]="i !== ix"
+                  class="step-index"
+                >
+                  {{ ix + 1 }}
+                </span>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <psh-select-number-product
+              *ngIf="step.id === stepName.number && step.active"
+              [numberSkuMapping]="numberSkuMapping"
+              [organization]="organization"
+              [selectedProduct]="product"
+              [purchaseSelectPlan]="purchaseSelectPlan"
+              [numberVendor]="numberVendor"
+              (selectedConfirm)="selectedNumber()"
+              (changeNumberSkuMapping)="changeNumberSkuMapping($event)"
+              (changeNumberVendor)="changeNumberVendor($event)"
+            ></psh-select-number-product>
+
+            <psh-select-addon
+              *ngIf="step.id === stepName.addons && step.active"
+              [purchaseSelectPlan]="purchaseSelectPlan"
+              [selectedProduct]="product"
+              [organization]="organization"
+              [selectedAddon]="selectedAddon"
+              [skus]="skus"
+              (changeSelectedAddon)="changeSelectedAddon($event)"
+            ></psh-select-addon>
+            <psh-payment
+              *ngIf="step.id === stepName.checkout && step.active"
+              [totalPrice]="totalPrice"
+              [wallet]="wallet"
+              [totalActivationFee]="totalActivationFee"
+              [hasNumber]="hasNumber"
+              [(autoRenew)]="autoRenew"
+            ></psh-payment>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem" class="purchase__actions">
+    <ng-container *ngIf="activeStep === stepName.checkout">
+      <div fxFlex="300px" class="mr-40"></div>
+      <div fxFlex="100" class="d-flex justify-content-between">
+        <button mat-button (click)="back()">
+          <mat-icon *ngIf="steps.length > 1">arrow_back</mat-icon>
+          {{ steps.length > 1 ? 'Back' : 'Cancel' }}
+        </button>
+        <ng-container *ngIf="wallet && (wallet.usableCredit >= totalPrice || totalPrice === 0); else topUp">
+          <button mat-raised-button color="primary" [disabled]="disabledPayment" (click)="payment()">
+            {{ trial ? 'Trial' : 'Pay Now' }}
+          </button>
+        </ng-container>
+        <ng-template #topUp>
+          <button mat-raised-button color="primary" (click)="openTopup()">Topup</button>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="activeStep === stepName.number">
+      <div fxFlex="300px" class="mr-40"></div>
+      <div fxFlex="100" class="d-flex justify-content-between">
+        <button mat-button (click)="cancel()">Cancel</button>
+        <button mat-raised-button color="primary" (click)="next()">Next</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="activeStep === stepName.addons">
+      <div fxFlex="300px" class="mr-40"></div>
+      <div fxFlex="100" class="d-flex justify-content-between">
+        <button mat-button (click)="cancel()" *ngIf="steps.length <= 2">Cancel</button>
+        <button mat-button (click)="back()" *ngIf="steps.length > 2">
+          <mat-icon>arrow_back</mat-icon>
+          Back
+        </button>
+        <button mat-raised-button color="primary" (click)="next()">Next</button>
+      </div>
+    </ng-container>
+  </div>
+</div>

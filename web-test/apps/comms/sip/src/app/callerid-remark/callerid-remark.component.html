@@ -1,0 +1,54 @@
+<div class="configure-content">
+  <div class="content">
+    <div class="right floated left aligned six wide column">
+      <div class="ui segment" style="padding-right: 0px">
+        <input accept="text/csv" class="files" type="file" #file style="display: none" (change)="upload($event)" />
+        <button *ngIf="!uploading" class="ui labeled icon button" (click)="triggerFileUpload()">
+          <i class="cloud upload icon"></i>
+          Upload
+        </button>
+        <button *ngIf="uploading" class="ui labeled icon button">
+          <i class="cloud upload icon"></i>
+          Uploading...
+        </button>
+      </div>
+    </div>
+    <div *ngIf="remarks?.length === 0">
+      <div class="ui container center aligned">
+        <div class="ui segment">This org has no remarks</div>
+      </div>
+    </div>
+    <div *ngIf="remarks?.length !== 0">
+      <table class="ui selectable table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th *ngFor="let c of columns">
+              <span *ngIf="toLowercase(c) === 'callerid'">CallerID</span>
+              <span *ngIf="toLowercase(c) !== 'callerid'">{{ toTitleCase(c) }}</span>
+            </th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of remarks; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td *ngFor="let c of columns">
+              <span *ngIf="r[c]">{{ toTitleCase(r[c]) }}</span>
+              <!-- <i *ngIf="!r[c]">(missing data)</i> -->
+              <i
+                *ngIf="toLowercase(c) !== 'callerid'"
+                class="ui icon edit"
+                title="Update"
+                (click)="edit(i, c, r[c])"
+              ></i>
+            </td>
+            <td>
+              <i class="ui icon delete" title="Delete" (click)="delete(i)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

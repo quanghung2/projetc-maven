@@ -1,0 +1,22 @@
+:host {
+  .large-file {
+    color: red;
+  }
+
+  .title {
+    word-break: break-all;
+  }
+
+  .preview-img {
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .right-floated {
+    float: right;
+    .btnCancel {
+      margin-right: 10px;
+    }
+  }
+}

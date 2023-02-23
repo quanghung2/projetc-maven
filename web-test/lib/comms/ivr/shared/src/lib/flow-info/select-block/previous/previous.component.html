@@ -1,0 +1,37 @@
+<h1 mat-dialog-title class="middle-step-title">Middle step</h1>
+
+<div mat-dialog-content class="content">
+  <p class="mat-subheading-1" *ngIf="data.parentBlock?.type == BlockType.transfer">
+    Configure next step if <b>{{ data.block?.label }}</b> missed a call.
+  </p>
+  <mat-nav-list>
+    <a
+      mat-list-item
+      *ngFor="let option of options"
+      [class.hidden]="option.key == BlockType.go && addFirstBlock"
+      (click)="selectType(option)"
+    >
+      <i *ngIf="option.key == BlockType.transfer" class="material-icons" style="color: #52c174; font-weight: bold"
+        >call</i
+      >
+      <img
+        *ngIf="option.key == BlockType.notification"
+        class="ui image"
+        src="assets/ivr-shared/images/vc-icon-voicemail.png"
+      />
+      <i *ngIf="option.key == BlockType.play" class="material-icons" style="color: #6eaae7">play_circle_outline</i>
+      <i *ngIf="option.key == BlockType.monitor" class="material-icons" style="color: indianred">record_voice_over</i>
+      <img
+        *ngIf="option.key == BlockType.confirmation"
+        class="ui image"
+        src="assets/ivr-shared/images/vc-icon-confirmation.png"
+      />
+      <img *ngIf="option.key == BlockType.go" class="ui image" src="assets/ivr-shared/images/vc-icon-back.png" />
+      {{ option.value }}
+    </a>
+  </mat-nav-list>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</div>

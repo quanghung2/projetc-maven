@@ -1,0 +1,13 @@
+<div id="callerids-view-modal" class="ui custom-modal modal" style="margin-bottom: 50px">
+  <i class="close icon" (click)="hideModal(modalId)"></i>
+  <div class="header" *ngIf="member">View callerId ({{ member.displayName }})</div>
+  <div class="content">
+    <div class="ui grid" *ngIf="member">
+      <div class="four wide column" *ngFor="let callerID of member.callerIds">
+        <div class="ui green basic label" style="min-width: 100px; text-align: center">
+          {{ callerID }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

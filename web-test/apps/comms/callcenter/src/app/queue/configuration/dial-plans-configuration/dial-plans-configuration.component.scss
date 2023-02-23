@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.dialplan {
+  width: 100%;
+
+  &-form {
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 1.6rem;
+
+    &__row {
+      width: 100%;
+    }
+  }
+
+  &-table {
+    width: 100%;
+
+    &--not-found {
+      text-align: center;
+    }
+  }
+
+  &-row {
+    &--actions {
+      text-align: right;
+    }
+
+    &--action {
+      cursor: pointer;
+    }
+  }
+}

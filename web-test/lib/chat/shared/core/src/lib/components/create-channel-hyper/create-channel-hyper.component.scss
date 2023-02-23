@@ -1,0 +1,19 @@
+:host {
+  .desc {
+    font-size: 0.8rem;
+    line-height: 1.25rem;
+    color: #717274;
+    margin: 0;
+  }
+
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+}

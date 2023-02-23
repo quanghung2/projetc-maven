@@ -1,0 +1,38 @@
+<div class="container-form" *ngIf="_form && genieConfig" [formGroup]="_form">
+  <div fxLayout="row" fxFlexFill>
+    <mat-form-field fxFlex>
+      <mat-select
+        placeholder="Skills"
+        formControlName="skillId"
+        [errorStateMatcher]="matcher"
+        (ngModelChange)="onChangeSkill($event)"
+      >
+        <mat-option *ngFor="let item of arrSkills" [value]="item.code">
+          {{ item.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="skillId.hasError('required')">Skill is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="container-list-field" fxLayout="column" fxLayoutAlign="space-between stretch" formArrayName="params">
+    <ng-container *ngFor="let item of params.controls; let i = index">
+      <div class="field-container" [formGroupName]="i" fxLayout="row" fxLayoutAlign="space-between center">
+        <label fxFlex="35">{{ item.get('name').value }}</label>
+        <mat-form-field fxFlex="60" class="params-input">
+          <input
+            matInput
+            placeholder="Value"
+            formControlName="value"
+            [errorStateMatcher]="matcher"
+            [required]="params.controls[i].get('isRequired').value"
+          />
+          <mat-error *ngIf="params.controls[i].get('value').hasError('required')"> Value is required </mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isExist">
+      <span class="exist-skill">Your Skill doesn't exist</span>
+    </ng-container>
+  </div>
+</div>

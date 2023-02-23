@@ -1,0 +1,386 @@
+<div mat-dialog-content class="container">
+  <form [formGroup]="formGroup" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem">
+    <section fxLayout="row" fxLayoutAlign="space-between center">
+      <h2>{{ createTrunkModalInput.isEdit ? 'Update' : 'Create' }} Trunk</h2>
+      <div fxLayout="row" fxLayoutGap=".8rem">
+        <button mat-stroked-button mat-dialog-close>Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          [loading]="isLoading"
+          [disabled]="formGroup.invalid && !hastranslation"
+          (click)="onSave()"
+        >
+          {{ createTrunkModalInput?.isEdit ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </section>
+
+    <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="3.2rem">
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap=".8rem" fxFlex>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            placeholder="Ex: abc1_xyz"
+            formControlName="name"
+            required
+            [b3nRetrictInput]="'([a-zA-Z]+[\\d_]*)+$'"
+          />
+          <mat-error *ngIf="formGroup?.get('name')?.errors?.['required']">Name can't be empty</mat-error>
+          <mat-error *ngIf="formGroup?.get('name')?.errors?.['pattern']">
+            Name must be at least 2 characters and the first character must be characters includes(a-zA-Z)
+          </mat-error>
+          <mat-error *ngIf="formGroup?.get('name')?.errors?.['isExistsPeer']">Peer is existed</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Capacity" formControlName="security" required>
+            <mat-option *ngFor="let security of createTrunkModalInput?.securitys" [value]="security.name">
+              {{ security.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup?.get('security')?.invalid">Capacity can't be empty</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Codec" formControlName="codec" required>
+            <mat-option *ngFor="let codec of createTrunkModalInput?.codecs || []" [value]="codec.name">
+              {{ codec.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup?.get('codec')?.invalid">Codec can't be empty</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Header relay" formControlName="headerRelay">
+            <mat-option value=""> None </mat-option>
+            <mat-option *ngFor="let relay of createTrunkModalInput?.headerRelays || []" [value]="relay.name">
+              {{ relay.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <label>Direction</label>
+        <mat-radio-group formControlName="direction">
+          <mat-radio-button
+            *ngFor="let direction of preConfig?.directions || []"
+            [value]="direction"
+            (change)="onChangeDirection($event)"
+            style="margin: 0 1.6rem 0.8rem 0"
+          >
+            {{ direction | titlecase }}
+          </mat-radio-button>
+        </mat-radio-group>
+
+        <div *ngIf="direction.value === 'outbound'" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="0.8rem">
+          <mat-form-field fxFlex="33.33">
+            <input matInput placeholder="Username" formControlName="username" />
+          </mat-form-field>
+          <mat-form-field fxFlex="33.33">
+            <input matInput placeholder="Password" formControlName="password" />
+          </mat-form-field>
+          <mat-form-field fxFlex="33.33">
+            <input matInput type="number" placeholder="Ping" formControlName="ping" />
+            <mat-error *ngIf="formGroup.get('ping').errors?.['min'] || formGroup.get('ping').errors?.['max']">
+              Ping must be from 30 to 3000
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <ng-container formArrayName="signallings">
+          <ng-container *ngFor="let email of signallings.controls; index as idx">
+            <div [formGroupName]="idx" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <mat-form-field fxFlex="30">
+                <mat-label>Signalling</mat-label>
+                <input matInput placeholder="192.168.2.2" formControlName="ip" required />
+                <mat-error *ngIf="signallings.controls[idx].get('ip').errors?.['required']">
+                  Signalling can't be empty
+                </mat-error>
+                <mat-error *ngIf="signallings.controls[idx].get('ip').errors?.['pattern']">
+                  Signalling is invalid
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="10rem">
+                <mat-label>Port</mat-label>
+                <input matInput placeholder="10" formControlName="port" required />
+                <mat-error *ngIf="signallings.controls[idx].get('port').errors?.['required']">
+                  Port can't be empty
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    signallings.controls[idx].get('port').errors?.['min'] ||
+                    signallings.controls[idx].get('port').errors?.['max']
+                  "
+                >
+                  Port must be from 0 to 65536
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex="10rem">
+                <mat-select placeholder="Protocol" formControlName="transport" required>
+                  <mat-option *ngFor="let protocol of protocols" [value]="protocol.key">
+                    {{ protocol.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div fxLayout="row" fxFlex="8rem">
+                <button
+                  class="link-button-remove"
+                  mat-icon-button
+                  *ngIf="signallings.controls.length > 1"
+                  (click)="removeSignalling(idx)"
+                >
+                  <mat-icon>clear</mat-icon>
+                </button>
+                <button
+                  class="link-button-add"
+                  mat-icon-button
+                  *ngIf="idx === signallings.controls.length - 1"
+                  (click)="addSignalling()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <ng-container formArrayName="medias">
+          <ng-container *ngFor="let media of medias.controls; index as idx">
+            <div [formGroupName]="idx" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+              <mat-form-field fxFlex="30">
+                <mat-label>Media</mat-label>
+                <input matInput placeholder="192.168.1.3/24" formControlName="media" required />
+                <mat-error *ngIf="medias.controls[idx].get('media').errors?.['required']">
+                  Media can't be empty
+                </mat-error>
+                <mat-error *ngIf="medias.controls[idx].get('media').errors?.['pattern']">Media is invalid</mat-error>
+              </mat-form-field>
+              <div fxLayout="row" fxFlex="8rem">
+                <button
+                  class="link-button-remove"
+                  mat-icon-button
+                  *ngIf="medias.controls.length > 1"
+                  (click)="removeMedia(idx)"
+                >
+                  <mat-icon>clear</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  *ngIf="idx === medias.controls.length - 1"
+                  class="link-button-add"
+                  (click)="addMedia()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div>
+          <mat-slide-toggle formControlName="enable">
+            {{ enable.value ? 'Toggle to turn off Trunk' : 'Toggle to turn on Trunk' }}
+          </mat-slide-toggle>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap=".8rem" fxFlex>
+        <mat-form-field>
+          <mat-select placeholder="Nodes" formControlName="nodes" multiple required>
+            <mat-option *ngFor="let node of nodesDataSource" [value]="node">{{ node }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup?.get('nodes')?.invalid">Nodes can't be empty</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Interface" formControlName="interface" required>
+            <mat-option *ngFor="let awsEdgeServer of awsEdgeServers" [value]="awsEdgeServer.name">
+              {{ awsEdgeServer.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="formGroup?.get('interface')?.invalid">Interface can't be empty</mat-error>
+        </mat-form-field>
+
+        <h4 style="font-weight: 500">Interface details table</h4>
+        <div style="border: 1px solid rgba(0, 0, 0, 0.12)">
+          <table mat-table [dataSource]="detailInterfaces" style="width: 100%">
+            <ng-container matColumnDef="node">
+              <th mat-header-cell *matHeaderCellDef>Node</th>
+              <td mat-cell *matCellDef="let element">{{ element.node }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="public_ip">
+              <th mat-header-cell *matHeaderCellDef>Public IP</th>
+              <td mat-cell *matCellDef="let element">{{ element.public_ip }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="private_ip">
+              <th mat-header-cell *matHeaderCellDef>Private IP</th>
+              <td mat-cell *matCellDef="let element">{{ element.private_ip }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="sip_port">
+              <th mat-header-cell *matHeaderCellDef>SIP Port</th>
+              <td mat-cell *matCellDef="let element">{{ element.sip_port }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="sips_port">
+              <th mat-header-cell *matHeaderCellDef>SIP TLS Port</th>
+              <td mat-cell *matCellDef="let element">{{ element.sips_port }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+              <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                <div fxLayoutAlign="center center">
+                  <span class="mat-body-1">Have not selected any nodes!</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loading">
+              <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+                <div *ngIf="isLoadingDetailInterface" fxLayoutAlign="center center">
+                  <mat-spinner diameter="20"></mat-spinner>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <tr
+              mat-footer-row
+              *matFooterRowDef="['noData']"
+              [hidden]="detailInterfaces?.filteredData?.length > 0 || isLoadingDetailInterface"
+            ></tr>
+            <tr mat-footer-row *matFooterRowDef="['loading']" [hidden]="!isLoadingDetailInterface"></tr>
+          </table>
+          <mat-paginator hidePageSize="true" pageSize="4" showFirstLastButtons></mat-paginator>
+        </div>
+        <div [style.padding]="'10px 0'" fxLayout="column">
+          <label>DTMF</label>
+          <span class="mat-caption secondary-text">RFC 2833</span>
+          <mat-checkbox formControlName="dtmfInband">In-band</mat-checkbox>
+        </div>
+      </div>
+    </section>
+
+    <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxFlex>
+        <label class="title">
+          Translation DNIS (optional and max {{ preConfig.limitation.max_peer_rule_size }} item(s))
+        </label>
+        <div cdkDropListGroup fxLayout="row" fxLayoutAlign="start stretch" class="translation">
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="dinsTranslations"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, false)"
+            >
+              <div class="translation-box" *ngFor="let item of dinsTranslations; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+
+          <div fxFlexAlign="center">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="dnisSelected"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, true)"
+            >
+              <div class="translation-box" *ngFor="let item of dnisSelected; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxFlex>
+        <label class="title">
+          Translation CLID (optional and max {{ preConfig.limitation.max_peer_rule_size }} item(s))
+        </label>
+        <div cdkDropListGroup fxLayout="row" fxLayoutAlign="start stretch" class="translation">
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="clidTranslations"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, false)"
+            >
+              <div class="translation-box" *ngFor="let item of clidTranslations; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+
+          <div fxFlexAlign="center">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="clidSelected"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, true)"
+            >
+              <div class="translation-box" *ngFor="let item of clidSelected; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="center stretch" fxFlex>
+        <label class="title">
+          Manipulation Profile (optional and max {{ preConfig.limitation.max_peer_rule_size }} item(s))
+        </label>
+        <div cdkDropListGroup fxLayout="row" fxLayoutAlign="start stretch" class="translation">
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="manipulations"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, false)"
+            >
+              <div class="translation-box" *ngFor="let item of manipulations; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+
+          <div fxFlexAlign="center">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+
+          <div fxFlex>
+            <div
+              cdkDropList
+              [cdkDropListData]="manipulationSelected"
+              class="translation-list"
+              (cdkDropListDropped)="drop($event, true)"
+            >
+              <div class="translation-box" *ngFor="let item of manipulationSelected; let idx = index" cdkDrag>
+                {{ item }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </form>
+</div>

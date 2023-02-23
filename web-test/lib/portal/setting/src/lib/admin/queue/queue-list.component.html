@@ -1,0 +1,178 @@
+<section fxLayout="column" class="queue-container">
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="progress-bar"></mat-progress-bar>
+
+  <mat-toolbar class="queue-container__header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h1>Queue Management</h1>
+  </mat-toolbar>
+
+  <div fxFlex fxLayout="column" class="queue-container__body">
+    <div fxLayout="row" class="action-bar">
+      <div fxFlex fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="start center" class="total">
+        <mat-form-field class="filter-type">
+          <mat-label>Filter by type</mat-label>
+          <mat-select [(ngModel)]="filteredType" (ngModelChange)="onChangeType($event)">
+            <mat-option value="">All</mat-option>
+            <mat-option *ngFor="let option of typeOptions" [value]="option.key">{{ option.value }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Search by name" [(ngModel)]="queryParams.queryString" (keyup.enter)="reload()" />
+          <button mat-icon-button matSuffix>
+            <mat-icon (click)="reload()" class="search-box-icon">search</mat-icon>
+          </button>
+          <button *ngIf="queryParams.queryString !== ''" mat-icon-button matSuffix>
+            <mat-icon (click)="queryParams.queryString = ''; reload()" class="search-box-icon">clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div fxFlex fxLayout="row" fxLayoutGap="1rem" fxLayoutAlign="end center">
+        <button mat-icon-button (click)="reload()" matTooltip="Refresh"><mat-icon>autorenew</mat-icon></button>
+        <button mat-flat-button color="primary" [disabled]="isMaxQueue" (click)="create()">Create</button>
+      </div>
+    </div>
+
+    <div *ngIf="queues" class="callcenter">
+      <table mat-table [dataSource]="dataSource" class="queue-table" matSort>
+        <ng-container matColumnDef="priority">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Priority</th>
+          <td mat-cell *matCellDef="let queue">{{ queue.priority }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="label">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td mat-cell *matCellDef="let queue">{{ queue.label }}</td>
+        </ng-container>
+        <ng-container matColumnDef="queuetype">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let queue">
+            <span *ngIf="!queue.callflowConfig.genieCode">Manual</span>
+            <span *ngIf="queue.callflowConfig.genieCode">Auto</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="queueconfig">
+          <th mat-header-cell *matHeaderCellDef>Queue Configuration</th>
+          <td mat-cell *matCellDef="let queue">
+            <span *ngIf="queue.callflowConfig.genieName">
+              Flow name:
+              {{ queue.callflowConfig.genieName }}
+            </span>
+            <span *ngIf="!queue.callflowConfig.genieCode">
+              <span *ngIf="queue.code"
+                >Code:
+                <button
+                  class="label"
+                  mat-button
+                  *ngIf="queue.code"
+                  matTooltip="Click to copy"
+                  ngxClipboard
+                  [cbContent]="queue.code"
+                  (cbOnSuccess)="copied()"
+                  (cbOnError)="copyFailed()"
+                >
+                  {{ queue.code | slice: 0:8 }}</button
+                >,
+              </span>
+              <span>Agent: {{ queue.assignedAgents.length }}</span>
+              <!-- <span>Disposition code: {{ queue.codeOptions.length }}</span> -->
+              <span *ngIf="queue.script">, script: {{ queue.script | truncate: 75 }} </span>
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="extension">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Extension</th>
+          <td mat-cell *matCellDef="let queue">
+            <span *ngIf="queue.code"
+              >Code:
+              <button
+                class="label"
+                mat-button
+                *ngIf="queue.code"
+                matTooltip="Click to copy"
+                ngxClipboard
+                [cbContent]="queue.code"
+                (cbOnSuccess)="copied()"
+                (cbOnError)="copyFailed()"
+              >
+                {{ queue.code | slice: 0:8 }}
+              </button>
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="numberofagent">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Number of Agents</th>
+          <td mat-cell *matCellDef="let queue">
+            {{ queue?.assignedAgents?.length }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let queue">
+            <div class="action__hover" fxLayout="row" fxLayoutAlign="end baseline" fxLayoutGap="0.8rem">
+              <button
+                mat-icon-button
+                class="basic"
+                [matMenuTriggerFor]="actionMenu"
+                [matMenuTriggerData]="{ queue: queue }"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <button mat-icon-button class="basic" matTooltip="Duplicate" (click)="duplicate(queue)">
+                <mat-icon class="material-icons-outlined btn-duplicate">content_copy</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" matTooltip="Delete" (click)="delete(queue)">
+                <mat-icon class="material-icons-outlined">delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayColumns; sticky: true"
+          [ngClass]="{ hide: queues.length === 0 }"
+        ></tr>
+        <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="5">
+            <div fxLayout="column" fxLayoutAlign="center center">No queue found</div>
+          </td>
+        </tr>
+      </table>
+      <mat-paginator hidePageSize="true" pageSize="10" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+</section>
+
+<mat-menu #actionMenu="matMenu" class="queue-menu">
+  <ng-template matMenuContent let-queue="queue">
+    <button mat-menu-item (click)="edit(queue)"><mat-icon>label</mat-icon> <span>Queue Configuration</span></button>
+    <button *ngIf="!queue.callflowConfig.genieCode" mat-menu-item (click)="agentManagementConfig(queue)">
+      <mat-icon>person_add</mat-icon> <span>Agent Management</span>
+    </button>
+    <button *ngIf="!queue.callflowConfig.genieCode" mat-menu-item (click)="noteConfiguration(queue)">
+      <mat-icon>phone_callback</mat-icon> <span>Popup Configuration</span>
+    </button>
+    <button *ngIf="hasOutbound" mat-menu-item (click)="showConcurrentCallConfig(queue)">
+      <mat-icon>phone_paused</mat-icon> <span>Outbound concurrent call config</span>
+    </button>
+    <button *ngIf="!queue.callflowConfig.genieCode" mat-menu-item (click)="messageConfig(queue)">
+      <svg class="mat-icon mat-icon-no-color" height="24" width="24">
+        <path
+          d="M2 22V4q0-.825.588-1.413Q3.175 2 4 2h16q.825 0 1.413.587Q22 3.175 22 4v12q0 .825-.587 1.413Q20.825 18 20
+          18H6Zm2-4.825L5.175 16H20V4H4ZM4 4v13.175Zm7.25 11h1.5V5h-1.5ZM8.5 13H10V7H8.5ZM6 11h1.5V9H6Zm8
+          2h1.5V7H14Zm2.5-2H18V9h-1.5Z"
+        />
+      </svg>
+      <span>Announcement Message</span>
+    </button>
+    <ng-container *ngFor="let triggerDef of triggerDefs">
+      <button mat-menu-item (click)="baUserConfig(queue, triggerDef)" fxLayout="row" fxLayoutAlign="start center">
+        <img [src]="triggerDef.iconUrl" width="24px" height="24px" class="mr-16" style="min-width: 24px" />
+        <span>{{ triggerDef.name }}</span>
+      </button>
+    </ng-container>
+  </ng-template>
+</mat-menu>

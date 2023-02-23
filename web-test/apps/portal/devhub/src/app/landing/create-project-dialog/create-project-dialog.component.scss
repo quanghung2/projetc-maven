@@ -1,0 +1,25 @@
+::ng-deep .mat-select-panel.select-subscription {
+  max-height: 280px !important;
+
+  .mat-option.option-subscription {
+    height: 56px !important;
+    line-height: 1.5 !important;
+
+    .uuid {
+      background: var(--gray-300);
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      padding: 3px 6px;
+      width: fit-content;
+      font-family: monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+  }
+}
+
+.mat-selection-list .mat-list-option {
+  height: 30px;
+  font-size: 14px;
+}

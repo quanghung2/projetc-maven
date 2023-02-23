@@ -1,0 +1,34 @@
+#config-advanced-configuration {
+  .radio-btn {
+    margin-right: 1rem;
+    margin-top: 2px;
+  }
+  .capacity,
+  .sip-type,
+  .isdn-incoming {
+    &__checkbox {
+      &__input,
+      &__label {
+        cursor: pointer;
+        outline: 0px;
+      }
+    }
+  }
+
+  .isdn-incoming-title {
+    cursor: pointer;
+  }
+
+  .isdn-incoming-toggle {
+    display: flex;
+    align-items: center;
+  }
+
+  .switcher-customize {
+    margin-top: 0;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+}

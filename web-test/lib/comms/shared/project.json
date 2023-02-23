@@ -1,0 +1,16 @@
+{
+  "name": "comms-shared",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/comms/shared/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/comms/shared/**/*.ts", "libs/comms/shared/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

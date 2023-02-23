@@ -1,0 +1,34 @@
+// @import '../compose.component';
+$label-width: 60px;
+
+.recipient-wrapper {
+  display: flex;
+  align-items: baseline;
+
+  .label {
+    color: var(--header-color-black);
+    font-weight: 500;
+    width: $label-width;
+    display: inline-block;
+  }
+
+  mat-chip-list {
+    mat-chip {
+      padding: 4px 12px;
+    }
+    mat-form-field {
+      height: 26px;
+      .mat-form-field-infix {
+        border-top-width: 0px;
+        padding: 0 0 4px 0;
+        input {
+          margin: 0 !important;
+        }
+      }
+    }
+  }
+
+  .mat-error {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.tts-section {
+  &__card {
+    background: #fafafa;
+    border: 1px solid lightgrey;
+    box-shadow: none !important;
+  }
+
+  mat-radio-button {
+    margin: 0 1.6rem 1.6rem 0;
+  }
+  //padding: 1.6rem 0;
+  .tts-block {
+    margin-bottom: 1.6rem;
+    .mt-15 {
+      margin-top: 1.6rem !important;
+    }
+
+    ::ng-deep .mat-tab-body-wrapper {
+      min-height: 220px;
+    }
+    .tts-speech-advance-block {
+      .advance-block-one {
+        mat-form-field {
+          min-width: 0;
+        }
+      }
+    }
+  }
+  .add-more {
+    margin-top: -1.6rem;
+  }
+  mat-form-field {
+    width: 100%;
+  }
+  .hidden {
+    display: none;
+  }
+}

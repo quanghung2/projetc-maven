@@ -1,0 +1,100 @@
+<mat-progress-bar *ngIf="isLoading" mode="indeterminate"> </mat-progress-bar>
+<ng-container *ngIf="case$ | async as case">
+  <mat-drawer-container class="detail-container">
+    <mat-drawer-content>
+      <main class="case-detail container-fluid container-limited limit-container-width flex column gap-16 px-16 mb-16">
+        <div class="case-detail__breadcrums bb flex align-items-center gap-16">
+          <div class="flex-spacer flex align-items-center gap-16">
+            <mat-icon (click)="goToHome()" class="cursor cursor-pointer">arrow_back</mat-icon>
+            <span class="secondary-text">{{ case.ownerOrgName }} #{{ case.sid }}</span>
+            <span class="badge badge-{{ case.status }} p-4"><mat-icon>folder_open</mat-icon> {{ case.status }}</span>
+          </div>
+          <div class="actions">
+            <button mat-icon-button (click)="this.drawer.toggle()">
+              <mat-icon class="material-icons-outlined">vertical_split</mat-icon>
+            </button>
+          </div>
+        </div>
+        <ng-container *ngIf="!editingMode; else editCaseRef">
+          <div class="case-detail__header">
+            <div class="case-detail__title">
+              <h2 class="m-0">{{ case.title }}</h2>
+            </div>
+            <div class="case-detail__actions">
+              <button mat-icon-button (click)="editCase()"><mat-icon>edit</mat-icon></button>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="case-detail__description">
+            <!-- 
+                TODO
+                use createdByOrg for current uploading files but should use ownerOrg after uploadFileSUpport new params
+                [ownerOrg]="case.createdByOrg"  
+              -->
+            <div
+              #caseDescription
+              lazyload
+              [text]="case.description"
+              [ownerOrg]="case.createdByOrg"
+              class="ck-content"
+            ></div>
+          </div>
+        </ng-container>
+        <ng-template #editCaseRef>
+          <ng-container *ngTemplateOutlet="editCaseTemplate; context: { $implicit: case }"></ng-container>
+        </ng-template>
+
+        <div class="case-detail__realted">
+          <b3n-case-related [case]="case"> </b3n-case-related>
+        </div>
+        <div class="case-detail__activities">
+          <b3n-case-activities [me]="me" [case]="case"></b3n-case-activities>
+        </div>
+      </main>
+    </mat-drawer-content>
+    <mat-drawer
+      #drawer
+      class="side-right"
+      position="end"
+      [mode]="mobileQuery.matches ? 'over' : 'side'"
+      [opened]="mobileQuery.matches ? false : true"
+      class="case-info"
+    >
+      <b3n-case-actions [case]="case" [me]="me"></b3n-case-actions>
+      <b3n-case-info [me]="me" [case]="case"></b3n-case-info>
+    </mat-drawer>
+  </mat-drawer-container>
+
+  <ng-template #editCaseTemplate let-case>
+    <form [formGroup]="editingFG" class="flex column gap-16">
+      <div class="case-detail__header">
+        <div class="case-detail__title">
+          <mat-form-field>
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter title" />
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="case-detail__description">
+        <b3n-editor
+          [content]="parsedDescription"
+          [accessControlId]="case.accessControlId"
+          [ownerOrgUuid]="case.ownerOrgUuid"
+        ></b3n-editor>
+      </div>
+      <div class="case-detail__actions-editing flex justify-content-end gap-16">
+        <button mat-button [disabled]="updating" (click)="editingMode = false">Cancel</button>
+        <button
+          mat-stroked-button
+          [loading]="updating"
+          [disabled]="updating || editingFG.invalid"
+          color="primary"
+          (click)="updateCase()"
+        >
+          Save
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</ng-container>

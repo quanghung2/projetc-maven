@@ -1,0 +1,38 @@
+:host {
+  table {
+    width: 100%;
+    margin: auto;
+  }
+
+  .btn-status {
+    .mat-icon {
+      color: #0f7ce1;
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+      margin-bottom: 6px;
+    }
+  }
+
+  .mat-column-location {
+    width: 40%;
+    min-width: 40%;
+  }
+
+  .mat-column-device {
+    width: 10%;
+  }
+
+  .mat-column-datetime {
+    width: 20%;
+  }
+
+  .mat-column-duration {
+    width: 20%;
+  }
+
+  .material-icons-outlined {
+    color: #17a2b8;
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,6 @@
+<b3n-header></b3n-header>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+
+<b3n-permission-denied *ngIf="!hasPermission" [me]="me"></b3n-permission-denied>

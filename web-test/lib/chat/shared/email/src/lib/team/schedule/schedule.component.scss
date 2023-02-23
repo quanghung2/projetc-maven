@@ -1,0 +1,33 @@
+.danger {
+  display: flex;
+  color: var(--error-color);
+  align-items: center;
+
+  span {
+    margin: 1px 8px 1px 0;
+  }
+
+  mat-icon {
+    vertical-align: middle;
+    height: 18px;
+    width: 18px;
+    font-size: 18px;
+    margin-left: -3px;
+    color: var(--error-color);
+  }
+}
+
+.action__header {
+  border-bottom: 1px solid var(--general-border);
+  height: var(--header-height);
+  padding: 0 10px;
+
+  mat-icon {
+    color: var(--icon-background);
+  }
+}
+
+.convo__item.active {
+  color: var(--white);
+  background-color: var(--primary-background);
+}

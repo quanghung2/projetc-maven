@@ -1,0 +1,22 @@
+<div class="twofa-saveRecoveryCode">
+  <div class="content">
+    <ng-container *ngIf="!showWarning">
+      <p class="hint">
+        Recovery Key is used to access your account in case you cannot receive Two-Factor Authentication codes.
+      </p>
+      <p class="recoveryCode">{{tfaInfo.recoveryKey}}</p>
+      <p class="hint">Treat your Recovery Key with the same level of attention as you would with your password!</p>
+    </ng-container>
+    <p class="hint" *ngIf="showWarning">
+      You have not downloaded your Recovery Key yet. Make sure you have kept your Recovery Key in a safe place.
+    </p>
+  </div>
+  <div class="mat-dialog-actions floatRight" *ngIf="!showWarning">
+    <button mat-button (click)="cancel()">Cancel</button>
+    <button mat-stroked-button color="primary" (click)="download()">Download</button>
+  </div>
+  <div class="mat-dialog-actions floatRight" *ngIf="showWarning">
+    <button mat-button (click)="back()">Back</button>
+    <button mat-stroked-button color="primary" (click)="finish()">Finish</button>
+  </div>
+</div>

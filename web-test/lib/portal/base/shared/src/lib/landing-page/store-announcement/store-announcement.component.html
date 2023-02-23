@@ -1,0 +1,69 @@
+<div class="create-announcement">
+  <div *ngIf="!announcenment" mat-dialog-title>Create announcement</div>
+  <div *ngIf="announcenment" mat-dialog-title>Update announcement</div>
+  <form #form="ngForm">
+    <div fxLayout="column" fxLayoutGap="0.5rem">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <textarea
+          #title="ngModel"
+          [(ngModel)]="announcementTitle"
+          (focus)="titleFocusChanged($event)"
+          (blur)="titleFocusChanged($event)"
+          cdkAutosizeMaxRows="10"
+          cdkAutosizeMinRows="1"
+          cdkTextareaAutosize
+          matInput
+          maxlength="100"
+          name="title"
+          required
+        >
+        </textarea>
+        <mat-error *ngIf="title.invalid && (title.dirty || title.touched)">Title is required</mat-error>
+        <mat-hint *ngIf="titleFocused">{{ announcementTitle?.length || 0 }}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Content</mat-label>
+        <textarea
+          #content="ngModel"
+          [(ngModel)]="announcementContent"
+          (focus)="contentFocusChanged($event)"
+          (blur)="contentFocusChanged($event)"
+          cdkAutosizeMaxRows="15"
+          cdkAutosizeMinRows="3"
+          cdkTextareaAutosize
+          matInput
+          maxlength="2000"
+          name="content"
+          required
+        >
+        </textarea>
+        <mat-error *ngIf="content.invalid && (content.dirty || content.touched)">Content is required</mat-error>
+        <mat-hint *ngIf="contentFocused">{{ announcementContent?.length || 0 }}/2000</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="announcenment">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="selectedStatus" name="status">
+          <mat-option value="ACTIVE">Active</mat-option>
+          <mat-option value="DISABLED">Disabled</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div align="end" mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      (click)="save()"
+      [disabled]="progressing || form.invalid"
+      [loading]="progressing"
+      color="primary"
+      mat-raised-button
+    >
+      <span *ngIf="!announcenment">Create</span>
+      <span *ngIf="announcenment">Update</span>
+    </button>
+  </div>
+</div>

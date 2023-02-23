@@ -1,0 +1,91 @@
+<mat-toolbar><h1>SMPP</h1></mat-toolbar>
+
+<div *ngIf="!isLoading" fxLayout="column" fxLayoutGap="10rem" class="display-smpp">
+  <div>
+    <h2>Production Account</h2>
+    <div fxLayout="column" fxLayoutGap="2rem">
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">System ID</div>
+        <div class="item-right">
+          {{ smpp?.systemId }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">Password</div>
+        <div fxLayout="column" class="item-right">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <ng-container>
+              <div *ngIf="!showPasswordProduction" class="api-key">{{ smpp?.displayPassword }}</div>
+              <div *ngIf="showPasswordProduction" class="api-key">{{ smpp?.password }}</div>
+              <button mat-icon-button (click)="toggleViewPasswordProduction()" disableRipple mat-button>
+                <mat-icon>{{ showPasswordProduction ? 'visibility' : 'visibility_off' }} </mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="copied()"
+                [cdkCopyToClipboard]="smpp?.password"
+                [disabled]="!showPasswordProduction"
+                disableRipple
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">Concurrent connection</div>
+        <div class="item-right">
+          {{ smpp?.maxConnections }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+
+  <div>
+    <h2>Test Account</h2>
+    <div fxLayout="column" fxLayoutGap="2rem">
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">System ID</div>
+        <div class="item-right">
+          {{ smppTest?.systemId }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">Password</div>
+        <div fxLayout="column" class="item-right">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <ng-container>
+              <div *ngIf="!showPasswordTest" class="api-key">{{ smppTest?.displayPassword }}</div>
+              <div *ngIf="showPasswordTest" class="api-key">{{ smppTest?.password }}</div>
+              <button mat-icon-button (click)="toggleViewPasswordTest()" disableRipple mat-button>
+                <mat-icon>{{ showPasswordTest ? 'visibility' : 'visibility_off' }} </mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="copied()"
+                [cdkCopyToClipboard]="smppTest?.password"
+                [disabled]="!showPasswordTest"
+                disableRipple
+              >
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+        <div class="item-left">Concurrent connection</div>
+        <div class="item-right">
+          {{ smppTest?.maxConnections }}
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+  </div>
+</div>

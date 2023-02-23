@@ -1,0 +1,11 @@
+<div
+  class="button-copy grey-300"
+  mat-button
+  [matTooltip]="tooltip"
+  ngxClipboard
+  [cbContent]="text"
+  (cbOnSuccess)="copied()"
+  (cbOnError)="copyFail()"
+>
+  {{ text | slice: 0:limitContentLength }}<span *ngIf="limitContentLength < text.length">...</span>
+</div>

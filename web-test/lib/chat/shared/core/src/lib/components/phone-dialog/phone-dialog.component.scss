@@ -1,0 +1,243 @@
+::ng-deep {
+  .pannel-delegate {
+    width: 270px !important;
+  }
+
+  .pannel-delegate__desktop {
+    width: 320px !important;
+    margin-top: 5px;
+    max-width: none;
+  }
+
+  .cdk-overlay-pane.manage-call {
+    .mat-dialog-container {
+      padding: 0;
+    }
+  }
+  @keyframes slideDown {
+    0% {
+      transform: translateX(200%);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  .cdk-overlay-pane.search-message {
+    animation: slideDown 0.3s forwards 0s ease;
+
+    .mat-dialog-container {
+      padding: 0;
+    }
+  }
+
+  .keypad__input {
+    .mat-form-field-underline {
+      display: none !important;
+    }
+    .mat-form-field-label {
+      color: black !important;
+    }
+
+    .icon-backspace {
+      user-select: none;
+      color: #646464;
+    }
+  }
+
+  .mat-tab-label {
+    width: 50% !important;
+    // color: white !important;
+  }
+}
+
+.container {
+  height: 100%;
+
+  .module__name {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0.9;
+    .icon {
+      font-size: 16px;
+      padding-top: 5px;
+    }
+  }
+
+  .text__sub {
+    font-weight: bold;
+    margin-left: 6px !important;
+    opacity: 1;
+  }
+}
+
+.keypad {
+  padding: 0 24px 16px;
+  height: 550px;
+  &__input {
+    width: 100%;
+    text-align: center;
+    margin: 1.5rem auto 1.5rem;
+
+    ::ng-deep {
+      .mat-input-element {
+        caret-color: black !important;
+      }
+      .mat-form-field-label {
+        opacity: 0.4;
+      }
+    }
+    input {
+      text-align: center;
+      background-color: inherit;
+      font-size: 3rem;
+      min-width: 0;
+      width: 100%;
+    }
+  }
+  .result-search {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    .call-ext {
+      visibility: hidden !important;
+      color: #2196f3;
+    }
+    .extensions {
+      padding: 5px 0px;
+      &:hover {
+        .call-ext {
+          visibility: visible !important;
+        }
+      }
+      .extension {
+        width: 100%;
+        .name {
+          color: rgba(0, 0, 0, 0.87);
+          font-weight: 550;
+        }
+        .sub-name {
+          font-size: 12px;
+          margin-top: -3px;
+        }
+      }
+    }
+    .btn-fab {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      // color: white;
+
+      .mat-button-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .avatar {
+      background: #cecece !important;
+      color: black;
+      font-weight: 600;
+      border: 1px solid #cecece;
+      font-size: 11px !important;
+      width: 28px !important;
+      height: 28px !important;
+    }
+  }
+
+  &__numbers,
+  &__actions {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  &__numbers {
+    width: 100%;
+    .number-region {
+      margin-bottom: 1rem;
+    }
+    .num {
+      border: 1px solid #0000;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      cursor: pointer;
+      // background-color: #d3d3d3;
+      font-family: Open Sans, Helvetica Neue, sans-serif;
+      font-weight: 500;
+
+      .digit {
+        font-size: 24px;
+      }
+
+      .digit-only {
+        font-size: 24px;
+        user-select: none;
+      }
+
+      .text {
+        font-size: 1em;
+        letter-spacing: 4px;
+        margin-top: 15px;
+        margin-left: 5px;
+        display: none;
+      }
+    }
+  }
+
+  &__actions {
+    .phone-icon {
+      position: relative;
+
+      .num-call {
+        background-color: #007be0;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+      }
+
+      .menu-delegate {
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+      }
+    }
+  }
+
+  .call {
+    width: 100%;
+    // margin-top: 60px;
+
+    .phone_button {
+      width: 270px;
+      border-radius: 25px;
+      border-color: transparent;
+    }
+    .call-name {
+      color: white;
+      font-size: 20px;
+      margin-left: 5px;
+    }
+  }
+}
+.num-call {
+  background-color: #2196f3;
+  width: 50px;
+  height: 46px;
+  line-height: 46px;
+  mat-icon {
+    color: white;
+  }
+  &.disabled {
+    background-color: #0000001f !important;
+    pointer-events: none;
+    .call-name {
+      color: #00000042 !important;
+    }
+  }
+}

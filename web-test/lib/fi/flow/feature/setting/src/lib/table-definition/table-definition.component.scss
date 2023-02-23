@@ -1,0 +1,49 @@
+.mat-row:hover {
+  background-color: #f2f7fd;
+  cursor: pointer;
+
+  .mat-column-name .btn-action {
+    display: block;
+  }
+}
+
+.mat-column-name {
+  .btn-action {
+    display: none;
+    padding-right: 32px;
+
+    mat-icon {
+      color: #999;
+      font-size: 20px;
+    }
+  }
+}
+
+.mat-column-publish {
+  width: 120px;
+}
+
+.mat-column-version,
+.mat-column-type {
+  width: 112px;
+}
+
+.publish {
+  background: #c8e6c9;
+  padding: 2px 12px;
+  border-radius: 17px;
+  font-size: 13px;
+  color: #1b5e20;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.no-publish {
+  background: #ffcdd2;
+  padding: 2px 12px;
+  border-radius: 17px;
+  font-size: 13px;
+  color: #b71c1c;
+  width: -moz-fit-content;
+  width: fit-content;
+}

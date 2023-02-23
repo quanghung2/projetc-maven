@@ -1,0 +1,43 @@
+:host {
+  display: block;
+  width: 100%;
+
+  mat-sidenav {
+    background: #fafafa;
+    left: 0 !important;
+    width: 280px;
+
+    ::ng-deep {
+      .mat-drawer-inner-container {
+        overflow: hidden;
+      }
+    }
+  }
+
+  .action {
+    .title {
+      font-size: 14px;
+      background-color: #2d9688;
+      color: white;
+    }
+    .btn-action-header {
+      visibility: hidden;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      mat-icon {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 22px;
+        color: #7a7a7a;
+      }
+    }
+
+    &:hover {
+      .btn-action-header {
+        visibility: visible;
+      }
+    }
+  }
+}

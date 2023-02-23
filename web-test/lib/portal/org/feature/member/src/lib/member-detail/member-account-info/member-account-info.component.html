@@ -1,0 +1,128 @@
+<ng-container *ngIf="member && profileOrg">
+  <div class="content">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">Status</div>
+        <div class="description">{{ member.displayStatus | titlecase }}</div>
+      </div>
+      <div *ngIf="allowChange" fxLayout="column" fxLayoutAlign="center center">
+        <ng-container *ngIf="!member.isSuspended; else isSuspended">
+          <button mat-button color="primary" (click)="disableMember()" *ngIf="!member.isDisabled">Disable</button>
+          <button mat-button color="primary" (click)="enableMember()" *ngIf="member.isDisabled">Enable</button>
+        </ng-container>
+        <ng-template #isSuspended>
+          <button mat-button color="primary" (click)="reactivateMember()">Reactivate</button>
+        </ng-template>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">Role</div>
+        <div class="description">{{ member.role | titlecase }}</div>
+      </div>
+      <div
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        [class.hidden]="profileOrg.isOwner || member.isDisabled || !allowChange"
+      >
+        <button *ngIf="member.role === MemberRole.OWNER" mat-button color="primary" (click)="transferOwner()">
+          Transfer
+        </button>
+        <button *ngIf="member.role !== MemberRole.OWNER" mat-button color="primary" (click)="openChangeRoleDialog()">
+          Change
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">Email</div>
+        <div class="description">{{ member.email }}</div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center" *ngIf="!member.email && allowChange && !member.isDisabled">
+        <button mat-button color="primary" class="ui button link" (click)="createCredential()">Create</button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content" *ngIf="showSectionUsername">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">Username</div>
+        <div class="description">{{ member.username }}</div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <button mat-button color="primary" class="ui button link" (click)="changeUsername()">Change</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content" *ngIf="!!member.mobileNumber">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">Phone</div>
+        <div class="description">{{ member.mobileNumber }}</div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content" *ngIf="allowMemberImport">
+    <div class="item">
+      <div class="header" fxLayout="row" fxLayoutAlign="start center">
+        PIN
+        <span class="spacer"></span>
+        <button mat-button color="primary" (click)="getPins()">View</button>
+      </div>
+      <div *ngIf="fetchingPin" class="spinner" fxLayout="column" fxLayoutAlign="center center">
+        <mat-spinner diameter="22" strokeWidth="2"></mat-spinner>
+      </div>
+      <div *ngIf="!fetchingPin && pins" class="pin-detail">
+        <div class="pin-detail__status" *ngIf="pins.length == 0">
+          <div>There is no PIN</div>
+        </div>
+        <div class="pin-detail__status" *ngIf="pins.length > 0">
+          Current PIN: <strong>{{ pins[0].pin }}</strong>
+        </div>
+        <div class="btnCreateNew">
+          <button mat-raised-button [loading]="creatingPin" (click)="createNewPin()">CREATE NEW PIN</button>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div
+    class="content"
+    *ngIf="profileOrg.isOwner && profileOrg.licenseEnabled && member.memberStatus === MemberStatus.active"
+  >
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header">VIP member</div>
+        <div class="description">
+          <mat-slide-toggle [formControl]="vipMemberCtrl" (change)="toggleVipMember($event)"> </mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+
+  <div class="content" *ngIf="showSectionUsername">
+    <div fxLayout="row">
+      <div class="item" fxLayout="column" fxFlex="1 1 auto">
+        <div class="header"><a href="javascript:;" (click)="setPassword()">Set password</a></div>
+        <div class="description"></div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,105 @@
+<form [formGroup]="formConfigs" novalidate>
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+    <mat-form-field
+      *ngIf="sharedVariableType === 'GET_SHARED_VARIABLE' || sharedVariableType === 'POP_SHARED_VARIABLE'"
+    >
+      <mat-select
+        placeholder="{{ sharedVariableType === 'GET_SHARED_VARIABLE' ? 'Key' : 'List' }} set in flow"
+        formControlName="flowUuid"
+      >
+        <mat-option *ngFor="let f of flows" [value]="f.flowUuid">{{ f.flowName }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <b3n-context-variable
+      [optionForControl]="
+        $any({
+          title: getTitleName(),
+          key: 'dynVariableName',
+          isOptional: false,
+          dataType: 'string',
+          disabled: !editable,
+          expressionTree: formConfigs.get('dynVariableName').value
+        })
+      "
+      [contextVariables]="contextVariables"
+      [typeBooleanCheckbox]="false"
+      (selectedValue)="selectValue($event, 'dynVariableName')"
+    ></b3n-context-variable>
+
+    <!-- <mat-form-field hideRequiredMarker="true">
+      <input placeholder="Key Name" matInput formControlName="variableName" [matAutocomplete]="auto" required />
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let variable of filteredSharedVariables" [value]="variable.name">
+          {{ variable.name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="formConfigs.get('variableName').invalid">Key name is required</mat-error>
+    </mat-form-field> -->
+
+    <ng-container
+      *ngIf="
+        sharedVariableType === 'SET_SHARED_VARIABLE' ||
+        sharedVariableType === 'PUSH_SHARED_VARIABLE' ||
+        sharedVariableType === 'INCREMENT_SHARED_VARIABLE'
+      "
+    >
+      <b3n-context-variable
+        *ngIf="sharedVariableType !== 'INCREMENT_SHARED_VARIABLE'"
+        [optionForControl]="
+          $any({
+            title: 'Value',
+            key: 'value',
+            isOptional: false,
+            dataType: 'string',
+            disabled: !editable,
+            expressionTree: formConfigs.get('value').value
+          })
+        "
+        [contextVariables]="contextVariables"
+        [typeBooleanCheckbox]="false"
+        (selectedValue)="selectValue($event, 'value')"
+      ></b3n-context-variable>
+
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <mat-form-field hideRequiredMarker="true" fxFlex="200px">
+          <input matInput type="number" placeholder="Time to live" formControlName="ttl" required />
+          <mat-error *ngIf="ttl.invalid">{{ getErrorTtl() }}</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex="100px">
+          <mat-label>&nbsp;</mat-label>
+          <mat-select formControlName="ttlUnit">
+            <mat-option [value]="'MINUTES'">Minutes</mat-option>
+            <mat-option [value]="'HOURS'">Hours</mat-option>
+            <mat-option [value]="'DAYS'">Days</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <div *ngIf="sharedVariableType === 'POP_SHARED_VARIABLE'" fxLayout="column" fxLayoutAlign="start start">
+      <label class="mb-0">Index</label>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <mat-radio-group [formControl]="indexCtrl">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+            <mat-radio-button [value]="-1">Most recent</mat-radio-button>
+            <mat-radio-button [value]="0">Least recent</mat-radio-button>
+            <mat-radio-button [value]="1"></mat-radio-button>
+          </div>
+        </mat-radio-group>
+
+        <mat-form-field hideRequiredMarker="true" fxFlex="150px">
+          <input matInput type="number" placeholder="Custom" [formControl]="customIndexCtrl" required />
+          <mat-error *ngIf="customIndexCtrl.invalid">{{ getErrorCustomIndex() }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-checkbox *ngIf="sharedVariableType === 'PUSH_SHARED_VARIABLE'" [formControl]="chkboxPushCtrl">
+      Do not replace if value exists
+    </mat-checkbox>
+    <mat-checkbox *ngIf="sharedVariableType === 'POP_SHARED_VARIABLE'" [formControl]="chkboxPopCtrl">
+      Also remove value from list
+    </mat-checkbox>
+  </div>
+</form>

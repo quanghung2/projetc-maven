@@ -1,0 +1,28 @@
+:host {
+  display: block;
+
+  .remark-dialog {
+    .agents {
+      font-size: 14px;
+      cursor: move;
+      border: solid thin lightgray;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem 0px;
+
+      .sortable-box {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        cursor: move;
+        padding: 0.8rem 1.6rem;
+      }
+    }
+  }
+}

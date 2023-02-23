@@ -1,0 +1,91 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import 'scss/core';
+@import 'app/app.theme.scss';
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100vh; // font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.pvtTotal,
+.pvtTotalLabel,
+.pvtGrandTotal {
+  display: none;
+}
+
+.pvtAxisLabel,
+.pvtRowLabel {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+table {
+  width: 100%;
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+thead th {
+  font-weight: 400;
+}
+
+td,
+th {
+  display: table-cell;
+  text-align: left;
+  vertical-align: middle;
+  border-radius: 2px;
+  border: none;
+  font-weight: 300;
+}
+
+tbody {
+  display: table-row-group;
+  vertical-align: middle;
+  border-color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-button {
+  width: 4px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border: thin solid #cccccc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7d7d7d;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}

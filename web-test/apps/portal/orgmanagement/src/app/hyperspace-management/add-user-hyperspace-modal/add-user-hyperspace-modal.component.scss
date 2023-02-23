@@ -1,0 +1,26 @@
+.team-member-modal {
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-sizing: border-box;
+
+    &--gray {
+      padding: 3px;
+      background: var(--gray-300);
+    }
+  }
+
+  .list-member {
+    min-height: 490px;
+    overflow: auto;
+    text-align: center;
+  }
+
+  .mat-dialog-container {
+    overflow: hidden;
+  }
+  .item-member:hover {
+    background-color: #f0f0f0;
+  }
+}

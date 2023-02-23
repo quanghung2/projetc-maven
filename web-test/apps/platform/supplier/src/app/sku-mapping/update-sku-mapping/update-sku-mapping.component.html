@@ -1,0 +1,106 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Mapping</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <input #name="ngModel" [(ngModel)]="skuMapping.name" matInput placeholder="Name" required />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select
+        [disabled]="skuMapping.id !== null"
+        [(ngModel)]="skuMapping.productId"
+        (selectionChange)="getSkus(skuMapping.productId)"
+        placeholder="Product"
+        required
+      >
+        <mat-option *ngFor="let product of telcomProducts" [value]="product.productId">
+          {{ product.name }} - {{ product.productId }}
+        </mat-option>
+      </mat-select>
+      <mat-spinner *ngIf="loadingProduct" class="loading" [diameter]="20">Loading...</mat-spinner>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="text" placeholder="SKU" matInput [formControl]="skuCtr" [matAutocomplete]="auto" required />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySku">
+        <mat-option *ngFor="let sku of filteredSkus$ | async" [value]="sku">
+          {{ sku.name }} - {{ sku.sku | slice: 0:6 }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-spinner *ngIf="loadingSku" class="loading" [diameter]="20">Loading...</mat-spinner>
+    </mat-form-field>
+    <div *ngIf="showCreateNewSku && skuCtr.value">
+      Above SKU does not existed.
+      <a (click)="createProductSku()" color="primary">Create new</a>
+    </div>
+
+    <mat-form-field>
+      <mat-select [disabled]="skuMapping.id !== null" [(ngModel)]="skuMapping.type" placeholder="Type" required>
+        <mat-option *ngFor="let type of supportedTypes" [value]="type">
+          {{ type | replaceSpecialCharacter | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #srcChipList>
+        <mat-chip
+          *ngFor="let src of skuMapping.srcPrefixes"
+          [removable]="removable"
+          (removed)="remove(src, 'srcPrefixes')"
+          >{{ src }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Enter to add new src prefix"
+          [matChipInputFor]="srcChipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event, 'srcPrefixes')"
+          type="text"
+          onKeyPress="if(this.value.length==11) return false;"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #destPrefixes>
+        <mat-chip
+          *ngFor="let dest of skuMapping.destPrefixes"
+          [removable]="removable"
+          (removed)="remove(dest, 'destPrefixes')"
+          >{{ dest }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Enter to add new dest prefix"
+          [matChipInputFor]="destPrefixes"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event, 'destPrefixes')"
+          type="text"
+          onKeyPress="if(this.value.length==11) return false;"
+        />
+      </mat-chip-list>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    [disabled]="
+      !skuMapping.productId || !skuMapping.name || !(skuCtr.value && !showCreateNewSku) || !skuMapping.type || updating
+    "
+    mat-raised-button
+    color="primary"
+    (click)="updateSkuMapping()"
+  >
+    <span>
+      {{ ctaActionName }}
+      <mat-spinner *ngIf="updating" class="loading" [diameter]="20">Loading...</mat-spinner></span
+    >
+  </button>
+</div>

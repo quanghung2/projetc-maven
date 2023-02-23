@@ -1,0 +1,40 @@
+:host {
+  .container {
+    padding: 0 3rem;
+
+    .header {
+      .action {
+        width: 60%;
+      }
+    }
+
+    .content {
+      .cas-action {
+        width: 60%;
+
+        .title {
+          margin: 0;
+        }
+
+        div {
+          mat-icon {
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .cas-module {
+        width: 60%;
+        line-height: 1.5 !important;
+
+        textarea {
+          color: #000000cf;
+        }
+      }
+    }
+  }
+}

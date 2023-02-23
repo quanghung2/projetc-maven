@@ -1,0 +1,13 @@
+<div class="ui page content small container">
+  <div class="ui secondary pointing menu">
+    <a [routerLink]="['./']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="item"
+      >Invoices</a
+    >
+
+    <a [routerLink]="['list']" routerLinkActive="active" class="item">Templates</a>
+  </div>
+
+  <div class="ui segment">
+    <router-outlet></router-outlet>
+  </div>
+</div>

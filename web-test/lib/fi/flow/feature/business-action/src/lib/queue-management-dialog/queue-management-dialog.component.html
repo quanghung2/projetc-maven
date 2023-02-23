@@ -1,0 +1,145 @@
+<div mat-dialog-title>
+  {{ baUser.trigger ? baUser.trigger.def.name : inputReq.triggerDef.name }}
+</div>
+<div mat-dialog-content>
+  <h4 class="flex justify-content-end secondary-text" style="margin-bottom: 1.6rem">
+    Queue -&nbsp;<strong>{{ inputReq.queueName }}</strong>
+  </h4>
+  <p class="text-red" *ngIf="baUser.trigger?.latestDef.uuid !== baUser.trigger?.def.uuid">
+    This event has been upgraded. Previous configuration may not work anymore. Please reconfigure
+  </p>
+
+  <!-- EDIT OR UPGRADE EVENT -->
+  <b3n-trigger-param
+    *ngIf="baUser.trigger"
+    [triggerDef]="
+      baUser.trigger.latestDef.uuid !== baUser.trigger.def.uuid ? baUser.trigger.latestDef : baUser.trigger.def
+    "
+    [triggerConfig]="baUser.trigger.configs"
+    [defaultParam]="inputReq.defaultParam"
+    [hideDefaultParam]="inputReq.hideDefaultParam"
+    (changeConfigs)="saveReq.trigger = $event"
+    (invalid)="invalidTriggerReq = $event"
+  ></b3n-trigger-param>
+
+  <!-- NEW EVENT -->
+  <b3n-trigger-param
+    *ngIf="!baUser.trigger"
+    [triggerDef]="inputReq.triggerDef"
+    [defaultParam]="inputReq.defaultParam"
+    [hideDefaultParam]="inputReq.hideDefaultParam"
+    (changeConfigs)="saveReq.trigger = $event"
+    (invalid)="invalidTriggerReq = $event"
+  ></b3n-trigger-param>
+
+  <mat-accordion #accordion="matAccordion" [multi]="false">
+    <!-- ACTION -->
+    <mat-expansion-panel
+      *ngFor="let a of baUser.actions; let i = index"
+      (afterCollapse)="alreadyExpanded[i] = true"
+      class="mat-elevation-z0"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+          <strong>{{ a.actionDef.presentName }}</strong>
+          <span class="text-red" *ngIf="a.state === ActionBaUserState.DEPRECATED">
+            (This action has been deprecated and may no longer work. Please remove)
+          </span>
+        </mat-panel-title>
+
+        <mat-icon
+          *ngIf="invalidActionReq[i] && alreadyExpanded[i]"
+          color="warn"
+          class="mt-8"
+          matTooltip="Incomplete configuration"
+        >
+          warning
+        </mat-icon>
+        <button
+          *ngIf="a.state === ActionBaUserState.NEW_BUSINESS_ACTION && a.showLatestActionDef === false"
+          mat-icon-button
+          (click)="$event.stopPropagation(); $event.preventDefault(); a.showLatestActionDef = true"
+        >
+          <mat-icon matTooltip="New version is available">upgrade</mat-icon>
+        </button>
+        <button mat-icon-button (click)="$event.stopPropagation(); $event.preventDefault(); removeAction(i)">
+          <mat-icon matTooltip="Remove">delete</mat-icon>
+        </button>
+      </mat-expansion-panel-header>
+
+      <b3n-action-param
+        *ngIf="!a.showLatestActionDef"
+        [actionDef]="a.actionDef"
+        [actionConfig]="a.configs"
+        [allowEdit]="a.state !== ActionBaUserState.DEPRECATED"
+        [exceptValueOfDts]="inputReq.additionalKey"
+        (changeConfigs)="saveReq.actions[i] = $event"
+        (invalid)="invalidActionReq[i] = $event"
+      ></b3n-action-param>
+
+      <b3n-action-param
+        *ngIf="a.showLatestActionDef"
+        [actionDef]="a.latestActionDef"
+        [actionConfig]="a.configs"
+        [exceptValueOfDts]="inputReq.additionalKey"
+        (changeConfigs)="saveReq.actions[i] = $event"
+        (invalid)="invalidActionReq[i] = $event"
+      ></b3n-action-param>
+    </mat-expansion-panel>
+
+    <!-- ADD ACTION -->
+    <mat-expansion-panel
+      id="add_{{ i }}"
+      *ngFor="let a of addActionReqInput; let i = index"
+      class="mat-elevation-z0"
+      [expanded]="true"
+      (afterCollapse)="alreadyExpanded[i + baUser.actions.length] = true"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="4px">
+          <strong>{{ a.presentName }}</strong>
+        </mat-panel-title>
+
+        <mat-icon
+          *ngIf="invalidActionReq[i + baUser.actions.length] && alreadyExpanded[i + baUser.actions.length]"
+          color="warn"
+          class="mt-8"
+          matTooltip="Incomplete configuration"
+        >
+          warning
+        </mat-icon>
+        <button mat-icon-button (click)="$event.stopPropagation(); $event.preventDefault(); removeNewAction(i)">
+          <mat-icon matTooltip="Remove">delete</mat-icon>
+        </button>
+      </mat-expansion-panel-header>
+
+      <b3n-action-param
+        [actionDef]="a"
+        [exceptValueOfDts]="inputReq.additionalKey"
+        (changeConfigs)="addActionReqOutput[i] = $event"
+        (invalid)="invalidActionReq[i + baUser.actions.length] = $event"
+      ></b3n-action-param>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <p class="mt-16" *ngIf="actionDefs.length > 0">
+    <a href="javascript:;" class="link" [matMenuTriggerFor]="menuAction">+ Add action</a>
+    <mat-menu #menuAction="matMenu">
+      <ng-container *ngFor="let a of actionDefs">
+        <button mat-menu-item (click)="selectActionDef(a)">{{ a.presentName }}</button>
+      </ng-container>
+    </mat-menu>
+  </p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="saving"
+    [disabled]="invalidTriggerReq || !actionReqValid()"
+    (click)="submit()"
+  >
+    Save
+  </button>
+</div>

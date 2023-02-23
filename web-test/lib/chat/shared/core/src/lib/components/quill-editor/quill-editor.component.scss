@@ -1,0 +1,143 @@
+:host {
+  display: block;
+  width: 100%;
+  position: relative;
+
+  .toolbar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: unset;
+
+    .mat-icon-button {
+      padding: 0px;
+      width: 26px !important;
+      height: 26px !important;
+      line-height: 26px !important;
+      .mat-icon {
+        height: 18px;
+        width: 18px;
+        font-size: 18px;
+        line-height: 18px;
+
+        &:hover {
+          color: #007a5a;
+        }
+      }
+    }
+  }
+
+  .editor {
+    display: block;
+    padding: 0;
+    margin-right: 0 !important;
+    width: 100%;
+
+    ::ng-deep {
+      .ql-container {
+        border: 1px solid #cccccc;
+        border-radius: 4px;
+        font: 400 15px/22px Open Sans, Roboto, monospace;
+        // overflow: auto;
+        // max-height: 200px;
+
+        .ql-editor {
+          padding-right: 10.5rem;
+          max-height: 200px;
+
+          p {
+            margin: 0;
+          }
+        }
+
+        // ====================== Emoji ======================
+        .textarea-emoji-control {
+          display: none;
+          width: 25px;
+          height: 25px;
+          right: 4px;
+          top: 10px;
+        }
+
+        #textarea-emoji {
+          position: absolute;
+          right: 0;
+          max-width: 250px;
+          z-index: 999;
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+          border-radius: 3px;
+          border: 1px solid rgba(0, 0, 0, 0.15);
+
+          #tab-panel {
+            zoom: 1.4;
+            max-height: 150px;
+
+            .ap {
+              margin-top: unset !important;
+            }
+          }
+        }
+
+        // ====================== Emoji ======================
+        .emoji_completions {
+          top: unset !important;
+          bottom: 54px;
+        }
+      }
+
+      .ql-disabled {
+        background-color: #80808085;
+      }
+
+      // ============ Mention ================
+      .ql-mention-list-container {
+        max-height: 354px;
+        overflow-y: scroll;
+        .ql-mention-list-item {
+          position: relative;
+          line-height: 44px;
+          height: 44px;
+          // custom mention
+          .item-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.6rem;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            padding: 0 1.6rem;
+            top: 0;
+            left: 0;
+            font-size: 14px;
+            flex-direction: row;
+
+            .curent-org {
+              color: #007be0;
+            }
+
+            .other-org {
+              color: #e95849;
+            }
+
+            .item-inner {
+              display: flex;
+              flex-flow: row;
+              align-items: center;
+              font-size: 14px;
+
+              .ql-name {
+                margin-left: 0.8rem;
+              }
+
+              .item-leave {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+
+      // ============ Mention ================
+    }
+  }
+}

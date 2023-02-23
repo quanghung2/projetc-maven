@@ -1,0 +1,73 @@
+<div class="container-form" *ngIf="_form && authenSettings">
+  <div fxLayout="row" fxLayoutAlign="space-between" fxFlexFill>
+    <mat-form-field fxFlex="35">
+      <input
+        type="text"
+        matInput
+        #authenCode
+        placeholder="Authen Code*"
+        [formControl]="codeAuthen"
+        [errorStateMatcher]="matcher"
+        onkeypress="return event.charCode === 46 || (48 <= event.charCode && event.charCode <= 57)"
+      />
+      <mat-error *ngIf="codeAuthen.hasError('required')"> Authentication code is required </mat-error>
+      <mat-error *ngIf="codeAuthen.hasError('duplicate')"> Authentication code already existed </mat-error>
+    </mat-form-field>
+    <mat-form-field fxFlex="60">
+      <mat-select
+        placeholder="Skills"
+        [formControl]="skillSelected"
+        (ngModelChange)="onChangeSkill($event)"
+        [errorStateMatcher]="matcher"
+      >
+        <mat-option *ngFor="let item of skills; let i = index" [value]="item.code">
+          {{ item.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="skillId.hasError('required')">Skill is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div
+    *ngIf="isExpand && !isNotExist"
+    class="container-list-field"
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch"
+  >
+    <span>Params</span>
+    <div
+      fxLayout="column"
+      fxLayoutAlign="space-between stretch"
+      fxLayoutGap="1.6rem"
+      *ngFor="let item of fields.controls; let i = index"
+    >
+      <div class="field-container" fxLayout="row" fxLayoutAlign="space-between center">
+        <label fxFlex="35">{{ item.get('lable').value }}</label>
+        <mat-form-field fxFlex="60" class="params-input">
+          <input
+            matInput
+            placeholder="Value"
+            [formControl]="$any(item.get('fieldValue'))"
+            [errorStateMatcher]="matcher"
+            [required]="item.get('isRequired').value"
+          />
+          <mat-error *ngIf="item.get('fieldValue').hasError('required')"> Value is required </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <span *ngIf="indexSelected === -1">No data params</span>
+  </div>
+
+  <ng-container *ngIf="isNotExist">
+    <span class="exist-skill">Your Skill doesn't exist</span>
+  </ng-container>
+
+  <div fxLayout="row" fxLayoutGap="1.6rem" fxLayoutAlign="end none">
+    <a href="javascript:void(0);" (click)="onDelete()" class="detele-item">
+      <div>Delete</div>
+    </a>
+    <a href="javascript:void(0);" *ngIf="!isNotExist" (click)="isExpand = !isExpand">
+      <div>{{ isExpand ? 'Collapse' : 'Expand' }}</div>
+    </a>
+  </div>
+</div>

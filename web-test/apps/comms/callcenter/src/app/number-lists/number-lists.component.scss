@@ -1,0 +1,65 @@
+:host {
+  .talking {
+    color: white;
+    background-color: #007be0 !important;
+  }
+
+  .number-column {
+    text-align: right;
+  }
+
+  .action-column {
+    width: 12%;
+    padding-right: 0;
+    min-width: 125px;
+  }
+
+  .status-icon {
+    font-size: 34px;
+  }
+
+  .td-status {
+    mat-icon {
+      float: left;
+      padding-left: 0px;
+    }
+    div {
+      float: left;
+      padding-top: 3px;
+    }
+  }
+
+  .tags-column {
+    width: 11%;
+  }
+
+  .status-chip {
+    text-align: center;
+    color: #ffffff !important;
+    border-radius: 4px;
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .label {
+    font-weight: 300;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: baseline;
+    margin: 0 0.14285714em;
+    background-color: #e8e8e8;
+    background-image: none;
+    padding: 4px 6px;
+    font-size: 12px;
+    letter-spacing: -0.5px;
+    color: rgba(0, 0, 0, 0.5);
+    text-transform: none;
+    font-weight: 600;
+    border: 0 solid transparent;
+    border-radius: 0.28571429rem;
+  }
+}
+
+.disable-color {
+  color: rgba(0, 0, 0, 0.19) !important;
+}

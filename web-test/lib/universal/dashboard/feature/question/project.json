@@ -1,0 +1,19 @@
+{
+  "name": "universal-dashboard-feature-question",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/universal/dashboard/feature/question/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/universal/dashboard/feature/question/**/*.ts",
+          "libs/universal/dashboard/feature/question/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

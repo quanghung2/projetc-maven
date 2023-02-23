@@ -1,0 +1,167 @@
+<mat-toolbar>
+  <mat-toolbar-row *ngIf="!noTitle"><h1>Call History</h1></mat-toolbar-row>
+  <mat-toolbar-row fxLayoutGap="0.8rem">
+    <ng-container *ngIf="!isUnifiedWorkspace && !noTeams">
+      <mat-form-field *ngIf="!(managedTeams.length === 1 && managedTeams[0].name === 'Me')">
+        <mat-select (selectionChange)="onSelectTeam($event)" [(ngModel)]="filter.teamUuid" placeholder="Teams">
+          <mat-option *ngFor="let team of managedTeams" [value]="team.uuid">{{ team.name | titlecase }}</mat-option>
+          <mat-option *ngIf="managedTeams?.length === 0" [value]="null">You have no team</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <span class="spacer"></span>
+
+    <mat-form-field *ngIf="!noDateRange">
+      <mat-select (selectionChange)="onSelectRange()" [(ngModel)]="filter.timeRange" placeholder="Date Range">
+        <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">
+          {{ timeRange.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!isUnifiedWorkspace">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Phone Number or Extension Key" [formControl]="searchTextCtr" />
+      <mat-icon *ngIf="filter.inputSearch" (click)="searchTextCtr.setValue(''); onFilterChanged()" matSuffix>
+        clear
+      </mat-icon>
+    </mat-form-field>
+    <a mat-button (click)="advancedSearch = !advancedSearch">Advanced search</a>
+    <button mat-icon-button [loading]="loading" (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+    <button
+      *ngIf="filter.teamUuid !== EnumScope.personal; else personalScope"
+      mat-stroked-button
+      class="btn-download"
+      [loading]="loadingDownload"
+      [disabled]="history?.length == 0 || loadingDownload"
+      [matMenuTriggerFor]="menu"
+    >
+      Export <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+    <ng-template #personalScope>
+      <button
+        (click)="onDownloadHistory('leg2v2')"
+        mat-stroked-button
+        [loading]="loadingDownload"
+        [disabled]="history?.length == 0 || loadingDownload"
+      >
+        Export
+      </button>
+    </ng-template>
+  </mat-toolbar-row>
+  <mat-toolbar-row
+    *ngIf="(filter.timeRange === TimeRangeKey.specific_date && !noDateRange) || advancedSearch"
+    fxLayoutAlign="start baseline"
+    fxLayoutGap="0.8rem"
+  >
+    <span class="spacer"></span>
+
+    <ng-container *ngIf="filter.timeRange === TimeRangeKey.specific_date && !noDateRange">
+      <mat-form-field (click)="pickerStart.open()">
+        <input
+          readonly
+          matInput
+          [matDatepicker]="pickerStart"
+          placeholder="Start Time"
+          [(ngModel)]="filter.startDate"
+          [min]="configDatepicker.minStart"
+          [max]="configDatepicker.maxStart"
+          (dateChange)="startDateChanged()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [class.hidden-icon]="!!filter.startDate"
+          [for]="pickerStart"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerStart type="datetime" [twelveHour]="false"></mat-datepicker>
+        <mat-icon
+          *ngIf="filter.startDate"
+          (click)="$event.stopPropagation(); filter.startDate = null; startDateChanged()"
+          matSuffix
+        >
+          clear
+        </mat-icon>
+      </mat-form-field>
+
+      <mat-form-field (click)="pickerEnd.open()">
+        <input
+          readonly
+          matInput
+          [matDatepicker]="pickerEnd"
+          placeholder="End Time"
+          [(ngModel)]="filter.endDate"
+          [min]="configDatepicker.minEnd"
+          [max]="configDatepicker.maxEnd"
+          (dateChange)="endDateChanged()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [class.hidden-icon]="!!filter.endDate"
+          [for]="pickerEnd"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #pickerEnd type="datetime" [twelveHour]="false"></mat-datepicker>
+        <mat-icon
+          *ngIf="filter.endDate"
+          (click)="$event.stopPropagation(); filter.endDate = null; endDateChanged()"
+          matSuffix
+        >
+          clear
+        </mat-icon>
+      </mat-form-field>
+    </ng-container>
+    <ng-container *ngIf="advancedSearch">
+      <mat-checkbox
+        [(ngModel)]="filter.hasRecording"
+        (change)="onFilterChanged(ResourceFilter.CR)"
+        class="resource-checkbox"
+      >
+        Call Recording
+      </mat-checkbox>
+      <mat-checkbox
+        [(ngModel)]="filter.hasVoicemail"
+        (change)="onFilterChanged(ResourceFilter.VM)"
+        class="resource-checkbox"
+      >
+        Voice Mail
+      </mat-checkbox>
+
+      <mat-form-field>
+        <mat-select (selectionChange)="onFilterChanged()" [(ngModel)]="filter.callType" placeholder="Call Type">
+          <mat-option
+            *ngFor="let call of callTypes"
+            [value]="call.key"
+            [ngClass]="{ 'hidden-type': filter.teamUuid === EnumScope.personal && call.key === CallType.forwarding }"
+            >{{ call.value }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select (selectionChange)="onFilterChanged()" [(ngModel)]="filter.status" placeholder="Call Result">
+          <mat-option
+            *ngFor="let item of statusCall"
+            [value]="item.key"
+            [ngClass]="{
+              'hidden-status':
+                filter.teamUuid !== EnumScope.personal &&
+                (item.key === StatusCall.redirection || item.key === StatusCall.delegated)
+            }"
+            >{{ item.value }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="onDownloadHistory('call2')">
+    <span>Call History</span>
+  </button>
+  <button mat-menu-item (click)="onDownloadHistory('leg2')">
+    <span>Call Leg History</span>
+  </button>
+</mat-menu>

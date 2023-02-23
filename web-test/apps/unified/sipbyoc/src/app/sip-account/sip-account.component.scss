@@ -1,0 +1,26 @@
+:host {
+  .container {
+    max-width: 800px;
+    margin: auto;
+
+    mat-toolbar-row {
+      padding: 0;
+    }
+
+    .help-block {
+      color: rgb(153, 153, 153);
+    }
+
+    mat-form-field {
+      min-width: 150px;
+    }
+
+    .icon-action {
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      font-size: 22px;
+      color: #7a7a7a;
+    }
+  }
+}

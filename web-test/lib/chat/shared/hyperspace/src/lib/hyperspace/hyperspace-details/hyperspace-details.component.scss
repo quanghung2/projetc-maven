@@ -1,0 +1,56 @@
+.convo_details {
+  .btn-action-header {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    mat-icon {
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      font-size: 22px;
+      color: #7a7a7a;
+    }
+  }
+
+  .mat-expansion-panel-header.mat-expanded {
+    height: 50px !important;
+  }
+
+  .csh-right-sidebar-info {
+    mat-icon {
+      color: #7a7a7a;
+    }
+
+    .avarta-container {
+      padding: 1rem 0;
+      .display-name {
+        font-weight: 550;
+        font-size: 15px;
+        color: rgba(0, 0, 0, 0.87);
+      }
+
+     
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+
+        &.member {
+          border: 1px solid #e0e0e0;
+          border-radius: 50%;
+        }
+      }
+
+      .text-description {
+        word-break: break-word;
+        white-space: pre-line;
+        max-height: 500px;
+        overflow: auto;
+      }
+    }
+
+    .phone-container {
+      padding: 1rem 0;
+    }
+  }
+}

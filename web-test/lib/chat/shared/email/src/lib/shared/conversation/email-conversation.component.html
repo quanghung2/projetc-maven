@@ -1,0 +1,44 @@
+<section class="conversation-container" *ngIf="conversationGroup">
+  <div class="convoCheckbox" *ngIf="showAction">
+    <mat-checkbox
+      (change)="onChangeCheckbox($event, conversationGroup)"
+      color="warn"
+      (click)="$event.stopPropagation()"
+    ></mat-checkbox>
+  </div>
+  <div class="convoContent">
+    <div class="statusIcon">
+      <mat-icon *ngIf="conversationGroup.unreadCount" class="unseenIcon">fiber_manual_record</mat-icon>
+      <mat-icon *ngIf="conversationGroup.replyTime" class="replyIcon">reply</mat-icon>
+    </div>
+    <div class="description">
+      <div>
+        {{
+          isDraft &&
+          conversationGroup.draft?.emailMessage &&
+          conversationGroup.draft?.emailMessage?.toAddresses?.length > 0
+            ? conversationGroup.draft?.emailMessage?.toAddresses[0]?.address
+            : conversationGroup.firstEmailRecipient
+            ? conversationGroup.firstEmailRecipient
+            : 'No Recipient'
+        }}
+      </div>
+      <div class="subject text-truncate">
+        {{
+          isDraft && conversationGroup.draft?.emailMessage
+            ? conversationGroup.draft?.emailMessage?.subject
+            : conversationGroup.description
+            ? conversationGroup.description
+            : 'No Subject'
+        }}
+      </div>
+      <div class="lastMsg text-truncate">
+        {{ conversationGroup.lastMsgDisplay }}
+      </div>
+    </div>
+    <mat-icon *ngIf="conversationGroup.mentionCount" class="mentionCount">priority_high</mat-icon>
+    <div class="lastUpdated text-truncate">
+      <small class="message__time">{{ lastMessageAsMillisecond | timeAgo }}</small>
+    </div>
+  </div>
+</section>

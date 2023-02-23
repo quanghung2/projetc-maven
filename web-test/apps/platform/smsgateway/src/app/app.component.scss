@@ -1,0 +1,26 @@
+.sms__container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+}
+
+.sms__header {
+  width: 100%;
+  color: white !important;
+  cursor: pointer;
+}
+
+.sms__nav {
+  margin-left: 2rem;
+  border: 0px !important;
+
+  a {
+    color: white !important;
+  }
+
+  .active {
+    color: white !important;
+    opacity: 1 !important;
+    border-bottom: 1px solid white !important;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "api-infra",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/infra/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/infra/**/*.ts", "libs/api/infra/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

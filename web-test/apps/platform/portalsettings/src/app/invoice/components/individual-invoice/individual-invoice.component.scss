@@ -1,0 +1,23 @@
+.ui.breadcrumb .active.section {
+  font-weight: 700;
+}
+
+.settings {
+  max-width: 800px;
+}
+
+.ui.form {
+  .currency .dropdown,
+  .crn input {
+    width: auto;
+  }
+}
+
+.ui.dividing.header {
+  font-weight: 600;
+
+  .exp {
+    font-style: italic;
+    font-weight: normal;
+  }
+}

@@ -1,0 +1,41 @@
+.select-subscription {
+  table {
+    width: 100%;
+
+    .total-renew {
+      color: #0fc180;
+    }
+    tr.mat-footer-row {
+      font-weight: bold;
+    }
+    .mat-header-cell {
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    .recover-second-footer-row {
+      text-align: center;
+    }
+    .available-amount {
+      color: red;
+    }
+  }
+  .subscription-card {
+    height: 326px;
+    width: 326px;
+    .description {
+      text-align: center;
+    }
+  }
+
+  .tabel-subscription {
+    .link {
+      text-decoration: none;
+      color: #007be0;
+    }
+  }
+
+  .recover-error {
+    background-color: #ffe082;
+    color: #795548;
+  }
+}

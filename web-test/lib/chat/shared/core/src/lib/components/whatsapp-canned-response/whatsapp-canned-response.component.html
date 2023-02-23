@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>
+  <div class="dialog-title">Send canned response</div>
+</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <textarea rows="5" placeholder="Content" matInput [(ngModel)]="data.cannedResponse.content"></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" color="primary" (click)="submit()">Send</button>
+</div>

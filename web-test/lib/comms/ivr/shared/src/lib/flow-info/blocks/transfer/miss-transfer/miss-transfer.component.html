@@ -1,0 +1,6 @@
+<mat-form-field class="miss-transfer">
+  <mat-label>Mark as miss call after</mat-label>
+  <mat-select placeholder="{{ block.ringTime }} seconds" [(ngModel)]="block.ringTime">
+    <mat-option *ngFor="let item of [7, 15, 30, 45, 60, 75, 90]" [value]="item"> {{ item }} seconds </mat-option>
+  </mat-select>
+</mat-form-field>

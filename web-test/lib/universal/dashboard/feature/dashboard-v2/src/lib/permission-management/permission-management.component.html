@@ -1,0 +1,141 @@
+<mat-drawer-container class="pm__container">
+  <mat-drawer #drawer position="end">
+    <ng-container *ngIf="showDrawer">
+      <b3n-store-permission
+        [dashboards]="dashboards"
+        [iamMember]="iamMember"
+        [iamMembers]="iamMembers"
+        (close)="closeDrawer($event)"
+      ></b3n-store-permission>
+    </ng-container>
+  </mat-drawer>
+  <mat-toolbar class="pm-toolbar__wrapper">
+    <span matTooltip="Back to dashboard" [routerLink]="['../']"> Dashboard </span>
+    <mat-icon>keyboard_arrow_right</mat-icon>
+    <span>Permission Management</span>
+  </mat-toolbar>
+  <div class="pm-info__wrapper">
+    <div class="pm-info">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p>View: Allows user to view dashboard</p>
+    </div>
+    <div class="pm-info">
+      <mat-icon class="material-icons-outlined">info</mat-icon>
+      <p>Manage: Allows user to edit and delete dashboard</p>
+    </div>
+  </div>
+  <form class="pm-actions__wrapper" [class.pm-disabled]="loading" [formGroup]="form">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search by name" formControlName="search" />
+    </mat-form-field>
+    <div class="pm-actions">
+      <button mat-button (click)="refresh()" [loading]="loading" type="button">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <button mat-raised-button color="primary" (click)="openDrawer()" type="button">Assign</button>
+    </div>
+  </form>
+  <div class="pm-table__wrapper">
+    <mat-table *ngIf="dataSource" [dataSource]="dataSource">
+      <ng-container matColumnDef="uuid" [sticky]="true">
+        <mat-header-cell *matHeaderCellDef> UUID </mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <p class="uuid" matTooltip="Click to copy" (click)="copy(member.memberUuid)">
+            {{ member.memberUuid.slice(0, 8) }}
+          </p>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="name" [sticky]="true">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <p class="name">{{ member.displayName }}</p>
+        </mat-cell>
+      </ng-container>
+
+      <!--* dynamic *-->
+      <ng-container [matColumnDef]="dashboard.uuid" *ngFor="let dashboard of dashboards">
+        <mat-header-cell *matHeaderCellDef class="mat-column-dynamic">
+          <div class="dynamic-header-cell">
+            <p class="name">{{ dashboard.name }}</p>
+            <div class="actions">
+              <p>View</p>
+              <p>Manage</p>
+            </div>
+          </div>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let member" class="mat-column-dynamic">
+          <div class="dynamic-cell">
+            <div class="status" name="readonly">
+              <mat-icon *ngIf="member.role === MemberRole.ADMIN; else readonlyCheck" color="primary">check</mat-icon>
+              <ng-template #readonlyCheck>
+                <mat-icon
+                  *ngIf="
+                    statusMap[member.memberUuid] &&
+                      statusMap[member.memberUuid][dashboard.uuid][DashboardPermission.READONLY];
+                    else empty
+                  "
+                  color="primary"
+                  >check</mat-icon
+                >
+              </ng-template>
+            </div>
+            <div class="status" name="manage">
+              <ng-container *ngIf="member.role === MemberRole.ADMIN; else manageCheck">
+                <mat-icon *ngIf="dashboard.isDefault"></mat-icon>
+                <mat-icon *ngIf="!dashboard.isDefault" color="primary">check</mat-icon>
+              </ng-container>
+              <ng-template #manageCheck>
+                <mat-icon
+                  *ngIf="
+                    statusMap[member.memberUuid] &&
+                      statusMap[member.memberUuid][dashboard.uuid][DashboardPermission.MANAGE];
+                    else empty
+                  "
+                  color="primary"
+                  >check</mat-icon
+                >
+              </ng-template>
+            </div>
+            <ng-template #empty>
+              <mat-icon></mat-icon>
+            </ng-template>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <!--* end dynamic *-->
+
+      <ng-container matColumnDef="actions" [stickyEnd]="true">
+        <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+        <mat-cell *matCellDef="let member">
+          <div class="actions">
+            <mat-icon
+              (click)="edit(member)"
+              matTooltip="Edit"
+              *ngIf="member.role !== MemberRole.ADMIN; else info"
+              class="pointer"
+              >edit</mat-icon
+            >
+            <ng-template #info>
+              <mat-icon class="material-icons-outlined" matTooltip="This member is Dashboard's admin">info</mat-icon>
+            </ng-template>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row
+        *matHeaderRowDef="displayedColumns; sticky: true"
+        [style.minWidth.px]="rowMinWidth"
+      ></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns" [style.minWidth.px]="rowMinWidth"></mat-row>
+    </mat-table>
+  </div>
+  <mat-paginator
+    *ngIf="totalCount"
+    [length]="totalCount"
+    [pageSize]="PerPage"
+    (page)="handlePage($event)"
+    hidePageSize
+    showFirstLastButtons
+  ></mat-paginator>
+</mat-drawer-container>

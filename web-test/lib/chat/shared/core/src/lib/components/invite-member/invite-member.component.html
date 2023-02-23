@@ -1,0 +1,62 @@
+<h1 mat-dialog-title>
+  <span
+    *ngIf="
+      (convo.type === GroupType.WhatsApp || convo.type === GroupType.SMS) && TXN_SECTION.UNASSIGNED === convo.txnSection
+    "
+    >Assign</span
+  >
+  <span
+    *ngIf="
+      (convo.type === GroupType.WhatsApp || convo.type === GroupType.SMS) && TXN_SECTION.UNASSIGNED !== convo.txnSection
+    "
+    >Transfer</span
+  >
+  <span *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS">Invite members</span>
+  <mat-icon
+    *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS && convo.privacy === Privacy.private"
+    class="icon"
+    >lock</mat-icon
+  >
+  <mat-icon
+    *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS && convo.privacy !== Privacy.private"
+    class="icon"
+    >#</mat-icon
+  >
+  <span *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS"> {{ convo?.name }}</span>
+  <span *ngIf="convo.type === GroupType.WhatsApp || convo.type === GroupType.SMS"> conversation</span>
+</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline">
+    <mat-label *ngIf="convo.type === GroupType.WhatsApp || convo.type === GroupType.SMS">Agent</mat-label>
+    <mat-label *ngIf="convo.type !== GroupType.WhatsApp && convo.type !== GroupType.SMS">Members</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let member of sortBy(members); trackBy: trackBy"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(member)"
+      >
+        <csh-render-member [user]="member"></csh-render-member>
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        #memberInput
+        [formControl]="memberCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+      />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let member of sortBy(filteredMembers | async); trackBy: trackBy" [value]="member">
+        <csh-render-member [user]="member" [key]="key"></csh-render-member>
+      </mat-option>
+      <mat-option *ngIf="(filteredMembers | async)?.length === 0" disabled>No members available</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="processing" (click)="submit()">{{ ctaButton }}</button>
+</div>

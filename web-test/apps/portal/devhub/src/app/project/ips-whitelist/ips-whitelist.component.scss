@@ -1,0 +1,61 @@
+:host {
+  display: block;
+
+  .ips-whitelist {
+    margin: auto;
+
+    &__title {
+      color: rgba(0, 0, 0, 0.67);
+      margin-bottom: 1.6rem;
+    }
+    &__content {
+      .mat-row:hover {
+        background: var(--gray-100);
+      }
+      .mat-row:hover .copy-btn {
+        display: block !important;
+      }
+      .mat-column-actions {
+        width: 50px;
+      }
+      &__actions-bar {
+        margin-top: 1rem;
+      }
+      table {
+        width: 100% !important;
+        .copy-btn-container {
+          width: 30px;
+          .copy-btn {
+            color: rgba(0, 0, 0, 0.67) !important;
+            font-size: 20px !important;
+            width: 20px !important;
+            height: 20px !important;
+            margin-left: 5px;
+            cursor: pointer;
+            display: none;
+          }
+        }
+        .actions {
+          visibility: hidden;
+          width: 50px;
+          color: rgba(0, 0, 0, 0.67) !important;
+        }
+        .mat-row:hover .actions {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  .no-data-container {
+    padding: 7.5rem;
+
+    .no-api-message {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 16px;
+      margin-bottom: 2rem;
+      text-align: center;
+      line-height: 2;
+    }
+  }
+}

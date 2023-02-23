@@ -1,0 +1,127 @@
+<table mat-table [dataSource]="audits" multiTemplateDataRows>
+  <ng-container matColumnDef="auditTime">
+    <th mat-header-cell *matHeaderCellDef>Date & time</th>
+    <td mat-cell *matCellDef="let element">{{ element.dateTime | userDate: 'MMM dd, hh:mm aa' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef>Action</th>
+    <td mat-cell *matCellDef="let element">{{ element.action }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="user">
+    <th mat-header-cell *matHeaderCellDef>User</th>
+    <td mat-cell *matCellDef="let element">{{ element.userId }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="target">
+    <th mat-header-cell *matHeaderCellDef>{{ nameColumnTarget }}</th>
+    <td mat-cell *matCellDef="let element">
+      {{ element.target }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ipAddress">
+    <th mat-header-cell *matHeaderCellDef>Ip address</th>
+    <td mat-cell *matCellDef="let element">{{ element.rawData?.clientInfo?.ipAddress }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnDefinitions.length">
+      <div
+        class="audit-table-detail"
+        fxLayout="row"
+        fxLayout="start stretch"
+        [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'"
+        [ngClass]="{ 'showing border border-radius-4': element === expandedElement }"
+      >
+        <poa-bizphone-audit-detail
+          fxFlex
+          [rawData]="element.rawData"
+          *ngIf="auditName === 'extension'"
+        ></poa-bizphone-audit-detail>
+        <poa-virtualline-v1-audit-detail
+          fxFlex
+          [audit]="element.rawData"
+          *ngIf="auditName === 'app-virtualline'"
+        ></poa-virtualline-v1-audit-detail>
+
+        <poa-approve-version
+          *ngIf="element.rawAction === 'approveVersion'"
+          [raw]="element.rawData"
+        ></poa-approve-version>
+        <poa-change-blocks *ngIf="element.rawAction === 'ivrFlowChanged'" [raw]="element.rawData"></poa-change-blocks>
+        <poa-change-numbers
+          *ngIf="element.rawAction === 'changeAssignedNumbers'"
+          [raw]="element.rawData"
+        ></poa-change-numbers>
+        <poa-change-schedule
+          *ngIf="element.rawAction === 'changeSchedule'"
+          [raw]="element.rawData"
+        ></poa-change-schedule>
+        <poa-export-history *ngIf="element.rawAction === 'exportHistory'" [raw]="element.rawData"></poa-export-history>
+        <poa-rollback-version
+          *ngIf="element.rawAction === 'rollbackVersion'"
+          [raw]="element.rawData"
+        ></poa-rollback-version>
+        <poa-absolete-change-blocks
+          *ngIf="element.rawAction === 'editVirtualLineFlow' || element.rawAction === 'importVirtualLineFlow'"
+          [raw]="element.rawData"
+        ></poa-absolete-change-blocks>
+        <poa-detail-wallboard-v1
+          fxFlex
+          [raw]="element.rawData"
+          *ngIf="auditName === 'wallboard'"
+        ></poa-detail-wallboard-v1>
+        <poa-edit-callcenter-queue
+          *ngIf="element.rawAction === 'editCallCenterQueue'"
+          [raw]="element.rawData"
+        ></poa-edit-callcenter-queue>
+        <poa-edit-callcenter-setting
+          *ngIf="element.rawAction === 'editCallCenterSettings'"
+          [raw]="element.rawData"
+        ></poa-edit-callcenter-setting>
+        <poa-edit-callcenter-agent-state
+          *ngIf="element.rawAction === 'editCallCenterAgentState'"
+          [raw]="element.rawData"
+        ></poa-edit-callcenter-agent-state>
+
+        <poa-directline-detail
+          fxFlex
+          [rawData]="element.rawData"
+          *ngIf="auditName === 'directline'"
+        ></poa-directline-detail>
+        <poa-sip-detail fxFlex [rawData]="element.rawData" *ngIf="auditName === 'appsip'"></poa-sip-detail>
+        <poa-fax-detail fxFlex [rawData]="element.rawData" *ngIf="auditName === 'fax'"></poa-fax-detail>
+        <poa-flow-audit-detail fxFlex [rawData]="element.rawData" *ngIf="auditName === 'flow'"></poa-flow-audit-detail>
+        <poa-ms-data-detail fxFlex [rawData]="element.rawData" *ngIf="auditName === 'ms-data'"></poa-ms-data-detail>
+        <!-- <poa-bizphone-audit-detail fxFlex [rawData]="element.rawData"></poa-bizphone-audit-detail> -->
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="noData">
+    <td mat-footer-cell *matFooterCellDef [attr.colspan]="columnDefinitions.length">
+      <div fxLayoutAlign="center center">
+        <span class="mat-body-1">No Data Available</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnDefinitions"></tr>
+  <tr
+    mat-row
+    *matRowDef="let element; columns: columnDefinitions"
+    [class.audit-element-row]="!isExpandedDetail(element)"
+    [class.example-expanded-row]="expandedElement === element"
+    (click)="expandedElement = expandedElement === element ? null : element"
+  ></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: ['expandedDetail']"
+    class="audit-detail-row"
+    [hidden]="isExpandedDetail(row)"
+  ></tr>
+
+  <tr mat-footer-row *matFooterRowDef="['noData']" class="no-data-table" [hidden]="audits.length > 0"></tr>
+</table>

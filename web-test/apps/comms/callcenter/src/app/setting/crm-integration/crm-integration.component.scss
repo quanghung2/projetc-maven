@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  max-width: 980px;
+
+  ::ng-deep .mat-form-field-infix {
+    width: 0;
+  }
+
+  .add-more-button {
+    float: right;
+  }
+}

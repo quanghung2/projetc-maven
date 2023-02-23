@@ -1,0 +1,28 @@
+:host {
+  .container {
+    max-width: 800px;
+    margin: auto;
+
+    .body {
+      table {
+        th {
+          &.mat-column-rule {
+            width: 40%;
+          }
+        }
+
+        tr {
+          .action-container {
+            visibility: hidden;
+          }
+
+          &:hover {
+            .action-container {
+              visibility: visible;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+.as-horizontal {
+  height: calc(100vh - var(--app__warning--height) - var(--app__toolbar--height));
+
+  .as-split-area {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    .height64 {
+      height: var(--header-height);
+    }
+
+    .action__header {
+      border-bottom: 1px solid var(--general-border);
+      padding: 0 10px;
+
+      mat-icon {
+        color: var(--icon-background);
+      }
+    }
+
+    .convo {
+      &__scroll-viewport {
+        height: calc(100vh - 100px);
+        width: 100%;
+        overflow-x: hidden;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        &::-webkit-scrollbar {
+          /* Hide scrollbar for Chrome, Safari and Opera */
+          display: none;
+        }
+      }
+
+      &__item {
+        margin: 10px 16px;
+        min-height: 95px;
+
+        &.active {
+          color: var(--white);
+          background-color: var(--primary-background);
+        }
+      }
+    }
+
+    ::ng-deep .as-split-gutter {
+      height: auto !important;
+    }
+  }
+}

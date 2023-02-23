@@ -1,0 +1,13 @@
+.delete-stored-card {
+  .content {
+    .error {
+      color: red;
+    }
+  }
+  .close-delete-stored:hover {
+    cursor: pointer;
+  }
+  .mat-button-focus-overlay {
+    background-color: transparent !important;
+  }
+}

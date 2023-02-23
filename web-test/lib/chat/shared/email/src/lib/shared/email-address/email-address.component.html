@@ -1,0 +1,8 @@
+<div class="messageText">
+  <span class="label">{{ label }}: </span>
+  <span *ngFor="let item of addresses; let i = index" class="itemEmail">
+    <span *ngIf="item.name">{{ item.name }} &lt;{{ item.address }}&gt;</span>
+    <span *ngIf="!item.name">{{ item.address }}</span>
+    <span *ngIf="i < addresses.length - 1">,</span>
+  </span>
+</div>

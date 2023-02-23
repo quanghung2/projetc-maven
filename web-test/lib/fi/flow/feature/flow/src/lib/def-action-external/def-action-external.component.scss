@@ -1,0 +1,18 @@
+.title {
+  color: #999;
+}
+
+.body-template {
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+
+  &::ng-deep {
+    .mat-form-field-underline {
+      height: 0;
+    }
+
+    .ql-container {
+      min-height: 175px;
+    }
+  }
+}

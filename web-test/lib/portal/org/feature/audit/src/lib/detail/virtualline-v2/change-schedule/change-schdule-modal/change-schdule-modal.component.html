@@ -1,0 +1,29 @@
+<div class="audit-detail-modal">
+  <h1 mat-dialog-title>Details</h1>
+  <div mat-dialog-content>
+    <table mat-table [dataSource]="shifts" class="mat-elevation-z1">
+      <ng-container matColumnDef="property">
+        <th mat-header-cell *matHeaderCellDef>Property</th>
+        <td mat-cell *matCellDef="let shift">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <div class="icon-item-change"></div>
+            <span>{{ shift?.dayOfWeek }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="changes">
+        <th mat-header-cell *matHeaderCellDef>Changes</th>
+        <td mat-cell *matCellDef="let shift">
+          {{ shift?.timeRangesStr }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns"></tr>
+    </table>
+  </div>
+  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end none">
+    <button mat-button (click)="onClose()">Close</button>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+@import '../../../email-settings.component';
+
+.form-container {
+  margin: 20px auto 0;
+  mat-form-field {
+    width: 100%;
+  }
+  .hint {
+    color: $empty-color;
+    text-align: center;
+    margin-bottom: 1.25em;
+    font-size: 80%;
+  }
+  .signature-content {
+    margin: 30px 0 20px;
+  }
+}
+
+::ng-deep .ql-editor {
+  padding: 12px 15px;
+}

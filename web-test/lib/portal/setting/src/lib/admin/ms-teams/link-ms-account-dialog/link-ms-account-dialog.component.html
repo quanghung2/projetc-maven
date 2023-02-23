@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>{{ data.defaultUser ? 'Update' : 'Link' }} team account</h1>
+<div mat-dialog-content class="d-flex flex-column">
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>{{ isExtensionKey ? 'Extension' : 'DDI number' }}</mat-label>
+    <input matInput [value]="data.defaultKey" readonly />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Team account</mat-label>
+    <input type="text" matInput required [formControl]="userControl" />
+    <mat-error *ngIf="userControl.invalid && userControl.errors?.['required']">Team account is required</mat-error>
+    <mat-error *ngIf="userControl.invalid && userControl.errors?.['email']">Invalid email address</mat-error>
+  </mat-form-field>
+
+  <div class="alert alert-danger text-center" role="alert" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="isLoading"
+    [disabled]="userControl.invalid"
+    (click)="handleUpdateExtension()"
+  >
+    {{ data.defaultUser ? 'Update' : 'Link' }}
+  </button>
+</div>

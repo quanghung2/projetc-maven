@@ -1,0 +1,38 @@
+.search-common {
+  // ::ng-deep .mat-form-field-outline {
+  //   /*change color of underline*/
+  //   color: white !important;
+  // }
+
+  // ::ng-deep .mat-select-value {
+  //   color: white !important;
+  // }
+
+  // ::ng-deep .mat-form-field-label {
+  //   color: white !important;
+  // }
+
+  // ::ng-deep .mat-form-field-ripple {
+  //   color: white !important;
+  // }
+
+  // ::ng-deep .mat-input-element {
+  //   color: white !important;
+  // }
+  // ::ng-deep .mat-select-arrow {
+  //   color: white !important;
+  // }
+  ::ng-deep .mat-form-field-flex > .mat-form-field-infix {
+    min-width: 100px;
+    padding: 0.4em 0px !important;
+  }
+  ::ng-deep .mat-form-field-label-wrapper {
+    top: -1.5em;
+  }
+  ::ng-deep .mat-select-trigger {
+    top: -0.3em;
+  }
+  mat-icon {
+    display: inline-flex !important;
+  }
+}

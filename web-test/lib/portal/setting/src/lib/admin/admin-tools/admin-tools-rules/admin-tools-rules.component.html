@@ -1,0 +1,64 @@
+<div fxLayout="column" fxLayoutGap="1.6rem" class="px-16">
+  <h3 class="mb-15">Call rules</h3>
+  <ng-container [formGroup]="form" *ngIf="form">
+    <div class="form__wrapper" fxLayout="column">
+      <mat-form-field>
+        <mat-label>Inbound call rule</mat-label>
+        <mat-select formControlName="inbound">
+          <mat-option value="">None</mat-option>
+          <mat-option *ngFor="let inbound of inbound$ | async" [value]="inbound.name">{{ inbound.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Outbound call rule</mat-label>
+        <mat-select formControlName="outbound">
+          <mat-option *ngFor="let outbound of outbound$ | async" [value]="outbound.name">{{
+            outbound.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <h3 class="mb-15">Permissions</h3>
+    <div [formGroup]="$any(form.controls['permissionCheckboxes'])">
+      <ng-container *ngFor="let key of permissionCheckboxes">
+        <mat-checkbox fxLayoutAlign="start center" class="mb-10" [formControlName]="key">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <span>{{ PERMISSION_CHECKBOXES[key] }}</span>
+          </div>
+        </mat-checkbox>
+      </ng-container>
+    </div>
+
+    <h3 class="mb-15">Features</h3>
+    <div [formGroup]="$any(form.controls['featureCheckboxes'])">
+      <ng-container *ngFor="let key of featureCheckboxes">
+        <mat-checkbox fxLayoutAlign="start center" class="mb-10" [formControlName]="key">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <span>{{ FEATURE_CHECKBOXES[key] }}</span>
+            <mat-icon
+              class="material-icons-outlined s-20 mess-warning"
+              *ngIf="key === 'enableAndroidBackground'"
+              matTooltip="This change will take effect when users close and re-open the app"
+              >info</mat-icon
+            >
+          </div>
+        </mat-checkbox>
+
+        <mat-form-field
+          *ngIf="key === 'usingPin' && usingPin.value"
+          [formGroup]="form"
+          [ngClass]="!passcode.value && passcode.touched && 'mb-10'"
+          class="w-100"
+        >
+          <input matInput placeholder="Passcode" formControlName="passcode" [value]="extension.pin.passCode" />
+          <mat-error>{{
+            passcode.value.length > 8 || (passcode.value.length < 4 && passcode.value.length > 0)
+              ? 'From 4 to 8 digits'
+              : '* Passcode is required'
+          }}</mat-error>
+        </mat-form-field>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,32 @@
+// :host {
+//   .container {
+//     overflow: overlay;
+//     height: calc(100vh - 64px); // mat-toolbar
+//     h3 {
+//       font-weight: bold;
+//     }
+//     mat-tab-group {
+//       width: 500px !important;
+//     }
+//     .body {
+//       width: 600px;
+
+//       .title {
+//         font-weight: 500;
+//       }
+
+//       ::ng-deep {
+//         .expansion-panel-no-shadow {
+//           box-shadow: none !important;
+//           border: 1px solid #e0e0e0;
+//           padding-bottom: 0 !important;
+//           .mat-expansion-panel-header {
+//             &.mat-expanded {
+//               height: 48px !important;
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }

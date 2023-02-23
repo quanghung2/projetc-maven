@@ -1,0 +1,121 @@
+<h2 mat-dialog-title>
+  Manage {{ data.type === 'addons' ? 'addon' : data.type === 'sim' ? 'SIM' : 'number' }} licenses
+</h2>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline">
+    <mat-label>Select {{ data.type === 'addons' ? 'addon' : 'number' }} </mat-label>
+    <mat-select
+      #licenseSelection
+      (selectionChange)="add2AssigningLicensesMapping($event.value)"
+      [disabled]="progressing"
+    >
+      <ng-container *ngIf="data.type === 'addons'">
+        <ng-container *ngFor="let a of availableAddonStatsFilter">
+          <mat-option [value]="a">
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <span>{{ a.skuName }}</span>
+            </div>
+          </mat-option>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="data.type !== 'addons'">
+        <ng-container *ngFor="let a of availableAddons; trackBy: licenseTrackByFunc">
+          <mat-option [value]="a" *ngIf="!a.isSim">
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <span>{{ a.displayText }} </span>
+            </div>
+          </mat-option>
+        </ng-container>
+      </ng-container>
+      <mat-option *ngIf="!availableAddons?.length" disabled>
+        No {{ data.type === 'addons' ? 'addon' : 'number' }} available
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-label>Assigned {{ data.type === 'sim' ? (data.type | uppercase) : data.type }}</mat-label>
+  <mat-list>
+    <ng-container *ngIf="data.type === 'addons' && availableAddonStats?.length">
+      <ng-container *ngFor="let item of mappedLicenseAddons; let i = index; trackBy: licenseTrackByFunc">
+        <ng-container *ngIf="item.quantity && item.sku !== data.simSku">
+          <mat-list-item>
+            {{ item.displayText }}
+            <span class="flex-spacer"></span>
+            <button tabindex="-1" mat-icon-button (click)="unassignMapping(item)">
+              <mat-icon class="action material-icons-round">remove</mat-icon>
+            </button>
+            <input
+              #itemInput
+              type="number"
+              class="quantity"
+              [value]="item.quantity"
+              (keydown)="quantityKeyDown($event)"
+              (input)="changeQuantity(item.quantity, $event.target['value'], item, itemInput)"
+            />
+            <button [disabled]="!assignable(item)" tabindex="-1" mat-icon-button (click)="assignMapping(item)">
+              <mat-icon class="action material-icons-round">add</mat-icon>
+            </button>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="data.type === 'numbers'">
+      <ng-container *ngFor="let item of mappedLicenses; let i = index; trackBy: licenseTrackByFunc">
+        <ng-container
+          *ngIf="simBelongToBase ? !item.unassigning && !item.license.resource?.info?.isDevice : !item.unassigning"
+        >
+          <mat-list-item>
+            {{ item.displayText }}
+            <span class="flex-spacer"></span>
+            <mat-icon (click)="unassign(item, i)" class="action">delete</mat-icon>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="data.type === 'sim'">
+      <ng-container *ngFor="let item of mappedLicenses; let i = index; trackBy: licenseTrackByFunc">
+        <ng-container *ngIf="item.license.resource?.info; let INFO">
+          <ng-container
+            *ngIf="!item.unassigning && item.sku !== data.simSku && (!INFO.number || (INFO.number && INFO.isDevice))"
+          >
+            <mat-list-item>
+              <ng-container *ngIf="INFO.number; else number">
+                {{
+                  !item.mapped
+                    ? 'SIM (' + INFO.number + ')'
+                    : INFO.physicalSimStatus
+                    ? 'SIM (' + INFO.number + ')'
+                    : INFO.number + ' (No SIM)'
+                }}
+                <span class="flex-spacer"></span>
+                <button
+                  mat-button
+                  [color]="INFO.physicalSimStatus ? 'warn' : 'primary'"
+                  (click)="configSIM(item)"
+                  *ngIf="item.mapped"
+                >
+                  {{ INFO.physicalSimStatus ? 'Unlink SIM' : 'Link SIM' }}
+                </button>
+              </ng-container>
+              <ng-template #number>
+                {{ item.displayText }}
+                <span class="flex-spacer"></span>
+              </ng-template>
+              <mat-icon (click)="unassign(item, i)" class="action">delete</mat-icon>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <p *ngIf="!mappedLicenses.length" class="text-center secondary-text">Empty</p>
+  </mat-list>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button color="primary" [loading]="progressing" [disabled]="progressing" (click)="update()">
+    Save
+  </button>
+</div>

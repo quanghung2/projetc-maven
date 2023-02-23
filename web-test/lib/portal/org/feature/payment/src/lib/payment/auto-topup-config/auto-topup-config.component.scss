@@ -1,0 +1,38 @@
+.auto-topup {
+  .toggle {
+    border: 1px solid #dddddd;
+    .toggle-auto-topup {
+      margin: 1.6rem;
+    }
+  }
+}
+
+::ng-deep .top-up-snack-bar-success {
+  background-color: #43a047;
+  color: white;
+}
+
+::ng-deep .top-up-snack-bar-error {
+  background-color: #ffe082;
+  color: #795548;
+}
+
+:host {
+  ::ng-deep .toggle-sub-renewal {
+    height: 4.8rem;
+
+    &.mat-disabled {
+      opacity: 1;
+
+      .mat-slide-toggle-bar {
+        opacity: 0.38;
+      }
+    }
+
+    .mat-slide-toggle-label {
+      .mat-slide-toggle-content {
+        white-space: normal;
+      }
+    }
+  }
+}

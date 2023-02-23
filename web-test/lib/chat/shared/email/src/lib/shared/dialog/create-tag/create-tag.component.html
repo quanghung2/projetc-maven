@@ -1,0 +1,28 @@
+<h1 class="mt-0">Create Tag</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input type="text" placeholder="Name" matInput [(ngModel)]="tag.name" required/>
+  </mat-form-field>
+  <mat-error *ngIf="error" class="mb-8">{{ error }}</mat-error>
+  <div class="header">Highlight</div>
+  <div class="description">
+    <div class="hint">Select a color to highlight the tag in the conversation list.</div>
+    <div class="color-menu">
+      <button mat-button [matMenuTriggerFor]="menu">
+        <span class="color-mark" [style.background]="tag.colorMark"></span>
+        <span class="label">{{ tag.colorMark }}</span>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" class="color-menu">
+        <button mat-menu-item *ngFor="let color of colorList" (click)="tag.colorMark = color">
+          <span class="color-mark" [style.background]="color"></span>
+          <span class="label">{{ color }}</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="create()">Create</button>
+</div>

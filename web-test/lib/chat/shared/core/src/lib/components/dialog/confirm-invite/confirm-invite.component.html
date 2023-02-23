@@ -1,0 +1,16 @@
+<div class="container">
+  <h1 mat-dialog-title>
+    <div class="dialog-title">Invite member to&nbsp;<csh-convo-name [channel]="data.convo"></csh-convo-name></div>
+  </h1>
+  <div mat-dialog-content>
+    <span *ngFor="let user of users">
+      <span class="name">@{{ user.displayName }} </span>
+      &nbsp;
+    </span>
+    {{ msg }}
+  </div>
+  <div mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+    <button mat-raised-button [loading]="processing" color="primary" (click)="submit()">{{ ctaButton }}</button>
+  </div>
+</div>

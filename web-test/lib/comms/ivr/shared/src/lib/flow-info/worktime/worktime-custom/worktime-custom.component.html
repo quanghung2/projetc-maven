@@ -1,0 +1,69 @@
+<div class="working-schedule-form" fxLayout="column" fxLayoutAlign="start none">
+  <ng-container *ngIf="loading; else loadView">
+    <div fxLayoutAlign="center center">
+      <mat-spinner diameter="35"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #loadView>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+      <mat-form-field class="select-group">
+        <mat-select
+          [(ngModel)]="selectedGroup"
+          (ngModelChange)="selectGroupChange($event)"
+          placeholder="Select holiday group"
+        >
+          <mat-option [value]="null">None</mat-option>
+          <mat-option *ngFor="let item of groups" [value]="item">{{ item.groupName }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" (click)="addGroup()">Add group</button>
+    </div>
+
+    <ng-container *ngIf="selectedGroup; else noSelected">
+      <section>
+        <div class="working-schedule-form__holidays">
+          <div class="working-schedule-form__title custom-day" fxLayout="row" fxLayoutAlign="start center">
+            Custom holiday ({{ selectedGroup.dates.length }})
+
+            <mat-form-field class="working-schedule-form__picker">
+              <input
+                matInput
+                readonly
+                [matDatepicker]="holidayPicker"
+                autocomplete="false"
+                [min]="minDate"
+                (dateChange)="addHoliday($event)"
+                [(ngModel)]="dateInput"
+              />
+              <mat-datepicker-toggle matSuffix [for]="holidayPicker"></mat-datepicker-toggle>
+              <mat-datepicker #holidayPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-icon
+              class="working-schedule-form__holidays__add-icon"
+              (click)="holidayPicker.open()"
+              matTooltip="Add a holiday"
+              >add
+            </mat-icon>
+          </div>
+          <mat-chip-list class="public-holidays">
+            <mat-chip
+              id="chip_{{ i }}"
+              *ngFor="let date of selectedGroup.dates; let i = index"
+              removable="true"
+              (removed)="remove(date.date)"
+              >{{ date.date | date: 'mediumDate' }}
+              <mat-icon matChipRemove>close</mat-icon>
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </section>
+    </ng-container>
+    <ng-template #noSelected>
+      <div class="working-schedule-form__holidays" fxLayout="row" fxLayoutAlign="center">
+        Please select a holiday group to view its custom holiday.
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

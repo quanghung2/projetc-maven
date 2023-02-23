@@ -1,0 +1,17 @@
+<strong class="text-title">Create new contact:</strong>
+<div class="crm-container" fxLayout="column" fxLayoutAlign="start">
+  <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="0.8rem">
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+      <span> Phone number:</span> <span class="mat-body-2"> {{ phoneNumber }}</span>
+    </div>
+    <ng-container *ngFor="let item of contact.data.properties">
+      <b3n-dynamic-input [prop]="item" fxFlex></b3n-dynamic-input>
+    </ng-container>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="end center">
+    <button [disabled]="isCreating" mat-raised-button (click)="onSave()" color="primary">
+      <span *ngIf="!isCreating"> Create </span>
+      <div *ngIf="isCreating">Creating</div>
+    </button>
+  </div>
+</div>

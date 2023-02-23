@@ -1,0 +1,28 @@
+<div class="header">Export History</div>
+<div class="content">
+  <div class="ui form">
+    <p>
+      Histories will be exported to a CSV file and send to the email below. If you don't fill the email, the export file
+      will be sent to your registered email.
+    </p>
+    <div class="field">
+      <label>Export to email</label>
+      <div class="ui input">
+        <input type="text" placeholder="Enter email..." [(ngModel)]="email" />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="actions">
+  <div class="middle aligned floating blocks">
+    <div class="block">
+      <div class="left"></div>
+    </div>
+    <div class="block">
+      <div class="right">
+        <div class="ui cancel link button">Cancel</div>
+        <div class="ui approve large primary button" (click)="export()">Export</div>
+      </div>
+    </div>
+  </div>
+</div>

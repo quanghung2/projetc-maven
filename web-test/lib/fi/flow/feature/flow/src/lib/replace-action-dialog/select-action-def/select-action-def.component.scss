@@ -1,0 +1,53 @@
+::ng-deep .mat-select-panel {
+  // Flop App, Ba Creator
+  &.select-action-def {
+    max-height: 360px !important;
+
+    .mat-datepicker-content {
+      box-shadow: none !important;
+    }
+
+    .mat-option.option-connector,
+    .mat-option.option-action {
+      height: 64px !important;
+      line-height: 1.5 !important;
+
+      .logo,
+      img {
+        height: 40px;
+        width: 40px;
+
+        .mat-icon {
+          width: 32px;
+          height: 32px;
+          font-size: 32px;
+          margin: 3px;
+        }
+      }
+
+      .name {
+        cursor: pointer;
+        font-size: 14px !important;
+      }
+
+      p {
+        color: #999;
+        font-size: 14px;
+        margin: 0;
+      }
+    }
+  }
+
+  // Dev Hub
+  &.select-action {
+    max-height: 360px !important;
+
+    .mat-option.sub-pl {
+      padding-left: 16px;
+    }
+  }
+
+  .mat-optgroup.hidden-label .mat-optgroup-label {
+    height: 0;
+  }
+}

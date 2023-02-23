@@ -1,0 +1,159 @@
+<mat-progress-bar *ngIf="loading" class="my-10" mode="indeterminate"></mat-progress-bar>
+
+<ng-container *ngIf="settings$ | async as settings">
+  <b3n-call-log-bar
+    [timezone]="timezone"
+    [(filter)]="pageFiltering"
+    [logPageType]="logPageType"
+    (export)="export()"
+    (filterChange)="onFilterChanged(settings)"
+  ></b3n-call-log-bar>
+
+  <div class="callcenter" *ngIf="logs">
+    <table mat-table [dataSource]="logs" *ngIf="logs?.data.length > 0" class="calllog-table">
+      <ng-container matColumnDef="txn-uuid">
+        <th mat-header-cell *matHeaderCellDef>Txn. Uuid</th>
+        <td mat-cell *matCellDef="let call">
+          <button
+            class="label"
+            mat-button
+            matTooltip="Click to copy"
+            ngxClipboard
+            [cbContent]="call.txnUuid"
+            (cbOnSuccess)="copied()"
+            (cbOnError)="copyFailed()"
+            (click)="$event.stopPropagation()"
+          >
+            {{ call.txnUuid | slice: 0:8 }}
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="from">
+        <th mat-header-cell *matHeaderCellDef>From</th>
+        <td mat-cell *matCellDef="let call">{{ call.callerId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="to">
+        <th mat-header-cell *matHeaderCellDef>To</th>
+        <td mat-cell *matCellDef="let call">
+          <span *ngIf="pageFiltering.callType === TxnType.incoming">{{ call.incomingNumber }}</span>
+          <span *ngIf="pageFiltering.callType === TxnType.callback">{{ call.contactNumber }}</span>
+          <span *ngIf="pageFiltering.callType === TxnType.autodialer">{{ call.destinationNumber }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="at">
+        <th mat-header-cell *matHeaderCellDef>At</th>
+        <td mat-cell *matCellDef="let call">{{ call.at | userDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="queue">
+        <th mat-header-cell *matHeaderCellDef>Queue</th>
+        <td mat-cell *matCellDef="let call">{{ call.queueName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="agent">
+        <th mat-header-cell *matHeaderCellDef>Agent</th>
+        <td mat-cell *matCellDef="let call">{{ call.extensionName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="disposition-code">
+        <th mat-header-cell *matHeaderCellDef>Disposition Code</th>
+        <td mat-cell *matCellDef="let call">{{ call.dispositionCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef>Note</th>
+        <td mat-cell *matCellDef="let call">
+          <div class="call-note">{{ call.note | truncate: 35 }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="customer-action">
+        <th mat-header-cell *matHeaderCellDef>Customer Action</th>
+        <td mat-cell *matCellDef="let call">
+          {{ call?.overflowAction | camel2title }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem" class="voicemail-col">
+            <span>Status</span>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let call" class="status">
+          <div *ngIf="logPageType === CallLogPageType.unanswered; else loadViewAnswered">
+            <ng-container *ngIf="call.result === 'voicemail'; else loadLog">
+              <span>
+                <a
+                  *ngIf="call.voiemailUrl; else notFile"
+                  [href]="call.voiemailUrl"
+                  matTooltip="The voicemail file is signed and only valid for downloading on 7 days"
+                  target="_bank"
+                >
+                  Voicemail
+                </a>
+                <ng-template #notFile> Voicemail </ng-template>
+              </span>
+            </ng-container>
+            <ng-template #loadLog>
+              <span *ngIf="call.status === 'ended'">Abandoned</span>
+              <span *ngIf="call.status !== 'ended' && call.status !== 'voicemail'" class="status">
+                {{ call.status | camel2title }}
+              </span>
+              <span *ngIf="call.status === 'voicemail'">
+                <a
+                  *ngIf="call.isRecoredVoicemail"
+                  [href]="call.first.voicemail.voiceMailRecordUrl"
+                  matTooltip="The voicemail file is signed and only valid for downloading on 7 days"
+                  target="_bank"
+                >
+                  Voicemail
+                </a>
+              </span>
+            </ng-template>
+          </div>
+          <ng-template #loadViewAnswered>
+            <div>
+              <span *ngIf="call.status === 'ended'">Answered</span>
+              <span *ngIf="call.status !== 'ended' && call.status !== 'voicemail'" class="status">
+                {{ call.status | camel2title }}
+              </span>
+            </div>
+          </ng-template>
+
+          <div class="duration">
+            ({{
+              (logPageType === CallLogPageType.answered ? call.talkDuration : call.connectAndWaitDuration) / 1000
+                | duration
+            }})
+            <i *ngIf="call.hangupBy" class="material-icons" matTooltip="Force hangup by {{ call.hangupBy }}"> info </i>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="viewCall(row)"
+        [class.pointer]="logPageType === CallLogPageType.answered"
+      ></tr>
+    </table>
+
+    <div class="paginator" *ngIf="pageable.page > 1 || isMore">
+      <button mat-icon-button (click)="onChangePage(pageable.page - 1)" [disabled]="pageable.page === 1">
+        <mat-icon class="s-16"> arrow_back_ios </mat-icon>
+      </button>
+      <button mat-icon-button (click)="onChangePage(pageable.page + 1)" [disabled]="!isMore">
+        <mat-icon class="s-16"> arrow_forward_ios </mat-icon>
+      </button>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" class="no-record-msg" *ngIf="logs && logs?.data?.length === 0">
+      <h3>No record found</h3>
+    </div>
+  </div>
+</ng-container>

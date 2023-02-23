@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import "~jsoneditor/dist/jsoneditor.min.css"; */
+.jsoneditor.jsoneditor-mode-code {
+  height: 500px;
+}
+
+textarea.jsoneditor-text {
+  height: 500px;
+}
+
+.jsoneditor.jsoneditor-mode-tree {
+  height: 500px;
+}
+
+.jsoneditor.jsoneditor-mode-view {
+  height: 500px;
+}
+
+.ui.loader:before {
+  border: 0.2em solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.ui.loader:after {
+  border-color: #767676 transparent transparent !important;
+}
+
+@media only screen and (min-width: 1200px) {
+  .ui.container {
+    width: 1127px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .ui.big.modal {
+    width: 1200px;
+    margin: 0 0 0 -600px;
+    display: block !important;
+  }
+
+  .ui.container {
+    width: 1314px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+@media only screen and (min-width: 1640px) {
+  .ui.container {
+    width: 1502px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+audio {
+  height: 48px;
+}
+
+.small-description {
+  font-size: 11px;
+  padding-top: 3px;
+  color: #9e9e9e;
+}

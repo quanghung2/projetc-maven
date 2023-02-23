@@ -1,0 +1,13 @@
+<ckeditor
+  [(ngModel)]="content"
+  [editor]="Editor"
+  [config]="editorConfig"
+  (ready)="onEditorReady($event)"
+  tagName="textarea"
+></ckeditor>
+<div class="tool">
+  <div>
+    <input hidden type="file" multiple #fileUpload (change)="onUploadFile($event)" />
+    <mat-icon matTooltip="Upload attachment or image" (click)="uploadFile()"> attach_file </mat-icon>
+  </div>
+</div>

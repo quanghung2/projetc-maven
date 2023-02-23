@@ -1,0 +1,13 @@
+<div mat-dialog-title>Concurrent Call</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [formControl]="formSipUsername" placeholder="Sip user name" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="concurrentCall" placeholder="Concurrent call" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="updateConcurrentCall()">Update</button>
+</div>

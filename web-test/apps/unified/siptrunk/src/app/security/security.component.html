@@ -1,0 +1,31 @@
+<mat-toolbar><h1>Security</h1></mat-toolbar>
+<div class="pt-16" fxLayout="column" class="container">
+  <div fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+    <mat-form-field fxFlex="350px">
+      <mat-label>Add ip address</mat-label>
+      <input #extensionInput [formControl]="textInputCtrl" matInput placeholder="1.1.1.1" />
+    </mat-form-field>
+
+    <button (click)="addIp()" color="primary" mat-stroked-button>Add</button>
+  </div>
+
+  <mat-list class="m-0 p-0">
+    <h3 mat-subheader class="p-0">IP Address list:</h3>
+  </mat-list>
+
+  <ng-container *ngIf="ipWhiteList.length === 0; else loadList">
+    <mat-hint fxLayoutAlign="center"> No IP address</mat-hint>
+  </ng-container>
+  <ng-template #loadList>
+    <mat-selection-list [multiple]="false">
+      <mat-list-option *ngFor="let item of ipWhiteList; let i = index">
+        <div fxFlex fxLayoutAlign="space-between center">
+          <span>{{ i + 1 }}. {{ item }}</span>
+          <button class="action" mat-icon-button color="warn" (click)="deleteIpAddress(i)" matTooltip="Delete rule">
+            <mat-icon>deleted</mat-icon>
+          </button>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+  </ng-template>
+</div>

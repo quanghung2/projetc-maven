@@ -1,0 +1,36 @@
+<div *ngIf="!loading; else spinner" class="template-config">
+  <div mat-dialog-title>{{ data?.title }} Preview</div>
+
+  <h3 *ngIf="items.length" class="title">Notes</h3>
+  <div mat-dialog-content class="item__review">
+    <div class="item__wrapper" [class.selected]="item?.label === i.label" *ngFor="let i of items; let idx = index">
+      <div class="item__row">
+        <p>{{ i.label }}</p>
+        <div class="item__details secondary-text">
+          <ng-container>
+            <p>{{ i.type === 'options' ? 'Option' : (i.type | capitalizeCase) }}</p>
+            <mat-icon *ngIf="i.type === ItemType.Option" (click)="i.expand = !i.expand">{{
+              i.expand ? 'expand_more' : 'expand_less'
+            }}</mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!note">
+            <mat-icon color="warn" [class.disabled]="item?.label === i.label" (click)="removeItem(idx)">clear</mat-icon>
+          </ng-container>
+        </div>
+      </div>
+      <mat-list role="list" *ngIf="i.type === ItemType.Option && i.expand" class="item__options">
+        <mat-list-item role="listitem" *ngFor="let option of i.options">{{ option }}</mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+  </div>
+</div>
+
+<ng-template #spinner>
+  <div fxLayout="column" fxLayoutAlign="center center" class="spinner-container">
+    <mat-spinner diameter="35" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-template>

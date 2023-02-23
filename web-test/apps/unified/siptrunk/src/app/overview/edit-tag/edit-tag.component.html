@@ -1,0 +1,23 @@
+<h1 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Update label SIP</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <textarea
+      matInput
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize"
+      cdkAutosizeMinRows="1"
+      cdkAutosizeMaxRows="10"
+      [(ngModel)]="label"
+      #textarea="ngModel"
+    ></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" color="primary" [disabled]="textarea.invalid" (click)="submit()">
+    Update
+  </button>
+</div>

@@ -1,0 +1,105 @@
+<div class="my-20" fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="15px">
+    <mat-form-field fxFlex="300px">
+      <mat-select placeholder="Filter by tag" [formControl]="tagCtrl" [multiple]="true">
+        <mat-option>
+          <ngx-mat-select-search
+            [placeholderLabel]="'Search...'"
+            [noEntriesFoundLabel]="'No tags found'"
+            [formControl]="tagFilterCtrl"
+            [showToggleAllCheckbox]="true"
+            [toggleAllCheckboxChecked]="tagCtrl.value?.length == sourceTags.length"
+            [toggleAllCheckboxIndeterminate]="tagCtrl.value?.length > 0 && tagCtrl.value?.length < sourceTags.length"
+            [toggleAllCheckboxTooltipMessage]="'Select All / Unselect All'"
+            [toogleAllCheckboxTooltipPosition]="'above'"
+            (toggleAll)="toggleSelectAll($event)"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option *ngFor="let t of filteredTags" [value]="t">{{ t }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field fxFlex="300px">
+      <input matInput placeholder="Filter by name" [formControl]="searchCtrl" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="start start">
+    <mat-form-field fxFlex="150px">
+      <mat-select placeholder="Auto refresh after" [formControl]="timeCtrl">
+        <mat-option *ngFor="let t of times" [value]="t.value">{{ t.display }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-icon-button (click)="refresh()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div *ngIf="loading" fxLayout="row" fxLayoutAlign="center start" class="my-20">
+  <mat-spinner [diameter]="30"></mat-spinner>
+</div>
+
+<div *ngIf="!loading" class="main-view" fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="40px">
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="40">
+    <p class="mb-0">
+      <small style="color: #999">Status last updated at: {{ lastUpdated | date: 'HH:mm:ss dd-MM-yyyy' }}</small>
+    </p>
+    <div class="mb-20" fxLayout="row" fxLayoutAlign="space-between center">
+      <h2 class="my-0">Services</h2>
+      <button mat-raised-button color="primary" (click)="openDialog()">Create</button>
+    </div>
+
+    <div class="statuses" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="5px">
+      <div
+        class="status {{ status.status }}"
+        [class.active]="selectedStatus?.id === status.id"
+        fxLayout="row"
+        *ngFor="let status of filteredStatuses"
+        (click)="selectedStatus?.id === status.id ? (selectedStatus = null) : (selectedStatus = status)"
+      >
+        <div class="bg-title" fxFlex="20px"></div>
+        <div class="title" fxFlex>
+          {{ status.name }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedStatus" fxFlex="1px" style="background: #e6e6e6"></div>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="60" *ngIf="selectedStatus">
+    <div class="mb-20" fxLayout="row" fxLayoutAlign="space-between center">
+      <h2 class="my-0">{{ selectedStatus.name }}</h2>
+      <button mat-stroked-button color="primary" (click)="openDialog(selectedStatus)">Edit</button>
+    </div>
+
+    <h4 *ngIf="selectedStatus.metadata.tags.length > 0">TAGS</h4>
+    <ul class="tags mb-20">
+      <li *ngFor="let tag of selectedStatus.metadata.tags">{{ tag }}</li>
+    </ul>
+
+    <h4 *ngIf="selectedStatus.results.length > 0">MONITORS</h4>
+    <div class="monitors">
+      <div class="monitor" *ngFor="let result of selectedStatus.results">
+        <div class="name">{{ result.name }}</div>
+        <ng-container *ngIf="result.type == 'marathon'">
+          <div [class]="health.status" fxLayout="row" *ngFor="let health of result.health">
+            <div class="bg-status" fxFlex="20px"></div>
+            <div class="title" fxFlex>
+              {{ health.version }}&nbsp;&nbsp;&nbsp;<small>{{ health.url }}</small>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="result.type == 'elastalert'">
+          <div [class]="health.status" fxLayout="row" *ngFor="let health of result.health">
+            <div class="bg-status" fxFlex="20px"></div>
+            <div class="title" fxFlex>{{ health.status }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

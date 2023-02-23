@@ -1,0 +1,21 @@
+<div *ngIf="branch">
+  <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between">
+    <div fxFlex="48">
+      <mat-form-field>
+        <mat-label>Expected response</mat-label>
+        <input
+          matInput
+          placeholder="Input regex, Ex ^ok.*"
+          [(ngModel)]="branch.responseRegex"
+          (ngModelChange)="constructBranchLabel()"
+        />
+      </mat-form-field>
+    </div>
+    <div fxFlex="">
+      <mat-form-field>
+        <mat-label>Process order</mat-label>
+        <input matInput type="number" placeholder="Ex: 1" [(ngModel)]="branch.order" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>

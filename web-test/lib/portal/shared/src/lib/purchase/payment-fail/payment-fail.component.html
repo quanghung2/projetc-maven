@@ -1,0 +1,11 @@
+<div fxLayout="row" class="container">
+  <div class="text-center noti page">
+    <img src="portal/assets/images/compilation-fail.svg" alt="compilation-success" />
+    <div class="header">This payment did not go through</div>
+    <div class="desc">Sorry, an error has occurred when we try to fulfill your request</div>
+    <div class="desc" *ngIf="msg">{{ msg }}</div>
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="goBack()">Go back</button>
+    </div>
+  </div>
+</div>

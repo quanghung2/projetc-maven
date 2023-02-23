@@ -1,0 +1,128 @@
+:host {
+  .number-list {
+    height: calc(100vh - var(--app__toolbar--height));
+
+    &__header {
+      background-color: inherit;
+      height: 64px;
+    }
+
+    &__body {
+      table {
+        tr {
+          th.mat-column {
+            &-uuid,
+            &-number-count,
+            &-status {
+              width: 150px;
+            }
+          }
+
+          .action-container {
+            visibility: hidden;
+          }
+
+          &:hover {
+            .action-container {
+              visibility: visible;
+            }
+          }
+        }
+      }
+
+      .talking {
+        color: white;
+        background-color: #007be0 !important;
+      }
+
+      .number-column {
+        text-align: right;
+      }
+
+      .action-column {
+        width: 12%;
+        padding-right: 0;
+        min-width: 125px;
+      }
+
+      .status-icon {
+        font-size: 34px;
+      }
+
+      .td-status {
+        mat-icon {
+          float: left;
+          padding-left: 0px;
+        }
+        div {
+          float: left;
+          padding-top: 3px;
+        }
+
+        .ready,
+        .scheduled,
+        .draft {
+          color: #9e9e9e !important;
+        }
+          .published {
+          color: #00b8d9 !important;
+        }
+
+        .paused {
+          color: #ff5630 !important;
+        }
+
+        .finished {
+          color: #36b37e !important;
+        }
+
+        .checking {
+          color: #00b8d9 !important;
+        }
+      }
+
+      .tags-column {
+        width: 11%;
+      }
+
+      .status-chip {
+        text-align: center;
+        color: #ffffff !important;
+        border-radius: 4px;
+        font-size: 13px;
+        padding: 4px 8px;
+      }
+
+      .label {
+        display: inline-block;
+        line-height: 1;
+        vertical-align: baseline;
+        background-color: #e8e8e8;
+        background-image: none;
+        padding: 4px 6px;
+        font-size: 12px;
+        letter-spacing: -0.5px;
+        color: rgba(0, 0, 0, 0.5);
+        text-transform: none;
+        font-weight: 600;
+        border: 0 solid transparent;
+        border-radius: 0.28571429rem;
+      }
+
+      .paginator {
+        float: right;
+      }
+    }
+
+    .disable-color {
+      color: rgba(0, 0, 0, 0.19) !important;
+    }
+  }
+}
+
+::ng-deep {
+  .blocked-tooltip {
+    word-break: break-all;
+    white-space: pre-line;
+  }
+}

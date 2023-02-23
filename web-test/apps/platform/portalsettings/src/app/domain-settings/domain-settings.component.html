@@ -1,0 +1,99 @@
+<loader [loading]="isLoading"></loader>
+<div class="ui page content container small" *ngIf="!isLoading">
+  <div class="ui grid">
+    <div class="row actions">
+      <div class="column left floated">
+        <div class="notice">
+          <em>Except Sender Email, changes on other fields won't be automatically updated if you don't <b>Save</b>.</em>
+        </div>
+      </div>
+      <div class="column right aligned right floated">
+        <div class="ui outlined button" (click)="reset()">Reset</div>
+        <div
+          class="ui primary button"
+          (click)="save()"
+          [class.disabled]="!hasChanges() || isUpdating || partnerForm.invalid"
+          [class.loading]="isUpdating"
+        >
+          Save Changes
+        </div>
+      </div>
+    </div>
+    <div class="sender row">
+      <div class="label column">
+        <span>Sender Email:</span>
+      </div>
+      <div class="column content">
+        <div class="ui divided relaxed list">
+          <div class="item">
+            <span>
+              {{ partner.senderEmail }}
+            </span>
+            <div class="ui green small label">Verified</div>
+            <button class="ui compact small button" (click)="updateSenderEmailModal.show(partner.senderEmail)">
+              Change
+            </button>
+          </div>
+          <div class="change item" *ngIf="!!updateSenderEmailRequest">
+            <span>Change request: </span>{{ updateSenderEmailRequest.newSenderEmail }}
+            <div class="ui orange small label">Pending Verification</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="one column row">
+      <div class="column">
+        <form #partnerForm="ngForm">
+          <div class="ui form">
+            <div class="required field" [ngClass]="{ error: supportEmail.invalid && supportEmail.dirty }">
+              <label>Contact Email</label>
+              <div class="ui fluid input">
+                <input
+                  type="email"
+                  name="supportEmail"
+                  pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                  [(ngModel)]="partner.supportEmail"
+                  #supportEmail="ngModel"
+                  placeholder="e.g. support@yourdomain.com"
+                  required
+                />
+              </div>
+              <div class="ui message small error" *ngIf="supportEmail.invalid && supportEmail.dirty">
+                <span *ngIf="supportEmail.errors?.['required']"
+                  >Contact Email is required.
+                  <br />
+                </span>
+                <span *ngIf="supportEmail.errors?.['pattern']"
+                  >Invalid email. It should be like noreply@yourdomain.com .</span
+                >
+              </div>
+            </div>
+
+            <div class="field" [ngClass]="{ error: salesEmail.invalid && salesEmail.dirty }">
+              <label>Sales Email</label>
+              <div class="ui fluid input">
+                <input
+                  type="email"
+                  name="salesEmail"
+                  pattern="^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                  [(ngModel)]="partner.salesEmail"
+                  #salesEmail="ngModel"
+                  placeholder="e.g. sales@yourdomain.com"
+                />
+              </div>
+              <div class="ui message small error" *ngIf="salesEmail.invalid && salesEmail.dirty">
+                <span *ngIf="salesEmail.errors?.['pattern']"
+                  >Invalid email. It should be like sales@yourdomain.com .</span
+                >
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<app-update-sender-email-modal
+  #updateSenderEmailModal
+  (senderEmailChange)="senderEmailChange($event)"
+></app-update-sender-email-modal>

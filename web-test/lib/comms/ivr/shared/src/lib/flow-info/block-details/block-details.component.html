@@ -1,0 +1,164 @@
+<div *ngIf="block" class="block-details-section">
+  <div
+    class="block-details-header"
+    [class.sm-padding]="newLabel?.length > 100"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+  >
+    <div
+      *ngIf="!editingLabel"
+      (click)="editingLabel = true"
+      class="block-label"
+      fxLayout="row"
+      fxLayoutAlign="center center"
+    >
+      <span *ngIf="block.label">{{ block.label }}</span>
+      <button mat-icon-button class="btnEdit"><mat-icon>edit</mat-icon></button>
+    </div>
+    <div *ngIf="editingLabel" fxLayout="row" fxLayoutAlign="center center">
+      <mat-form-field>
+        <input matInput [(ngModel)]="newLabel" (keyup.enter)="editingLabel = false; block.label = newLabel" autofocus />
+        <span matSuffix>
+          <button
+            mat-icon-button
+            [disabled]="newLabel?.length > 100"
+            (click)="editingLabel = false; block.label = newLabel"
+            color="primary"
+          >
+            <mat-icon aria-label="Example icon-button with a heart icon">check</mat-icon>
+          </button>
+        </span>
+        <span matSuffix>
+          <button mat-icon-button (click)="editingLabel = false; newLabel = block.label" color="warn">
+            <mat-icon aria-label="Example icon-button with a heart icon">cancel</mat-icon>
+          </button>
+        </span>
+        <mat-hint class="mat-error" *ngIf="newLabel?.length > 100">Maximum 100 characters</mat-hint>
+      </mat-form-field>
+    </div>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button (click)="hideSidebar()"><mat-icon>close</mat-icon></button>
+  </div>
+
+  <form #form="ngForm" class="block-details-content">
+    <section
+      *ngIf="
+        parentBlock &&
+        [BlockType.gather, BlockType.transfer, BlockType.condition, BlockType.webhook].includes(parentBlock.type)
+      "
+      class="block-group"
+    >
+      <h2>
+        {{ blockTypeMap[parentBlock.type] }} settings
+        <h4>Set up the branch information of the parent block.</h4>
+      </h2>
+
+      <b3n-gather-branch
+        *ngIf="parentBlock.type === BlockType.gather"
+        [blockUuid]="parentBlock.uuid"
+        [branch]="$any(branch)"
+        class="block-entry"
+      >
+      </b3n-gather-branch>
+      <b3n-miss-transfer
+        *ngIf="parentBlock.type === BlockType.transfer"
+        [block]="$any(parentBlock)"
+        class="block-entry"
+      >
+      </b3n-miss-transfer>
+      <b3n-condition-branch
+        *ngIf="parentBlock.type === BlockType.condition"
+        [blockUuid]="parentBlock.uuid"
+        [branch]="$any(branch)"
+        class="block-entry"
+      >
+      </b3n-condition-branch>
+      <b3n-webhook-branch
+        *ngIf="parentBlock.type === BlockType.webhook"
+        [blockUuid]="parentBlock.uuid"
+        [branch]="$any(branch)"
+        class="block-entry"
+      >
+      </b3n-webhook-branch>
+    </section>
+
+    <section *ngIf="block" class="block-group">
+      <h2>
+        {{ blockTypeMap[block.type] }} settings
+        <h4>Set up the main information of the current block.</h4>
+      </h2>
+
+      <ng-container *ngIf="!isDevice">
+        <mat-form-field class="block-group__select-numbers" *ngIf="displayNumbers.length > 1">
+          <mat-select name="selectedNumbers" placeholder="Select incoming number">
+            <mat-option (click)="assign(number, i)" *ngFor="let number of displayNumbers; let i = index">
+              <div fxLayout="row">{{ number }}</div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div *ngIf="selectedNumbers.length" class="block-group__added-numbers">
+          <h3>Incoming numbers</h3>
+          <mat-divider></mat-divider>
+          <div *ngFor="let number of selectedNumbers; let i = index" fxLayout="row" fxLayoutAlign="start center">
+            {{ number }} <span class="fill-remaining-space"></span>
+            <button mat-icon-button (click)="remove(number, i)">
+              <mat-icon style="color: rgba(0, 0, 0, 0.7)">delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <b3n-gather *ngIf="block.type === BlockType.gather" [block]="$any(block)" class="block-entry"></b3n-gather>
+      <b3n-transfer
+        *ngIf="block.type === BlockType.transfer"
+        [block]="$any(block)"
+        [isDevice]="isDevice"
+        class="block-entry"
+      ></b3n-transfer>
+      <b3n-notification
+        *ngIf="block.type === BlockType.notification"
+        [block]="$any(block)"
+        [workflow]="workflow"
+        class="block-entry"
+      ></b3n-notification>
+      <b3n-play *ngIf="block.type === BlockType.play" [block]="block" class="block-entry"></b3n-play>
+      <b3n-go *ngIf="block.type === BlockType.go" [block]="$any(block)" [tree]="tree" class="block-entry"></b3n-go>
+      <b3n-condition *ngIf="block.type === BlockType.condition" [block]="block" class="block-entry"></b3n-condition>
+      <b3n-confirm *ngIf="block.type === BlockType.confirmation" [block]="block" class="block-entry"></b3n-confirm>
+      <b3n-webhook *ngIf="block.type === BlockType.webhook" [block]="block" class="block-entry"></b3n-webhook>
+      <b3n-monitor *ngIf="block.type === BlockType.monitor" [block]="block"></b3n-monitor>
+      <b3n-genie *ngIf="block.type === BlockType.genie" [block]="$any(block)" [skills]="skills"></b3n-genie>
+      <b3n-common [block]="block" class="block-entry"></b3n-common>
+    </section>
+  </form>
+
+  <div class="block-details-footer">
+    <button
+      *ngIf="
+        !(
+          workflow.numbers?.length > 0 ||
+          (workflowVersion?.status !== WorkflowStatus.draft &&
+            workflowVersion?.version &&
+            !(currentOrg.isAdmin && workflowVersion.status === WorkflowStatus.pending))
+        )
+      "
+      mat-raised-button
+      (click)="save()"
+      [disabled]="form.invalid || saving"
+      color="primary"
+    >
+      <span *ngIf="!saving">Save Changes</span> <span *ngIf="saving">Saving...</span>
+    </button>
+    <div
+      *ngIf="
+        workflow.numbers?.length > 0 ||
+        (workflowVersion?.status !== WorkflowStatus.draft &&
+          workflowVersion?.version &&
+          !(currentOrg.isAdmin && workflowVersion.status === WorkflowStatus.pending))
+      "
+      class="px-16 yellow-200 text-center container-fluid editable"
+    >
+      <a href="javascript:void(0)" (click)="edit()">Switch to an draft version to edit and publish</a>
+    </div>
+  </div>
+</div>

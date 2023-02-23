@@ -1,0 +1,111 @@
+<ng-container *ngIf="msg.body && msg.body.data">
+  <mat-accordion class="section">
+    <mat-expansion-panel hideToggle disabled [expanded]="true">
+      <mat-expansion-panel-header (click)="isSectionExpanded = !isSectionExpanded">
+        <mat-panel-title>
+          <csh-render-member [user]="user" [showStatus]="false" [showDisplayName]="false"></csh-render-member>
+          <div class="description">
+            <div class="title" *ngIf="msg.body.data.hasFromAddresses">
+              <button
+                class="btnSenderMenu"
+                mat-button
+                [matMenuTriggerFor]="senderMenu"
+                (click)="stopPropagation($event)"
+              >
+                <b3n-email-sender-address [fromAddresses]="msg.body.data.fromAddresses[0]"></b3n-email-sender-address>
+              </button>
+              <mat-menu #senderMenu="matMenu" class="sender-menu" yPosition="below">
+                <button
+                  mat-menu-item
+                  ngxClipboard
+                  [cbContent]="msg.body.data.fromAddresses[0].name"
+                  *ngIf="msg.body.data.fromAddresses[0].name"
+                >
+                  Copy "{{ msg.body.data.fromAddresses[0].name }}"
+                </button>
+                <button mat-menu-item ngxClipboard [cbContent]="msg.body.data.fromAddresses[0].address">
+                  Copy "{{ msg.body.data.fromAddresses[0].address }}"
+                </button>
+              </mat-menu>
+              <b3n-email-address [addresses]="msg.body.data.toAddresses" [label]="'To'"></b3n-email-address>
+            </div>
+            <section *ngIf="isSectionExpanded">
+              <div *ngIf="msg.body.data.hasCCAddresses">
+                <b3n-email-address [addresses]="msg.body.data.ccAddresses" [label]="'cc'"></b3n-email-address>
+              </div>
+              <div *ngIf="msg.body.data.hasBCCAddresses">
+                <b3n-email-address [addresses]="msg.body.data.bccAddresses" [label]="'Bcc'"></b3n-email-address>
+              </div>
+            </section>
+          </div>
+          <div></div>
+          <mat-icon
+            *ngIf="msg.body.data.hasAttachments"
+            [matBadge]="msg.body.data.attachments.length"
+            matBadgeSize="small"
+            class="attachment__info__icon"
+          >
+            attach_file
+          </mat-icon>
+          <b3n-email-timeago [ts]="msg.ts"></b3n-email-timeago>
+          <div class="actions" *ngIf="conversationGroup.isOpen">
+            <button mat-icon-button [matMenuTriggerFor]="actionMenu" (click)="stopPropagation($event)">
+              <mat-icon class="settings">more_vert</mat-icon>
+            </button>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <ng-container *ngIf="msg.body.data.hasAttachments">
+        <div class="divider"></div>
+        <div class="attachmentSection">
+          <div class="attachment" *ngFor="let item of msg.body.data.attachments; let i = index">
+            <ng-container *ngIf="item.mediaUuid">
+              <img class="message__attachment__icon" [src]="getFileType(item.fileType)" alt="markup" />
+              <h5 class="description text-truncate">{{ item.name }}</h5>
+              <mat-icon class="message__attachment__icon" (click)="download(item)">save_alt</mat-icon>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <div class="divider"></div>
+      <div class="htmlMessage" [class.hideGmailQuote]="hideBlock">
+        <ng-container *ngIf="isSectionExpanded; else displayEmailTextTemplate">
+          <div class="messageContent" [innerHTML]="displayHTML | safe: 'html'"></div>
+          <div
+            class="messageContent"
+            [innerHTML]="displayQuoteHTML | safe: 'html'"
+            *ngIf="displayQuoteHTML && !hideBlock"
+          ></div>
+        </ng-container>
+        <ng-template #displayEmailTextTemplate>
+          <div class="noContentText" *ngIf="!msg.body.data.text">No content</div>
+          <div class="text-truncate" (click)="isSectionExpanded = !isSectionExpanded">{{ displayEmailText }}</div>
+        </ng-template>
+        <div class="showHideBlockAction" *ngIf="isSectionExpanded && hasQuoteHTML">
+          <mat-icon (click)="hideBlock = !hideBlock">more_horiz</mat-icon>
+        </div>
+      </div>
+
+      <section [hidden]="!isSectionExpanded">
+        <div class="divider"></div>
+        <div class="replyMessage">
+          <button mat-button (click)="composeEmail('reply')" class="mx-10"><mat-icon>reply</mat-icon> Reply</button>
+          <button mat-button [matMenuTriggerFor]="menu"><mat-icon>forward</mat-icon> Forward</button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="composeEmail('forward')">Forward</button>
+            <button mat-menu-item (click)="composeEmail('forward as new')">Forward as a new conversation</button>
+          </mat-menu>
+        </div>
+      </section>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>
+
+<mat-menu #actionMenu="matMenu" class="sender-menu" yPosition="below">
+  <button mat-menu-item (click)="copyLink()">Copy conversation link</button>
+  <button mat-menu-item (click)="composeEmail('normal')">Compose new email</button>
+  <button mat-menu-item (click)="composeEmail('reply')">Reply</button>
+  <button mat-menu-item (click)="composeEmail('forward')">Forward</button>
+  <button mat-menu-item (click)="composeEmail('forward as new')">Forward as a new conversation</button>
+</mat-menu>

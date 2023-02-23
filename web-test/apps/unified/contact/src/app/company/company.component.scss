@@ -1,0 +1,42 @@
+:host {
+  .container {
+    width: 900px;
+    margin: auto;
+    padding-top: 1.6rem;
+    padding-bottom: 3.2rem;
+
+    .search-input {
+      width: 250px;
+    }
+
+    table {
+      th.mat-column-action {
+        width: 120px;
+      }
+
+      tr {
+        .blacklist {
+          color: #bf2600;
+        }
+
+        .whitelist {
+          color: #36b37e;
+        }
+
+        .none {
+          color: rgba(0, 0, 0, 0.54);
+        }
+
+        .action-container {
+          visibility: hidden;
+        }
+
+        &:hover {
+          .action-container {
+            visibility: visible;
+          }
+        }
+      }
+    }
+  }
+}

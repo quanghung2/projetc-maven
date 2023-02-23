@@ -1,0 +1,16 @@
+{
+  "name": "comms-ivr-shared",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/comms/ivr/shared/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/comms/ivr/shared/**/*.ts", "libs/comms/ivr/shared/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

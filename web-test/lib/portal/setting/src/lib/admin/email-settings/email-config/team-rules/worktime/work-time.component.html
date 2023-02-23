@@ -1,0 +1,62 @@
+<div class="d-flex worktime">
+  <form [formGroup]="workingSchedule" class="working-schedule-form">
+    <section>
+      <table class="working-time-table">
+        <tbody>
+          <tr formArrayName="shifts" *ngFor="let shift of shiftsField.controls; let i = index">
+            <ng-container [formGroupName]="i">
+              <td>
+                <mat-slide-toggle formControlName="enabled" (change)="shiftChanged(shift)">
+                  {{ shift['controls'].day.value | titlecase }}
+                </mat-slide-toggle>
+              </td>
+              <ng-container
+                formArrayName="timeRanges"
+                *ngFor="let timeRange of shift['controls'].timeRanges.controls; let timeIndex = index"
+              >
+                <td [formGroupName]="timeIndex">
+                  <div fxLayout="row" fxLayoutGap="1.6rem" class="time-range">
+                    <mat-form-field class="working-time-table__from">
+                      <input
+                        matInput
+                        readonly
+                        [matDatepicker]="pickerTimeStart"
+                        placeholder="From"
+                        formControlName="from"
+                        (click)="pickerTimeStart.open()"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="pickerTimeStart"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTimeStart type="time" [twelveHour]="true"></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="working-time-table__to">
+                      <input
+                        matInput
+                        readonly
+                        [matDatepicker]="pickerTimeEnd"
+                        placeholder="To"
+                        formControlName="to"
+                        (click)="pickerTimeEnd.open()"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="pickerTimeEnd"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTimeEnd type="time" [twelveHour]="true"></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </td>
+              </ng-container>
+              <td>
+                <button
+                  mat-icon-button
+                  (click)="applyWorkTimeToAll(shift)"
+                  matTooltip="Apply this time to all active work schedule"
+                  [disabled]="!shift['controls'].enabled.value"
+                >
+                  <mat-icon [style.color]="shift.value.enabled ? '#007be0' : '#d9d9d9'">sync</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </form>
+</div>

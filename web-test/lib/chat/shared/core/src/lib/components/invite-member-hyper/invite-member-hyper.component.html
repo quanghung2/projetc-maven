@@ -1,0 +1,53 @@
+<div class="team-member-modal">
+  <h2 mat-dialog-title>Add User</h2>
+
+  <mat-dialog-content class="mat-typography flex column justify-content-start align-items-none gap-8">
+    <mat-form-field appearance="legacy">
+      <mat-label>Search contact</mat-label>
+      <input matInput placeholder="Enter contact name" [formControl]="searchMember" />
+      <button mat-icon-button matSuffix>
+        <mat-icon *ngIf="!searchMember.value">search</mat-icon>
+        <mat-icon *ngIf="searchMember.value" (click)="searchMember.setValue('')"> close </mat-icon>
+      </button>
+    </mat-form-field>
+    <div class="list-member" fxFlex="column">
+      <ng-container *ngIf="members$ | async as members">
+        <mat-selection-list>
+          <mat-list-option
+            *ngFor="let member of members"
+            checkboxPosition="before"
+            [value]="member"
+            [selected]="selectedUuids.includes(member.userUuid)"
+            (click)="onSelectedMember(member)"
+          >
+            <div class="flex justify-content-space-between align-items-center">
+              <div class="flex justify-content-start align-items-center gap-8">
+                <img *ngIf="member.photoUrl" [src]="member.photoUrl" class="avatar" />
+                <mat-icon *ngIf="!member.photoUrl" svgIcon="member" class="avatar avatar--gray"></mat-icon>
+                <span>{{ member.displayName }}</span>
+              </div>
+
+              <div class="box" [class.other-org]="!member.isCurrentOrg">{{ member.shortName }}</div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+
+        <ng-container *ngIf="!members.length">
+          <div class="no-user">Empty</div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      [loading]="isSave"
+      [disabled]="selectedUuids.length === 0 || isSave"
+      color="primary"
+      (click)="onSave()"
+    >
+      Add
+    </button>
+  </mat-dialog-actions>
+</div>

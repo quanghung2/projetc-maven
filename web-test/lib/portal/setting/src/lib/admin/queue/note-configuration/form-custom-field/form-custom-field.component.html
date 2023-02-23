@@ -1,0 +1,69 @@
+<ng-container [formGroup]="group">
+  <div class="item-field" fxFill fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="0.25rem">
+    <mat-form-field fxFlex>
+      <mat-label>Question</mat-label>
+      <input formControlName="key" type="text" matInput placeholder="Enter question" [errorStateMatcher]="matcher" />
+      <mat-icon *ngIf="key.value" (click)="key.setValue('')" matSuffix>clear</mat-icon>
+      <mat-error *ngIf="key?.hasError('duplicate')"> Question has existed </mat-error>
+      <mat-error *ngIf="key?.hasError('required')"> Question is required </mat-error>
+    </mat-form-field>
+    <ng-container [ngSwitch]="type">
+      <ng-container *ngSwitchCase="TypeCustomField.singleChoiceField">
+        <ng-container *ngTemplateOutlet="addOptions"></ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="TypeCustomField.multipleChoiceField">
+        <ng-container *ngTemplateOutlet="addOptions"></ng-container>
+      </ng-container>
+    </ng-container>
+    <div fxLayoutAlign="end" style="padding-top: 0.25rem">
+      <button [disabled]="group.invalid" mat-flat-button color="primary" (click)="addMore()">Add</button>
+    </div>
+  </div>
+
+  <ng-template #addOptions>
+    <div fxLayout="column" fxLayoutAlign="start none">
+      <div fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+        <mat-form-field fxFlex>
+          <mat-label>Options</mat-label>
+          <input
+            formControlName="options"
+            type="text"
+            matInput
+            #codeOption
+            (keyup.enter)="addOption(codeOption.value); codeOption.value = ''"
+            placeholder="Enter options"
+            [errorStateMatcher]="matcher"
+          />
+          <mat-icon *ngIf="codeOption.value" (click)="codeOption.value = ''" matSuffix>clear</mat-icon>
+          <mat-error *ngIf="options?.hasError('minLength')"> You need at least one option </mat-error>
+        </mat-form-field>
+        <button mat-icon-button color="primary" (click)="addOption(codeOption.value); codeOption.value = ''">
+          <mat-icon>done</mat-icon>
+        </button>
+      </div>
+      <ng-container *ngIf="choices.value.length === 0; else loadListView">
+        <mat-hint fxLayoutAlign="center"> No option </mat-hint>
+      </ng-container>
+      <ng-template #loadListView>
+        <div
+          cdkDropList
+          class="item__rows"
+          *ngIf="choices.value.length > 0"
+          (cdkDropListDropped)="dropFieldOptions($event)"
+        >
+          <div class="sortable-box" *ngFor="let option of choices.value; let i = index" cdkDrag>
+            <span>{{ i + 1 }}. {{ option }}</span> <span class="fill-remaining-space"></span>
+            <mat-icon
+              *ngIf="choices.value.length > 1"
+              (click)="removeOption(i)"
+              class="code-option__btn-delete"
+              matTooltip="Delele"
+            >
+              delete
+            </mat-icon>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</ng-container>

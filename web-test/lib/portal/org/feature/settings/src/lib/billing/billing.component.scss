@@ -1,0 +1,50 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 1.6rem;
+}
+
+.list-email {
+  margin-bottom: 1.6rem;
+  width: 100%;
+
+  &__delete-btn {
+    color: var(--gray-600);
+  }
+
+  .email {
+    .status {
+      color: white;
+      padding: 0 0.125rem;
+      &.verified {
+        color: #1b5e20;
+        background: #c8e6c9;
+        border: 1px solid #c8e6c9;
+        padding: 3px 7px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      &.unverified {
+        color: #795548;
+        background: #ffecb3;
+        border: 1px solid #ffecb3;
+        padding: 3px 7px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .button-fake {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+.new-email {
+  width: 100%;
+}
+
+.billing-name {
+  margin-bottom: 0.75rem !important;
+}

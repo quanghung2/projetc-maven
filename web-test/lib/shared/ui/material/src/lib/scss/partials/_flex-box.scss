@@ -1,0 +1,91 @@
+.flex {
+  display: flex;
+  flex-direction: row;
+
+  &-wrap {
+    flex-wrap: wrap;
+  }
+
+  &.column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &.justify-content {
+    &-start {
+      justify-content: flex-start;
+    }
+    &-end {
+      justify-content: end;
+    }
+    &-center {
+      justify-content: center;
+    }
+    &-space-around {
+      justify-content: space-around;
+    }
+    &-space-between {
+      justify-content: space-between;
+    }
+    &-space-evenly {
+      justify-content: space-evenly;
+    }
+  }
+
+  &.align-items {
+    &-none {
+      align-items: stretch;
+    }
+    &-start {
+      align-items: flex-start;
+    }
+    &-end {
+      align-items: flex-end;
+    }
+    &-center {
+      align-items: center;
+    }
+  }
+
+  &.gap {
+    &-025 {
+      gap: 0.25rem;
+    }
+    &-2 {
+      gap: 0.2rem;
+    }
+    &-3 {
+      gap: 0.3rem;
+    }
+    &-4 {
+      gap: 0.4rem;
+    }
+    &-5 {
+      gap: 0.5rem;
+    }
+    &-8 {
+      gap: 0.8rem;
+    }
+    &-10 {
+      gap: 1rem;
+    }
+    &-11 {
+      gap: 1.1rem;
+    }
+    &-14 {
+      gap: 1.4rem;
+    }
+    &-15 {
+      gap: 1.5rem;
+    }
+    &-16 {
+      gap: 1.6rem;
+    }
+    &-20 {
+      gap: 2rem;
+    }
+    &-40 {
+      gap: 4rem;
+    }
+  }
+}

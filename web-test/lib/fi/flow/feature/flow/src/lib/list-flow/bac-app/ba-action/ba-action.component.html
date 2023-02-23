@@ -1,0 +1,109 @@
+<div class="container py-16">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="mb-8">
+    <mat-form-field fxFlex="300px">
+      <input matInput placeholder="Search by name" [formControl]="keywordCtrl" />
+      <mat-icon matSuffix>search</mat-icon>
+      <mat-error *ngIf="keywordCtrl.invalid">{{ getErrorKeyword() }}</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="createFlow()" [loading]="creating">Create Flow</button>
+  </div>
+
+  <div *ngIf="loading" class="mt-120" fxLayoutAlign="center center">
+    <mat-spinner [diameter]="50" [strokeWidth]="2"></mat-spinner>
+  </div>
+
+  <div *ngIf="flowsPage && !loading" fxLayout="column" fxLayoutAlign="start stretch">
+    <h3 class="mt-120 text-center" *ngIf="flowsPage.totalCount === 0">
+      <p>You don't have any flows.</p>
+    </h3>
+
+    <table *ngIf="flowsPage.totalCount > 0" mat-table [dataSource]="flowsPage.content">
+      <ng-container matColumnDef="uuid">
+        <th mat-header-cell *matHeaderCellDef>UUID</th>
+        <td mat-cell *matCellDef="let e">
+          <div
+            (cdkCopyToClipboardCopied)="copied()"
+            [cdkCopyToClipboard]="e.uuid"
+            matTooltip="Click to copy"
+            class="uuid-column"
+          >
+            {{ e.uuid.substring(0, 8) }}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let e">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <span>{{ e.name }}</span>
+            <label *ngIf="e.type === 'SUBROUTINE'" class="label-status warning">Subroutine</label>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="mappedTriggerNames">
+        <th mat-header-cell *matHeaderCellDef>Mapped Events</th>
+        <td mat-cell *matCellDef="let e">
+          <span
+            [matTooltip]="e.mappedTriggerNames?.join('\n')"
+            [matTooltipClass]="'blocked-tooltip'"
+            [matTooltipPosition]="'right'"
+            [matTooltipDisabled]="!e.mappedTriggerNames"
+          >
+            {{ e.mappedTriggerNames ? e.mappedTriggerNames.length : '-' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="activeLastUpdatedAt">
+        <th mat-header-cell *matHeaderCellDef>Deployed On</th>
+        <td mat-cell *matCellDef="let e">
+          <ng-container *ngIf="e.activeLastUpdatedAt">
+            {{ e.activeLastUpdatedAt | date: 'dd MMM yyyy HH:mm' }} - v{{ e.activeVersion }}
+          </ng-container>
+          <ng-container *ngIf="!e.activeLastUpdatedAt">-</ng-container>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deprecated">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let e">
+          <mat-icon *ngIf="e.activeTotalWarnings > 0" matTooltip="This flow contains deprecated definitions">
+            error
+          </mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let e">
+          <button mat-icon-button (click)="viewFlow(e)" matTooltip="Configure">
+            <mat-icon>tune</mat-icon>
+          </button>
+          <button mat-icon-button *ngIf="!e.activeVersion" (click)="rename(e)" matTooltip="Rename">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="delete(e)" matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      *ngIf="flowsPage.totalCount > 0"
+      [length]="flowsPage.totalCount"
+      [pageIndex]="pageable.page"
+      [pageSize]="pageable.perPage"
+      (page)="changePage($event.pageIndex)"
+      hidePageSize
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<ng-container *ngIf="msg?.mt === MsgType.prechatsurvey">
+  <div class="message flex column justify-content-start align-items-center">
+    <div fxFlexAlign="center" class="text__time">{{ msg?.ts | date: 'h:mm a' }}</div>
+    <div class="prechat-survey flex column justify-content-start align-items-none gap-025">
+      <div class="flex column justify-content-start align-items-none gap-025">
+        <span class="label">Your name:</span>
+        <span class="value">{{ convo.customerInfo.name }}</span>
+      </div>
+      <div class="flex column justify-content-start align-items-none gap-025">
+        <span class="label">E-mail:</span>
+        <span class="value">
+          <a href="mailto:{{ convo.customerInfo.email }}" target="_blank">{{ convo.customerInfo.email }}</a>
+        </span>
+      </div>
+      <div class="flex column justify-content-start align-items-none gap-025" *ngIf="convo.customerInfo.number">
+        <span class="label">Number:</span>
+        <span class="value">{{ convo.customerInfo.number }}</span>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="msg?.mt === MsgType.message || msg?.mt === MsgType.attachment || msg?.mt === MsgType.mcq">
+  <div
+    class="message"
+    [ngClass]="isMe ? 'customer' : 'agent'"
+    fxLayout="row"
+    fxLayoutAlign="{{ isMe ? 'end' : 'start' }} start"
+  >
+    <div fxFlex="70%" style="max-width: 70%">
+      <ng-container *ngIf="isMe; else agentMessage">
+        <div class="flex column justify-content-start align-items-end gap-025">
+          <div fxFlex="row" fxLayoutAlign="end center" *ngIf="position === PositionMessage.first" fxLayoutGap="1rem">
+            <span class="text__time">{{ msg?.ts | date: 'h:mm a' }} </span>
+            <span class="text__author"> You </span>
+          </div>
+          <div
+            class="text__message"
+            *ngIf="msg?.mt === MsgType.message || msg?.mt === MsgType.mcq"
+            [ngClass]="position"
+            [innerHTML]="builtTextMessage?.text | safe: 'html'"
+          ></div>
+          <ng-container *ngIf="msg?.mt === MsgType.attachment">
+            <csh-attachment-message [message]="msg" [isMobile]="true" [isPublic]="true"></csh-attachment-message>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <ng-template #agentMessage>
+        <div class="flex justify-content-start align-items-start gap-025">
+          <div fxFlex="35px">
+            <ng-container *ngIf="position === PositionMessage.first">
+              <!-- <ng-container *ngIf="(msg?.author | async)?.avatar; else avartaDefault">
+                <img class="avarta" [attr.src]="(msg?.author | async).avatar" />
+              </ng-container>
+              <ng-template #avartaDefault> -->
+              <mat-icon class="icon__author" *ngIf="position === PositionMessage.first">
+                {{ hasChatBox ? 'smart_toy' : 'person' }}
+              </mat-icon>
+              <!-- </ng-template> -->
+            </ng-container>
+          </div>
+          <div class="spacer flex column justify-content-start align-items-start gap-025">
+            <div
+              class="flex justify-content-start align-items-center gap-10"
+              *ngIf="position === PositionMessage.first"
+            >
+              <span class="text__author" *ngIf="hasChatBox">Chatbot</span>
+              <span class="text__author" *ngIf="!hasChatBox">{{ (profile$ | async)?.name }}</span>
+              <span class="text__time">{{ msg?.ts | date: 'h:mm a' }} </span>
+            </div>
+
+            <div
+              class="text__message"
+              *ngIf="msg?.mt === MsgType.message || msg?.mt === MsgType.mcq"
+              [ngClass]="position"
+              [innerHTML]="builtTextMessage?.text | safe: 'html'"
+            ></div>
+
+            <ng-container *ngIf="msg?.mt === MsgType.attachment">
+              <csh-attachment-message
+                [message]="msg"
+                [parentElr]="parentElr"
+                [isMobile]="true"
+                [isPublic]="true"
+              ></csh-attachment-message>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="waitingChatbot">
+  <div class="message agent flex justify-content-start align-items-start">
+    <div fxFlex="70%" style="max-width: 70%">
+      <div class="flex justify-content-start align-items-start gap-025">
+        <div fxFlex="35px">
+          <ng-container>
+            <mat-icon class="icon__author"> smart_toy </mat-icon>
+          </ng-container>
+        </div>
+        <div class="spacer flex column justify-content-start align-items-start gap-025">
+          <div fxFlex="row" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <span class="text__author">Chatbot</span>
+            <span class="text__time">{{ msg?.ts | date: 'h:mm a' }} </span>
+          </div>
+
+          <div class="text__message loading"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,21 @@
+<ng-container *ngIf="conversationGroup">
+  <ng-container *ngIf="conversationGroup.isOpen; else isArchive">
+    <div class="quill conversation-group">
+      <csh-quill-editor
+        [data]="quillEditorData"
+        (messaged)="handleEnterMessage($event)"
+        (uploadedFiles)="onUploadFile($event)"
+        (textChanged)="onTextChanged($event)"
+        (enterEditLastMessage)="handleEditLastMessage($event)"
+      ></csh-quill-editor>
+    </div>
+  </ng-container>
+
+  <ng-template #isArchive>
+    <div class="convo__footer notMember flex justify-content-center align-items-center gap-8">
+      <div class="warning-label flex justify-content-center align-items-center gap-16">
+        You are viewing , an archived channel
+      </div>
+    </div>
+  </ng-template>
+</ng-container>

@@ -1,0 +1,17 @@
+<table mat-table *ngIf="lstQueuePerformance?.length; else noData" [dataSource]="lstQueuePerformance">
+  <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column.key">
+    <th mat-header-cell *matHeaderCellDef>{{ column.value }}</th>
+    <td
+      mat-cell
+      *matCellDef="let queue"
+      [class.color-red]="column.key === 'abandonedCallPercentage' && queue['highlight']"
+    >
+      {{ queue[column.key] }}
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="columnsProps; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: columnsProps"></tr>
+</table>
+<ng-template #noData>
+  <div class="no-data">No data</div>
+</ng-template>

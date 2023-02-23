@@ -1,0 +1,35 @@
+:host {
+  .org-photo {
+    position: relative;
+    &__upload-file {
+      display: none;
+    }
+    &__img {
+      width: 75px;
+      height: 75px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      border: 1px solid var(--gray-300);
+    }
+    &__icon {
+      border-radius: 50%;
+      padding: 2px;
+      position: absolute !important;
+      bottom: -5px !important;
+      right: -5px !important;
+      border: 1px solid var(--gray-300);
+      cursor: pointer;
+    }
+    &:before {
+      content: '';
+      width: 36px;
+      background: white;
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      height: 36px;
+      border-radius: 50%;
+    }
+  }
+}

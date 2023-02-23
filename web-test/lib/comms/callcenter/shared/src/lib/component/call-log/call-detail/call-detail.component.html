@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Call Log detail</h1>
+
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutGap="1.6rem" fxLayoutAlign="start stretch">
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="1.6rem">
+      <div fxFlex fxLayout="column" fxLayoutGap="0.8rem">
+        <div fxFlex><strong>From:</strong> {{ call.callerId }}</div>
+        <div fxFlex><strong>Agent:</strong> {{ call.agentString }}</div>
+        <div fxFlex><strong>Status:</strong> {{ call.status }}</div>
+      </div>
+      <div fxFlex fxLayout="column" fxLayoutGap="0.8rem">
+        <div fxFlex><strong>At:</strong> {{ call.timestamp | userDate }}</div>
+        <div fxFlex><strong>Queue:</strong> {{ call.queueName }}</div>
+        <div fxFlex><strong>Duration:</strong> {{ call.durations.talking | duration }}</div>
+      </div>
+    </div>
+    <div *ngIf="orderInfoArr.length > 0">
+      <p><strong>Order info:</strong></p>
+      <ul>
+        <li *ngFor="let item of orderInfoArr">{{ item.key }}: {{ item.value }}</li>
+      </ul>
+    </div>
+    <div>
+      <mat-form-field class="full-width">
+        <mat-select placeholder="Disposition code" [(ngModel)]="call.code" name="dispositionCode" #callerId="ngModel">
+          <mat-option [value]="">No deposition code</mat-option>
+          <mat-option *ngFor="let code of codes" [value]="code">{{ code }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <textarea class="changeable-textbox" matInput placeholder="Note" [(ngModel)]="call.note" rows="3"></textarea>
+    </div>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="onUpdateNote()">
+    <span *ngIf="!isUpdating">Update</span> <span *ngIf="isUpdating">Updating...</span>
+  </button>
+</div>

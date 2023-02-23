@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Call journey</h1>
+<div *ngFor="let block of callJourney; let index = index" mat-dialog-content>
+  <div class="call-journey-content" fxLayout="row" fxLayoutAlign="start center">
+    <div class="call-journey-content__call-icon" *ngIf="index === 0"></div>
+    <img src="./assets/images/next.svg" *ngIf="index > 0" /> {{ block }}
+  </div>
+</div>
+<div mat-dialog-actions fxLayout="row">
+  <span class="fill-remaining-space"></span> <button mat-button mat-dialog-close="true">Close</button>
+</div>

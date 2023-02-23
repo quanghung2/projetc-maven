@@ -1,0 +1,97 @@
+<div class="section" fxFlex>
+  <mat-form-field floatLabel="always">
+    <mat-label>Actions</mat-label>
+    <input matInput placeholder="Search..." [formControl]="searchAction" />
+  </mat-form-field>
+
+  <div *ngIf="!searchAction.value && suggestionProperties.length > 0">
+    <label class="mb-0"><i>Suggestions</i></label>
+    <ul class="suggestion">
+      <li *ngFor="let prop of suggestionProperties">
+        <a href="javascript:;" (click)="selectProperty(prop)">{{ prop.actionNameAndTitle }}</a>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="filteredActions?.length === 0">
+    <label class="mb-0"><i>No items</i></label>
+  </div>
+
+  <mat-selection-list
+    [multiple]="false"
+    [(ngModel)]="selectedActions"
+    [compareWith]="compareAction"
+    (selectionChange)="selectAction()"
+  >
+    <mat-list-option *ngFor="let action of filteredActions" [value]="action">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span *ngIf="action.number">{{ action.number }}. {{ action.actionName }}</span>
+        <span *ngIf="!action.number">{{ action.actionName }}</span>
+        <mat-icon class="navigate-next">navigate_next</mat-icon>
+      </div>
+    </mat-list-option>
+  </mat-selection-list>
+</div>
+<div class="divider" *ngIf="selectedActions.length > 0" fxFlex="1px"></div>
+<div class="section" *ngIf="selectedActions.length > 0" fxFlex>
+  <mat-form-field floatLabel="always">
+    <mat-label>Properties</mat-label>
+    <input matInput placeholder="Search..." [formControl]="searchProperty" />
+  </mat-form-field>
+
+  <div *ngIf="filteredProperties?.length === 0">
+    <label class="mb-0"><i>No items</i></label>
+  </div>
+
+  <mat-selection-list
+    [multiple]="false"
+    [(ngModel)]="selectedProperties"
+    [compareWith]="compareProp"
+    (selectionChange)="selectProperty()"
+  >
+    <ng-container *ngIf="keyForContextVar !== 'switching'">
+      <ng-container *ngFor="let prop of filteredProperties">
+        <mat-list-option [value]="prop">
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <span>{{ prop.title }}</span>
+            <mat-icon *ngIf="keyForContextVar === 'looping' && prop.arrayItems?.length > 0" class="navigate-next">
+              navigate_next
+            </mat-icon>
+          </div>
+        </mat-list-option>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="keyForContextVar === 'switching'">
+      <mat-list-option *ngFor="let prop of filteredProperties" [value]="prop">
+        {{ selectedActions[0].index === -1 ? prop.actionNameAndTitle : prop.title }}
+      </mat-list-option>
+    </ng-container>
+  </mat-selection-list>
+</div>
+<div
+  class="divider"
+  *ngIf="selectedProperties.length > 0 && selectedProperties[0].arrayItems?.length > 0"
+  fxFlex="1px"
+></div>
+<div class="section" *ngIf="selectedProperties.length > 0 && selectedProperties[0].arrayItems?.length > 0" fxFlex>
+  <mat-form-field floatLabel="always">
+    <mat-label>Item Properties</mat-label>
+    <input matInput placeholder="Search..." [formControl]="searchArrayItems" />
+  </mat-form-field>
+
+  <div *ngIf="filteredArrayItems?.length === 0">
+    <label class="mb-0"><i>No items</i></label>
+  </div>
+
+  <mat-selection-list
+    [multiple]="false"
+    [(ngModel)]="selectedArrayItems"
+    [compareWith]="compareProp"
+    (selectionChange)="selectArrayItem()"
+  >
+    <ng-container *ngFor="let prop of filteredArrayItems">
+      <mat-list-option [value]="prop">{{ prop.title }}</mat-list-option>
+    </ng-container>
+  </mat-selection-list>
+</div>

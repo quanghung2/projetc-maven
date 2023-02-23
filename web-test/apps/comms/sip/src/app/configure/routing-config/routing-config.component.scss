@@ -1,0 +1,74 @@
+:host {
+  .routing-config-content {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    #clearSearch {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    .action-bar-container {
+      padding: 1rem 0;
+    }
+
+    .type-selection {
+      padding-left: 0.5rem !important;
+    }
+
+    .search-label {
+      top: 12px;
+    }
+    .no-padding {
+      padding: 0 !important;
+    }
+    .add-btn {
+      margin-left: 0;
+    }
+    .item.filter .ui.dropdown {
+      min-width: 140px;
+    }
+
+    .search-input {
+      padding: 0.5rem 1rem !important;
+      min-width: 180px;
+      width: 180px;
+    }
+
+    .big-title {
+      font-size: 20px;
+    }
+
+    .title {
+      padding: 15px 15px 0px 0px;
+      line-height: 1.778;
+    }
+    .content {
+      margin-top: 30px;
+    }
+    table {
+      tr {
+        .type {
+          width: 20%;
+        }
+
+        .rule {
+          width: 20%;
+        }
+
+        .forward-to {
+          width: 55%;
+        }
+        .delete {
+          width: 5%;
+          visibility: hidden !important;
+        }
+        &:hover {
+          background-color: #f0f0f0;
+          .delete {
+            visibility: visible !important;
+          }
+        }
+      }
+    }
+  }
+}

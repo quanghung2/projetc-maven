@@ -1,0 +1,404 @@
+.tooltip {
+  position: relative;
+  user-select: none;
+}
+
+// emoji , edited text
+.tooltip .tooltiptext {
+  visibility: hidden;
+  font-size: 11px;
+  left: 105%;
+  top: -50%;
+  white-space: nowrap;
+  background-color: #696767;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+
+  &.edited {
+    left: calc(-100% / 2);
+    bottom: -200%;
+  }
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.emoji-chat {
+  zoom: 1.6 !important;
+  // font-size: unset;
+}
+
+.ap-adore {
+  background-image: url('../../assets/emoji/adore.gif') !important;
+  background-size: contain !important;
+}
+.ap-ah {
+  background-image: url('../../assets/emoji/ah.gif') !important;
+  background-size: contain !important;
+}
+.ap-ahihi {
+  background-image: url('../../assets/emoji/ahihi.png') !important;
+  background-size: contain !important;
+}
+.ap-beat {
+  background-image: url('../../assets/emoji/beat.gif') !important;
+  background-size: contain !important;
+}
+.ap-beauty {
+  background-image: url('../../assets/emoji/beauty.gif') !important;
+  background-size: contain !important;
+}
+.ap-beryl {
+  background-image: url('../../assets/emoji/beryl.png') !important;
+  background-size: contain !important;
+}
+.ap-black_square {
+  background-image: url('../../assets/emoji/black_square.png') !important;
+  background-size: contain !important;
+}
+.ap-blushing {
+  background-image: url('../../assets/emoji/blushing.gif') !important;
+  background-size: contain !important;
+}
+.ap-boss {
+  background-image: url('../../assets/emoji/boss.gif') !important;
+  background-size: contain !important;
+}
+.ap-bowtie {
+  background-image: url('../../assets/emoji/bowtie.png') !important;
+  background-size: contain !important;
+}
+.ap-brick {
+  background-image: url('../../assets/emoji/brick.png') !important;
+  background-size: contain !important;
+}
+.ap-brick_shot {
+  background-image: url('../../assets/emoji/brick_shot.gif') !important;
+  background-size: contain !important;
+}
+.ap-bringiton {
+  background-image: url('../../assets/emoji/bringiton.gif') !important;
+  background-size: contain !important;
+}
+.ap-bye {
+  background-image: url('../../assets/emoji/bye.gif') !important;
+  background-size: contain !important;
+}
+.ap-chut {
+  background-image: url('../../assets/emoji/chut.gif') !important;
+  background-size: contain !important;
+}
+.ap-chutchut {
+  background-image: url('../../assets/emoji/chutchut.png') !important;
+  background-size: contain !important;
+}
+.ap-cubimal_chick {
+  background-image: url('../../assets/emoji/cubimal_chick.png') !important;
+  background-size: contain !important;
+}
+.ap-d {
+  background-image: url('../../assets/emoji/d.gif') !important;
+  background-size: contain !important;
+}
+.ap-dancing {
+  background-image: url('../../assets/emoji/dancing.gif') !important;
+  background-size: contain !important;
+}
+.ap-dansgame {
+  background-image: url('../../assets/emoji/dansgame.png') !important;
+  background-size: contain !important;
+}
+.ap-dcs {
+  background-image: url('../../assets/emoji/dcs.gif') !important;
+  background-size: contain !important;
+}
+.ap-doubt {
+  background-image: url('../../assets/emoji/doubt.gif') !important;
+  background-size: contain !important;
+}
+.ap-dream {
+  background-image: url('../../assets/emoji/dream.gif') !important;
+  background-size: contain !important;
+}
+.ap-dribble {
+  background-image: url('../../assets/emoji/dribble.gif') !important;
+  background-size: contain !important;
+}
+.ap-dusty_stick {
+  background-image: url('../../assets/emoji/dusty_stick.png') !important;
+  background-size: contain !important;
+}
+.ap-fb-angry {
+  background-image: url('../../assets/emoji/fb-angry.gif') !important;
+  background-size: contain !important;
+}
+.ap-fb-heart {
+  background-image: url('../../assets/emoji/fb-heart.gif') !important;
+  background-size: contain !important;
+}
+.ap-fb-laugh {
+  background-image: url('../../assets/emoji/fb-laugh.gif') !important;
+  background-size: contain !important;
+}
+.ap-fb-like {
+  background-image: url('../../assets/emoji/fb-like.gif') !important;
+  background-size: contain !important;
+}
+.ap-fb-sad {
+  background-image: url('../../assets/emoji/fb-sad.gif') !important;
+  background-size: contain !important;
+}
+.ap-fb-wow {
+  background-image: url('../../assets/emoji/fb-wow.gif') !important;
+  background-size: contain !important;
+}
+.ap-feelgood {
+  background-image: url('../../assets/emoji/feelgood.gif') !important;
+  background-size: contain !important;
+}
+.ap-feelsgood {
+  background-image: url('../../assets/emoji/feelsgood.png') !important;
+  background-size: contain !important;
+}
+.ap-finnadie {
+  background-image: url('../../assets/emoji/finnadie.png') !important;
+  background-size: contain !important;
+}
+.ap-fu {
+  background-image: url('../../assets/emoji/fu.png') !important;
+  background-size: contain !important;
+}
+.ap-furious {
+  background-image: url('../../assets/emoji/furious.gif') !important;
+  background-size: contain !important;
+}
+.ap-glitch_crab {
+  background-image: url('../../assets/emoji/glitch_crab.png') !important;
+  background-size: contain !important;
+}
+.ap-goberserk {
+  background-image: url('../../assets/emoji/goberserk.png') !important;
+  background-size: contain !important;
+}
+.ap-godmode {
+  background-image: url('../../assets/emoji/godmode.png') !important;
+  background-size: contain !important;
+}
+.ap-haha {
+  background-image: url('../../assets/emoji/haha.gif') !important;
+  background-size: contain !important;
+}
+.ap-heo {
+  background-image: url('../../assets/emoji/heo.gif') !important;
+  background-size: contain !important;
+}
+.ap-hihi {
+  background-image: url('../../assets/emoji/hihi.gif') !important;
+  background-size: contain !important;
+}
+.ap-hurtrealbad {
+  background-image: url('../../assets/emoji/hurtrealbad.png') !important;
+  background-size: contain !important;
+}
+.ap-kappa {
+  background-image: url('../../assets/emoji/kappa.gif') !important;
+  background-size: contain !important;
+}
+.ap-laugh {
+  background-image: url('../../assets/emoji/laugh.gif') !important;
+  background-size: contain !important;
+}
+.ap-lookdown {
+  background-image: url('../../assets/emoji/lookdown.gif') !important;
+  background-size: contain !important;
+}
+.ap-matrix {
+  background-image: url('../../assets/emoji/matrix.gif') !important;
+  background-size: contain !important;
+}
+.ap-metal {
+  background-image: url('../../assets/emoji/metal.png') !important;
+  background-size: contain !important;
+}
+.ap-octocat {
+  background-image: url('../../assets/emoji/octocat.png') !important;
+  background-size: contain !important;
+}
+.ap-oh {
+  background-image: url('../../assets/emoji/oh.gif') !important;
+  background-size: contain !important;
+}
+.ap-oops {
+  background-image: url('../../assets/emoji/oops.gif') !important;
+  background-size: contain !important;
+}
+.ap-piggy {
+  background-image: url('../../assets/emoji/piggy.png') !important;
+  background-size: contain !important;
+}
+.ap-pride {
+  background-image: url('../../assets/emoji/pride.png') !important;
+  background-size: contain !important;
+}
+.ap-rofl {
+  background-image: url('../../assets/emoji/rofl.gif') !important;
+  background-size: contain !important;
+  background-position: center;
+}
+.ap-rube {
+  background-image: url('../../assets/emoji/rube.png') !important;
+  background-size: contain !important;
+}
+.ap-run {
+  background-image: url('../../assets/emoji/run.gif') !important;
+  background-size: contain !important;
+}
+.ap-runaway {
+  background-image: url('../../assets/emoji/runaway.gif') !important;
+  background-size: contain !important;
+}
+.ap-sad {
+  background-image: url('../../assets/emoji/sad.gif') !important;
+  background-size: contain !important;
+}
+.ap-sexy {
+  background-image: url('../../assets/emoji/sexy.gif') !important;
+  background-size: contain !important;
+}
+.ap-shame {
+  background-image: url('../../assets/emoji/shame.gif') !important;
+  background-size: contain !important;
+}
+.ap-shameonyou {
+  background-image: url('../../assets/emoji/shameonyou.gif') !important;
+  background-size: contain !important;
+}
+.ap-shipit {
+  background-image: url('../../assets/emoji/shipit.png') !important;
+  background-size: contain !important;
+}
+.ap-shot {
+  background-image: url('../../assets/emoji/shot.gif') !important;
+  background-size: contain !important;
+}
+.ap-simple_smile {
+  background-image: url('../../assets/emoji/simple_smile.png') !important;
+  background-size: contain !important;
+}
+.ap-slack {
+  background-image: url('../../assets/emoji/slack.png') !important;
+  background-size: contain !important;
+}
+.ap-slack_call {
+  background-image: url('../../assets/emoji/slack_call.png') !important;
+  background-size: contain !important;
+}
+.ap-sosad {
+  background-image: url('../../assets/emoji/sosad.gif') !important;
+  background-size: contain !important;
+}
+.ap-stick {
+  background-image: url('../../assets/emoji/stick.gif') !important;
+  background-size: contain !important;
+}
+.ap-sure {
+  background-image: url('../../assets/emoji/sure.gif') !important;
+  background-size: contain !important;
+}
+.ap-surrender {
+  background-image: url('../../assets/emoji/surrender.gif') !important;
+  background-size: contain !important;
+}
+.ap-surrender-jump {
+  background-image: url('../../assets/emoji/surrender-jump.gif') !important;
+  background-size: contain !important;
+}
+.ap-swiftrage {
+  background-image: url('../../assets/emoji/swiftrage.gif') !important;
+  background-size: contain !important;
+}
+.ap-talktothehand {
+  background-image: url('../../assets/emoji/talktothehand.gif') !important;
+  background-size: contain !important;
+}
+.ap-thumbsup_all {
+  background-image: url('../../assets/emoji/thumbsup_all.gif') !important;
+  background-size: contain !important;
+}
+.ap-troll {
+  background-image: url('../../assets/emoji/troll.png') !important;
+  background-size: contain !important;
+}
+.ap-wet {
+  background-image: url('../../assets/emoji/wet.gif') !important;
+  background-size: contain !important;
+}
+.ap-what {
+  background-image: url('../../assets/emoji/what.gif') !important;
+  background-size: contain !important;
+}
+.ap-whistle {
+  background-image: url('../../assets/emoji/whistle.gif') !important;
+  background-size: contain !important;
+}
+.ap-white_square {
+  background-image: url('../../assets/emoji/white_square.png') !important;
+  background-size: contain !important;
+}
+.ap-yes {
+  background-image: url('../../assets/emoji/yes.gif') !important;
+  background-size: contain !important;
+}
+.ap-what-icon {
+  background-image: url('../../assets/emoji/what-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-tire-icon {
+  background-image: url('../../assets/emoji/tire-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-after-boom-icon {
+  background-image: url('../../assets/emoji/after-boom-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-amazed-icon {
+  background-image: url('../../assets/emoji/amazed-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-bad-smelly-icon {
+  background-image: url('../../assets/emoji/bad-smelly-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-baffle-icon {
+  background-image: url('../../assets/emoji/baffle-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-beat-plaster-icon {
+  background-image: url('../../assets/emoji/beat-plaster-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-beated-icon {
+  background-image: url('../../assets/emoji/beated-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-confuse-icon {
+  background-image: url('../../assets/emoji/confuse-icon.png') !important;
+  background-size: contain !important;
+}
+.ap-nosebleed-icon {
+  background-image: url('../../assets/emoji/nosebleed-icon.png') !important;
+  background-size: contain !important;
+}

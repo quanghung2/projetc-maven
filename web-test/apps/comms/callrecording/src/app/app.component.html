@@ -1,0 +1,23 @@
+<div id="app" *ngIf="!isLoading">
+  <div *ngIf="user.isHasSub" class="ui page top fixed centered menu">
+    <div class="ui container">
+      <a *ngIf="isManager" class="item" routerLink="/subscriptions" routerLinkActive="active">Subscription</a>
+      <a *ngIf="isManager || user?.isHasSub" class="item" routerLink="/history" routerLinkActive="active">History</a>
+
+      <a *ngIf="isManager && user?.isEnableCompliance" class="item" routerLink="/settings" routerLinkActive="active"
+        >Settings</a
+      >
+
+      <a class="item" *ngIf="isManager && isCompliance" routerLink="/managers" routerLinkActive="active"
+        >User Management</a
+      >
+    </div>
+  </div>
+  <div [ngClass]="{ hidden: user == undefined }">
+    <router-outlet></router-outlet>
+  </div>
+  <app-modal></app-modal>
+  <app-acl-action-modal></app-acl-action-modal>
+  <app-callerids-view-modal></app-callerids-view-modal>
+  <app-assign-modal></app-assign-modal>
+</div>

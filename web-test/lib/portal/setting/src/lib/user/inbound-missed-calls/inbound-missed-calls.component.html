@@ -1,0 +1,12 @@
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>Inbound Missed Calls</h1>
+</sui-template-portal>
+
+<div *ngIf="!loading" class="container p-16" fxLayout="column" fxLayoutAlign="start center">
+  <div *ngIf="inputBaUserReq" [style.width.px]="600" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px">
+    <b3n-ba-inbound-missed-calls
+      *ngFor="let inputReq of inputBaUserReq"
+      [inputReq]="inputReq"
+    ></b3n-ba-inbound-missed-calls>
+  </div>
+</div>

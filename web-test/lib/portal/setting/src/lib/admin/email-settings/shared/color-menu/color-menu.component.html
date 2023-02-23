@@ -1,0 +1,13 @@
+<div class="color-menu">
+  <button mat-icon-button [matMenuTriggerFor]="menu">
+    <span class="color-mark" [style.background]="colorMark"></span>
+    <span class="label">{{ colorMark }}</span>
+    <mat-icon>keyboard_arrow_down</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu" class="color-menu">
+    <button mat-menu-item *ngFor="let color of colorList" (click)="colorMark = color">
+      <span class="color-mark" [style.background]="color"></span>
+      <span class="label">{{ color }}</span>
+    </button>
+  </mat-menu>
+</div>

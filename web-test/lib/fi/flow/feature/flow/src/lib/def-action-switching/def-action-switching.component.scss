@@ -1,0 +1,75 @@
+.mat-standard-chip {
+  min-height: 0;
+}
+
+.path-item {
+  border: 1px solid #9c9c9c;
+  border-radius: 4px;
+
+  &__header {
+    cursor: pointer;
+    padding: 10px;
+    background: #e4e4e4;
+
+    .edit {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #939393;
+
+      &:hover {
+        cursor: pointer;
+        color: #2196f3;
+      }
+    }
+
+    .name {
+      color: #2196f3;
+    }
+
+    .remove-path {
+      color: #939393;
+
+      &:hover {
+        cursor: pointer;
+        color: #f44336;
+      }
+    }
+  }
+
+  &__body {
+    .expression-group-item {
+      .remove-condition {
+        margin-bottom: 8px;
+        color: #939393;
+        &:hover {
+          color: #f44336;
+        }
+      }
+    }
+    .or-operator {
+      border-top: 1px solid rgb(230, 230, 230);
+      padding-top: 10px;
+    }
+  }
+
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 0 16px;
+  }
+}
+
+.cdk-drag-placeholder {
+  border: 1px dotted #9c9c9c;
+  border-radius: 4px;
+  min-height: 46px;
+  margin-bottom: 8px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.drop-list.cdk-drop-list-dragging .path-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}

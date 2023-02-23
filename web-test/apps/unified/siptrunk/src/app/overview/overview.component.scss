@@ -1,0 +1,25 @@
+:host {
+  display: block;
+
+  .container {
+    max-width: 550px;
+    margin: auto;
+    padding: 3rem 0;
+
+    .item-left {
+      color: var(--gray-600);
+    }
+    .item-right {
+      font-weight: 500;
+      color: var(--gray-800);
+    }
+
+    .icon-action {
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      font-size: 22px;
+      color: #7a7a7a;
+    }
+  }
+}

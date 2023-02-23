@@ -1,0 +1,76 @@
+<h1 mat-dialog-title>
+  <span *ngIf="!queue.data.clonedQueue.uuid">Create a queue</span>
+  <span *ngIf="queue.data.clonedQueue.uuid">Duplicate a queue from {{ queue.data.clonedQueue.label }}</span>
+</h1>
+<div mat-dialog-content>
+  <form
+    [formGroup]="createQueueForm"
+    fxLayout="column"
+    fxLayoutAlign="space-between stretch"
+    fxLayoutGap="0.5rem"
+    class="dialog-content-container"
+  >
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Queue name"
+        formControlName="label"
+        (keyup.enter)="create()"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="label.hasError('required')"> Queue name is required </mat-error>
+      <mat-error *ngIf="label.hasError('maxlength')"> Maximum 100 characters </mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="number"
+        matInput
+        onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+        placeholder="Queue priority"
+        formControlName="priority"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="priority.invalid"> Accept value from 1 to 100 (1 is the highest) </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        numberPatternQuantity
+        matInput
+        placeholder="Queue extension"
+        formControlName="extension"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="extension.invalid"> From 3 to 5 digits </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="short-line">
+      <mat-label>Wrap up time (seconds)</mat-label>
+      <input
+        matInput
+        name="wrapupTime"
+        onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+        type="number"
+        formControlName="wrapupTime"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="wrapupTime.invalid"> From 0 to 900 seconds </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>SLA threshold (seconds)</mat-label>
+      <mat-select formControlName="slaThreshold">
+        <mat-option *ngFor="let slaThreshold of slaThresholds" [value]="slaThreshold.key">
+          {{ slaThreshold.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-flat-button (click)="create()" [loading]="creating" [disabled]="createQueueForm.invalid" color="primary">
+    Create
+  </button>
+</div>

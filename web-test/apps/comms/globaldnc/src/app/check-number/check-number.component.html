@@ -1,0 +1,242 @@
+<div class="ui page content container">
+  <div class="ui grid">
+    <div class="bulk-filtering-container">
+      <div class="header">Bulk Filtering</div>
+      <div class="right-container">
+        <div class="csv-template">
+          <i class="icon link file download"></i>
+          <a
+            class="label"
+            href="https://docs.google.com/document/d/120pZw1zefd2woLEjbWf7lU_AoYyFSjrcVS7xdCnflTU/edit"
+            target="_blank"
+            >User Manual</a
+          >
+        </div>
+        <div class="user-manual">
+          <i class="icon link file download"></i>
+          <a
+            class="label"
+            href="https://d1fnpdk9svbocx.cloudfront.net/template/bulk-filtering-template.csv"
+            target="_blank"
+            >CSV Template</a
+          >
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="upload-container" [class.havefile]="tempKey || uploading">
+        <div [class.hidden]="tempKey || uploading" class="browse-container">
+          <label class="ui button primary" for="file">Browse CSV</label>
+          <form id="upload" class="hidden">
+            <input type="file" id="file" class="hidden" (change)="upload($event)" accept=".csv, text/csv" />
+          </form>
+        </div>
+        <div [class.hidden]="!tempKey" class="file-container">
+          <i class="icon insert drive file"></i>
+          <div class="file">
+            <div [class.hidden]="uploading" class="file-name">File Successfully Uploaded</div>
+            <div [class.hidden]="!uploading" class="file-name">File Uploading</div>
+            <!--<div class="file-name">{{fileUrl.split('/')[fileUrl.split('/').length - 1]}}</div>-->
+            <div class="clearfix"></div>
+            <div [class.hidden]="!uploading" class="ui active blue progress">
+              <div class="bar">
+                <div class="progress"></div>
+              </div>
+            </div>
+            <!-- <div [class.hidden]="uploading" class="count-number">{{ countNumber }} numbers</div> -->
+          </div>
+          <i class="close icon" (click)="clearFile()"></i>
+        </div>
+
+        <!--<div [class.hidden]="fileUrl" class="down-csv-template">
+					<a class="label" href="https://d1fnpdk9svbocx.cloudfront.net/template/bulk-filtering-template.csv" target="_blank">Download CSV Template</a>
+				</div>-->
+
+        <!--<div [class.hidden]="!fileUrl" class="down-csv-template">
+					<a class="label" href="{{fileUrl}}" target="_blank">Browse CSV</a>
+				</div>-->
+      </div>
+
+      <div class="ui error message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="pricing-container">
+        <div class="description">
+          <div>
+            <strong>PRICING</strong>
+          </div>
+          Each lookup will <strong> be charged {{ price.real }} {{ price.currency }}</strong> (rounded up to the nearest
+          0.1 cents per transaction).
+        </div>
+      </div>
+      <div class="cal-container">
+        <div class="total-number">
+          <div class="value">{{ countSingaporeNumber < 0 ? '-' : countSingaporeNumber }}</div>
+          <div class="description">Total Singapore numbers submitted</div>
+        </div>
+        <div class="x">
+          <div class="value">x</div>
+        </div>
+        <div class="rate">
+          <div class="value">{{ price.real }}</div>
+          <div class="description">{{ price.currency }}/number</div>
+        </div>
+        <div class="equal">
+          <div class="value">=</div>
+        </div>
+        <div class="result">
+          <div class="value">
+            {{ getTotalResult() }}
+          </div>
+          <div class="description">Quantity of credits used for this check</div>
+        </div>
+        <div *ngIf="lookingupRate" class="ui active inverted dimmer inner-dimmer">
+          <div class="ui text loader"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="result-info">
+        <div class="middle aligned floating blocks">
+          <div class="block">
+            <div class="left">
+              <div class="text-container">
+                <div class="label">Results Notification</div>
+                <div class="description">You will be notified by email once the result is ready within 24 hours.</div>
+                <div class="note">
+                  * If the result is used with a non-DNC device (SMS marketing tool or phone), please inform your
+                  company's Data Protection Officer (DPO) of any unsub requests.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="block">
+            <div class="right proceed-container" [class.hidden]="!tempKey">
+              <div class="ui cancel link button" (click)="clearFile()">Clear all</div>
+              <div class="ui approve large primary button" (click)="proceed()" *ngIf="!proceeding && !proceeded">
+                Proceed checking
+              </div>
+              <div class="ui approve large primary button loading" *ngIf="proceeding">Proceed checking</div>
+              <button class="ui approve large primary button" *ngIf="!proceeding && proceeded" disabled>
+                Proceeded
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="log-container">
+      <div class="header">Activity Logs</div>
+      <div class="ui page control borderless menu">
+        <div class="item vertical filter">
+          <label>Filter by Time Range</label>
+          <div sm-component class="ui underline selected dropdown" tabindex="0">
+            <div class="text">Last 1 day</div>
+            <i class="icon dropdown"></i>
+            <div class="menu" tabindex="-1">
+              <div class="item" (click)="changeLastDay('1')">Last 1 day</div>
+              <div class="item" (click)="changeLastDay('7')">Last 1 week</div>
+              <div class="item" (click)="changeLastDay('30')">Last 1 month</div>
+              <div class="item" (click)="changeLastDay('custom')">Custom</div>
+            </div>
+          </div>
+        </div>
+        <div class="item vertical calendar filter">
+          <label>From</label>
+          <div
+            sm-component
+            id="log-from-date"
+            class="ui calendar"
+            type="date"
+            maxDate="today"
+            endCalendar="log-to-date"
+            formatDate="yyyy-MM-dd"
+            affectOther="true"
+            (change)="changeFrom($event.date)"
+          >
+            <div class="ui fluid input left icon">
+              <i class="today icon"></i>
+              <input
+                type="text"
+                placeholder="From"
+                value="{{ searchRequest.from | date: 'yyyy-MM-dd' }}"
+                [disabled]="lastDay !== 'custom'"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="item vertical calendar filter">
+          <label>To</label>
+          <div
+            sm-component
+            id="log-to-date"
+            class="ui calendar"
+            type="date"
+            [attr.minDate]="searchRequest.from"
+            range="30 days"
+            startCalendar="log-from-date"
+            formatDate="yyyy-MM-dd"
+            (change)="changeTo($event.date)"
+          >
+            <div class="ui fluid input left icon">
+              <i class="today icon"></i>
+              <input
+                type="text"
+                placeholder="To"
+                value="{{ searchRequest.to | date: 'yyyy-MM-dd' }}"
+                [disabled]="lastDay !== 'custom'"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="log-result-container">
+        <div class="empty" [class.hidden]="searchResult.totalCount != 0">No record found. Try another day range.</div>
+        <table [class.hidden]="searchResult.totalCount == 0" class="ui page unstackable table">
+          <thead>
+            <tr>
+              <th>Transaction ID</th>
+              <th>From</th>
+              <th>Submission Date</th>
+              <th>Total SG numbers</th>
+              <th>Costs</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of searchResult.entries">
+              <td>{{ r.txn_uuid }}</td>
+              <td>{{ r.credential_detail }}</td>
+              <td>{{ r.created_at | date: 'yyyy-MM-dd HH:mm' }}</td>
+              <td>{{ r.number_of_dnc_check }}</td>
+              <td>{{ r.customer_cost }}</td>
+              <td>{{ r.commit_status === 'committed' ? (r.postback_result ? 'Completed' : 'Failed') : 'Pending' }}</td>
+              <td>
+                <div *ngIf="r.postback_result">
+                  <a href="javascript:void(0);"
+                    ><i class="icon link file download" (click)="download(r.postback_result)"></i
+                  ></a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="7">
+                <pagination
+                  [totalCount]="searchResult.totalCount"
+                  [perPage]="pagination.perPage"
+                  [currentPage]="pagination.currentPage"
+                  (pageChange)="changePage($event)"
+                ></pagination>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+        <div *ngIf="searching" class="ui active inverted dimmer inner-dimmer">
+          <div class="ui text loader"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

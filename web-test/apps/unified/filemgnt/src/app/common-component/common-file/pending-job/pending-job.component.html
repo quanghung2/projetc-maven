@@ -1,0 +1,72 @@
+<div class="pending-jobs-container">
+  <mat-toolbar>
+    <div class="flex align-items-center">
+      <div class="item-link" (click)="onBackPreviousPage()">
+        {{ isFolder ? prevPageTitle : (prevPageTitle | date) }}
+      </div>
+      <div class="icon-link">
+        <mat-icon>chevron_right</mat-icon>
+      </div>
+    </div>
+    <div class="page-title">Pending Jobs</div>
+  </mat-toolbar>
+  <table mat-table [dataSource]="currentPendingJobs">
+    <ng-container matColumnDef="jobId">
+      <th mat-header-cell *matHeaderCellDef>Job ID</th>
+      <td mat-cell *matCellDef="let e">
+        {{ e.jobId }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef>Type</th>
+      <td mat-cell *matCellDef="let e">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <label fxLayout="row" fxLayoutAlign="center center" [class]="e.type">
+            {{ e.type | titlecase }}
+          </label>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let e">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <label fxLayout="row" fxLayoutAlign="center center">
+            {{ e.status | titlecase }}
+          </label>
+          <button *ngIf="e.status === 'pending'" mat-icon-button [loading]="loading" (click)="onRefresh(e)">
+            <mat-icon matTooltip="Reload status">refresh</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let e">
+        <div class="pointer">
+          <mat-icon matTooltip="View detail" (click)="onDetail(e)" class="action-job">remove_red_eye</mat-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="notDataAbvailable">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+        <div fxLayoutAlign="center center">
+          <span class="mat-body-1">No pending job</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr
+      mat-footer-row
+      *matFooterRowDef="['notDataAbvailable']"
+      class="no-data-table"
+      [hidden]="currentPendingJobs?.length"
+    ></tr>
+  </table>
+</div>

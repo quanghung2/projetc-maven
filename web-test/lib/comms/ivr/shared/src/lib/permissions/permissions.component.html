@@ -1,0 +1,125 @@
+<mat-drawer-container>
+  <mat-drawer-content>
+    <mat-toolbar>
+      <div class="page-title">Permission Management</div>
+    </mat-toolbar>
+    <mat-toolbar>
+      <mat-toolbar-row class="flex justify-content-space-between align-items-center">
+        <mat-form-field class="search-box" class="mr-10">
+          <mat-label>Search Member</mat-label>
+          <input [formControl]="filterFC" matInput placeholder="Search by Name" />
+          <button mat-icon-button matSuffix>
+            <mat-icon class="btn-search">search</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="flex justify-content-start align-items-center">
+          <button mat-button (click)="onReload()" mat-icon-button class="mr-10">
+            <mat-icon matTooltip="Refresh">refresh</mat-icon>
+          </button>
+          <button (click)="onAssignPermissions()" mat-raised-button color="primary">Assign</button>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div class="table-container px-16">
+      <table mat-table [dataSource]="attendantMember?.content">
+        <ng-container matColumnDef="uuid" sticky>
+          <th mat-header-cell *matHeaderCellDef>UUID</th>
+          <td mat-cell *matCellDef="let e">
+            <button
+              class="label box"
+              mat-button
+              matTooltip="Click to copy"
+              ngxClipboard
+              [cbContent]="e.uuid"
+              (cbOnSuccess)="copied()"
+              (cbOnError)="copyFailed()"
+              (click)="$event.stopPropagation()"
+            >
+              {{ e.uuid | slice: 0:8 }}
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name" sticky>
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let e">{{ e.displayName }}</td>
+        </ng-container>
+
+        <ng-container
+          *ngFor="let permission of permissions; let i = index; trackBy: trackBy"
+          [matColumnDef]="permission.action"
+        >
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="flex align-items-center">
+              {{ permission.displayText }}
+              <mat-icon
+                *ngIf="isFileExplorer"
+                [matTooltip]="permission.tooltip"
+                class="material-icons-outlined pointer info-tooltip"
+                >info</mat-icon
+              >
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let e">
+            <mat-icon class="done-icon teal-fg" *ngIf="hasPermission(e, permission)">done</mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" sticky>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let e">
+            <div class="actions" fxLayout="row" fxLayoutAlign="end baseline" fxLayoutGap="0.8rem">
+              <button
+                mat-icon-button
+                *ngIf="!e.isUpperAdmin"
+                matTooltip="Edit"
+                (click)="showDetail(e, $event); sidenav.open()"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                *ngIf="e.isUpperAdmin"
+                [matTooltip]="'This member is ' + groupNameToolTipFormated + ' admin'"
+              >
+                <mat-icon class="material-icons-outlined">info</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notDataAbvailable">
+          <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div class="flex justify-content-center align-items-center">
+              <span class="mat-body-1">No member found.</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr mat-footer-row *matFooterRowDef="['notDataAbvailable']" [hidden]="attendantMember?.content?.length"></tr>
+      </table>
+    </div>
+    <mat-paginator
+      (page)="onPageChanged($event)"
+      [class.disable]="attendantMember?.content?.length"
+      [length]="attendantMember?.totalCount"
+      [pageIndex]="pageable.page"
+      [pageSizeOptions]="[10, 15, 20]"
+      [pageSize]="pageable.perPage"
+      hidePageSize
+      showFirstLastButtons
+    ></mat-paginator>
+  </mat-drawer-content>
+  <mat-drawer #sidenav [autoFocus]="false" mode="over" opened="false" position="end" disableClose="true">
+    <b3n-permissions-detail
+      [groupName]="groupName"
+      [member]="selectedMember"
+      [permissionsIAM]="permissions"
+      (closeSidebarEvent)="sidebar.close()"
+      (permissionChangeEvent)="onReload()"
+    ></b3n-permissions-detail>
+  </mat-drawer>
+</mat-drawer-container>

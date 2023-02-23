@@ -1,0 +1,58 @@
+<h1 mat-dialog-title>{{ rule.id ? 'Update' : 'Create' }} inbox</h1>
+<div mat-dialog-content>
+  <div class="form-container">
+    <mat-form-field>
+      <input type="text" placeholder="Name" matInput name="signature" required [(ngModel)]="rule.name" />
+    </mat-form-field>
+    <div class="channels">
+      <div class="title">
+        Affect to inboxes: <strong>{{ rule.inboxUuids?.length }}</strong>
+      </div>
+      <div class="content">
+        <div class="section">
+          <mat-form-field>
+            <mat-select [(value)]="selectedInbox">
+              <mat-option *ngFor="let inbox of cbbInboxes" [value]="inbox.uuid">
+                {{ inbox.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button mat-stroked-button color="primary" class="btnAdd" (click)="addChannel()">Add</button>
+        </div>
+        <div class="channel-display">
+          <div *ngFor="let inbox of rule.inboxUuids" class="item">
+            <div class="displayName">{{ getChannelIncommingEmail(inbox) }}</div>
+            <a (click)="removeChannel(inbox)" class="icon"><mat-icon>cancel</mat-icon></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="officeHour">
+      <div class="title">Office hours</div>
+      <div class="content">
+        <div class="timezone">Your app's timezone is {{ timezone }}</div>
+        <table class="officeHourContent">
+          <b3n-work-time [(rule)]="rule"></b3n-work-time>
+        </table>
+      </div>
+    </div>
+    <div class="cannedResponse">
+      <div class="title">Reply with canned response</div>
+      <div class="content">
+        <mat-form-field>
+          <mat-select [(value)]="selectedCannedResponse">
+            <mat-option *ngFor="let item of cbbCannedResponses" [value]="item.id">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="doUpdate()">
+    {{ rule.id ? 'Update' : 'Create' }}
+  </button>
+</div>

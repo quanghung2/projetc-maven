@@ -1,0 +1,34 @@
+<div class="permission permission__container" fxLayout="column">
+  <mat-toolbar class="permission__toolbar">
+    <div class="header">
+      <h1>{{ member?.displayName }}'s Permissions</h1>
+      <div *ngIf="member?.isUpperAdmin" class="secondary-text subtitle">This user is Business Hub admin</div>
+    </div>
+    <span class="spacer"></span>
+    <button (click)="close()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div *ngFor="let permission of permissions; let i = index; trackBy: trackBy" class="permission__item">
+    <div class="permission__header">
+      <div class="permission__header__title">
+        {{ permission.description | titlecase }}
+      </div>
+    </div>
+    <div fxLayout="column" class="permission__content">
+      <div *ngFor="let action of permission.actions; let i = index; trackBy: trackBy" class="py-8px">
+        <div fxLayout="column" class="toggle-container">
+          <mat-checkbox [(ngModel)]="action.granted" [disabled]="member?.isUpperAdmin">{{
+            action.description
+          }}</mat-checkbox>
+        </div>
+        <mat-divider *ngIf="i !== permission.actions?.length - 1" class="divider"></mat-divider>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="center center" class="permission__footer">
+    <button (click)="save()" [loading]="progressing" [disabled]="member?.isUpperAdmin" mat-flat-button color="primary">
+      Update
+    </button>
+  </div>
+</div>

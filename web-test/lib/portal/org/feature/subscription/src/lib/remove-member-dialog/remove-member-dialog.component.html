@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Remove Member</h1>
+<div mat-dialog-content>
+  <p>Do you want to remove {{ data.member.displayName }} from this subscription?</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button [loading]="loading" [disabled]="loading" color="primary" (click)="removeMember()">
+    Remove
+  </button>
+</div>

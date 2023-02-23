@@ -1,0 +1,17 @@
+.stored-card {
+  .loading-container {
+    margin-top: 5rem;
+    mat-spinner {
+      margin: 20px auto;
+    }
+  }
+  .box {
+    border: 1px solid #dddddd;
+    .box-stored-card {
+      padding: 1.6rem;
+      .icon-card {
+        margin-top: 4px;
+      }
+    }
+  }
+}

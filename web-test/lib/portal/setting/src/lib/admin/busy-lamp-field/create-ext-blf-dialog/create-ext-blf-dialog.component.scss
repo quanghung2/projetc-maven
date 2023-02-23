@@ -1,0 +1,27 @@
+.item_rows {
+  max-height: 200px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: solid thin lightgray;
+  background-color: white;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .item {
+    padding: 8px 10px;
+    &:hover {
+      background: #f4f4f4;
+
+      .code-option__btn-delete {
+        visibility: visible;
+      }
+    }
+  }
+
+  .code-option__btn-delete {
+    visibility: hidden;
+    font-size: 21px;
+    color: gray;
+    cursor: pointer;
+  }
+}

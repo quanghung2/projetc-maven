@@ -1,0 +1,35 @@
+<div fxLayout="column" fxLayoutAlign="start stretch" [class.hightlight-group-item]="pathId && pathId === node.pathId">
+  <div
+    class="item"
+    fxLayout="row"
+    fxLayoutAlign="space-between center"
+    fxLayoutGap="12px"
+    [id]="'menuTree' + (!!node?.actionUuid ? node?.actionUuid : node?.pathId)"
+    [ngStyle]="{ opacity: !isHasData || (!node.isVisible && isHasData) ? '1' : '0.5' }"
+    [class.active]="isActiveNode()"
+  >
+    <section fxFlex fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center" (click)="gotoAction(false)">
+      <img [src]="getIcon(node)" class="logo" fxFlex="32px" />
+      <p class="mb-0">{{ node.number }}. {{ node.name }}</p>
+    </section>
+    <section fxFlex="64px" fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="end center">
+      <mat-icon
+        (click)="gotoAction(true)"
+        *ngIf="!node.pathId"
+        class="edit-item"
+        matTooltip="{{ flow.editable ? 'Edit' : 'View' }}"
+      >
+        {{ flow.editable ? 'edit' : 'visibility' }}
+      </mat-icon>
+
+      <mat-icon [class.collapse]="!node.children?.length" (click)="node.isExpand = !node.isExpand">
+        {{ node.isExpand ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+      </mat-icon>
+    </section>
+  </div>
+  <ng-container *ngFor="let children of node.children">
+    <div class="pl-16" [style.display]="node?.isExpand ? 'block' : 'none'">
+      <b3n-tree-node [nodeParent]="node" [node]="children" [isHasData]="isHasData"></b3n-tree-node>
+    </div>
+  </ng-container>
+</div>

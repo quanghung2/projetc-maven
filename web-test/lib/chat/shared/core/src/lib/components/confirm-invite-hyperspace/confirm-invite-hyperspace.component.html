@@ -1,0 +1,35 @@
+<div class="container">
+  <h1 mat-dialog-title>
+    <div class="dialog-title">
+      Invite member to&nbsp;
+      <div class="convo-name">
+        <ng-container *ngIf="!data.convo.isGroupChat; else groupName">
+          <span>@</span>
+          {{ data.convo.description.trim() }}
+        </ng-container>
+        <ng-template #groupName>
+          <div class="flex">
+            <span *ngIf="data.convo.isPublic; else privateConvo">#</span>
+            <ng-template #privateConvo>
+              <span class="private-icon">
+                <mat-icon>lock</mat-icon>
+              </span>
+            </ng-template>
+            <span>{{ data.convo.name.trim() }}</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </h1>
+  <div mat-dialog-content>
+    <span *ngFor="let user of users">
+      <span class="name">@{{ user.displayName }} </span>
+      &nbsp;
+    </span>
+    {{ msg }}
+  </div>
+  <div mat-dialog-actions fxLayoutAlign="end">
+    <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+    <button mat-raised-button [loading]="processing" color="primary" (click)="submit()">{{ ctaButton }}</button>
+  </div>
+</div>

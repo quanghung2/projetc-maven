@@ -1,0 +1,138 @@
+<div *ngIf="permission; else noPermission" class="content-container">
+  <div fxLayout="row" class="action-bar">
+    <div fxFlex fxLayout="row" fxLayoutGap="0.8rem" fxLayoutAlign="end center">
+      <mat-form-field>
+        <input
+          matInput
+          [disabled]="isLoading"
+          placeholder="Search by name"
+          [(ngModel)]="filterSetting.mappings"
+          (keyup.enter)="updateFilterSetting()"
+        />
+        <mat-icon (click)="updateFilterSetting()" matSuffix>search</mat-icon>
+        <mat-icon
+          *ngIf="filterSetting.mappings !== ''"
+          (click)="filterSetting.mappings = ''; updateFilterSetting()"
+          matSuffix
+          >clear</mat-icon
+        >
+      </mat-form-field>
+      <button mat-icon-button [loading]="isLoading" (click)="reload()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-stroked-button (click)="import()">Import</button>
+      <button mat-stroked-button (click)="export()">Export</button>
+      <button mat-raised-button color="primary" (click)="onShowSkuMapping()">
+        <span class="mat-button-wrapper">Create Mapping</span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="skuMappingsFiltered && skuMappingsFiltered.length > 0; else noData" class="supplier mat-elevation-z1">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="sku">
+        <th mat-header-cell *matHeaderCellDef>Sku</th>
+        <td mat-cell *matCellDef="let element">{{ element.sku }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="productId">
+        <th mat-header-cell *matHeaderCellDef>Product</th>
+        <td mat-cell *matCellDef="let element">{{ element.productId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="destPrefixes">
+        <th mat-header-cell *matHeaderCellDef>Dest Prefixes</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let dest of element?.destPrefixes.slice(0, 2)"> {{ dest }} </mat-chip>
+            <mat-chip
+              *ngIf="element?.destPrefixes.length > 2"
+              matTooltip="Load more"
+              (click)="loadMore(element?.destPrefixes)"
+            >
+              ...
+            </mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="srcPrefixes">
+        <th mat-header-cell *matHeaderCellDef>Src Prefixes</th>
+        <td mat-cell *matCellDef="let element">
+          <mat-chip-list #chipList>
+            <mat-chip *ngFor="let src of element?.srcPrefixes.slice(0, 2)"> {{ src }} </mat-chip>
+            <mat-chip
+              *ngIf="element?.srcPrefixes.length > 2"
+              matTooltip="Load more"
+              (click)="loadMore(element?.srcPrefixes)"
+            >
+              ...
+            </mat-chip>
+          </mat-chip-list>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedDate">
+        <th mat-header-cell *matHeaderCellDef>Last Updated</th>
+        <td mat-cell *matCellDef="let element">{{ element?.updatedDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th class="actions" mat-header-cell *matHeaderCellDef style="text-align: end"></th>
+        <td mat-cell *matCellDef="let element">
+          <div fxLayoutAlign="end center">
+            <button
+              mat-icon-button
+              fxLayout="row"
+              fxLayoutAlign="center none"
+              matTooltip="Edit"
+              class="edit-supplier"
+              (click)="onShowSkuMapping(element)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              fxLayout="row"
+              fxLayoutAlign="center none"
+              matTooltip="Delete"
+              class="edit-supplier"
+              (click)="showConfirmDelete(element)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayColumns"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+
+  <ng-template #noData>
+    <div fxLayout="column" fxLayoutAlign="center center" class="no-data">
+      <h3 *ngIf="!isLoading" class="message">No record found</h3>
+    </div>
+  </ng-template>
+</div>
+<ng-template #noPermission>
+  <div fxLayout="column" fxLayoutAlign="center center" class="no-permission">
+    <mat-icon class="error_outline icon"></mat-icon>
+    <h1 class="message">
+      You do not own any supplier. <br />
+      Please contact your admin to get support.
+    </h1>
+  </div>
+</ng-template>

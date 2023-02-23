@@ -1,0 +1,81 @@
+<b3n-header-flow fromPage="flow-testing"></b3n-header-flow>
+
+<div *ngIf="flow && trigger" class="flow-container" fxLayout="row" fxLayoutAlign="center start">
+  <mat-card class="block-container">
+    <h2 class="mb-8"><strong>Fill params to test</strong></h2>
+
+    <form [formGroup]="$any(formArrayInput)" novalidate>
+      <div
+        [formGroupName]="i"
+        *ngFor="let item of formArrayInput.controls; let i = index"
+        fxLayout="column"
+        fxLayoutAlign="start stretch"
+        fxLayoutGap="8px"
+        class="mb-8"
+      >
+        <ng-container *ngIf="item.get('dataType').value === 'array'">
+          <b3n-test-item-array [formItem]="$any(item)"></b3n-test-item-array>
+        </ng-container>
+
+        <ng-container *ngIf="item.get('dataType').value !== 'array'">
+          <ng-container *ngIf="trigger.def?.triggerDefUuid === TriggerDefUuid.INCOMING_CALL">
+            <mat-form-field hideRequiredMarker="true">
+              <mat-select [placeholder]="item.get('title').value" formControlName="value" required>
+                <mat-option *ngFor="let phone of numbers" [value]="phone">{{ phone }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="item.get('value').invalid">{{ getErrorInput(item.get('value')) }}</mat-error>
+            </mat-form-field>
+          </ng-container>
+
+          <ng-container *ngIf="trigger.def?.triggerDefUuid !== TriggerDefUuid.INCOMING_CALL">
+            <mat-form-field *ngIf="item.get('dataType').value !== 'boolean'" hideRequiredMarker="true">
+              <input
+                matInput
+                [attr.type]="item.get('dataType').value === 'number' ? 'number' : null"
+                [placeholder]="item.get('title').value"
+                formControlName="value"
+                required
+              />
+              <mat-error *ngIf="item.get('value').invalid">{{ getErrorInput(item.get('value')) }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="item.get('dataType').value === 'boolean'" hideRequiredMarker="true">
+              <mat-select [placeholder]="item.get('title').value" formControlName="value" required>
+                <mat-option [value]="true">True</mat-option>
+                <mat-option [value]="false">False</mat-option>
+              </mat-select>
+              <mat-error *ngIf="item.get('value').invalid">{{ getErrorInput(item.get('value')) }}</mat-error>
+            </mat-form-field>
+          </ng-container>
+        </ng-container>
+      </div>
+    </form>
+
+    <div class="mt-16" fxLayout="row" fxLayoutAlign="end center">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        [loading]="executing"
+        [disabled]="formArrayInput.invalid || gettingLogs"
+        (click)="execute()"
+      >
+        Execute
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<div
+  *ngIf="!executionId && (gettingLogs || executing)"
+  fxLayout="column"
+  fxLayoutAlign="start center"
+  fxLayoutGap="16px"
+>
+  <h3 *ngIf="trigger.def?.triggerDefUuid === TriggerDefUuid.INCOMING_CALL">
+    <strong>Please make a call to {{ number }} to start testing</strong>
+  </h3>
+  <h3 *ngIf="trigger.def?.triggerDefUuid !== TriggerDefUuid.INCOMING_CALL"><strong>Executing...</strong></h3>
+  <p><mat-spinner diameter="40"></mat-spinner></p>
+</div>
+<b3n-log-detail *ngIf="executionId && !gettingLogs" [executionId]="executionId"></b3n-log-detail>

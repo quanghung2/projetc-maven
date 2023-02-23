@@ -1,0 +1,68 @@
+<ng-container *ngIf="onmessage$ | async"></ng-container>
+
+<ng-container *ngIf="isError; else loadProfile">
+  <div class="container" fxLayout="row" fxLayoutAlign="center center">
+    <h1>Profile not found.</h1>
+  </div>
+</ng-container>
+
+<ng-template #loadProfile>
+  <ng-container *ngIf="ui$ | async as ui">
+    <div class="container" [class.landscape]="ui.isLandscape" fxLayout="row" fxLayoutAlign="center center">
+      <ng-container *ngIf="loadingProfile; else loadView">
+        <mat-spinner diameter="35"></mat-spinner>
+      </ng-container>
+      <ng-template #loadView>
+        <div
+          class="body"
+          [class.mobile]="ui.isMobile"
+          [class.view-profile]="ui.isMobile && viewing === Viewing.profile"
+          fxLayout="row"
+        >
+          <div
+            fxFlex
+            *ngIf="viewing === Viewing.profile || !ui.isMobile"
+            class="widget"
+            fxLayout="column"
+            fxLayoutAlign="start none"
+          >
+            <b3n-agent-profile
+              fxFlex
+              [profileAgent]="profileAgent"
+              [ui]="ui"
+              [viewing]="viewing"
+              (navigateForm)="nextView()"
+            ></b3n-agent-profile>
+          </div>
+
+          <div fxFlex *ngIf="viewing === Viewing.form" class="widget" fxLayout="column" fxLayoutAlign="start none">
+            <b3n-form-information
+              fxFlex
+              [isLoading]="loading"
+              [ui]="ui"
+              (value)="createCustomer($event)"
+            ></b3n-form-information>
+          </div>
+
+          <div fxFlex *ngIf="viewing === Viewing.chat" class="widget" fxLayout="column" fxLayoutAlign="start none">
+            <section class="header" fxFlex="52px" fxLayoutAlign="center center">
+              <span class="title">{{ customerInfo?.displayName }}</span>
+            </section>
+            <mat-divider></mat-divider>
+            <ng-container *ngIf="liveChat$ | async as livechat">
+              <b3n-chatbox-content
+                fxFlex
+                [livechat]="livechat"
+                [ui]="ui"
+                [hasChatBox]="hasChatBox"
+                [animation]="animation"
+                [enableIndividualMetting]="enableIndividualMetting"
+                (onStartOver)="startConvo()"
+              ></b3n-chatbox-content>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</ng-template>

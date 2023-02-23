@@ -1,0 +1,47 @@
+<mat-toolbar><h1>Edge</h1></mat-toolbar>
+<div fxLayout="row" fxLayoutAlign="space-between start" class="container">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="15px">
+    <mat-form-field fxFlex="300px">
+      <input matInput placeholder="Domain" [formControl]="searchCtrl" (keyup.enter)="loadData()" />
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="loadData()">Search</button>
+  </div>
+  <button mat-raised-button color="primary" (click)="createServer()">Create</button>
+</div>
+<mat-divider *ngIf="list"></mat-divider>
+<p *ngIf="list && list.length == 0 && !loading">No data</p>
+<div fxLayout="row" fxLayoutAlign="start start" class="mt-20 mb-10" *ngIf="list?.length > 0">
+  <mat-form-field fxFlex="300px">
+    <input matInput placeholder="Filter by Cluster/Nodename" [formControl]="filterCtrl" />
+    <mat-icon matSuffix>filter_alt</mat-icon>
+  </mat-form-field>
+</div>
+<mat-accordion [multi]="true">
+  <mat-expansion-panel [expanded]="true" *ngFor="let item of filteredServers; let i = index">
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ item.cluster }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let s of item.servers; let j = index">
+        <div fxLayout="row" fxLayoutAlign="space-between start" fxFlexFill>
+          <div fxLayout="column" fxLayoutAlign="start stretch">
+            <a href="javascript:;" (click)="detailServer(s)">{{ s.nodeName }}</a>
+            <ul>
+              <li>
+                <label class="ip">{{ s.ip }}</label>
+              </li>
+              <li>
+                <label class="version">v{{ s.version }}</label>
+              </li>
+            </ul>
+          </div>
+
+          <button mat-icon-button color="warn" (click)="deleteServer(s)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+</mat-accordion>

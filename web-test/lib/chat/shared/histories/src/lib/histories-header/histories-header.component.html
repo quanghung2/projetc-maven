@@ -1,0 +1,14 @@
+<div class="container flex column justify-content-start align-items-none" fxFill>
+  <div class="spacer flex justify-content-space-between align-items-center">
+    <div fxLayoutAlign="start center">
+      <csh-menu-toggle></csh-menu-toggle>
+      <div class="title flex column justify-content-center align-items-start">
+        <span class="display-name">{{ contact?.displayName || 'Unknown Contact' }}</span>
+      </div>
+    </div>
+
+    <button class="icon-info" [class.active]="toggleInfoBtn$ | async" mat-icon-button (click)="toggleRightSidebar()">
+      <mat-icon fontSet="material-icons-outlined">vertical_split</mat-icon>
+    </button>
+  </div>
+</div>

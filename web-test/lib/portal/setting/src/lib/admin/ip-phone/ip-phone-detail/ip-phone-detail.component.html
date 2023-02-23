@@ -1,0 +1,58 @@
+<mat-progress-bar *ngIf="loading" class="progress-bar" mode="indeterminate"></mat-progress-bar>
+
+<sui-template-portal portalHostId="USER_HEADER_LEFT_SECTION_ID">
+  <h1>IP Phones</h1>
+</sui-template-portal>
+
+<mat-toolbar *ngIf="isAdmin">
+  <mat-toolbar-row fxLayoutAlign="end center" fxLayoutGap="0.8rem">
+    <button (click)="routingManageDevicesPage()" mat-stroked-button>Manage devices</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<ng-container *ngIf="assignedDevice; else hasNoDevice">
+  <section class="ip-phone">
+    <form [formGroup]="ipPhonesForm" class="ip-phone__content" fxLayout="column">
+      <h2>Device Information</h2>
+
+      <mat-form-field appearance="outline">
+        <mat-label>MAC address</mat-label>
+        <mat-select (selectionChange)="onChangeDevice($event)" *ngIf="isAdmin" formControlName="device" required>
+          <mat-option *ngFor="let d of devices" [value]="d">
+            {{ d.deviceUuid }}
+          </mat-option>
+        </mat-select>
+        <input *ngIf="!isAdmin" formControlName="device" matInput readonly />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Device name</mat-label>
+        <input formControlName="name" matInput />
+      </mat-form-field>
+
+      <div fxLayout="column" fxLayoutGap="1rem">
+        <button
+          (click)="updateDevice()"
+          [disabled]="ipPhonesForm.invalid"
+          [loading]="updating"
+          color="primary"
+          mat-flat-button
+        >
+          Update
+        </button>
+        <button (click)="unassign()" [loading]="progressing" color="primary" mat-button>Unassign</button>
+      </div>
+    </form>
+  </section>
+</ng-container>
+
+<ng-template #hasNoDevice>
+  <div class="no-device" fxLayout="column" fxLayoutAlign="center center">
+    <mat-icon class="ip-phone-icon" svgIcon="ip-phone"></mat-icon>
+    <div>No devices assign to this user</div>
+
+    <button *ngIf="isAdmin" mat-flat-button color="primary" (click)="assignExtensionToDevice()" class="btn-assign">
+      Assign
+    </button>
+  </div>
+</ng-template>

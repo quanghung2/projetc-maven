@@ -1,0 +1,114 @@
+<div class="ui page content container">
+  <div class="ui page control borderless menu">
+    <div class="item vertical filter">
+      <label>Filter by Status</label>
+      <div sm-component class="ui underline selected dropdown" tabindex="0">
+        <div class="text">All Statuses</div>
+        <i class="icon dropdown"></i>
+        <div class="menu" tabindex="-1">
+          <div class="item">All Statuses</div>
+        </div>
+      </div>
+    </div>
+    <div class="item search filter">
+      <div class="ui search">
+        <div class="ui icon input">
+          <form (submit)="search()">
+            <input class="prompt" type="text" placeholder="Search phone number" [(ngModel)]="searchStr" name="name" /><i
+              class="search icon"
+            ></i>
+            <button class="hidden" type="submit"></button>
+          </form>
+        </div>
+        <div class="results"></div>
+      </div>
+    </div>
+    <div class="item count">{{ searchResult.totalCount | number }} consents</div>
+    <div class="right menu">
+      <div class="item" *ngIf="isPrimary()">
+        <div class="ui primary button" (click)="openAddConsentNumberModal()">Import consent</div>
+      </div>
+      <div class="item">
+        <div class="ui primary button" (click)="export()">Export CSV</div>
+      </div>
+    </div>
+  </div>
+  <div class="result-container">
+    <div [class.hidden]="searchResult.totalCount != 0" class="empty">
+      No record found. Change filters or search other numbers.
+    </div>
+    <table [class.hidden]="searchResult.totalCount == 0" class="ui page unstackable table">
+      <thead>
+        <tr>
+          <th>Destination</th>
+          <th>Voice Status</th>
+          <th>Fax Status</th>
+          <th>Sms Status</th>
+          <th>Last Modified</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let en of searchResult.entries">
+          <td>
+            {{ en.number }}
+          </td>
+          <td>
+            {{ en.voice | consentStatus: 'short' }}
+            <div sm-component class="ui inline dropdown" *ngIf="canEdit()">
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <div class="item" (click)="changeStatus('voice', en, 'notRecorded')">Not recorded</div>
+                <div class="item" (click)="changeStatus('voice', en, 'whitelist')">Whitelist</div>
+                <div class="item" (click)="changeStatus('voice', en, 'blacklist')">Blacklist</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            {{ en.fax | consentStatus: 'short' }}
+            <div sm-component class="ui inline dropdown" *ngIf="canEdit()">
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <div class="item" (click)="changeStatus('fax', en, 'notRecorded')">Not recorded</div>
+                <div class="item" (click)="changeStatus('fax', en, 'whitelist')">Whitelist</div>
+                <div class="item" (click)="changeStatus('fax', en, 'blacklist')">Blacklist</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            {{ en.sms | consentStatus: 'short' }}
+            <div sm-component class="ui inline dropdown" *ngIf="canEdit()">
+              <i class="dropdown icon"></i>
+              <div class="menu">
+                <div class="item" (click)="changeStatus('sms', en, 'notRecorded')">Not recorded</div>
+                <div class="item" (click)="changeStatus('sms', en, 'whitelist')">Whitelist</div>
+                <div class="item" (click)="changeStatus('sms', en, 'blacklist')">Blacklist</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            {{ en.updatedAt | date: 'yyyy-MM-dd HH:mm' }}
+          </td>
+          <td>
+            <i title="Delete" class="icon link delete" (click)="delete(en)" *ngIf="isPrimary()"></i>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="6">
+            <pagination
+              [totalCount]="searchResult.totalCount"
+              [perPage]="pagination.perPage"
+              [currentPage]="pagination.currentPage"
+              (pageChange)="changePage($event)"
+            ></pagination>
+          </th>
+        </tr>
+      </tfoot>
+    </table>
+    <div *ngIf="searching" class="ui active inverted dimmer inner-dimmer">
+      <div class="ui text loader"></div>
+    </div>
+  </div>
+</div>

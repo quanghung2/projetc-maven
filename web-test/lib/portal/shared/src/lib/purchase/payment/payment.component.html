@@ -1,0 +1,26 @@
+<ng-container *ngIf="wallet">
+  <section class="checkout__container">
+    <p>Auto-renew Option</p>
+    <div class="item">
+      <span>Automatically renew your subscription <strong>07</strong> days before the expiry date.</span>
+      <mat-slide-toggle [(ngModel)]="autoRenew" (ngModelChange)="changeRenew()"></mat-slide-toggle>
+    </div>
+    <p>Payment summary</p>
+    <div class="item no-border-bottom" *ngIf="hasNumber">
+      <span>Number Activation Fee</span>
+      <span class="highlight item__pricing">{{ totalActivationFee | currency: wallet?.currency }}</span>
+    </div>
+    <div class="item no-border-bottom">
+      <span>Total Price</span>
+      <span class="highlight item__pricing">{{ totalPrice | currency: wallet?.currency }}</span>
+    </div>
+    <div class="item no-border-bottom">
+      <span>Available credits </span>
+      <span class="highlight item__available">{{ wallet.usableCredit | currency: wallet?.currency }}</span>
+    </div>
+    <div class="item">
+      <span> Credit after purchase </span>
+      <span class="highlight item__remaining">{{ wallet.usableCredit - totalPrice | currency: wallet?.currency }}</span>
+    </div>
+  </section>
+</ng-container>

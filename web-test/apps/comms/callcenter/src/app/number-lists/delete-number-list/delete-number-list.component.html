@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Delete a number list</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <p>
+      You want to delete number list <strong>{{ data.name }}</strong> ?
+    </p>
+
+    <p>This action cannot be recovered!</p>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="delete()" color="primary" [disabled]="isDeleting">
+    <span *ngIf="!isDeleting">Delete number list</span> <span *ngIf="isDeleting">Deleting...</span>
+  </button>
+</div>

@@ -1,0 +1,61 @@
+:host {
+  display: block;
+  margin-top: 3rem;
+
+  .org-link__container {
+    margin-bottom: 2rem;
+  }
+
+  .buttons__wrapper {
+    display: flex;
+    align-items: center;
+
+    mat-form-field {
+      width: 180px;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  .mat-table {
+    tr.mat-row:hover {
+      background: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    .mat-column-orgUuid {
+      width: 15%;
+
+      .uuid {
+        font-size: 12px;
+        background: #e0e0e0;
+        border-radius: 2px;
+        color: #616161;
+        padding: 4px 10px;
+        width: 85px;
+        cursor: pointer;
+      }
+    }
+
+    .mat-column-actions {
+      text-align: right;
+    }
+
+    .actions-column {
+      visibility: hidden;
+    }
+
+    tr.mat-row:hover .actions-column {
+      visibility: visible;
+    }
+
+    .mat-icon.actions-icon {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 22px;
+      height: 22px;
+      width: 22px;
+    }
+  }
+}

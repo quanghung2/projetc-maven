@@ -1,0 +1,64 @@
+.mat-dialog-content {
+  .background-sound {
+    border-right: solid thin lightgray;
+    padding-right: 1.6rem;
+  }
+  .marketing-msgs {
+    padding-left: 1.6rem;
+  }
+}
+
+.title {
+  line-height: 40px;
+  border-bottom: solid thin lightgray;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.moh-url .empty-url,
+.moh-url .valid-url {
+  padding: 15px;
+
+  min-width: 18rem;
+  border: dashed thin lightgray;
+  text-align: center;
+}
+
+.cfg-item {
+  margin-bottom: 15px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.msgs {
+  height: 450px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.msgs .msg {
+  margin-bottom: 15px;
+  width: 100%;
+  .mat-h3 {
+    width: 100%;
+  }
+
+  .msg-cfg {
+    width: 100%;
+  }
+}
+
+.msgs .msg .msg-title .remove-btn i {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.msgs .msg .msg-title .col {
+  padding: 0;
+}
+
+.msgs .msg .msg-title .remove-btn {
+  padding-right: 10px;
+}

@@ -1,0 +1,27 @@
+<div fxLayout="column" class="select-trigger" fxLayoutAlign="start stretch">
+  <mat-form-field *ngIf="showForApp === AppName.FLOW">
+    <input matInput placeholder="Search..." [formControl]="searchTriggerCtrl" />
+  </mat-form-field>
+
+  <mat-selection-list [multiple]="false" [(ngModel)]="selectedTriggerDef">
+    <mat-list-option *ngFor="let triggerDef of filteredTriggerDefs" [value]="triggerDef">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+        <img [src]="triggerDef.iconUrl" width="40px" height="40px" />
+        <p class="mb-0">{{ triggerDef.displayName }}</p>
+      </div>
+    </mat-list-option>
+  </mat-selection-list>
+
+  <div class="mt-10 mb-2" fxLayout="row" fxLayoutAlign="end center">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [loading]="creating"
+      [disabled]="!selectedTriggerDef.length || !flow.editable"
+      (click)="selectTrigger()"
+    >
+      Choose
+    </button>
+  </div>
+</div>

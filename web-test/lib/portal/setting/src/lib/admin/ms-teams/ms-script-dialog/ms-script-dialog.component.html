@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Powershell script</h1>
+<div mat-dialog-content class="d-flex flex-column">
+  <mat-form-field appearance="outline" *ngIf="powerShellScript">
+    <mat-label>Textarea</mat-label>
+    <textarea matInput rows="20" readonly class="script-area">
+      {{ powerShellScript }}
+    </textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="accent" *ngIf="powerShellScript" (click)="copyScript()">Copy script</button>
+</div>

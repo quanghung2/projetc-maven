@@ -1,0 +1,53 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="start center">
+  <span class="spacer">Select Organization</span>
+  <mat-icon mat-dialog-close *ngIf="!data?.disabledClose" class="cursor-pointer">close</mat-icon>
+</div>
+
+<mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" [formGroup]="filterFG" class="select-form">
+    <mat-radio-group
+      fxLayout="row"
+      fxLayoutAlign="space-around center"
+      *ngIf="hasServicedOrg$ | async"
+      formControlName="type"
+      aria-label="Select an option"
+    >
+      <mat-radio-button [value]="OrgType.memberOrg">Your Organizations</mat-radio-button>
+      <mat-radio-button [value]="OrgType.servicedOrg">Serviced Organizations</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field *ngIf="shouldShowSearchBox">
+      <input matInput formControlName="queryString" placeholder="Search organization" />
+    </mat-form-field>
+    <div *ngIf="organizations.length; else emptyOrgs" class="org-list">
+      <div
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxLayoutGap="0.8rem"
+        class="org-item"
+        *ngFor="let org of organizations; trackBy: trackBy"
+        (click)="isServicedOrg && orgExisted(org) ? null : switchOrg(org)"
+        [ngClass]="{
+          'org-item': !(isServicedOrg && orgExisted(org)),
+          'org-item-existed': isServicedOrg && orgExisted(org)
+        }"
+        [class.active]="org.orgUuid == selectedOrgUuid"
+      >
+        <div class="logo">
+          <img src="{{ org.photoSrc }}" />
+        </div>
+        <div class="name">{{ org.orgName }}</div>
+
+        <span class="flex-spacer"></span>
+        <button *ngIf="org.isPartner" mat-flat-button color="primary">Admin</button>
+        <button *ngIf="org.type === 'DEMO'" mat-flat-button class="linkDemo">Demo</button>
+        <mat-icon *ngIf="isServicedOrg && orgExisted(org)" matTooltip="You are already a member of this account."
+          >help</mat-icon
+        >
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<ng-template #emptyOrgs>
+  <h3 class="text-center">No organization found</h3>
+</ng-template>

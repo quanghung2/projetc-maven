@@ -1,0 +1,28 @@
+<div class="result-list-container">
+  <h4 class="title">Message results</h4>
+  <ng-container *ngIf="viewMessages.length; else noEmails">
+    <mat-card
+      *ngFor="let msg of viewMessages; let index = index"
+      class="d-flex justify-content-between mb-10"
+      (click)="onViewMessage(msg.convo)"
+    >
+      <ng-container *ngIf="msg.mt === 'email'; else chatMessage">
+        <div>
+          <b3n-email-sender-address [fromAddresses]="msg?.body?.data?.fromAddresses[0]"></b3n-email-sender-address>
+          <b3n-email-address [addresses]="msg?.body?.data?.toAddresses" [label]="'To'"></b3n-email-address>
+          <div>{{ msg?.body?.title }}</div>
+        </div>
+        <b3n-email-timeago [ts]="msg.ts"></b3n-email-timeago>
+      </ng-container>
+      <ng-template #chatMessage>
+        <ng-container>
+          <csh-chat-message [message]="msg"></csh-chat-message>
+        </ng-container>
+      </ng-template>
+    </mat-card>
+  </ng-container>
+  <ng-template #noEmails>
+    <p>Couldn't find any message related to your search!</p>
+  </ng-template>
+  <mat-spinner *ngIf="loading" [diameter]="30"></mat-spinner>
+</div>

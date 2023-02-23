@@ -1,0 +1,22 @@
+/*
+ * Remove template code below
+ */
+
+:host {
+  display: block;
+  font-family: sans-serif;
+  width: 100%;
+}
+::ng-deep {
+  .attach_file-icon {
+    // color: #909090 !important;
+    font-size: 14px;
+    width: 14px;
+    margin-right: 5px;
+    margin-top: -4px;
+    vertical-align: middle;
+  }
+}
+.main-container {
+  height: calc(100vh - 64px);
+}

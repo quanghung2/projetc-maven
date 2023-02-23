@@ -1,0 +1,142 @@
+<div *ngIf="currentOrg" class="security">
+  <div class="area">
+    <div class="headerSection">
+      <h2>Security Status</h2>
+      <div class="iconContainer">
+        <mat-icon class="error-icon" *ngIf="getErrorIssueNumber() > 0">cancel</mat-icon>
+        <mat-icon class="invalid" *ngIf="getWarningIssueNumber() > 0">error</mat-icon>
+        <mat-icon class="valid" *ngIf="getErrorIssueNumber() <= 0">check_circle</mat-icon>
+      </div>
+      <div class="hint">{{ getHeaderHint() }}</div>
+    </div>
+    <div class="issueSection">
+      <mat-accordion hideToggle>
+        <mat-expansion-panel
+          [expanded]="isPasswordPromError() || isPasswordPromWarning() || isPasswordComplexityError()"
+          [disabled]="!isPasswordPromError() && !isPasswordPromWarning() && !isPasswordComplexityError()"
+          class="item"
+        >
+          <mat-expansion-panel-header collapsedHeight="80px">
+            <mat-panel-title>
+              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem" class="item__header">
+                <mat-icon
+                  *ngIf="!isPasswordPromError() && !isPasswordPromWarning() && !isPasswordComplexityError()"
+                  class="valid"
+                  >check_circle</mat-icon
+                >
+                <mat-icon class="error-icon" *ngIf="isPasswordComplexityError() || isPasswordPromError()"
+                  >cancel</mat-icon
+                >
+                <mat-icon
+                  class="invalid"
+                  *ngIf="!(isPasswordComplexityError() || isPasswordPromError()) && isPasswordPromWarning()"
+                  >error</mat-icon
+                >
+                <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.2rem" class="header">
+                  <div class="header__title">Password</div>
+                  <div class="header__sub-title mat-caption">
+                    <ng-container
+                      *ngIf="!isPasswordPromError() && !isPasswordPromWarning() && !isPasswordComplexityError()"
+                    >
+                      Your password is valid
+                    </ng-container>
+                    <ng-container *ngIf="isPasswordComplexityError()">
+                      Your password does not comply with password policies.
+                    </ng-container>
+                    <ng-container *ngIf="isPasswordPromError() && !isPasswordComplexityError()">
+                      Your password has been expired. You have to fill new password.
+                    </ng-container>
+                    <ng-container *ngIf="isPasswordPromWarning() && !isPasswordComplexityError()">
+                      Your password will expire in
+                      <strong>{{ securityCompliance.passwordDaysBeforeExpiry }}</strong> day(s).
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1.6rem" class="expanded">
+            <mat-form-field>
+              <input
+                matInput
+                type="password"
+                placeholder="Old Password"
+                [(ngModel)]="oldPassword"
+                (keyup.enter)="updatePersonal()"
+                (keypress)="resetError()"
+              />
+              <mat-hint class="error-hint" *ngIf="error.oldPassword">{{ error.oldPassword }}</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                matInput
+                type="password"
+                placeholder="New Password"
+                [(ngModel)]="newPassword"
+                (keyup.enter)="updatePersonal()"
+                (keypress)="resetError()"
+              />
+              <mat-hint class="error-hint" *ngIf="error.newPassword">{{ error.newPassword }}</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+              <input
+                matInput
+                type="password"
+                placeholder="Confirm New Password"
+                [(ngModel)]="confirmNewPassword"
+                (keyup.enter)="updatePersonal()"
+                (keypress)="resetError()"
+              />
+              <mat-hint class="error-hint" *ngIf="error.confirmPassword">{{ error.confirmPassword }}</mat-hint>
+            </mat-form-field>
+            <div class="ui error message" *ngIf="error.serverError">{{ error.serverError }}</div>
+            <div class="password-actions">
+              <button mat-raised-button [loading]="progressing" color="primary" (click)="updatePersonal()">
+                Update
+              </button>
+            </div>
+          </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel [expanded]="!tfaInfo.tfaEnabled" [disabled]="tfaInfo.tfaEnabled" class="item">
+          <mat-expansion-panel-header collapsedHeight="80px">
+            <mat-panel-title>
+              <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1.6rem" class="item__header">
+                <mat-icon *ngIf="tfaInfo.tfaEnabled" class="valid">check_circle</mat-icon>
+                <mat-icon class="error-icon" *ngIf="isTfaError()">cancel</mat-icon>
+                <mat-icon class="invalid" *ngIf="!isTfaError() && isTfaWarning()">error</mat-icon>
+                <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0.2rem">
+                  <div class="header__title">Two-Factor Authentication</div>
+                  <div class="header__sub-title mat-caption">
+                    <ng-container *ngIf="tfaInfo.tfaEnabled">Two-Factor Authentication is on.</ng-container>
+                    <ng-container *ngIf="isTfaWarning()">Two-Factor Authentication is off</ng-container>
+                    <ng-container *ngIf="isTfaError()">You have to enable it before continue.</ng-container>
+                  </div>
+                </div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div fxLayout="row" fxLayoutAlign="stretch center" class="content">
+            <span class="text">Status: </span> <strong class="status off" *ngIf="!tfaInfo.tfaEnabled"> Off</strong>
+            <strong class="status on" *ngIf="tfaInfo.tfaEnabled"> On</strong>
+            <span class="flex-spacer"></span>
+            <button
+              mat-raised-button
+              color="primary"
+              class="floatRight"
+              (click)="setup2fa()"
+              *ngIf="!tfaInfo.tfaEnabled"
+            >
+              Enable
+            </button>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="continue()" [disabled]="getErrorIssueNumber() > 0">
+      <span *ngIf="!continueProcessing">Continue</span>
+      <mat-spinner *ngIf="continueProcessing" diameter="20"></mat-spinner>
+    </button>
+  </div>
+</div>

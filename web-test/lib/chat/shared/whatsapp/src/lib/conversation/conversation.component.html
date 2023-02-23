@@ -1,0 +1,12 @@
+<ng-container *ngIf="ticket">
+  <div class="convo-container flex column justify-content-end align-items-none">
+    <div fxFlex="64px" class="header">
+      <csw-conversation-header [ticket]="ticket"></csw-conversation-header>
+      <mat-divider></mat-divider>
+    </div>
+    <csw-conversation-content fxFlex="auto" class="body" [ticket]="ticket"></csw-conversation-content>
+    <div class="footer">
+      <csw-conversation-footer [ticket]="ticket" (uploadedFiles)="uploadFileV2($event, 0)"></csw-conversation-footer>
+    </div>
+  </div>
+</ng-container>

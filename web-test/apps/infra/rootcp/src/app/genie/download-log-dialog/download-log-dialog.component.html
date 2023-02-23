@@ -1,0 +1,13 @@
+<div mat-dialog-title>Download app logs</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Key" [formControl]="keyCtrl" (keyup.enter)="download()" required />
+    <mat-error *ngIf="keyCtrl.invalid">Key is required</mat-error>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [loading]="downloading" [disabled]="keyCtrl.invalid" (click)="download()">
+    Download
+  </button>
+</div>

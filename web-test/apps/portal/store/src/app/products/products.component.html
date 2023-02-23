@@ -1,0 +1,53 @@
+<div class="wrapper">
+  <h1 class="my-16 text-center">Our products</h1>
+  <mat-tab-group animationDuration="0" (selectedTabChange)="selectedTabChange($event)">
+    <mat-tab *ngFor="let tab of appTypes; let i = index" [label]="tab.name | capitalizeCase">
+      <ng-template
+        [ngTemplateOutlet]="tab.type === 'BUNDLE' ? bundlesTempl : appsTempl"
+        [ngTemplateOutletContext]="{ type: tab.type }"
+      ></ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<ng-template #bundlesTempl>
+  <section class="m-8">
+    <ng-container *ngIf="bundles$ | async; else noBundle">
+      <div fxLayout="row wrap" fxLayoutGap="1.6rem" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+        <ng-container *ngFor="let bundle of bundles$ | async">
+          <b3n-bundle-detail [bundle]="bundle"></b3n-bundle-detail>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #noBundle>
+      <p class="text-center">There are no bundles. Please contact your administrator.</p>
+    </ng-template>
+  </section>
+</ng-template>
+
+<ng-template #appsTempl let-type="type">
+  <div class="product-list-page">
+    <div class="products">
+      <div class="px-40 w-100" *ngIf="loading">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+
+      <mat-card *ngFor="let app of apps" class="product" [fxHide]="loading">
+        <div class="content" *ngIf="app.type === type">
+          <div class="header__wrapper">
+            <img [src]="app.logo" *ngIf="app.type === 'APP'" />
+            <div class="header">{{ app.name }}</div>
+          </div>
+          <div [innerHtml]="app.shortDescription" [matTooltip]="app.shortDescription" class="description"></div>
+          <store-product-detail
+            *ngIf="partner && currentOrg"
+            (changeLoading)="changeLoading($event)"
+            [id]="app.productId"
+            [partner]="partner"
+            [currentOrg]="currentOrg"
+          ></store-product-detail>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</ng-template>

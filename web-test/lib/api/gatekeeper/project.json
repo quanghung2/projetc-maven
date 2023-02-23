@@ -1,0 +1,16 @@
+{
+  "name": "api-gatekeeper",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/gatekeeper/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/gatekeeper/**/*.ts", "libs/api/gatekeeper/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

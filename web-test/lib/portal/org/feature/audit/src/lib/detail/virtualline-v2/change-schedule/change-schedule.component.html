@@ -1,0 +1,49 @@
+<table mat-table [dataSource]="[0, 1, 2]">
+  <ng-container matColumnDef="ipaddress">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let change">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div *ngIf="(audit?.shifts)[change * 2]?.dayOfWeek" class="icon-item-change"></div>
+        <span>{{ (audit?.shifts)[change * 2]?.dayOfWeek }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="ipaddressValue">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let change">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <span>{{ (audit?.shifts)[change * 2]?.timeRangesStr }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="change">
+    <th mat-header-cell *matHeaderCellDef>Changes</th>
+    <td mat-cell *matCellDef="let change">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div *ngIf="(audit?.shifts)[change * 2 + 1]?.dayOfWeek" class="icon-item-change"></div>
+        <span>{{ (audit?.shifts)[change * 2 + 1]?.dayOfWeek }}</span>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="changeValue">
+    <th mat-header-cell *matHeaderCellDef>
+      <span *ngIf="!audit?.shifts.length"> No changes</span>
+      <div *ngIf="audit?.shifts.length > 0">
+        <span>{{ audit.shifts.length }}</span>
+        <span *ngIf="audit.shifts.length > 1"> changes</span>
+        <span *ngIf="audit.shifts.length === 1"> change</span>
+      </div>
+      <a *ngIf="audit?.shifts.length > 6" (click)="showModelDetail()">(Show all)</a>
+    </th>
+
+    <td mat-cell *matCellDef="let change">
+      <span>{{ (audit?.shifts)[change * 2 + 1]?.timeRangesStr }}</span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns"></tr>
+</table>

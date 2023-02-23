@@ -1,0 +1,34 @@
+<div class="update-extension">
+  <div mat-dialog-title>
+    <div>Update extension</div>
+  </div>
+  <div>
+    <form [formGroup]="form">
+      <mat-form-field>
+        <mat-label>Extension Number</mat-label>
+        <input matInput formControlName="extKey" (keyup.enter)="update()" />
+        <mat-error>Extension Number is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Directory Name</mat-label>
+        <input matInput (keyup.enter)="update()" focus formControlName="extLabel" type="text" name="update-ext-label" />
+        <mat-error>{{
+          form.controls['extLabel'].value.length > 100 ? 'Maximum 100 characters' : 'Directory Name is required'
+        }}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-dialog-close mat-button>Cancel</button>
+    <button
+      [loading]="updating"
+      [disabled]="form.invalid || updating"
+      mat-raised-button
+      color="primary"
+      (click)="update()"
+    >
+      Update
+    </button>
+  </div>
+</div>

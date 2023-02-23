@@ -1,0 +1,108 @@
+<div *ngIf="license && mappingConfig" class="license">
+  <div class="license__header mt-16 mb-32">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div class="header__title" fxLayout="row" fxLayoutAlign="start center">
+        <h1 class="mb-0">{{ license.skuName }}</h1>
+        <span *ngIf="license.isExtension || license.isCallGroup" class="secondary-text">
+          ({{ license.resource.key }})
+        </span>
+      </div>
+      <ng-container *ngIf="license.isExtension">
+        <button mat-flat-button color="warn" (click)="deleteExt()">Delete</button>
+      </ng-container>
+    </div>
+  </div>
+  <div fxLayout="column" fxLayoutGap="16px">
+    <div fxLayout="column" fxLayoutGap="16px">
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+        <span>Subscription ID</span>
+        <shc-copy-button [text]="license.subscriptionUuid" tooltip="Click to copy"></shc-copy-button>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
+
+    <ng-container *ngIf="license.isExtension">
+      <div>
+        <h3 fxLayout="row" fxLayoutAlign="space-between center">
+          Extension <button mat-button color="primary" (click)="editExtension()">Edit</button>
+        </h3>
+
+        <div *ngIf="extension$ | async as extension">
+          <div class="px-16 py-8"><span class="">Number:</span> {{ license.resourceKey }}</div>
+          <div class="px-16 py-8">Directory Name: {{ extension?.extLabel }}</div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="license.isPerUserLicense">
+      <div>
+        <h3 fxLayout="row" fxLayoutAlign="space-between center">
+          <span>Assigned user</span>
+          <button (click)="manageUser()" color="primary" mat-button>Manage</button>
+        </h3>
+        <mat-list class="p-0">
+          <mat-list-item *ngIf="!!license.identityUuid"> {{ license.assignedUser }}</mat-list-item>
+          <mat-list-item *ngIf="!license.identityUuid" class="text-center">No assigned user</mat-list-item>
+        </mat-list>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="OBJECT_KEYS_FUNC(addonMappingConfig).length">
+      <h3 fxLayout="row" fxLayoutAlign="space-between center">
+        <span>Assigned addons</span>
+        <button (click)="manageAddon('addons')" color="primary" mat-button>Manage</button>
+      </h3>
+      <mat-list *ngIf="addonLicenseMappings?.length" class="p-0">
+        <ng-container *ngFor="let item of addonLicenseMappings; let i = index">
+          <mat-list-item *ngIf="item.sku !== simSku" [class.bb]="i < addonLicenseMappings.length - 1">
+            {{ item.quantity + ' ' + item.skuName }}
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <div *ngIf="!addonLicenseMappings?.length" class="empty-box text-center">No addon assigned</div>
+    </ng-container>
+
+    <ng-container *ngIf="OBJECT_KEYS_FUNC(numberMappingConfig).length">
+      <h3 fxLayout="row" fxLayoutAlign="space-between center">
+        <span>Assigned numbers </span>
+        <button (click)="manageAddon('numbers')" color="primary" mat-button>Manage</button>
+      </h3>
+      <mat-list *ngIf="numberLicenses.length" class="p-0">
+        <ng-container *ngFor="let item of numberLicenses; let i = index">
+          <mat-list-item
+            *ngIf="OBJECT_KEYS_FUNC(simMappingConifg).length ? !item.resource?.info?.isDevice : true"
+            [class.bb]="i < numberLicenses.length - 1"
+          >
+            {{ item.displayText }}
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+      <div *ngIf="!numberLicensesWOSim.length" class="empty-box text-center">No number assigned</div>
+    </ng-container>
+
+    <ng-container *ngIf="OBJECT_KEYS_FUNC(simMappingConifg).length && simSku">
+      <h3 fxLayout="row" fxLayoutAlign="space-between center">
+        <span> Assigned SIM </span>
+        <button (click)="manageAddon('sim')" color="primary" mat-button>Manage</button>
+      </h3>
+      <mat-list *ngIf="numberLicenses.length" class="p-0">
+        <ng-container *ngFor="let item of numberLicenses; let i = index">
+          <ng-container *ngIf="item.resource?.info; let INFO">
+            <mat-list-item
+              *ngIf="item.sku !== simSku && (!INFO.number || (INFO.number && INFO.isDevice))"
+              [class.bb]="i < numberLicenses.length - 1"
+            >
+              <ng-container *ngIf="INFO.number; let MSISDN; else: number">
+                {{ INFO.physicalSimStatus ? 'SIM (' + INFO.number + ')' : INFO.number + ' (No SIM)' }}
+              </ng-container>
+              <ng-template #number>
+                {{ item.displayText }}
+              </ng-template>
+            </mat-list-item>
+          </ng-container>
+        </ng-container>
+      </mat-list>
+      <div *ngIf="!numberLicensesWSim.length" class="empty-box text-center">No number assigned</div>
+    </ng-container>
+  </div>
+</div>

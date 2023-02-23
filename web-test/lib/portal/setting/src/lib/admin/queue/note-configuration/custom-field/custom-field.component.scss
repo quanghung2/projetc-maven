@@ -1,0 +1,78 @@
+:host {
+  .item-field {
+    padding: 0.8rem;
+
+    .item__rows {
+      border: solid thin lightgray;
+      padding-top: 0;
+      margin-top: 10px;
+      max-height: 200px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-radius: 5px;
+
+      .sortable-box {
+        font-size: 14px;
+        cursor: move;
+        border-bottom: solid thin lightgray;
+
+        &:hover {
+          background: #f4f4f4;
+
+          .code-option__btn-delete {
+            visibility: visible;
+          }
+        }
+
+        &:nth-last-child(1) {
+          border-bottom: none;
+        }
+
+        .code-option__btn-delete {
+          visibility: hidden;
+          font-size: 21px;
+          color: gray;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .icon-delete {
+      visibility: hidden;
+    }
+    &:hover {
+      .icon-delete {
+        visibility: visible;
+      }
+    }
+  }
+
+  .icon-action {
+    font-size: 21px;
+    color: gray;
+    cursor: pointer;
+  }
+
+  .mat-caption {
+    &.text {
+      opacity: 0.7;
+    }
+  }
+
+  .mat-subheading-1 {
+    &.text {
+      margin: 0;
+      font-size: 17px;
+    }
+  }
+}
+
+::ng-deep {
+  mat-form-field {
+    // icon-clear
+    .mat-form-field-suffix {
+      align-self: flex-end;
+      cursor: pointer;
+    }
+  }
+}

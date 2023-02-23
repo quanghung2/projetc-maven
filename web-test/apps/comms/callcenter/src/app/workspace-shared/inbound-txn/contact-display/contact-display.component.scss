@@ -1,0 +1,30 @@
+:host {
+  .text-title {
+    font-size: 17px;
+  }
+
+  .crm-container {
+    padding-left: 1.6rem;
+
+    .title-contact {
+      margin: 0 !important;
+    }
+
+    .prop-info {
+      padding-left: 1.6rem;
+    }
+
+    .display-value {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+  }
+
+  .division {
+    height: 2px;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+    background-color: black;
+  }
+}

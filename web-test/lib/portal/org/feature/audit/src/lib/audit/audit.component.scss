@@ -1,0 +1,12 @@
+:host {
+  width: 100%;
+  height: 100%;
+  .audit-container {
+    table {
+      width: 100%;
+    }
+    .audit-nodata {
+      margin-top: 10px;
+    }
+  }
+}

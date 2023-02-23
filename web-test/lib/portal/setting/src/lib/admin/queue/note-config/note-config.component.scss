@@ -1,0 +1,33 @@
+.note-config__container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h1,
+  p {
+    margin: 0;
+  }
+}
+
+.note-config__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tool-bar__wrapper {
+  display: flex;
+  flex-direction: column;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.note-config__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 17.5px;
+}

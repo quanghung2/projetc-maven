@@ -1,0 +1,56 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">Account</div>
+  <div class="title uppercase">
+    <strong>Subscription plan: {{ currentAccount.subscription.name }}</strong>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row">
+        <div class="four wide column right aligned number-info">
+          <a href="javascript:void(0);" (click)="showSipNumbers()" class="amount-label">{{
+            currentAccount.account.numbers.length
+          }}</a>
+          <div class="number-label" *ngIf="currentAccount.account.numbers.length == 1">NUMBER</div>
+          <div class="number-label" *ngIf="currentAccount.account.numbers.length > 1">NUMBERS</div>
+          <a href="javascript:void(0)" (click)="getMoreDIDNumbers()">Get more number</a>
+        </div>
+        <div class="twelve wide column left aligned">
+          <div class="ui grid two column">
+            <div class="row feature-row">
+              <div class="eight wide column feature-label first">Concurrent calls</div>
+              <div class="eight wide column feature-value first">
+                {{
+                  currentAccount.subscription.concurrentCalls == -1
+                    ? 'Unlimited'
+                    : currentAccount.subscription.concurrentCalls
+                }}
+              </div>
+            </div>
+            <div class="row feature-row">
+              <div class="eight wide column feature-label">TLS, SRTP</div>
+              <div class="eight wide column feature-value">
+                <span *ngIf="currentAccount.features.sip_tls">Supported</span>
+                <span *ngIf="!currentAccount.features.sip_tls">Not supported</span>
+              </div>
+            </div>
+            <div class="row feature-row">
+              <div class="eight wide column feature-label">CallerID rebranding</div>
+              <div class="eight wide column feature-value">
+                <span *ngIf="currentAccount.features.cli_rebranding">Supported</span>
+                <span *ngIf="!currentAccount.features.cli_rebranding">Not supported</span>
+              </div>
+            </div>
+            <div class="row feature-row">
+              <div class="eight wide column feature-label last">Backup Line</div>
+              <div class="eight wide column feature-value last">
+                <span *ngIf="currentAccount.features.backup_line">Supported</span>
+                <span *ngIf="!currentAccount.features.backup_line">Not supported</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

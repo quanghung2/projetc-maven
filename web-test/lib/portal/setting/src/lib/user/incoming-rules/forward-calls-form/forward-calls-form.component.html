@@ -1,0 +1,21 @@
+<!-- <div *ngIf="incoming" fxLayout="column" fxLayoutGap="1rem">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="3.2rem">
+    <label>Ring: </label>
+    <div fxLayout="row wrap" fxLayoutGap="1.6rem">
+      <ng-container *ngIf="incoming?.cfConfig?.forwardList?.length > 0; else noItem">
+        <span class="box" fxLayoutAlign="center center" *ngFor="let item of incoming?.cfConfig?.forwardList">
+          <ng-container *ngIf="item?.length <= 5; else numberPhone">
+            {{ (item | selectExtension | async)?.displayText }}
+          </ng-container>
+          <ng-template #numberPhone> +{{ item }} </ng-template>
+        </span>
+        <mat-icon color="primary" class="icon-edit" (click)="editDevices()">edited</mat-icon>
+      </ng-container>
+      <ng-template #noItem>
+        <div fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+          <a style="cursor: pointer" (click)="editDevices()">Add user & phone number</a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div> -->

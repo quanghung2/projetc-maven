@@ -1,0 +1,16 @@
+{
+  "name": "fi-flow-shared",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/fi/flow/shared/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/fi/flow/shared/**/*.ts", "libs/fi/flow/shared/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

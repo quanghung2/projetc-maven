@@ -1,0 +1,55 @@
+<mat-toolbar><h1>IP Whitelist</h1></mat-toolbar>
+<div *ngIf="apiKey; else noApiKey" class="ips-whitelist p-16">
+  <div class="ips-whitelist__content">
+    <div class="ips-whitelist__content__actions-bar" fxLayout="row">
+      <span class="spacer"></span>
+
+      <button
+        (click)="openAddIpWhitelistDialog()"
+        [disabled]="ips?.length > 20"
+        [loading]="adding"
+        color="primary"
+        mat-flat-button
+      >
+        Add
+      </button>
+    </div>
+    <table [dataSource]="dataSource" mat-table>
+      <ng-container matColumnDef="ipAddress">
+        <th *matHeaderCellDef mat-header-cell>IP Address</th>
+        <td *matCellDef="let element" mat-cell>{{ element.ipAddress }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let element" mat-cell>
+          <div class="actions">
+            <button (click)="confirmDelete(element)" mat-icon-button matTooltip="Delete">
+              <mat-icon class="material-icons-outlined">delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      <tr *matNoDataRow class="mat-row">
+        <td class="mat-cell" colspan="2">
+          <div fxLayout="column" fxLayoutAlign="center center">No data available</div>
+        </td>
+      </tr>
+    </table>
+    <mat-paginator [pageSize]="10" hidePageSize showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<ng-template #noApiKey>
+  <div class="no-data-container" fxLayout="column" fxLayoutAlign="center center">
+    <div class="no-api-message">
+      <div>It would help if you issued an API Key before managing IP WhiteList.</div>
+      <div>
+        Please go to <a href="javascript:void(0)" routerLink="../api-keys">API Key Page</a> and create one first.
+      </div>
+    </div>
+  </div>
+</ng-template>

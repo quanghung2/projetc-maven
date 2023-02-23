@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Enter the PIN to get access</h2>
+<div mat-dialog-content>
+  <form #form="ngForm" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1em">
+    <!-- <div class="mat-body-2">Enter the PIN to get access</div> -->
+    <mat-form-field>
+      <input
+        matInput
+        type="password"
+        placeholder="PIN"
+        required
+        [(ngModel)]="password"
+        name="pinCtl"
+        (keydown.enter)="progress()"
+      />
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-stroked-button color="primary" [disabled]="form.invalid || progressing" (click)="progress()">
+    Access
+  </button>
+</div>

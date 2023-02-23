@@ -1,0 +1,8 @@
+<mat-form-field *ngIf="extension" class="full-width">
+  <mat-label>Total ring time (seconds)</mat-label>
+  <mat-select [(ngModel)]="extension.mailBox.elapsedTime">
+    <mat-option *ngFor="let time of elapsedTimeOptions" [value]="time.key">
+      {{ time.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

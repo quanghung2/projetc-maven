@@ -1,0 +1,10 @@
+.notification-settings {
+  mat-form-field {
+    width: 100%;
+    .chip-list-email {
+      .mat-chip-list-wrapper {
+        width: 100% !important;
+      }
+    }
+  }
+}

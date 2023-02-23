@@ -1,0 +1,115 @@
+<div *ngIf="isLoading" class="loading-container" fxLayout="row" fxLayoutAlign="center center">
+  <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+</div>
+<div class="container">
+  <ng-container *ngIf="bundle$ | async as bundle">
+    <h1>Purchase bundle</h1>
+    <div class="purchase__body py-16">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="40px" class="purchase__details">
+        <div fxFlex="300px" fxFlexFill [formGroup]="fg">
+          <h3 class="d-flex justify-content-between title">
+            <span>Bundle:</span>
+            <span>{{ bundle.name | capitalizeCase }}</span>
+          </h3>
+          <div fxLayoutAlign="start center" class="d-flex secondary-text">
+            <span class="spacer">Quantity</span>
+            <mat-form-field fxFlex="100px">
+              <input matInput type="number" formControlName="quantity" min="0" [max]="maximumQuantity" />
+            </mat-form-field>
+          </div>
+          <div fxLayoutAlign="end center" style="font-size: 12px">
+            <mat-error *ngIf="quantity.value >= maximumQuantity">Maximum quantity exceeded</mat-error>
+          </div>
+          <div fxLayoutAlign="start center" class="feature__item d-flex secondary-text">
+            <span class="spacer">Billed</span>
+            <mat-radio-group fxLayoutGap="24px" formControlName="billed" aria-label="Billed">
+              <mat-radio-button *ngFor="let bill of billeds" [value]="bill.key">{{ bill.value }}</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-divider></mat-divider>
+          <div>
+            <h3>Features</h3>
+            <ng-container *ngFor="let item of bundle.items">
+              <div
+                *ngIf="priceMap[item.numberSku || item.sku] != null"
+                fxLayoutAlign="start center"
+                class="feature__item d-flex bb secondary-text"
+              >
+                <span class="spacer">
+                  <span [class.font-medium]="!!item.numberSku">{{ priceMap[item.numberSku || item.sku].skuName }}</span>
+                  {{ !!item.numberSku ? ' number' : '' }} x
+                  {{ item.quantity * (fg.get('quantity').value || 1) }}
+                </span>
+                <span>{{
+                  priceMap[item.numberSku || item.sku].finalPrice * (item.quantity * (fg.get('quantity').value || 1))
+                    | currency: currency
+                }}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div fxFlex="1 1 auto" fxFlexFill>
+          <ng-container *ngFor="let step of steps; let i = index">
+            <div fxLayout="column" fxLayoutAlign="start stretch" *ngIf="step.active">
+              <div fxLayout="row" fxLayoutAlign="stretch center" class="step__header">
+                <h3 class="spacer title">{{ step.id.toString() | titlecase }}</h3>
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                  <span
+                    *ngFor="let item of steps; let ix = index"
+                    [class.blue-500]="i === ix"
+                    [class.grey-400]="i !== ix"
+                    class="step-index"
+                  >
+                    {{ ix + 1 }}
+                  </span>
+                </div>
+              </div>
+              <mat-divider></mat-divider>
+              <psh-select-number
+                *ngIf="step.id === stepName.number && step.active"
+                [skuInfoMapping]="numberSkuMapping"
+                (selectedConfirm)="selectedNumber()"
+              ></psh-select-number>
+              <psh-payment
+                *ngIf="step.id === stepName.checkout && step.active"
+                [totalPrice]="totalPrice"
+                [wallet]="wallet"
+                [totalActivationFee]="totalActivationFee"
+                [hasNumber]="hasNumber"
+                [(autoRenew)]="autoRenew"
+              ></psh-payment>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <psh-purchase-product *ngIf="!isBundle"> </psh-purchase-product>
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="0.8rem" class="purchase__actions">
+    <ng-container *ngIf="activeStep === stepName.checkout">
+      <div fxFlex="300px" class="mr-40"></div>
+      <div fxFlex="100" class="d-flex justify-content-between">
+        <button mat-button (click)="back()">
+          <mat-icon *ngIf="steps.length > 1">arrow_back</mat-icon>
+          {{ steps.length > 1 ? 'Back' : 'Cancel' }}
+        </button>
+        <ng-container *ngIf="wallet && (wallet.usableCredit >= totalPrice || totalPrice === 0); else topUp">
+          <button mat-raised-button color="primary" (click)="payment()">Pay Now</button>
+        </ng-container>
+        <ng-template #topUp>
+          <button mat-raised-button color="primary" (click)="openTopup()">Topup</button>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="activeStep === stepName.number">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-raised-button [disabled]="fg?.invalid || !reservedAllNumber" color="primary" (click)="next()">
+        Next
+      </button>
+    </ng-container>
+    <ng-container *ngIf="activeStep === stepName.addons">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="next()">Next</button>
+    </ng-container>
+  </div>
+</div>

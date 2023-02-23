@@ -1,0 +1,16 @@
+{
+  "name": "api-leave",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/leave/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/leave/**/*.ts", "libs/api/leave/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

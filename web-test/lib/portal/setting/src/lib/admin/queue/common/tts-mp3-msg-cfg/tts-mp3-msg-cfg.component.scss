@@ -1,0 +1,42 @@
+.tts-n-mp3-msg-cfg {
+  border: solid thin lightgray;
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 4px;
+}
+
+.tts-n-mp3-msg-cfg mat-form-field {
+  width: 100%;
+}
+
+.tts-n-mp3-msg-cfg .audio-type {
+  margin-bottom: 10px;
+}
+
+.show-advance-btn {
+  text-align: center;
+  margin-bottom: -5px;
+}
+
+.audio-url .valid-url {
+  padding: 10px;
+}
+
+.audio-url .empty-url {
+  padding: 20px;
+}
+
+.audio-url .empty-url,
+.audio-url .valid-url {
+  border: dashed thin lightgray;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.mat-icon {
+  zoom: 0.7;
+}
+
+.auto-type-button {
+  font-size: 14px;
+}

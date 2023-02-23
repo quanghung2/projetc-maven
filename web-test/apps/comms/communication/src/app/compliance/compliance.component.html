@@ -1,0 +1,268 @@
+<div fxLayout="column" fxLayoutAlign="start center">
+  <div class="container" fxLayout="column" fxLayoutAlign="start none">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <h2 class="page-title">Compliance</h2>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="body px-16" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+      <mat-form-field class="search-input" fxFlexAlign="center">
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          type="number"
+          #inputSearch
+          placeholder="Search numbers (e.g: 6581234567)"
+          [formControl]="searchTextCtr"
+          (keydown.enter)="onFilterChanged()"
+        />
+        <button mat-icon-button matSuffix [loading]="lookuping">
+          <mat-icon (click)="onFilterChanged()" class="search-box-icon">search</mat-icon>
+        </button>
+        <button *ngIf="searchTextCtr.value" (click)="searchTextCtr.setValue('')" mat-icon-button matSuffix>
+          <mat-icon class="search-box-icon">clear</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div *ngIf="!isViewResult; else viewResult" class="extra-info" fxFlexAlign="center">
+        <div>Search numbers to view:</div>
+        <div>- <strong>Current DNC status</strong> with full validity period.</div>
+        <div>- <strong>Activity Logs</strong>.</div>
+      </div>
+      <ng-template #viewResult>
+        <div fxLayout="column" fxLayoutAlign="start none">
+          <h3>DNC Status</h3>
+          <span class="spacer"> </span>
+
+          <table class="dnc-status" mat-table [dataSource]="lookResult">
+            <ng-container matColumnDef="no">
+              <th mat-header-cell *matHeaderCellDef>Number</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.number }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="voice">
+              <th mat-header-cell *matHeaderCellDef>Voice Call</th>
+              <td mat-cell *matCellDef="let element">
+                <span
+                  class="capitalize"
+                  [class]="element?.mediums?.voice?.info?.result"
+                  [matTooltip]="element.mediums.voice.display"
+                >
+                  {{ element?.mediums?.voice?.info?.cause | dncStatus }}
+                </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="fax">
+              <th mat-header-cell *matHeaderCellDef>Fax Message</th>
+              <td mat-cell *matCellDef="let element">
+                <span
+                  class="capitalize"
+                  [class]="element?.mediums?.fax?.info?.result"
+                  [matTooltip]="element.mediums.fax.display"
+                >
+                  {{ element?.mediums?.fax?.info?.cause | dncStatus }}
+                </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="sms">
+              <th mat-header-cell *matHeaderCellDef>SMS Message</th>
+              <td mat-cell *matCellDef="let element">
+                <span
+                  class="capitalize"
+                  [class]="element?.mediums?.sms?.info?.result"
+                  [matTooltip]="element.mediums.sms.display"
+                >
+                  {{ element?.mediums?.sms?.info?.cause | dncStatus }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pdpcId">
+              <th mat-header-cell *matHeaderCellDef>PDPC ID</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  class="label box"
+                  mat-button
+                  *ngIf="element.pdpcId"
+                  matTooltip="Click to copy"
+                  ngxClipboard
+                  [cbContent]="element.pdpcId"
+                  (cbOnSuccess)="copied()"
+                  (cbOnError)="copyFailed()"
+                >
+                  {{ element.pdpcId | slice: 0:8 }}
+                </button>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+              <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsResult.length">
+                <div fxLayoutAlign="center center">
+                  <span class="mat-body-1">No Data Available</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsResult"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsResult"></tr>
+            <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="lookResult?.length > 0"></tr>
+          </table>
+        </div>
+
+        <b3n-compliance-note fxFlexAlign="start"></b3n-compliance-note>
+
+        <mat-divider></mat-divider>
+
+        <div fxLayout="column" fxLayoutAlign="start none">
+          <div fxLayoutGap="1.6rem" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+            <h3>Activity Logs</h3>
+            <span class="spacer"> </span>
+
+            <mat-form-field fxFlex="150px">
+              <mat-select (selectionChange)="onSelectRange()" [(ngModel)]="timeRange" placeholder="Date Range">
+                <mat-option *ngFor="let timeRange of timeRanges" [value]="timeRange.key">
+                  {{ timeRange.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <ng-container *ngIf="timeRange === TimeRangeKey.specific_date">
+              <mat-form-field (click)="pickerStart.open()">
+                <input
+                  readonly
+                  matInput
+                  [matDatepicker]="pickerStart"
+                  placeholder="Start Time"
+                  [(ngModel)]="startDate"
+                  [min]="configDatepicker.minStart"
+                  [max]="configDatepicker.maxStart"
+                  (dateChange)="startDateChanged()"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [class.hidden-icon]="!!startDate"
+                  [for]="pickerStart"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #pickerStart type="datetime"></mat-datepicker>
+                <mat-icon
+                  *ngIf="startDate"
+                  (click)="$event.stopPropagation(); startDate = null; startDateChanged()"
+                  matSuffix
+                >
+                  clear
+                </mat-icon>
+              </mat-form-field>
+
+              <mat-form-field (click)="pickerEnd.open()">
+                <input
+                  readonly
+                  matInput
+                  [matDatepicker]="pickerEnd"
+                  placeholder="End Time"
+                  [(ngModel)]="endDate"
+                  [min]="configDatepicker.minEnd"
+                  [max]="configDatepicker.maxEnd"
+                  (dateChange)="endDateChanged()"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [class.hidden-icon]="!!endDate"
+                  [for]="pickerEnd"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #pickerEnd type="datetime"></mat-datepicker>
+                <mat-icon
+                  *ngIf="endDate"
+                  (click)="$event.stopPropagation(); endDate = null; endDateChanged()"
+                  matSuffix
+                >
+                  clear
+                </mat-icon>
+              </mat-form-field>
+            </ng-container>
+
+            <button
+              (click)="export()"
+              mat-stroked-button
+              [loading]="loadingDownload"
+              [disabled]="dataSource?.data?.length === 0 || loadingDownload"
+            >
+              Export
+            </button>
+          </div>
+
+          <table class="activity-log" mat-table [dataSource]="dataSource">
+            <ng-container matColumnDef="txnUuid">
+              <th mat-header-cell *matHeaderCellDef>TXN UUID</th>
+              <td mat-cell *matCellDef="let element">
+                <button
+                  class="label box"
+                  *ngIf="element.txnUuid"
+                  mat-button
+                  matTooltip="Click to copy"
+                  ngxClipboard
+                  [cbContent]="element.txnUuid"
+                  (cbOnSuccess)="copied()"
+                  (cbOnError)="copyFailed()"
+                  (click)="$event.stopPropagation()"
+                >
+                  {{ element.txnUuid | slice: 0:8 }}
+                </button>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="target">
+              <th mat-header-cell *matHeaderCellDef>Target</th>
+              <td mat-cell *matCellDef="let element">{{ element.number }}</td>
+            </ng-container>
+            <ng-container matColumnDef="from">
+              <th mat-header-cell *matHeaderCellDef>From</th>
+              <td mat-cell *matCellDef="let element">{{ element.credentialDetail?.trim()?.split(',')?.[0] || '_' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="when">
+              <th mat-header-cell *matHeaderCellDef>When</th>
+              <td mat-cell *matCellDef="let element">{{ element.time | userDate }}</td>
+            </ng-container>
+            <ng-container matColumnDef="medium">
+              <th mat-header-cell *matHeaderCellDef>Medium</th>
+              <td mat-cell *matCellDef="let element">{{ element.medium }}</td>
+            </ng-container>
+            <ng-container matColumnDef="DNC-status">
+              <th mat-header-cell *matHeaderCellDef>DNC Status</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="capitalize" [class]="element.result" [matTooltip]="element.displayResult">
+                  {{ element.cause | dncStatus }}
+                </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="pdpc-id">
+              <th mat-header-cell *matHeaderCellDef>PDPC ID</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.pdpcTxnId }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="remark">
+              <th mat-header-cell *matHeaderCellDef>Remark</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.bypassReason }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="noData">
+              <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumnsActivity.length">
+                <div fxLayoutAlign="center center">
+                  <span class="mat-body-1">No Data Available</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsActivity"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsActivity"></tr>
+            <tr mat-footer-row *matFooterRowDef="['noData']" [hidden]="dataSource.data?.length > 0"></tr>
+          </table>
+          <mat-paginator hidePageSize="true" pageSize="10" showFirstLastButtons></mat-paginator>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

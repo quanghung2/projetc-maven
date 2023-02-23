@@ -1,0 +1,167 @@
+<csh-right-sidebar>
+  <csh-right-sidebar-header>
+    <csh-right-sidebar-title>Detail</csh-right-sidebar-title>
+    <csh-right-sidebar-action fxLayoutGap="1rem">
+      <ng-container *ngIf="txn$ | async as txn">
+        <button
+          *ngIf="isMemberTxn"
+          class="btn-action-header"
+          matTooltip="Leave"
+          mat-icon-button
+          color="normal"
+          (click)="left(txn)"
+        >
+          <mat-icon class="material-icons-outlined icon-action-header">exit_to_app</mat-icon>
+        </button>
+      </ng-container>
+      <button class="btn-action-header" matTooltip="Copy Link" mat-icon-button color="normal" (click)="copyLink()">
+        <mat-icon class="material-icons-outlined icon-action-header">link</mat-icon>
+      </button>
+    </csh-right-sidebar-action>
+  </csh-right-sidebar-header>
+  <mat-divider></mat-divider>
+  <csh-right-sidebar-content>
+    <csh-right-sidebar-info class="flex column justify-content-start align-items-none">
+      <div class="avarta-container flex justify-content-start align-items-center gap-10">
+        <div fxFlex="50px" fxLayoutAlign="center center">
+          <section class="avatar" fxLayoutAlign="center center">
+            <mat-icon svgIcon="user"></mat-icon>
+          </section>
+        </div>
+        <div class="flex column justify-content-center align-items-none">
+          <span class="display-name">{{ contactActive?.displayName }}</span>
+        </div>
+      </div>
+
+      <ng-container *ngIf="contactActive.numbers?.length > 0">
+        <div
+          *ngFor="let number of contactActive?.numbers"
+          class="phone-container flex justify-content-start align-items-center gap-10"
+        >
+          <div fxFlex="50px" fxLayoutAlign="center center">
+            <mat-icon (click)="makeCallTo(number.number)">phone</mat-icon>
+          </div>
+          <div class="flex column justify-content-center align-items-none">
+            <span>{{ number.number }} </span>
+            <span class="mat-caption">Work</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="contactActive?.emails?.length > 0">
+        <div
+          *ngFor="let email of contactActive?.emails"
+          class="phone-container flex justify-content-start align-items-center gap-10"
+        >
+          <div fxFlex="50px" fxLayoutAlign="center center">
+            <a href="mailTo:{{ email }}" fxLayoutAlign="center center">
+              <mat-icon>mail</mat-icon>
+            </a>
+          </div>
+          <div class="flex column justify-content-center align-items-none">
+            <span>{{ email.email }}</span>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="inbox$ | async as inbox">
+        <div class="phone-container flex justify-content-start align-items-center gap-10">
+          <div fxFlex="50px" fxLayoutAlign="center center">
+            <a fxLayoutAlign="center center">
+              <mat-icon>inbox</mat-icon>
+            </a>
+          </div>
+          <div class="flex column justify-content-center align-items-none">
+            <span>{{ inbox.name }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </csh-right-sidebar-info>
+
+    <csh-right-sidebar-extend>
+      <mat-accordion class="flat-mat-accordion" multi>
+        <ng-container *ngIf="txn$ | async as txn">
+          <ng-container *ngIf="isInboxFlow">
+            <mat-expansion-panel expanded>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Info </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <b3n-txn-information [txn]="txn"></b3n-txn-information>
+              </ng-template>
+            </mat-expansion-panel>
+          </ng-container>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title> Agents </mat-panel-title>
+              <mat-panel-description>
+                {{ txn?.lastAssignedAgents?.length || 0 }}
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <b3n-txn-members [txn]="txn"></b3n-txn-members>
+            </ng-template>
+          </mat-expansion-panel>
+
+          <ng-container *ngIf="txn?.metadata?.currentVisit">
+            <mat-expansion-panel expanded>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Current Visit </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <div class="detail-txn" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                  <mat-icon>open_in_new</mat-icon>
+                  <a fxFlex="auto" class="text-data" [href]="txn?.metadata?.currentVisit" target="_blank">{{
+                    txn.metadata.title || txn.metadata.currentVisit
+                  }}</a>
+                </div>
+              </ng-template>
+            </mat-expansion-panel>
+          </ng-container>
+
+          <ng-container *ngIf="txn?.metadata?.ipAddress">
+            <mat-expansion-panel expanded>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Device Info </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <div class="detail-txn flex column justify-content-start align-items-start gap-5">
+                  <div *ngIf="txn?.metadata?.device" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <span fxFlex="80px" class="label">OS/Device</span>
+                    <div fxFlex="auto" class="text-data">{{ txn?.metadata?.device }}</div>
+                  </div>
+                  <div fx fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <span fxFlex="80px" class="label">Ip Address</span>
+                    <div fxFlex="auto" class="text-data">{{ txn?.metadata?.ipAddress }}</div>
+                  </div>
+                  <div *ngIf="txn?.metadata?.browser" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <span fxFlex="80px" class="label">Browser</span>
+                    <div fxFlex="auto" class="text-data">{{ txn?.metadata?.browser }}</div>
+                  </div>
+                  <div *ngIf="txn?.metadata?.countryName" fxLayoutAlign="start center" fxLayoutGap="1rem">
+                    <span fxFlex="80px" class="label">Location</span>
+                    <div fxFlex="auto" class="text-data">{{ txn?.metadata?.countryName }}</div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-expansion-panel>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!isInboxFlow">
+          <ng-container *ngIf="convoTxns$ | async as txns">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Private Notes </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <csl-private-note [txns]="txns"></csl-private-note>
+              </ng-template>
+            </mat-expansion-panel>
+          </ng-container>
+        </ng-container>
+      </mat-accordion>
+    </csh-right-sidebar-extend>
+  </csh-right-sidebar-content>
+</csh-right-sidebar>

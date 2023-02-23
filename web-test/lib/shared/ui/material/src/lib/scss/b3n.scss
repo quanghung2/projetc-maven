@@ -1,0 +1,18 @@
+// Material theming tools
+@import '@angular/material/theming';
+
+// Breakpoint mixins
+@import 'partials/breakpoints';
+
+.spacer,
+.flex-spacer,
+.fill-remaining-space {
+  flex: 1 1 auto !important;
+}
+.d-content-width {
+  flex: 0 0 auto;
+}
+
+.mat-datepicker-content .mat-calendar {
+  height: auto !important;
+}

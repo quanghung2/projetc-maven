@@ -1,0 +1,79 @@
+<div [formGroup]="formMappings" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+  <ng-container formArrayName="urlMappings">
+    <ng-container [formGroupName]="i" *ngFor="let item of formMappings.get('urlMappings')['controls']; let i = index">
+      <b3n-input-param
+        *ngIf="isOptional === item.value.isOptional && item.value.visible"
+        [optionForInput]="item.value"
+        (valueChanges)="selectValue($event, item, $any(formMappings.get('urlMappings')))"
+      ></b3n-input-param>
+    </ng-container>
+  </ng-container>
+
+  <ng-container formArrayName="headersMappings">
+    <ng-container
+      [formGroupName]="i"
+      *ngFor="let item of formMappings.get('headersMappings')['controls']; let i = index"
+    >
+      <b3n-input-param
+        *ngIf="isOptional === item.value.isOptional && item.value.visible"
+        [optionForInput]="item.value"
+        (valueChanges)="selectValue($event, item, $any(formMappings.get('headersMappings')))"
+      ></b3n-input-param>
+    </ng-container>
+  </ng-container>
+
+  <ng-container formArrayName="bodyMappings">
+    <ng-container [formGroupName]="i" *ngFor="let item of formMappings.get('bodyMappings')['controls']; let i = index">
+      <ng-container *ngIf="isOptional === item.value.isOptional && item.value.visible">
+        <ng-container *ngIf="item.value.dataType === 'array'">
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+            <span class="title-array">{{ item.value.title }}</span>
+            <div fxLayout="column" fxLayoutGap="4px" formArrayName="arrayItemsMappings">
+              <div
+                class="widget-title"
+                *ngFor="let itemMapping of item.get('arrayItemsMappings').controls; let itemMappingIdx = index"
+              >
+                <div [formGroupName]="itemMappingIdx" fxLayout="row" fxLayoutAlign="start center">
+                  <b3n-input-param
+                    fxFlex
+                    [optionForInput]="itemMapping.value"
+                    (valueChanges)="selectValue($event, itemMapping)"
+                  ></b3n-input-param>
+
+                  <div
+                    *ngIf="
+                      !item.value.readonly || item.value.isOptional || item.get('arrayItemsMappings').value.length > 1
+                    "
+                    class="delete-button-custom"
+                  >
+                    <button mat-icon-button (click)="removeItem(item.get('arrayItemsMappings'), itemMappingIdx)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="widget-child">{{ itemMappingIdx + 1 }}</div>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  type="button"
+                  [disabled]="item.value.readonly"
+                  (click)="addItem(item.get('arrayItemsMappings'), item.value)"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <b3n-input-param
+          *ngIf="item.value.dataType !== 'array'"
+          [optionForInput]="item.value"
+          (valueChanges)="selectValue($event, item, $any(formMappings.get('bodyMappings')))"
+        ></b3n-input-param>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>

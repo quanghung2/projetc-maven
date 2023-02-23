@@ -1,0 +1,21 @@
+<mat-toolbar><h1>Transactions</h1></mat-toolbar>
+
+<div *ngIf="!sellerOrgs" fxLayout="row" fxLayoutAlign="center center" class="p-32 text-center mx-a">
+  <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+</div>
+
+<ng-container *ngIf="sellerOrgs">
+  <p *ngIf="sellerOrgs.length == 0" class="teal-color p-32 text-center">You have no wallet</p>
+  <ng-container *ngIf="sellerOrgs.length > 0">
+    <mat-toolbar>
+      <mat-form-field fxFlex="300px">
+        <mat-select placeholder="Seller" [formControl]="selectSellerCtrl">
+          <mat-option *ngFor="let org of sellerOrgs" [value]="org">{{ org.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-toolbar>
+    <div class="px-16">
+      <b3n-transactions *ngIf="transactionInput" [data]="transactionInput"></b3n-transactions>
+    </div>
+  </ng-container>
+</ng-container>

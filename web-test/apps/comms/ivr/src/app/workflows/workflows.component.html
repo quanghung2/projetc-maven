@@ -1,0 +1,131 @@
+<section
+  *ngIf="pendingScheduleWorkflowVersions?.length > 0 && user.isAdmin && workflows?.length > 0"
+  class="workflow-notification"
+>
+  <div
+    *ngFor="let workflowVersion of pendingScheduleWorkflowVersions"
+    class="workflow-notification__request"
+    fxLayout="row"
+    fxLayoutAlign="center baseline"
+  >
+    <h3 *ngIf="workflowVersion.status === WorkflowStatus.pending && workflowVersion.name">
+      The new version of
+      <a (click)="routingNewVersion(workflowVersion.workFlowUuid)" href="javascript:void(0)">{{
+        workflowVersion.name
+      }}</a>
+      is pending for scheduled!
+    </h3>
+    <h3 *ngIf="workflowVersion.status === WorkflowStatus.scheduled && workflowVersion.name">
+      The new version of
+      <a (click)="routingNewVersion(workflowVersion.workFlowUuid)" href="javascript:void(0)">{{
+        workflowVersion.name
+      }}</a>
+      has been scheduled for deployment!
+    </h3>
+  </div>
+</section>
+
+<div *ngIf="assignedSubscriptions && workflows" class="workflows-section">
+  <div *ngIf="assignedSubscriptions.length == 0" class="no-subscription">
+    <h1>You have no subscription. Please contact your admin to get access.</h1>
+  </div>
+
+  <div *ngIf="assignedSubscriptions.length > 0 && workflows.length === 0" class="no-subscription">
+    <h1>You need at least one flow for the purchased subscriptions</h1>
+    <h3><button (click)="storeWorkflow()" color="primary" mat-raised-button>Create flow</button></h3>
+  </div>
+
+  <mat-toolbar *ngIf="assignedSubscriptions.length > 0 && workflows.length > 0" fxLayoutGap="0.8rem">
+    <span class="fill-remaining-space"></span>
+    <mat-form-field class="search">
+      <input (keyup.enter)="search()" [(ngModel)]="searchNumber" matInput placeholder="Search by number" />
+      <button (click)="search()" *ngIf="!searching" mat-icon-button matSuffix><mat-icon>search</mat-icon></button>
+      <button (click)="cancelSearch()" *ngIf="searching" mat-icon-button matSuffix><mat-icon>close</mat-icon></button>
+    </mat-form-field>
+    <button
+      mat-raised-button
+      class="create-button"
+      (click)="storeWorkflow()"
+      *ngIf="assignedSubscriptions.length > backupData.length"
+    >
+      Create flow
+    </button>
+  </mat-toolbar>
+  <div *ngIf="assignedSubscriptions.length > 0 && workflows.length > 0" class="workflows-content" fxLayout="column">
+    <table mat-table [dataSource]="workflows">
+      <ng-container matColumnDef="enableCallRecording">
+        <th *matHeaderCellDef mat-header-cell>Call recording</th>
+        <td *matCellDef="let workflow" mat-cell>
+          <span *ngIf="workflow.enableCallRecording" style="color: #ff9800">Yes </span>
+          <span *ngIf="!workflow.enableCallRecording" style="color: gray">No </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="label">
+        <th *matHeaderCellDef mat-header-cell>Flow name</th>
+        <td (click)="configWorkflow(workflow)" *matCellDef="let workflow" class="pointer" mat-cell>
+          {{ workflow.label }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="subscription">
+        <th *matHeaderCellDef mat-header-cell>Assigned subscription</th>
+        <td (click)="configWorkflow(workflow)" *matCellDef="let workflow" class="pointer" mat-cell>
+          <span *ngIf="assignedSubscriptions.length > 0">
+            {{ subscriptionMaping[workflow.subscriptionUuid]?.description || 'No subscription' }}</span
+          >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th *matHeaderCellDef mat-header-cell>Status</th>
+        <td *matCellDef="let workflow" mat-cell>
+          <div
+            [ngClass]="{
+              live: workflow.status === WorkflowStatus.active,
+              inactive: workflow.status === WorkflowStatus.inactive,
+              draft: workflow.status === WorkflowStatus.draft,
+              pending: workflow.status === WorkflowStatus.pending
+            }"
+          >
+            {{ workflow.status | titlecase }}
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef>Deployment time</th>
+        <td *matCellDef="let workflow" mat-cell>{{ workflow.scheduledAt | userDate }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let workflow" class="actions-column">
+          <button [matMenuTriggerFor]="menu" class="action-menu" mat-button>
+            <i class="material-icons">more_vert</i>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button (click)="storeWorkflow(workflow, ActionType.assign)" *ngIf="user.isAdmin" mat-menu-item>
+              Assign
+            </button>
+            <button
+              (click)="storeWorkflow(workflow, ActionType.unassign)"
+              *ngIf="user.isAdmin && workflow.numbers?.length > 0"
+              mat-menu-item
+            >
+              Unassign
+            </button>
+            <button (click)="storeWorkflow(workflow, ActionType.rename)" mat-menu-item>Rename</button>
+            <button (click)="openVersionHistoryDialog(workflow)" mat-menu-item>Show version history</button>
+            <button
+              (click)="delete(workflow)"
+              mat-menu-item
+              style="color: red"
+              *ngIf="workflow.numbers?.length === 0 && user.isAdmin"
+            >
+              Delete
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+      <tr *matHeaderRowDef="displayedColumns" class="table-header" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns" class="table-row" mat-row></tr>
+    </table>
+  </div>
+</div>

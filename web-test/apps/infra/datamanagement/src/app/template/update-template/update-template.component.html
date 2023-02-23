@@ -1,0 +1,201 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Template</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutGap="50px">
+    <div fxLayout="column" fxFlex="25" class="dialog-content-container">
+      <mat-form-field>
+        <div class="header" fxLayout="row">
+          <input
+            [disabled]="ctaActionName === 'Update'"
+            [(ngModel)]="newTemplate.code"
+            matInput
+            placeholder="Report Code"
+            autocomplete="off"
+          />
+          <mat-icon
+            matTooltip="The recommended naming convention for Report code is: <partner/customer short name>.<service name>.<feature name>.<sub feature name>.<affected object>.<adding inapp suffix if the report means for other apps to query>
+              e.g: ge.wallboard.autodialer.agent, wallboard.inbound, wallboard.autodialer.agent.inapp, etc..."
+            matTooltipClass="blocked-tooltip"
+            >help_outline</mat-icon
+          >
+        </div>
+      </mat-form-field>
+      <mat-form-field>
+        <div class="header" fxLayout="row">
+          <input [(ngModel)]="newTemplate.label" matInput placeholder="Label" />
+          <mat-icon
+            matTooltip="The recommend naming convention for Label is: <Service Name> <Feature Name> <Sub Feature Name> <Add-on Words>
+                         e.g: Wallboard Inbound, Wallboard Callback, Wallboard Agent Activities Analytics (inapp), etc... "
+            matTooltipClass="blocked-tooltip"
+            >help_outline</mat-icon
+          >
+        </div>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select [disabled]="ctaActionName === 'Update'" [(ngModel)]="newTemplate.type" placeholder="Type">
+          <mat-option value="dump">Historical </mat-option>
+          <mat-option value="agg">Commulative </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select
+          [disabled]="ctaActionName === 'Update' || newTemplate.type !== 'agg'"
+          [(ngModel)]="period"
+          placeholder="Period"
+        >
+          <mat-option *ngFor="let period of periodOptions" [value]="period.key">{{ period.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          type="text"
+          placeholder="Descriptor"
+          matInput
+          [(ngModel)]="newTemplate.descriptor"
+          (input)="filterDescriptor()"
+          [matAutocomplete]="auto"
+          required
+        />
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="getstatmentParams()">
+          <mat-option *ngFor="let source of filteredSources" [value]="source.descriptor">
+            {{ source.descriptor }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <div *ngIf="text && configType === 'design'" fxLayout="column" fxLayoutGap="1.6rem">
+        <textarea
+          *ngIf="text"
+          class="config-raw test-descriptor"
+          [(ngModel)]="text"
+          matInput
+          placeholder="Query Statment"
+          [rows]="11"
+        ></textarea>
+        <div fxLayoutAlign="end end">
+          <button [loading]="loadingExtractData" mat-raised-button color="primary" (click)="getSampleDataDescriptor()">
+            Extract Data Field
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="column" fxFlex="35" fxLayoutGap="0.8rem" class="dialog-content-container sample-data">
+      <span class="sample">Sample Data</span>
+      <textarea
+        class="config-raw"
+        [(ngModel)]="sampleData"
+        matInput
+        placeholder="Query Sample Data"
+        [rows]="35"
+      ></textarea>
+    </div>
+
+    <div
+      fxLayout="column"
+      fxFlex="40"
+      fxLayoutAlign="start stretch"
+      fxLayoutGap="1.6rem"
+      class="dialog-content-container content-config"
+    >
+      <div class="title" fxLayout="row" fxLayoutAlign="start center">
+        <span>Report Template:</span>
+        <mat-radio-group
+          [(ngModel)]="configType"
+          (change)="getstatmentParams()"
+          aria-label="Select an option"
+          fxLayoutGap="0.8rem"
+        >
+          <mat-radio-button value="design">Design Mode</mat-radio-button>
+          <mat-radio-button value="raw" checked>Raw Mode</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <div *ngIf="configType !== 'design'">
+        <textarea class="config-raw" [(ngModel)]="config" matInput placeholder="Query Statment" [rows]="35"></textarea>
+      </div>
+      <div *ngIf="configType === 'design' && designFields.length > 0">
+        <div class="title-field">
+          <div class="file-name" fxLayout="row" fxLayoutAlign="start start">
+            <mat-form-field>
+              <input
+                [(ngModel)]="fileNameDesignMode"
+                matInput
+                maxlength="230"
+                placeholder="File Name"
+                required
+                autocomplete="off"
+              />
+            </mat-form-field>
+            <span> {{ '{range}.csv' }}</span>
+          </div>
+
+          <div class="add-field" fxLayout="row">
+            <span>Report Fields</span>
+            <mat-icon (click)="addField(newColumn())" matTooltip="Add field">add_circle</mat-icon>
+          </div>
+        </div>
+
+        <form
+          cdkDropList
+          [formGroup]="designConfig"
+          class="config-design example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            formArrayName="templateFields"
+            *ngFor="let field of designConfig.controls['templateFields']['controls']; let i = index"
+            cdkDrag
+            fxLayout="column"
+            class="fields-test"
+            fxLayoutAlign="center center"
+          >
+            <div class="fields" [formGroupName]="i" fxLayout="column" fxLayoutGap="0rem" fxFlexAlign="center">
+              <span class="index">{{ i + 1 }}</span>
+              <mat-form-field>
+                <input formControlName="name" matInput placeholder="Name" autocomplete="off" />
+              </mat-form-field>
+
+              <section class="format" fxLayout="row" fxLayoutGap="0.5rem">
+                <mat-form-field fxFlex="40">
+                  <mat-select
+                    formControlName="formatOption"
+                    placeholder="Format"
+                    (selectionChange)="checkDisableFormat(field)"
+                  >
+                    <mat-option *ngFor="let format of formatOptions" [value]="format.key">{{
+                      format.display
+                    }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field fxFlex="60">
+                  <input formControlName="format" placeholder="Format" matInput />
+                </mat-form-field>
+              </section>
+
+              <mat-form-field>
+                <mat-select formControlName="expression" placeholder="Expression">
+                  <mat-option *ngFor="let field of designFields" [value]="field">{{ field }}</mat-option>
+                  <mat-option value="custom">{{ setValueCustom() }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field *ngIf="field.controls.expression.value === 'custom'">
+                <input formControlName="fieldCustom" placeholder="Field" matInput />
+              </mat-form-field>
+              <mat-icon class="close" (click)="removeField(i)" matTooltip="Remove field">delete</mat-icon>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" (click)="updateTemplate()">
+    {{ ctaActionName }}
+  </button>
+</div>

@@ -1,0 +1,46 @@
+<div class="attendant">
+  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem" class="attendant__header">
+    <h1 (click)='back()' class="cursor-pointer">Auto attendant</h1>
+    <nav mat-tab-nav-bar>
+      <a
+        mat-tab-link
+        *ngFor="let link of links"
+        [routerLink]="[link.key, { uuid: uuid }]"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [active]="rla.isActive"
+      >
+        {{ link.value }}
+      </a>
+    </nav>
+    <span class="spacer"></span>
+    <div
+      *ngIf="selectedWorkflow?.numbers.length > 1"
+      class="fw-400"
+      matTooltip="{{ selectedWorkflow.numbers.join(', ') }}"
+    >
+      {{ selectedWorkflow.numbers.length }} numbers
+    </div>
+    <div *ngIf="selectedWorkflow?.numbers.length == 1" class="fw-400">{{ selectedWorkflow?.numbers }}</div>
+    <mat-form-field class="source-selection">
+      <mat-select #numberSelection [value]="selectedWorkflow">
+        <ng-container *ngFor="let workflow of workflows">
+          <mat-option class="option" *ngIf="selectedWorkflow.uuid === workflow.uuid" [value]="workflow">{{
+            workflow.label
+          }}</mat-option>
+          <mat-option
+            (click)="routingSelectedWorkflow(workflow)"
+            *ngIf="selectedWorkflow.uuid != workflow.uuid"
+            [value]="workflow"
+            class="option"
+            >{{ workflow.label }}</mat-option
+          >
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </mat-toolbar>
+  <div class="attendant__body">
+    <router-outlet></router-outlet>
+  </div>
+</div>

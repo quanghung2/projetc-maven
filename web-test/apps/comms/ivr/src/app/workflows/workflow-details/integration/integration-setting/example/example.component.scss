@@ -1,0 +1,47 @@
+.view-example {
+  &__title {
+    margin-bottom: 0.8rem;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+  }
+  img {
+    width: 100%;
+    height: auto;
+  }
+  .generic-ticketing {
+    &__start {
+      margin-bottom: -0.8rem;
+      color: gray;
+      font-weight: 500;
+    }
+    &__end {
+      margin-bottom: -0.8rem;
+      margin-top: 1.5rem;
+      color: gray;
+      font-weight: 500;
+    }
+    &__note {
+      padding: 0.8rem;
+      color: gray;
+      font-weight: 500;
+    }
+    ul {
+      li {
+        line-height: 1.5;
+        color: steelblue;
+      }
+    }
+  }
+  .https-notification-view {
+    mat-card {
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.freshdesk-view,
+.zendesk-view,
+.agileCrm-view {
+  min-width: 600px;
+  min-height: 250px;
+}

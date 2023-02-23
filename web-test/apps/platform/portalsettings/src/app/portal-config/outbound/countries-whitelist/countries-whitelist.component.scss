@@ -1,0 +1,68 @@
+.countries-whitelist__container {
+  display: flex !important;
+  flex-direction: column;
+  gap: 10px;
+
+  .action__wrapper {
+    display: flex;
+    gap: 10px;
+    height: 34px;
+    justify-content: space-between;
+
+    .button {
+      margin: 0 !important;
+    }
+
+    .button__wrapper {
+      display: flex;
+      gap: 10px;
+    }
+  }
+}
+
+table {
+  border: 0 !important;
+
+  th {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .countries-whitelist__empty {
+    text-align: center;
+  }
+
+  .row {
+    .checkbox {
+      margin-left: 40px;
+
+      input {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+    }
+
+    .icon__wrapper {
+      opacity: 0;
+      display: flex;
+      gap: 16px;
+      justify-content: flex-end;
+      align-items: center;
+
+      i {
+        font-size: 22px;
+      }
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+
+      .icon__wrapper {
+        opacity: 1;
+      }
+    }
+  }
+}

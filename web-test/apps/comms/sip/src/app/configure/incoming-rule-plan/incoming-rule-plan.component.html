@@ -1,0 +1,60 @@
+<div class="configure-content" *ngIf="!loading">
+  <div class="big-title">
+    Incoming Call Rule
+    <div class="right floated two wide column add-btn">
+      <div class="ui primary button" (click)="add()">Create</div>
+    </div>
+  </div>
+  <div class="ui divider"></div>
+  <div class="content">
+    <table class="ui page selectable unstackable table" *ngIf="currentAccount?.incoming?.inboundRulePlans?.length > 0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Matching Pattern</th>
+          <th>Replacement</th>
+          <th>Prepend Plus</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of currentAccount?.incoming?.inboundRulePlans; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            Starts with <strong>{{ plan.startWith }}</strong> and has a length of
+            <strong>{{ plan.numberLength | arrayNumber }}</strong>
+          </td>
+          <td *ngIf="plan.appendPrefix == ''">
+            Remove <strong>{{ plan.removePrefix }}</strong> leading digits and no prepend
+          </td>
+          <td *ngIf="plan.appendPrefix != ''">
+            Remove <strong>{{ plan.removePrefix }}</strong> leading digits and prepend
+            <strong>{{ plan.appendPrefix }}</strong>
+          </td>
+          <td>
+            <strong>{{ plan.doPrependPlus }}</strong>
+          </td>
+          <td>
+            <i class="delete icon" (click)="removePlan(i)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="currentAccount?.incoming?.inboundRulePlans?.length == 0">
+      <div class="ui grid two column form">
+        <div class="row empty-content">
+          <div class="five wide column right aligned">
+            <i class="drive icon"></i>
+          </div>
+          <div class="eight wide column">
+            <div class="empty-dial-plan">Empty Inbound Incoming Rule Plans</div>
+            <div>No plan for incoming call rule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isRemovingPlan" class="ui active inverted dimmer inner-dimmer">
+    <div class="ui text loader"></div>
+  </div>
+</div>

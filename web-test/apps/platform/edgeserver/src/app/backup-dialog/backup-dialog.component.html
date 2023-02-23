@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Backup</h2>
+<div mat-dialog-body>
+  <mat-form-field floatLabel="always">
+    <mat-select placeholder="Cluster" [formControl]="clusterCtrl">
+      <mat-option *ngFor="let cluster of clusters$ | async as clusters" [value]="cluster.cluster">
+        {{ cluster.cluster }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p style="color: red">*WARNING: All ongoing calls might be affected during the configuration snapshot.</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button color="warn" (click)="backup()">Backup</button>
+</div>

@@ -1,0 +1,31 @@
+.otp {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100%;
+  font-size: 64px;
+  font-weight: bold;
+  letter-spacing: 16px;
+  color: #ffffff;
+  background: rgb(0, 137, 123);
+  background: linear-gradient(45deg, rgba(0, 137, 123, 1) 0%, rgba(255, 255, 255, 1) 100%);
+
+  p {
+    font-size: 14px;
+    letter-spacing: normal;
+    font-weight: normal;
+  }
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+:host {
+  width: 100%;
+}

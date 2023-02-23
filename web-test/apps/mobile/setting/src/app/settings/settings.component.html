@@ -1,0 +1,111 @@
+<div class="settings__container" [style.maxWidth]="(settingsService.isWindows$ | async) && 'unset'">
+  <div *ngIf="loading" class="progress__wrapper">
+    <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
+    <div *ngIf="sessionError$ | async as sessionError" class="session__error">
+      {{ sessionError }}
+      <div class="right" (click)="closeApp()">
+        <mat-icon aria-hidden="false" aria-label="icon">close</mat-icon>
+        <p>close</p>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="!loading">
+    <div class="settings__profile">
+      <div class="image__wrapper">
+        <img [src]="profile.photoSrc" />
+        <div class="status" *ngIf="me">
+          <ng-container [ngSwitch]="currentStatus.key">
+            <div class="dnd" *ngSwitchCase="'dnd'">
+              <mat-icon aria-hidden="false" aria-label="icon">do_not_disturb_on_total_silence</mat-icon>
+            </div>
+            <div *ngSwitchDefault [class]="currentStatus.key"></div>
+          </ng-container>
+        </div>
+      </div>
+      <div class="infomation__wrapper">
+        <h3>{{ currentOrg.orgName | uppercase }}</h3>
+        <p>{{ extension ? extension.displayText : profile.displayName }}</p>
+        <p *ngIf="canSwitch" class="switch" (click)="switch()">Switch organization</p>
+      </div>
+      <div class="right" class="close__wrapper" (click)="closeApp()">
+        <mat-icon aria-hidden="false" aria-label="icon">close</mat-icon>
+      </div>
+    </div>
+    <div class="settings__controls">
+      <ng-container *ngIf="me">
+        <mat-card
+          *ngFor="let control of settingControls"
+          (click)="navigate(control.navigate)"
+          class="controls__wrapper"
+        >
+          <mat-card-header>
+            <mat-card-title>{{ control.name }}</mat-card-title>
+            <div class="navigation">
+              <ng-container *ngIf="control.setStatus">
+                <div class="status">
+                  <ng-container [ngSwitch]="currentStatus.key">
+                    <mat-icon *ngSwitchCase="'dnd'" aria-hidden="false" aria-label="icon"
+                      >do_not_disturb_on_total_silence</mat-icon
+                    >
+                    <div *ngSwitchDefault="" [class]="currentStatus.key"></div>
+                  </ng-container>
+                </div>
+                <p>{{ currentStatus.key === AgentStatus.dnd ? 'Away' : currentStatus.value }}</p>
+              </ng-container>
+              <mat-icon *ngIf="!control.setStatus" aria-hidden="false" aria-label="icon">chevron_right</mat-icon>
+            </div>
+          </mat-card-header>
+          <mat-card-content *ngIf="control.template">
+            <ng-template [ngTemplateOutlet]="this[control.template]"></ng-template>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
+<div *ngIf="isDialogOpen" (click)="close()" class="backdrop"></div>
+
+<ng-template #callForwarding>
+  <ul class="controls__template" class="pl-48" *ngIf="forwardList?.length; else noForwarding">
+    <li *ngFor="let forward of forwardList; let i = index" class="mb-10">
+      <ng-container *ngIf="forward?.length <= 5; else numberPhone">
+        <span> {{ (forward | selectExtension | async)?.displayText }}</span>
+      </ng-container>
+      <ng-template #numberPhone>
+        <span>{{ forward }}</span>
+      </ng-template>
+    </li>
+  </ul>
+  <ng-template #noForwarding>
+    <div class="controls__template">No forwarding number configured</div>
+  </ng-template>
+</ng-template>
+
+<ng-template #devices>
+  <ul class="controls__template" class="pl-48" *ngIf="deviceList?.length">
+    <li *ngFor="let device of deviceList; let i = index" class="mb-10">
+      <span> {{ device | extDevice }}</span>
+    </li>
+  </ul>
+</ng-template>
+
+<ng-template #inboundCall>
+  <div class="controls__template">Actions for Working hours, Non-working hours and Public holidays</div>
+</ng-template>
+
+<ng-template #outboundCall>
+  <ng-container *ngIf="extension; else noOutboundCall">
+    <ng-container *ngIf="extension.callerId; else noOutboundCall">
+      <div class="controls__template">
+        <p>
+          Caller ID <i>{{ extension.callerId }}</i>
+        </p>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+<ng-template #noOutboundCall>
+  <div class="controls__template">
+    <p>Caller ID <i> Not set</i></p>
+  </div>
+</ng-template>

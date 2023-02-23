@@ -1,0 +1,61 @@
+<ng-container *ngIf="meetings">
+  <aside class="container flex column justify-content-start align-items-none gap-16">
+    <div class="header-info">
+      <div class="flex justify-content-space-between align-items-center">
+        <h2>Meetings</h2>
+        <button mat-raised-button color="primary" (click)="createRoom()">New Meeting</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+    </div>
+    <div *ngIf="!isLoading" class="conference-room">
+      <div *ngFor="let meeting of meetings" class="meetings flex justify-content-space-between align-items-center">
+        <div class="flex column justify-content-start align-items-start">
+          <span>Room: {{ meeting.conferenceRoomNumber }}</span>
+          <div class="flex justify-content-start align-items-start">
+            <div
+              *ngFor="let m of meeting.membersInMeeting; let x = index; let l = count"
+              fxLayoutGap="0rem"
+              class="members"
+            >
+              <button
+                *ngIf="x < maxMemberShow"
+                mat-mini-fab
+                class="mat-elevation-z1 btn-fab btn-fab__members"
+                [matTooltip]="m.name"
+              >
+                <span class="name">{{ m.name | firstWord }}</span>
+              </button>
+              <button
+                *ngIf="x == maxMemberShow"
+                mat-mini-fab
+                class="mat-elevation-z1 btn-fab btn-fab__members"
+                [matTooltip]="m.name"
+              >
+                <span class="name">+{{ l - x }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-8">
+          <button [disabled]="calling" mat-stroked-button color="primary" (click)="checkJoinMeeting(meeting)">
+            Join
+          </button>
+          <button
+            *ngIf="meeting.owner.uuid == IdentityUUid"
+            [disabled]="calling"
+            mat-stroked-button
+            color="warn"
+            (click)="confirmDelete(meeting.id)"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+</ng-container>

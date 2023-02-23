@@ -1,0 +1,29 @@
+:host {
+  .desc {
+    font-size: 15px;
+    line-height: 1.25rem;
+    color: #717274;
+    margin: 0;
+  }
+
+  .example-section {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    height: 60px;
+  }
+
+  .mat-form-field {
+    width: 100%;
+  }
+}
+
+::ng-deep .autocomplete-member {
+  .curent-org {
+    color: #007be0;
+  }
+
+  .other-org {
+    color: #e95849;
+  }
+}

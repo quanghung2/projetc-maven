@@ -1,0 +1,16 @@
+{
+  "name": "api-member",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/member/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/member/**/*.ts", "libs/api/member/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

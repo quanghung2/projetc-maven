@@ -1,0 +1,38 @@
+<h3>{{ data.linkage ? 'Edit' : 'Create' }} linkage</h3>
+<mat-progress-bar *ngIf="loading" mode="indeterminate" class="my-10"></mat-progress-bar>
+<form autocomplete="off" [formGroup]="form" class="store-linkage__form" [class.disabled]="loading">
+  <mat-form-field>
+    <mat-label>Buyer Uuid</mat-label>
+    <input matInput formControlName="buyerUuid" />
+    <mat-error>* Buyer Uuid is required</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Seller Uuid</mat-label>
+    <input matInput formControlName="sellerUuid" />
+    <mat-error>* Seller Uuid is required</mat-error>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Currency</mat-label>
+    <mat-select formControlName="currency">
+      <mat-option *ngFor="let currency of supportedCurrencies" [value]="currency">{{ currency }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Type</mat-label>
+    <mat-select formControlName="type">
+      <mat-option *ngFor="let type of types" [value]="type.key">{{ type.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="action__wrapper">
+    <button mat-stroked-button matDialogClose [disabled]="saving">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="form.invalid || !currency.value"
+      [loading]="saving"
+      (click)="storeLinkage()"
+    >
+      {{ data.linkage ? 'Update' : 'Create' }}
+    </button>
+  </div>
+</form>

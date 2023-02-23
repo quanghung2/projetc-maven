@@ -1,0 +1,29 @@
+<mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    opened
+    class="sidenav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    [fixedBottomGap]="0"
+    [disableClose]="true"
+  >
+    <b3n-header (titleMenuChanged)="title = $event"></b3n-header>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+        <h1>{{ title }}</h1>
+        <div class="action" *ngIf="sip$ | async as sip" fxLayout="row" fxLayoutAlign="end center">
+          <button class="btn-action-header" mat-icon-button (click)="editTag(sip)">
+            <mat-icon class="material-icons-outlined">edit</mat-icon>
+          </button>
+          <span class="title border-radius-4 px-16" [matTooltip]="sip.displayNumbers">{{ sip.displayName }} </span>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

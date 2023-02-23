@@ -1,0 +1,72 @@
+<as-split direction="horizontal" [restrictMove]="true">
+  <as-split-area [size]="30" [minSize]="25" [maxSize]="35" class="horizontal__left">
+    <ng-container *ngTemplateOutlet="customHeaderTemplate"></ng-container>
+    <ng-container *ngIf="!customDisplayConvoTemplate">
+      <ng-container *ngIf="conversations?.length; else noConvos">
+        <div
+          class="action__header flex justify-content-start align-items-center"
+          *ngIf="isDisplayHeaderActions"
+          [class.height64]="!customHeaderTemplate"
+        >
+          <csh-menu-toggle *ngIf="!hideMenuIcon"></csh-menu-toggle>
+          <section class="spacer flex justify-content-space-between align-items-center">
+            <button mat-icon-button (click)="toggleShowAction()">
+              <mat-icon>done_all</mat-icon>
+            </button>
+            <section>
+              <button
+                mat-icon-button
+                (click)="assignMembers()"
+                class="action__assign"
+                matTooltip="Assign to members"
+                *ngIf="checkedConversationGroups.length"
+              >
+                <mat-icon>group_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                (click)="deleteConvo()"
+                class="action__delete"
+                matTooltip="archived"
+                *ngIf="checkedConversationGroups.length"
+              >
+                <mat-icon>archive</mat-icon>
+              </button>
+            </section>
+          </section>
+        </div>
+        <div itemSize="100" class="convo__scroll-viewport">
+          <mat-card
+            class="convo__item"
+            *ngFor="let convo of conversations; trackBy: trachByConvo"
+            [class.active]="selectedConversationGroup.id === convo.id"
+            (click)="onSelectConvo(convo)"
+          >
+            <b3n-email-conversation
+              [convo]="convo"
+              [isDraft]="true"
+              [showAction]="showAction"
+              (selectActionEmitter)="onCheckConvo($event)"
+              [me]="me"
+            ></b3n-email-conversation>
+          </mat-card>
+          <ng-container *ngTemplateOutlet="loadMoreTemplate"></ng-container>
+        </div>
+      </ng-container>
+      <ng-template #noConvos>
+        <div
+          class="action__header height64 flex justify-content-start align-items-center"
+          *ngIf="isDisplayHeaderActions"
+        >
+          <csh-menu-toggle></csh-menu-toggle>
+        </div>
+        <p class="text-center">No conversations</p>
+      </ng-template>
+    </ng-container>
+    <ng-container *ngTemplateOutlet="customDisplayConvoTemplate"></ng-container>
+  </as-split-area>
+
+  <as-split-area [size]="70" [minSize]="65" [maxSize]="75">
+    <b3n-email-conversation-detail [users]="users" [me]="me"></b3n-email-conversation-detail>
+  </as-split-area>
+</as-split>

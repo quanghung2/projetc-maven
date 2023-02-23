@@ -1,0 +1,30 @@
+<!-- <mat-sidenav-container>
+  <mat-sidenav
+    #sidenav
+    mode="side"
+    opened
+    class="sidenav"
+    [fixedInViewport]="true"
+    [fixedTopGap]="0"
+    [fixedBottomGap]="0"
+    [disableClose]="true"
+  >
+    <b3n-header (titleMenuChanged)="title = $event"></b3n-header>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+        <h1>{{ title }}</h1>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+<div fxFill fxLayout="column" fxLayoutAlign="start none">
+  <b3n-header fxFlex="64px" (titleMenuChanged)="title = $event"></b3n-header>
+  <div fxFlex="auto">
+    <router-outlet></router-outlet>
+  </div>
+</div>

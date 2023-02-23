@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.tts-section {
+  &__card {
+    border: 1px solid lightgrey;
+    box-shadow: none !important;
+  }
+
+  mat-radio-button {
+    margin: 0 1.6rem 1.6rem 0;
+  }
+  //padding: 1.6rem 0;
+  .tts-block {
+    margin-bottom: 1.6rem;
+    ::ng-deep .mat-tab-body-wrapper {
+      min-height: 220px;
+    }
+    .tts-speech-advance-block {
+      .advance-block-one {
+        mat-form-field {
+          min-width: 0;
+        }
+      }
+    }
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+  .hidden {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .radio__group {
+    flex-direction: column !important;
+  }
+}

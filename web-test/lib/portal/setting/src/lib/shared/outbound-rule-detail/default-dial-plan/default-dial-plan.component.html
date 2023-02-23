@@ -1,0 +1,80 @@
+<div class="default-dial-plans">
+  <div mat-dialog-title>Import default dial plan rules by country</div>
+  <mat-form-field>
+    <mat-label>Select country</mat-label>
+    <mat-select [(ngModel)]="selectedCountryID" (selectionChange)="selectCountry()">
+      <mat-option *ngFor="let country of countries" [value]="country.ISO2">
+        {{ country.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <ng-container *ngIf="selectedCountryID">
+    <table mat-table [dataSource]="dialPlans">
+      <ng-container matColumnDef="checkbox">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            [checked]="allPlanChecked"
+            [indeterminate]="isIndeterminate"
+            (change)="toggleAll($event)"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [checked]="element.isChecked" (change)="selectPlan(element, $event)"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="startWith">
+        <th mat-header-cell *matHeaderCellDef>Start with</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.planDetail.startWith }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numberLength">
+        <th mat-header-cell *matHeaderCellDef>Number length</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.planDetail.numberLength }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="removePrefix">
+        <th mat-header-cell *matHeaderCellDef>Remove prefix</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.planDetail.removePrefix }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="appendPrefix">
+        <th mat-header-cell *matHeaderCellDef>Append prefix</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.planDetail.appendPrefix }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="noPlan">
+        <td colspan="4" mat-footer-cell *matFooterCellDef>
+          <div fxLayout="column" fxLayoutAlign="center center">No dial plan found</div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="dialPlanDisplayedColumns"></tr>
+      <ng-template [ngIf]="dialPlans.length === 0">
+        <tr mat-footer-row *matFooterRowDef="['noPlan']"></tr>
+      </ng-template>
+      <tr mat-row *matRowDef="let rule; columns: dialPlanDisplayedColumns"></tr>
+    </table>
+  </ng-container>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      (click)="import()"
+      mat-raised-button
+      color="primary"
+      [disabled]="importing || noPlanChecked || !selectedCountryID"
+    >
+      <span *ngIf="!importing">Import</span>
+      <span *ngIf="importing">Importing..</span>
+    </button>
+  </div>
+</div>

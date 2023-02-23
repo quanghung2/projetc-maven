@@ -1,0 +1,19 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .buttons__wrapper {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+h3 {
+  font-weight: 500;
+}

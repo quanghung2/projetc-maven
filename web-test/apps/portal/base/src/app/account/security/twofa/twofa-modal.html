@@ -1,0 +1,18 @@
+<h1 mat-dialog-title *ngIf="action=== TwoFaActionType.ENABLE_TFA">Enable Two-Factor Authentication</h1>
+<h1 mat-dialog-title *ngIf="action=== TwoFaActionType.DISABLE_TFA">Disable Two-Factor Authentication</h1>
+<h1 mat-dialog-title *ngIf="action=== TwoFaActionType.CREATE_RECOVERY_KEY">Create New Recovery Key</h1>
+
+<div mat-dialog-content>
+  <div [hidden]="step !== 1">
+    <b3n-twofa-verifyEmail
+      [email]="email"
+      [tfaInfo]="tfaInfo"
+      [action]="action"
+      (finishVerifyEmailEvent)="finishStep($event)"
+    ></b3n-twofa-verifyEmail>
+  </div>
+  <div [hidden]="step !== 2">
+    <b3n-twofa-saveRecoveryCode [tfaInfo]="tfaInfo" [mobileNumber]="mobileNumber" (actionEvent)="doActionStep2($event)">
+    </b3n-twofa-saveRecoveryCode>
+  </div>
+</div>

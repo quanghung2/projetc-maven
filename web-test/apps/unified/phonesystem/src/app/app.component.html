@@ -1,0 +1,35 @@
+<ng-container
+  *ngIf="{
+    org: profileOrg$ | async,
+    hasPhoneLicense: hasPhoneLicense$ | async,
+    orgHasBaseLicense: orgHasBaseLicense$ | async
+  } as data"
+>
+  <mat-sidenav-container
+    *ngIf="data.hasPhoneLicense || (data.org?.isUpperAdmin && data.orgHasBaseLicense); else landingPage"
+    class="sidenav-container"
+  >
+    <mat-sidenav
+      #sidenav
+      mode="side"
+      opened
+      class="sidenav"
+      [fixedInViewport]="true"
+      [fixedTopGap]="0"
+      [fixedBottomGap]="0"
+      [disableClose]="true"
+    >
+      <b3n-sidebar></b3n-sidebar>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</ng-container>
+
+<ng-template #landingPage>
+  <div fxFill fxLayoutAlign="center center">
+    <h1>You have no items to configure. Please contact your admin to get more information.</h1>
+  </div>
+</ng-template>

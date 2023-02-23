@@ -1,0 +1,5 @@
+<section class="integration" fxLayout="row wrap" fxLayoutGap="2rem">
+  <mat-card (click)="settingDetail(integration)" *ngFor="let integration of integrations" fxFlex="22">
+    <img [src]="integration.imageURL" /> {{ integration.integrationName }}
+  </mat-card>
+</section>

@@ -1,0 +1,68 @@
+@import '../email.component';
+
+::ng-deep .inbox-menu {
+  min-width: 300px;
+  .inbox-menu-container {
+    margin: 10px;
+    .header {
+      font-weight: 600;
+      .btnAdd {
+        align-self: center;
+        margin-left: 15px;
+      }
+    }
+    .action {
+      .title {
+        margin: 15px 0 10px;
+        color: var(--empty-color);
+        font-weight: 600;
+      }
+      .item {
+        display: flex;
+        cursor: pointer;
+        mat-icon {
+          margin-right: 10px;
+          color: var(--primary-background);
+        }
+      }
+    }
+    .list {
+      .title {
+        margin: 15px 0 10px;
+        color: var(--empty-color);
+        font-weight: 600;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        .name {
+          flex: 1 1 auto;
+        }
+        a {
+          height: 20px;
+          mat-icon {
+            color: var(--primary-background);
+            font-size: 20px;
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.team__settings {
+  width: 20px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    color: #8a8a8a;
+    font-size: 18px;
+    width: 25px;
+    height: 25px;
+  }
+}

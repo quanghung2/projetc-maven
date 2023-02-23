@@ -1,0 +1,55 @@
+<div class="org-link-members__header">
+  <h3>Organization member list</h3>
+  <mat-icon (click)="dialogRef.close()">close</mat-icon>
+</div>
+
+<div class="org-link-members__actions">
+  <button mat-raised-button type="button" color="secondary" (click)="showAddForm = true">Add Organization</button>
+</div>
+
+<form *ngIf="showAddForm" [formGroup]="form" class="org-link-members__form" autocomplete="off">
+  <mat-form-field>
+    <mat-label>Org Uuid</mat-label>
+    <input matInput formControlName="orgUuid" />
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="button" (click)="invite()" [disabled]="form.invalid">Add</button>
+</form>
+
+<table mat-table [dataSource]="dataSource" class="org-link-members__table">
+  <ng-container matColumnDef="logo">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let orgLinkMember">
+      <div class="logo"><img [src]="orgLinkMember.logoUrl ? orgLinkMember.logoUrl : DEFAULT_ORG_LOGO" /></div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let orgLinkMember">{{ orgLinkMember.name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="uuid">
+    <th mat-header-cell *matHeaderCellDef>Uuid</th>
+    <td mat-cell *matCellDef="let orgLinkMember">
+      <div
+        class="uuid"
+        matTooltip="Click to copy"
+        ngxClipboard
+        [cbContent]="orgLinkMember.uuid"
+        (cbOnSuccess)="copied()"
+        (cbOnError)="copyFailed()"
+      >
+        {{ orgLinkMember.uuid | slice: 0:8 }}...
+      </div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef>Role</th>
+    <td mat-cell *matCellDef="let orgLinkMember">
+      <div [ngClass]="orgLinkMember.role === 'OWNER' ? 'owner' : 'member'">
+        {{ orgLinkMember.role | lowercase }}
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-paginator [showFirstLastButtons]="true" [pageSize]="pageSize"></mat-paginator>

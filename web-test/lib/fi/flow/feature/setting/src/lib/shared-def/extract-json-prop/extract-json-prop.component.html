@@ -1,0 +1,43 @@
+<ng-container [formGroup]="formProperties">
+  <div formArrayName="{{ key }}" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px" class="mt-32">
+    <div
+      [formGroupName]="i"
+      *ngFor="let item of formArray.controls; let i = index"
+      fxLayout="column"
+      fxLayoutAlign="start stretch"
+    >
+      <h4>
+        <strong>Path: {{ item.value.path }}</strong>
+      </h4>
+
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="8px">
+        <mat-form-field hideRequiredMarker="true" fxFlex="30">
+          <input matInput placeholder="Label" formControlName="title" required />
+          <mat-error *ngIf="item.get('title').invalid">{{ getErrorInput(item.get('title')) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Description" formControlName="description" />
+          <mat-error *ngIf="item.get('description').invalid">{{ getErrorInput(item.get('description')) }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="item.value.dataType !== 'array'" fxFlex="30">
+          <mat-select placeholder="Possible value" formControlName="selectionDataSourceUuid">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let data of authorDataSource$ | async" [value]="data.uuid">{{ data.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div fxFlex="40px">
+          <button mat-icon-button type="button" color="warn" (click)="removeOption(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="ml-64" *ngIf="item.value.dataType === 'array'">
+        <b3n-extract-json-prop [formProperties]="parseFormGroup(item)" [key]="'arrayItemProps'"></b3n-extract-json-prop>
+      </div>
+    </div>
+  </div>
+</ng-container>

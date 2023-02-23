@@ -1,0 +1,70 @@
+<div *ngIf="!loading">
+  <div sm-component class="ui vertical accordion menu">
+    <div class="item haschild">
+      <div class="active title">
+        <i class="dropdown icon"></i>
+        <span><i class="person icon"></i>Account</span>
+      </div>
+      <div class="active content">
+        <a class="item" [routerLink]="['/configure/account-info']" [queryParamsHandling]="'merge'"> Setting info </a>
+        <a class="item" [routerLink]="['/configure/subscription-info']" [queryParamsHandling]="'merge'">
+          Subscription info
+        </a>
+      </div>
+    </div>
+    <a class="item" [routerLink]="['/configure/dial-plan']" [queryParamsHandling]="'merge'">
+      <span><i class="keyboard icon"></i>Dial Plan</span>
+    </a>
+    <a class="item" [routerLink]="['/configure/incoming-rule-plan']" [queryParamsHandling]="'merge'">
+      <span><i class="phone icon"></i>Incoming Call Rule</span>
+    </a>
+    <div class="item haschild">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        <span><i class="lock icon"></i>Security</span>
+      </div>
+      <div class="content">
+        <a class="item" [routerLink]="['/configure/ip-white-list']" [queryParamsHandling]="'merge'"> IP white list </a>
+        <a class="item" [routerLink]="['/configure/country-white-list']" [queryParamsHandling]="'merge'">
+          Country white list
+        </a>
+      </div>
+    </div>
+    <a class="item" [routerLink]="['/configure/connected-devices']" [queryParamsHandling]="'merge'">
+      <span><i class="favorite icon"></i>Connected devices</span>
+    </a>
+    <a
+      *ngIf="currentAccount.features.backup_line"
+      class="item"
+      [routerLink]="['/configure/backup-line']"
+      [queryParamsHandling]="'merge'"
+    >
+      <span><i class="add box icon"></i>High Availability</span>
+    </a>
+    <a
+      *ngIf="currentAccount.features.call_recording_v2"
+      class="item"
+      [routerLink]="['/configure/call-recording']"
+      [queryParamsHandling]="'merge'"
+    >
+      <span><i class="voicemail icon"></i>Call Recording</span>
+    </a>
+    <a
+      *ngIf="currentAccount.features.dnc_check"
+      class="item"
+      [routerLink]="['/configure/compliance']"
+      [queryParamsHandling]="'merge'"
+    >
+      <span><i class="warning sign icon"></i>Compliance</span>
+    </a>
+    <a class="item" [routerLink]="['/configure/history']" [queryParamsHandling]="'merge'">
+      <span><i class="history icon"></i>History</span>
+    </a>
+    <a class="item" [routerLink]="['/configure/pin-login']" [queryParamsHandling]="'merge'">
+      <span><i class="vpn key icon"></i>Pin Login</span>
+    </a>
+    <a class="item" [routerLink]="['/configure/routing-config']" [queryParamsHandling]="'merge'">
+      <span><i class="settings icon"></i>Routing Config</span>
+    </a>
+  </div>
+</div>

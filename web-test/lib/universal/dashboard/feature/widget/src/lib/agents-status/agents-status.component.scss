@@ -1,0 +1,61 @@
+:host {
+  height: 100%;
+  display: block;
+  overflow: auto;
+
+  .item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .item2 {
+    display: table;
+  }
+
+  .available {
+    background-color: #5cb85c !important;
+    color: #fff !important;
+  }
+
+  .wrapup {
+    background-color: #f0ad4e !important;
+    color: #fff !important;
+  }
+
+  .talking {
+    background-color: #269abc !important;
+    color: #fff !important;
+  }
+
+  .busy {
+    background-color: #f47a37 !important;
+    color: #fff !important;
+  }
+
+  .offline {
+    color: rgba(0, 0, 0, 0.6);
+    background-color: #e8e8e8;
+  }
+
+  .duration {
+    font-size: smaller;
+  }
+
+  .mat-card {
+    border: thin solid #d3d3d3;
+  }
+
+  .agent-status {
+    padding: 5px;
+  }
+
+  .no-data {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    place-content: center;
+  }
+}

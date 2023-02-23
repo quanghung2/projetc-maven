@@ -1,0 +1,57 @@
+<form
+  class="note-template__form"
+  [ngStyle]="module === 'survey' && { width: 'unset' }"
+  autocomplete="off"
+  [formGroup]="form"
+>
+  <ng-container *ngIf="!noteTemplate">
+    <div class="tool-bar__wrapper">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" [errorStateMatcher]="matcher" />
+        <mat-error *ngIf="title.errors?.['required']">Title is required</mat-error>
+        <mat-error *ngIf="title.errors?.['empty']">Please add at least one item</mat-error>
+        <mat-error *ngIf="title.errors?.['exist']">This item is already exists</mat-error>
+        <mat-error *ngIf="title.errors?.['maxlength']">Maximum 128 characters </mat-error>
+      </mat-form-field>
+    </div>
+    <b3n-store-item
+      *ngIf="showStoreItem"
+      [module]="module"
+      (addItem)="addItem($event)"
+      (closed)="triggerStoreItem($event)"
+      [item]="item"
+      [isMaxQuestion]="items.length >= 10"
+    ></b3n-store-item>
+  </ng-container>
+  <h3 *ngIf="items.length">Questions</h3>
+  <div class="item__review">
+    <div class="item__wrapper" [class.selected]="item?.label === i.label" *ngFor="let i of items; let idx = index">
+      <div class="item__row">
+        <p>{{ i.label }}</p>
+        <div class="item__details secondary-text">
+          <ng-container>
+            <p>{{ i.type === 'options' ? 'Option' : (i.type | capitalizeCase) }}</p>
+            <mat-icon *ngIf="i.type === ItemType.Option" (click)="i.expand = !i.expand">{{
+              i.expand ? 'expand_more' : 'expand_less'
+            }}</mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!noteTemplate">
+            <!-- * Disable edit item (can enable in future) -->
+            <!-- <mat-icon (click)="triggerStoreItem(true, i)" class="item__edit">edit</mat-icon> -->
+            <mat-icon color="warn" [class.disabled]="item?.label === i.label" (click)="removeItem(idx)">clear</mat-icon>
+          </ng-container>
+        </div>
+      </div>
+      <mat-list role="list" *ngIf="i.type === ItemType.Option && i.expand" class="item__options">
+        <mat-list-item role="listitem" *ngFor="let option of i.options">{{ option }}</mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+  <div class="note-template__action" *ngIf="!noteTemplate">
+    <button mat-button (click)="back()">Cancel</button>
+    <button mat-stroked-button color="primary" (click)="addNoteTemplate()" [loading]="adding" [disabled]="form.invalid">
+      Create
+    </button>
+  </div>
+</form>

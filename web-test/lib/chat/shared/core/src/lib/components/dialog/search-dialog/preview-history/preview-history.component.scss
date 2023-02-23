@@ -1,0 +1,76 @@
+:host {
+  position: relative;
+
+  .header {
+    position: relative;
+
+    &__container {
+      padding-left: 1rem;
+      color: #172b4d;
+      font-weight: 600;
+    }
+
+    .icon {
+      width: 1rem;
+      height: 1rem;
+      font-size: 1rem;
+    }
+
+    .viewing-date {
+      z-index: 10;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+
+      span {
+        background: #fff;
+        padding: 0 0.75rem;
+        border-radius: 20px;
+        user-select: none;
+      }
+    }
+  }
+
+  .body {
+    overflow: hidden;
+    position: relative;
+
+    .ui-loading {
+      width: 100%;
+      background-color: white;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+
+    .messages-viewport {
+      height: 100%;
+      width: 100%;
+      overflow: overlay;
+
+      .hight-light {
+        background-color: #fffef3;
+        border: 1px solid #f6f5e7;
+        border-radius: 2px;
+      }
+    }
+    .group-by-date {
+      width: 100%;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+      line-height: 0.1em;
+      margin: 20px 0 20px 0px;
+      color: #666;
+      font-size: 14px;
+      span {
+        background: #fff;
+        border-radius: 7.5px;
+        padding: 5px 12px 6px;
+        text-align: center;
+        user-select: none;
+      }
+    }
+  }
+}

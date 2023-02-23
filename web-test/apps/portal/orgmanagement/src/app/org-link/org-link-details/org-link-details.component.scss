@@ -1,0 +1,92 @@
+@mixin role($color) {
+  width: 65px;
+  color: $color;
+  border: 1px solid $color;
+  padding: 1px 5px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+::ng-deep .org-link-details__wrapper {
+  width: 650px;
+
+  h3 {
+    font-weight: 450;
+  }
+}
+
+.org-link-members__header {
+  display: flex;
+  justify-content: space-between;
+
+  mat-icon {
+    cursor: pointer;
+  }
+}
+
+.org-link-members__actions {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.org-link-members__form {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin: 16px 0;
+  align-items: center;
+}
+
+.org-link-members__table {
+  .mat-header-cell,
+  .mat-cell {
+    padding-left: 24px;
+  }
+
+  .mat-column-logo {
+    width: 10%;
+
+    .logo {
+      width: 35px;
+      height: 35px;
+
+      img {
+        border-radius: 50%;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  .mat-column-uuid {
+    width: 15%;
+
+    .uuid {
+      font-size: 12px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      color: #616161;
+      padding: 4px 10px;
+      width: 85px;
+      cursor: pointer;
+    }
+  }
+
+  .mat-column-name {
+    width: 60%;
+  }
+
+  .mat-column-role {
+    width: 15%;
+
+    .owner {
+      @include role(rgb(233, 88, 73));
+    }
+
+    .member {
+      @include role(rgb(43, 173, 212));
+    }
+  }
+}

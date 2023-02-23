@@ -1,0 +1,41 @@
+<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="1.6rem" class="px-16 mb-16">
+  <h3 class="mb-10">Activated devices</h3>
+  <ng-container *ngIf="activatedDevices">
+    <ng-container *ngIf="activatedDevices.length === 0; else loadList">
+      <mat-hint fxLayoutAlign="center"> No activated devices </mat-hint>
+    </ng-container>
+    <ng-template #loadList>
+      <div fxFlexAlign="stretch" class="item__rows">
+        <ng-container *ngFor="let device of activatedDevices; let i = index">
+          <ng-container *ngIf="device">
+            <div fxLayout="row" fxLayoutAlign="space-between center" class="sortable-box" fxLayoutGap="1.6rem">
+              <ng-container
+                [ngTemplateOutlet]="deviceItemTmp"
+                [ngTemplateOutletContext]="{ device: device, i: i, extension: extension }"
+              ></ng-container>
+            </div>
+            <mat-divider *ngIf="i < activatedDevices.length - 1"></mat-divider>
+          </ng-container>
+        </ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #deviceItemTmp let-device="device" let-i="i" let-extension="extension">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <span>
+      {{ device?.isDelegated ? 'Delegated' : '' }} {{ device?.deviceType | extDevice }}
+      {{ device?.isDelegated ? 'from ' + (device.delegatedFrom | selectExtension | async)?.displayText : '' }}</span
+    >
+  </div>
+
+  <button
+    matTooltip="Device configuration"
+    (click)="setupDevice(device)"
+    *ngIf="device?.canConfigTLS || device?.isDelegated"
+    mat-icon-button
+  >
+    <mat-icon>tune</mat-icon>
+  </button>
+</ng-template>

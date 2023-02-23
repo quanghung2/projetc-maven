@@ -1,0 +1,42 @@
+<div *ngIf="!agents?.length" class="no-data">No data</div>
+
+<div class="cao-widget__wrapper">
+  <ng-container *ngFor="let agent of agents; let i = index">
+    <div class="cell" [class.no-border__top]="i > 2" [class.no-border__left]="i % 3 !== 0">
+      <div class="left-side">
+        <p class="label">{{ agent.extensionLabel }}</p>
+      </div>
+      <div
+        class="right-side"
+        [class]="agent.status"
+        [class.talking]="agent.status === AgentStatus.available && isTalking(agent.agentUuid)"
+      >
+        <ng-container [ngSwitch]="agent.status">
+          <ng-container *ngSwitchCase="AgentStatus.away">
+            <p class="status">Away</p>
+            <p class="role" *ngIf="agent.actorRole">({{ agent.actorRole | capitalizeCase }})</p>
+          </ng-container>
+          <ng-container *ngSwitchCase="AgentStatus.busy">
+            <p class="status">{{ agent.remark }}</p>
+          </ng-container>
+          <ng-container *ngSwitchCase="AgentStatus.offline">
+            <p class="status">Offline</p>
+            <p class="role" *ngIf="agent.actorRole">({{ agent.actorRole | capitalizeCase }})</p>
+          </ng-container>
+          <ng-container *ngSwitchCase="AgentStatus.available">
+            <ng-container *ngIf="isTalking(agent.agentUuid); else available">
+              <p class="status">Talking</p>
+            </ng-container>
+            <ng-template #available>
+              <p class="status">Available</p>
+              <p class="role" *ngIf="agent.actorRole">({{ agent.actorRole | capitalizeCase }})</p>
+            </ng-template>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <p class="status">{{ agent.status | capitalizeCase }}</p>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>

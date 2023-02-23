@@ -1,0 +1,16 @@
+{
+  "name": "comms-callcenter-shared",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/comms/callcenter/shared/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/comms/callcenter/shared/**/*.ts", "libs/comms/callcenter/shared/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,6 @@
+<div *ngIf="!approved && deviceOTP" class="otp">
+  {{ deviceOTP.code }}
+  <p>Please open the Dashboard application in Portal and enter above OTP code to grant access to this device</p>
+</div>
+
+<iframe *ngIf="approved && dashboardLink" [src]="dashboardLink" allowfullscreen></iframe>

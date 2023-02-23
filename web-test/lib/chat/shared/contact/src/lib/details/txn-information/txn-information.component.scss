@@ -1,0 +1,72 @@
+@mixin img {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  line-height: 32px;
+  border-radius: 50%;
+}
+
+:host {
+  .case-item {
+    padding-bottom: 16px;
+
+    &__header {
+      color: #303030;
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    &__title {
+    }
+    &__action {
+      position: relative;
+      .mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        visibility: hidden;
+      }
+    }
+    &__content {
+    }
+
+    .due-date-form {
+      visibility: hidden;
+      width: 0;
+    }
+    &:hover {
+      .mat-icon {
+        visibility: visible;
+      }
+    }
+    .item {
+      &__avatar {
+        & > img {
+          @include img;
+        }
+      }
+      &__content {
+      }
+      &__title {
+        font-weight: 550;
+      }
+    }
+  }
+}
+
+.search-group {
+  width: 100%;
+  .search-box {
+    display: block;
+    width: 280px;
+    padding: 16px;
+    mat-form-field {
+      width: 100%;
+    }
+    ::ng-deep .mat-form-field-wrapper {
+      padding: 0;
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<router-outlet></router-outlet>
+
+<sui-template-portal [portalHostId]="RIGHT_SIDEBAR_ID">
+  <div fxFill class="side-bar__member">
+    <b3n-details *ngIf="contactActive$ | async as contactActive" [contactActive]="contactActive"></b3n-details>
+  </div>
+</sui-template-portal>

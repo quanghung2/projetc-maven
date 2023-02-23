@@ -1,0 +1,43 @@
+<h1 mat-dialog-title>Outbound concurrent call config</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    <mat-form-field>
+      <input
+        type="number"
+        min="0"
+        max="{{ availableConcurrentCall }}"
+        matInput
+        [(ngModel)]="queue.outboundConcurrentCallLimit"
+        placeholder="Concurrent call"
+      />
+    </mat-form-field>
+    <span
+      >Available concurrent call / Total concurrent call :
+      <span class="primary-fg"
+        >{{
+          config.outboundConcurrentCallLimit -
+            outboundConcurrentCallUsageOfQueueOrther -
+            queue.outboundConcurrentCallLimit
+        }}/{{ config.outboundConcurrentCallLimit }}</span
+      ></span
+    >
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    [disabled]="
+      saving ||
+      queue.outboundConcurrentCallLimit > availableConcurrentCall ||
+      queue.outboundConcurrentCallLimit < 0 ||
+      (queue.outboundConcurrentCallLimit == 0 && isQueueAssigned)
+    "
+    (click)="save()"
+    color="primary"
+  >
+    <span *ngIf="!saving">Save</span> <span *ngIf="saving">Saving...</span>
+  </button>
+</div>

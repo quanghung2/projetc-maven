@@ -1,0 +1,130 @@
+<ng-container [ngSwitch]="selectedFiter">
+  <ng-container *ngSwitchCase="TeamInboxFiter.Assigned">
+    <div class="flex column justify-content-start align-items-none">
+      <ng-container *ngIf="isLoadingActiveTxn; else listAssignToOther">
+        <div class="flex justify-content-center align-items-start">
+          <mat-spinner diameter="20"></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-template #listAssignToOther>
+        <mat-nav-list class="convo-list list-cases">
+          <ng-container *ngIf="assignedToOther.length > 0; else noCase">
+            <mat-list-item
+              *ngFor="let item of assignedToOther; let i = index; trackBy: trackByTxn"
+              mat-list-item
+              [routerLink]="['contacts', item.customerUuid, 'txns', 'active']"
+              (click)="closeSidebar($event)"
+              routerLinkActive="active"
+              class="convo item-convo"
+            >
+              <mat-icon class="icon case" matListIcon [svgIcon]="'user'"></mat-icon>
+              <div matLine class="convo__headline">
+                <ng-container *ngIf="item.customerUuid | selectContact | async as info">
+                  <span class="text-overflow-ellipsis">
+                    {{ info.displayName }}
+                  </span>
+                </ng-container>
+              </div>
+            </mat-list-item>
+          </ng-container>
+
+          <ng-container *ngIf="hasMorePending$ | async">
+            <ng-container *ngIf="isLoadingMorePending; else hasMoreView">
+              <div class="flex justify-content-center align-items-start">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+            </ng-container>
+            <ng-template #hasMoreView>
+              <div class="flex justify-content-center align-items-start">
+                <a href="javascript:void" (click)="loadMorePending()">Load more</a>
+              </div>
+            </ng-template>
+          </ng-container>
+        </mat-nav-list>
+      </ng-template>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="TeamInboxFiter.Open">
+    <div class="flex column justify-content-start align-items-none">
+      <ng-container *ngIf="isLoadingActiveTxn; else listPending">
+        <div class="flex justify-content-center align-items-start">
+          <mat-spinner diameter="20"></mat-spinner>
+        </div>
+      </ng-container>
+      <ng-template #listPending>
+        <mat-nav-list class="convo-list list-cases">
+          <ng-container *ngIf="unassigned.length > 0; else noCase">
+            <mat-list-item
+              *ngFor="let item of unassigned; let i = index; trackBy: trackByTxn"
+              mat-list-item
+              [routerLink]="['contacts', item.customerUuid, 'txns', 'active']"
+              (click)="closeSidebar($event)"
+              routerLinkActive="active"
+              class="convo item-convo"
+            >
+              <mat-icon class="icon case" matListIcon [svgIcon]="'user'"></mat-icon>
+              <div matLine class="convo__headline">
+                <ng-container *ngIf="item.customerUuid | selectContact | async as info">
+                  <span class="text-overflow-ellipsis">
+                    {{ info.displayName }}
+                  </span>
+                </ng-container>
+              </div>
+            </mat-list-item>
+          </ng-container>
+
+          <ng-container *ngIf="hasMorePending$ | async">
+            <ng-container *ngIf="isLoadingMorePending; else hasMoreView">
+              <div class="flex justify-content-center align-items-start">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+            </ng-container>
+            <ng-template #hasMoreView>
+              <div class="flex justify-content-center align-items-start">
+                <a href="javascript:void" (click)="loadMorePending()">Load more</a>
+              </div>
+            </ng-template>
+          </ng-container>
+        </mat-nav-list>
+      </ng-template>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="TeamInboxFiter.Closed">
+    <mat-nav-list class="convo-list list-cases">
+      <ng-container *ngIf="endChatOrg.length > 0; else noCase">
+        <mat-list-item
+          *ngFor="let item of endChatOrg; let i = index; trackBy: trackByTxn"
+          mat-list-item
+          [routerLink]="['contacts', item.customerUuid, 'txns', 'end']"
+          (click)="closeSidebar($event)"
+          routerLinkActive="active"
+          class="convo item-convo"
+        >
+          <mat-icon class="icon case" matListIcon [svgIcon]="'user'"></mat-icon>
+          <div matLine class="convo__headline">
+            <ng-container *ngIf="item.customerUuid | selectContact | async as info">
+              <span class="text-overflow-ellipsis">
+                {{ info.displayName }}
+              </span>
+            </ng-container>
+          </div>
+        </mat-list-item>
+      </ng-container>
+
+      <ng-container *ngIf="hasMoreEndTxns$ | async">
+        <div class="flex justify-content-center align-items-start">
+          <a href="javascript:void" (click)="loadMore()">Load more</a>
+        </div>
+      </ng-container>
+    </mat-nav-list>
+  </ng-container>
+</ng-container>
+
+<ng-template #noCase>
+  <div class="flex justify-content-center align-items-center" style="margin-top: 15rem">
+    <div class="sidebar__item__no_case">
+      <mat-icon class="icon">chat_bubble_outline</mat-icon>
+      <p class="text">Empty inbox</p>
+    </div>
+  </div>
+</ng-template>

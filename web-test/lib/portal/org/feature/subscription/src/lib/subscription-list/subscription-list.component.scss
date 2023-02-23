@@ -1,0 +1,22 @@
+.mat-row {
+  &:hover,
+  &.selected {
+    background-color: #f0f0f0;
+    cursor: pointer;
+  }
+}
+
+.btn-copy {
+  button {
+    visibility: hidden;
+  }
+
+  &:hover button {
+    visibility: visible;
+  }
+}
+
+.no-subscription {
+  margin-top: 5rem;
+  color: rgba(0, 0, 0, 0.67);
+}

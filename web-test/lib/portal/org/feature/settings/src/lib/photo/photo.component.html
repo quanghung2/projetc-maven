@@ -1,0 +1,5 @@
+<div class="org-photo" fxLayout="column" *ngIf="organization">
+  <img class="org-photo__img" [src]="organization.logoUrl" alt="org-photo" />
+  <mat-icon (click)="uploadFile.click()" class="org-photo__icon" svgIcon="photo"></mat-icon>
+  <input #uploadFile type="file" class="org-photo__upload-file" (change)="onFileChange($event)" accept="image/*" />
+</div>

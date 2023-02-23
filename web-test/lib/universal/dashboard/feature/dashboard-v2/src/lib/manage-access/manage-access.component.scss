@@ -1,0 +1,91 @@
+.manage-access__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.manage-access__title {
+  font-weight: 500;
+  margin: 0;
+  font-size: 16px;
+}
+
+.manage-access__toolbar {
+  display: flex;
+  gap: 16px;
+
+  .toolbar__search {
+    width: 300px;
+  }
+
+  .toolbar__type {
+    width: 180px;
+  }
+}
+
+::ng-deep .manage-access__table {
+  overflow: scroll;
+
+  .mat-header-cell {
+    padding: 5px 10px !important;
+  }
+
+  .mat-cell {
+    padding: 5px 10px !important;
+  }
+
+  .mat-row {
+    &:hover {
+      .mat-column-actions {
+        .actions__wrapper {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  .mat-column-extLabel {
+    width: 30%;
+  }
+
+  .mat-column-dashboardUuids {
+    width: 60%;
+  }
+
+  .mat-column-actions {
+    width: 10%;
+
+    .actions__wrapper {
+      opacity: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .mat-column-noData {
+    text-align: center;
+  }
+}
+
+mat-paginator {
+  margin-top: -16px;
+}
+
+.manage-access__actions {
+  flex-grow: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.hidden {
+  display: none;
+}
+
+::ng-deep .sub-title {
+  font-size: 12px;
+  opacity: 0.7;
+}

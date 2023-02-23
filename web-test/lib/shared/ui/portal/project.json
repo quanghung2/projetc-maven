@@ -1,0 +1,16 @@
+{
+  "name": "shared-ui-portal",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/ui/portal/src",
+  "prefix": "sui",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/shared/ui/portal/**/*.ts", "libs/shared/ui/portal/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

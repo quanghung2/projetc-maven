@@ -1,0 +1,49 @@
+<div class="ck-editor-container">
+  <div
+    *ngIf="!isEdit && content"
+    #htmlEditor
+    lazyload
+    [ownerOrg]="ownerOrg"
+    [text]="content"
+    [innerHTML]="content | safe: 'html'"
+  ></div>
+  <button
+    *ngIf="idComment === id && !noHaveEdit"
+    class="btn-action-header action-edit"
+    mat-icon-button
+    (click)="onEdit()"
+  >
+    <mat-icon class="material-icons-outlined">edit</mat-icon>
+  </button>
+  <div class="ck-editor" *ngIf="isEdit">
+    <ckeditor
+      #editor
+      [editor]="Editor"
+      [config]="editorConfig"
+      (ready)="onReady($event)"
+      (change)="onchange($event)"
+    ></ckeditor>
+    <div class="tool">
+      <div fxFlex="row" fxLayoutAlign="end center" fxLayoutGap="1rem">
+        <input fxHide type="file" id="fileInput" multiple #fileUpload (change)="upload($event)" />
+        <mat-icon matTooltip="Upload" (click)="fileUpload.click()"> attach_file </mat-icon>
+      </div>
+    </div>
+    <div *ngIf="idComment" class="action mb-16 mt-16" fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="end end">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [loading]="isLoadingUpdate"
+        [disabled]="!isEmptyCkeditor"
+        (click)="update()"
+      >
+        Save changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- <div fxLayout="row" fxLayoutAlign="start center">
+  <button mat-stroked-button color="normal" class="action-add" (click)="onEdit()">Close case</button>
+</div> -->

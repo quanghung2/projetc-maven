@@ -1,0 +1,15 @@
+<form [formGroup]="form" class="invite__wrapper" autocomplete="off">
+  <h3>
+    {{ data.type === 'Create' ? 'Create connection' : 'Invite organization' }}
+  </h3>
+  <mat-form-field>
+    <mat-label>Org Uuid</mat-label>
+    <input matInput formControlName="orgUuid" />
+  </mat-form-field>
+  <mat-error *ngIf="orgUuid.invalid && (orgUuid.touched || orgUuid.dirty)"> * Organization Uuid is required </mat-error>
+  <p class="notion">* Please enter the Organization UUID you want to connect to</p>
+  <div class="button_wrapper">
+    <button mat-stroked-button type="button" (click)="dialogRef.close()">Cancel</button>
+    <button mat-raised-button color="primary" type="button" (click)="invite()" [disabled]="form.invalid">Invite</button>
+  </div>
+</form>

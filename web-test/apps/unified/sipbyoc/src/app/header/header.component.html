@@ -1,0 +1,21 @@
+<mat-toolbar fxLayout="column" fxLayoutAlign="start none">
+  <div class="title">BYOC Trunk</div>
+  <mat-form-field *ngIf="sips$ | async as sips" class="sip-selection">
+    <mat-label *ngIf="sips?.length === 0">No SIP available</mat-label>
+    <mat-select #selectProject [formControl]="selectedSipCtrl" [compareWith]="compareObjects" class="text-sm">
+      <div class="option-container">
+        <mat-option *ngFor="let option of sips" [value]="option">{{ option?.detail?.label }}</mat-option>
+      </div>
+    </mat-select>
+  </mat-form-field>
+</mat-toolbar>
+
+<mat-divider></mat-divider>
+
+<ng-container *ngIf="selectedSipCtrl.value">
+  <ng-container *ngFor="let menu of displayMenus">
+    <div class="link" [routerLink]="menu.urlPath" routerLinkActive="active" (click)="selectMenu(menu)">
+      {{ menu.displayText }}
+    </div>
+  </ng-container>
+</ng-container>

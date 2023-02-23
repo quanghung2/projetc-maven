@@ -1,0 +1,16 @@
+{
+  "name": "api-payment",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/payment/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/payment/**/*.ts", "libs/api/payment/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,97 @@
+<ng-container *ngIf="dataSource">
+  <mat-toolbar class="dashboard-toolbar">
+    <div fxLayout="row" class="dashboard-toolbar__content" fxLayoutAlign="space-between center">
+      <div class="action-bar" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+        <mat-form-field fxFlex="250px">
+          <mat-label>Search</mat-label>
+          <input matInput placeholder="Search by name" [formControl]="key" />
+          <button
+            mat-button
+            *ngIf="!!key.value"
+            matSuffix
+            mat-icon-button
+            aria-label="Clear"
+            (click)="key.setValue('')"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <mat-form-field fxFlex="200px">
+          <mat-label>Service</mat-label>
+          <mat-select [formControl]="service">
+            <mat-option [value]="SELECT_ALL">All</mat-option>
+            <mat-option *ngFor="let service of serviceOptions" [value]="service">{{ service | titlecase }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div fxLayoutAlign="end center" fxLayoutGap="1rem">
+        <button mat-button (click)="onRefresh()">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+        <button *ngIf="editable" (click)="store()" color="primary" mat-stroked-button>Create</button>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <div class="container">
+    <table [dataSource]="dataSource" class="container-table" mat-table>
+      <ng-container matColumnDef="uuid">
+        <th *matHeaderCellDef mat-header-cell>UUID</th>
+        <td *matCellDef="let element" mat-cell>{{ element.uuid }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th *matHeaderCellDef mat-header-cell>Name</th>
+        <td *matCellDef="let element" mat-cell>
+          <a [routerLink]="element.uuid" href="javascript:void(0)">{{ element.name }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="service">
+        <th *matHeaderCellDef mat-header-cell>Service</th>
+        <td *matCellDef="let element" mat-cell>{{ element.formatedServiceName | titlecase }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastUpdated">
+        <th *matHeaderCellDef mat-header-cell>Last modified</th>
+        <td *matCellDef="let element" mat-cell>{{ element.updatedAt | userDate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell></th>
+        <td *matCellDef="let element" align="end" fxLayoutGap="0.5em" mat-cell>
+          <div class="table-actions">
+            <button (click)="getPublicLink(element)" mat-icon-button matTooltip="Public acess">
+              <mat-icon>link</mat-icon>
+            </button>
+            <button (click)="store(element)" mat-icon-button matTooltip="Edit"><mat-icon>edit</mat-icon></button>
+            <button (click)="remove(element)" color="warn" mat-icon-button matTooltip="Remove">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="notDataAbvailable">
+        <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+          <div fxLayoutAlign="center center">
+            <span class="mat-body-1">No dashboard found </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      <tr
+        mat-footer-row
+        *matFooterRowDef="['notDataAbvailable']"
+        class="no-data-table"
+        [class.hidden]="dataSource?.data?.length > 0"
+      ></tr>
+    </table>
+
+    <mat-paginator [pageSize]="10" [length]="dataSource.data.length"></mat-paginator>
+  </div>
+</ng-container>

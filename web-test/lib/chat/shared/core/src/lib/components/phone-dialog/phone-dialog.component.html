@@ -1,0 +1,208 @@
+<ng-container *ngIf="extension$ | async as extension">
+  <div
+    *ngIf="delegatedCallerId$ | async as delegatedCallerId"
+    class="container flex column justify-content-start align-items-none gap-8"
+  >
+    <!-- <h1 mat-dialog-title>Make a call</h1> -->
+
+    <div>
+      <mat-tab-group mat-align-tabs="start" animationDuration="100ms">
+        <mat-tab label="Keypad">
+          <div class="keypad flex column justify-content-space-between align-items-start gap-20">
+            <mat-form-field floatLabel="never" class="keypad__input">
+              <input
+                placeholder="Enter a number to call"
+                matInput
+                phoneNumPattern
+                type="text"
+                #inputDial
+                [formControl]="phoneNumber"
+                (keypress)="doPress($event)"
+                (keyup.enter)="delegatedCallerId.length === 0 ? btnCall(extension.callerId) : openMenu()"
+                autocomplete="off"
+              />
+
+              <mat-icon
+                class="icon-backspace"
+                *ngIf="!!phoneNumber.value"
+                matSuffix
+                mat-icon-button
+                aria-label="backspace"
+                (click)="clearText()"
+              >
+                backspace
+              </mat-icon>
+            </mat-form-field>
+
+            <div class="module__name flex column justify-content-start align-items-start">
+              <div class="flex justify-content-center align-items-center gap-4">
+                <mat-icon class="icon">phone_in_talk</mat-icon>
+
+                <span>Caller ID: </span>
+
+                <span class="text__sub">{{ callerId }}</span>
+              </div>
+
+              <div class="flex justify-content-center align-items-center gap-4">
+                <mat-icon class="icon">voicemail</mat-icon>
+
+                <span>Call recording: </span>
+
+                <span class="text__sub">
+                  {{
+                    extension.crConfig.isEnableIncoming || extension.crConfig.isEnableOutgoing
+                      ? ' enabled'
+                      : ' disabled'
+                  }}
+                </span>
+              </div>
+            </div>
+
+            <div class="keypad__numbers flex flex-wrap justify-content-start align-items-center gap-10">
+              <div
+                *ngFor="let key of [].constructor(9); let i = index"
+                fxFlex="0 1 calc(33.3%- 1rem)"
+                class="number-region flex column justify-content-center align-items-center"
+              >
+                <div class="num" (click)="inputPhoneNumber(i + 1)">
+                  <div class="digit-only">{{ i + 1 }}</div>
+                </div>
+              </div>
+
+              <div
+                fxFlex="0 1 calc(33.3% - 1rem)"
+                class="number-region flex column justify-content-center align-items-center"
+              >
+                <div class="num" (click)="inputPhoneNumber('*')">
+                  <div class="digit-only">*</div>
+                </div>
+              </div>
+
+              <div
+                fxFlex="0 1 calc(33.3% - 1rem)"
+                class="number-region flex column justify-content-center align-items-center"
+              >
+                <div class="num" (click)="inputPhoneNumber('0')">
+                  <div class="digit-only">0</div>
+
+                  <div class="text">+</div>
+                </div>
+              </div>
+
+              <div
+                fxFlex="0 1 calc(33.3% - 1rem)"
+                class="number-region flex column justify-content-center align-items-center"
+              >
+                <div class="num" (click)="inputPhoneNumber('#')">
+                  <div class="digit-only">#</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="call spacer flex column justify-content-end align-items-center gap-5">
+              <ng-container *ngIf="{ extensionHasCallerId: extensionHasCallerId$ | async } as data">
+                <span
+                  class="secondary-text color-warn"
+                  *ngIf="!data.extensionHasCallerId && delegatedCallerId.length === 0"
+                >
+                  Please configure caller ID first
+                </span>
+
+                <div class="flex column justify-content-start align-items-none gap-025">
+                  <button
+                    color="primary"
+                    class="num-call phone_button"
+                    (click)="delegatedCallerId.length === 0 ? btnCall(extension.callerId) : openMenu()"
+                    fxLayoutAlign="center center"
+                    [class.disabled]="!data.extensionHasCallerId && delegatedCallerId.length === 0"
+                  >
+                    <span class="call-name"> CALL</span>
+                  </button>
+
+                  <div
+                    class="menu-delegate"
+                    #menuTrigger="matMenuTrigger"
+                    [matMenuTriggerFor]="menuDelegate"
+                    [matMenuTriggerData]="{ list: delegatedCallerId }"
+                  ></div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Extensions">
+          <div class="keypad flex column justify-content-start align-items-start gap-20">
+            <mat-form-field floatLabel="never" class="keypad__input">
+              <input
+                placeholder="Search for name or extension key"
+                matInput
+                type="text"
+                #inputDial
+                [formControl]="searchExtension"
+                autocomplete="off"
+              />
+            </mat-form-field>
+
+            <div class="result-search">
+              <div
+                *ngFor="let ext of extensions$ | async as extensions"
+                class="extensions flex column justify-content-start align-items-start"
+              >
+                <div class="extension flex justify-content-space-between align-items-center">
+                  <div class="flex justify-content-start align-items-center gap-14">
+                    <button mat-mini-fab class="mat-elevation-z1 btn-fab avatar" [matTooltip]="ext.extLabel">
+                      <span>{{ ext.extLabel | firstWord }}</span>
+                    </button>
+
+                    <div class="flex column justify-content-start align-items-start">
+                      <span class="name">{{ ext.extLabel }}</span>
+
+                      <span class="sub-name">Ext: {{ ext.extKey }}</span>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-content-end align-items-center">
+                    <mat-icon
+                      (click)="
+                        delegatedCallerId.length === 0 ? btnCallExtension(ext.extKey, extension.callerId) : openMenu()
+                      "
+                      class="call-ext"
+                    >
+                      phone
+                    </mat-icon>
+
+                    <div
+                      class="menu-delegate"
+                      #menuTrigger="matMenuTrigger"
+                      [matMenuTriggerFor]="menuDelegate"
+                      [matMenuTriggerData]="{ list: delegatedCallerId }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</ng-container>
+
+<mat-menu #menuDelegate="matMenu" class="pannel-delegate">
+  <ng-template matMenuContent let-list="list">
+    <ng-container *ngIf="callerId">
+      <button mat-menu-item (click)="btnCall(callerId)">Call as myself</button>
+
+      <mat-divider> </mat-divider>
+    </ng-container>
+
+    <button mat-menu-item *ngFor="let item of list" (click)="btnCall(item.number)">
+      {{
+        (item.extKey | selectExtensionCallcenter | async)?.displayText ||
+          'Extension ' + item.extKey + ' (' + item.extKey + ')'
+      }}
+      : {{ item.number }}
+    </button>
+  </ng-template>
+</mat-menu>

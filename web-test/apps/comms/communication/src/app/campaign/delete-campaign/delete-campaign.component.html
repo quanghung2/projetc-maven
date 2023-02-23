@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Archive campaign</h1>
+
+<div mat-dialog-content>
+  <div class="dialog-content-container">
+    Are you sure to archive <strong>{{ data.campaign.name }}</strong> campaign? This action cannot recovery.
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="delete()" color="warn" [disabled]="isDeleting">
+    <span *ngIf="!isDeleting">Delete</span> <span *ngIf="isDeleting">Deleting...</span>
+  </button>
+</div>

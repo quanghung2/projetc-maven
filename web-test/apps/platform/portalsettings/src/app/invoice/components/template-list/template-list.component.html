@@ -1,0 +1,37 @@
+<div class="ui cards">
+  <div class="float-left ui card">
+    <div class="content">
+      <div class="header">Individual Invoice</div>
+      <div class="description">
+        <p>Issued right after purchasing or auto-topup.</p>
+      </div>
+    </div>
+    <div class="extra content">
+      <a [routerLink]="['../individual']" class="right floated"> <i class="edit icon"></i> Edit </a>
+    </div>
+  </div>
+
+  <div class="float-left ui card">
+    <div class="content">
+      <div class="header">Monthly Invoice</div>
+      <div class="description">
+        <p>Monthly statement of usage, purchase and credit balance.</p>
+      </div>
+    </div>
+    <div class="extra content">
+      <a [routerLink]="['../monthly']" class="right floated"> <i class="edit icon"></i> Edit </a>
+    </div>
+  </div>
+
+  <div class="float-left ui card">
+    <div class="content">
+      <div class="header">Credit Note</div>
+      <div class="description">
+        <p>Refund invoices, cancel subscriptions.</p>
+      </div>
+    </div>
+    <div class="extra content">
+      <a [routerLink]="['../cn']" class="right floated"> <i class="edit icon"></i> Edit </a>
+    </div>
+  </div>
+</div>

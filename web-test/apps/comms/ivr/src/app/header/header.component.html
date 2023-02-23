@@ -1,0 +1,10 @@
+<mat-toolbar color="primary" class="mat-elevation-z4">
+  <div><h1 class="app-name" [routerLink]="['/']" class="cursor-pointer">Virtual Line</h1></div>
+  <div *ngIf="tabs && tabs.length > 0" fxLayout="row" class="links">
+    <button *ngFor="let tab of tabs" [routerLink]="tab.key" routerLinkActive="active" mat-button class="button-link">
+      {{ tab.value }}
+    </button>
+  </div>
+
+  <div fxFlex="1 1 0" id="header-actions"><!-- content will be placed dynamically via Cdk Portal --></div>
+</mat-toolbar>

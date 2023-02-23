@@ -1,0 +1,10 @@
+:host {
+  display: block;
+  max-width: 720px;
+
+  .no-data {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 400;
+  }
+}

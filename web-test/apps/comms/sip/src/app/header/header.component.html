@@ -1,0 +1,72 @@
+<div class="ui app menu">
+  <div class="ui page top fixed centered menu" *ngIf="enableCalleridRemark()">
+    <div class="ui container big horizontal divided list">
+      <a class="item" [class.active]="state === 'configure'" href="javascript:void(0);" (click)="showConfigure()">
+        <div class="middle aligned content">Configure</div>
+      </a>
+      <a
+        class="item"
+        [class.active]="state === 'callerid-remark'"
+        href="javascript:void(0);"
+        (click)="showCallerIdRemark()"
+      >
+        <div class="middle aligned content">CallerID Remarks</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="right menu" *ngIf="state === 'configure'">
+    <div sm-component class="ui dropdown item">
+      <input type="hidden" /> <span>{{ currentAccount.tag }}</span>
+      <div *ngIf="currentAccount.sipUsername"><update-label></update-label></div>
+      <div class="virtual-text">
+        {{ currentAccount.sipUsername }}
+        <span *ngIf="currentAccount.numbers && currentAccount.numbers.length > 1"
+          >({{ currentAccount.numbers.length }} numbers)</span
+        >
+        <span *ngIf="currentAccount.numbers && currentAccount.numbers.length == 1"
+          >({{ currentAccount.numbers[0] }})</span
+        >
+      </div>
+      <div class="text">
+        {{ currentAccount.sipUsername }}
+        <span *ngIf="currentAccount.numbers && currentAccount.numbers.length > 1"
+          >({{ currentAccount.numbers.length }} numbers)</span
+        >
+        <span *ngIf="currentAccount.numbers && currentAccount.numbers.length == 1"
+          >({{ currentAccount.numbers[0] }})</span
+        >
+      </div>
+      <i class="dropdown icon"></i>
+      <div class="menu">
+        <!--<div *ngIf="accountList.length > 10" class="ui icon search input">
+					<i class="search icon"></i>
+					<input type="text" placeholder="Search" tabindex="0" [(ngModel)]="searchString">
+				</div>
+				<div *ngIf="accountList.length > 10" class="help-block">This list only shows up to 10 accounts, filter to narrow down the list</div>
+				<div *ngIf="accountList.length > 10" class="divider"></div>-->
+        <div
+          *ngFor="let item of accountList | filterAccount: searchString; let i = index"
+          [class.disabled]="item.sipUsername == currentAccount.sipUsername"
+          class="item"
+          [attr.data-value]="item.number"
+          (click)="switchAccount(item)"
+          [class.hidden]="i > 9"
+        >
+          {{ item.tag }} - {{ item.sipUsername }}
+          <span *ngIf="item.numbers && item.numbers.length > 1">({{ item.numbers.length }} numbers)</span>
+          <span *ngIf="item.numbers && item.numbers.length == 1">({{ item.numbers[0] }})</span>
+        </div>
+        <div *ngIf="accountList.length > 10" class="divider"></div>
+        <div *ngIf="accountList.length > 10" class="view item">
+          <a href="javascript:void(0)" class="" (click)="viewSipAccountList()">View all SIP accounts</a>
+        </div>
+        <!-- <div class="shopping item">
+          <a href="javascript:void(0)" class="" (click)="subscribeMore()">
+            <i class="shopping cart icon"></i> <span>Subscribe more SIP account</span>
+          </a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

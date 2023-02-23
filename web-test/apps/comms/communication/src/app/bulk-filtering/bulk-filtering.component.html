@@ -1,0 +1,85 @@
+<div fxLayout="column" fxLayoutAlign="start center">
+  <div class="container" fxLayout="column" fxLayoutAlign="start none">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <h2 class="page-title">Bulk Filtering</h2>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="body px-16" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+      <div *ngIf="price" fxLayout="column" fxLayoutAlign="start none" fxLayoutGap="1.6rem">
+        <!-- <div fxLayoutGap="1.6rem" fxLayoutAlign="start center">
+          <h3 class="mb-0">Activity Logs</h3>
+          <span class="spacer"> </span>
+          <b3n-upload-numbers
+            [backgroundUploading]="backgroundUploading"
+            (onBackgroundUploading)="backgroundUploading = $event"
+            (uploadDoneEvent)="reCalculator($event)"
+          ></b3n-upload-numbers>
+        </div> -->
+
+        <b3n-upload-numbers
+          [backgroundUploading]="backgroundUploading"
+          (onBackgroundUploading)="backgroundUploading = $event"
+          [viewWidget]="true"
+          (uploadDoneEvent)="reCalculator($event)"
+        ></b3n-upload-numbers>
+
+        <b3n-history-bulk-filtering></b3n-history-bulk-filtering>
+
+        <!-- <div>
+          Each lookup will <strong> be charged {{ price.real }} {{ price.currency }}</strong> (rounded up to the nearest
+          0.1 cents per transaction).
+        </div>
+
+        <div class="widget" fxLayout="row" fxLayout="start center">
+          <div fxFlex class="pt-16" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <span class="large-character" *ngIf="countSingaporeNumber < 0; else countSG" class="large-character">
+              -
+            </span>
+            <ng-template #countSG>
+              <div class="large-character">{{ countSingaporeNumber }}</div>
+            </ng-template>
+            <div class="text-align">Total Singapore numbers submitted</div>
+          </div>
+          <div class="large-character pt-16" fxFlex fxLayout="column" fxLayoutAlign="start center">x</div>
+          <div fxFlex class="pt-16" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <div class="large-character">{{ price.real }}</div>
+            <div>{{ price.currency }}/number</div>
+          </div>
+          <div class="large-character pt-16" fxFlex fxLayout="column" fxLayoutAlign="start center">=</div>
+          <div fxFlex class="pt-16" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1rem">
+            <span class="large-character" *ngIf="countSingaporeNumber < 0; else total" class="large-character">
+              -
+            </span>
+            <ng-template #total>
+              <div class="large-character">{{ totalResult }}</div>
+            </ng-template>
+            <div class="text-align">Quantity of credits used for this check</div>
+          </div>
+        </div> -->
+      </div>
+
+      <!-- <mat-divider></mat-divider>
+
+      <div fxLayout="column" fxLayoutAlign="start none">
+        <h3 class="mb-0">History Bulk Filtering</h3>
+        <b3n-history-bulk-filtering></b3n-history-bulk-filtering>
+      </div> -->
+
+      <!-- <mat-divider></mat-divider> -->
+
+      <!-- <div fxLayout="column" fxLayoutAlign="start none">
+        <h3 class="mb-0">Results Notification</h3>
+        <p>You will be notified by email once the result is ready within 24 hours.</p>
+        <div class="secondary-text">
+          * If the result is used with a non-DNC device (SMS marketing tool or phone), please inform your company's Data
+          Protection Officer (DPO) of any unsub requests.
+        </div>
+      </div> -->
+
+      <!-- <mat-divider></mat-divider> -->
+
+      <!-- <b3n-activity-logs></b3n-activity-logs> -->
+    </div>
+  </div>
+</div>

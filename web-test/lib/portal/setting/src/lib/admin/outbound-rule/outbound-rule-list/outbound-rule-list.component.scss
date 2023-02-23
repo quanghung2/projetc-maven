@@ -1,0 +1,50 @@
+:host {
+  display: block;
+
+  .outbound-rule-settings {
+    margin: auto;
+
+    .loading-container {
+      margin-top: 5rem;
+      mat-spinner {
+        margin: 20px auto;
+      }
+    }
+
+    .mat-table {
+      width: 100%;
+      border-radius: 4px 4px 0 0;
+      overflow: hidden !important;
+
+      .mat-column-actions {
+        width: 105px;
+      }
+
+      tr.mat-row:hover {
+        background: rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+      }
+      .actions-column {
+        display: none;
+      }
+      tr.mat-row:hover .actions-column {
+        display: block;
+      }
+      .mat-icon.actions-icon {
+        color: rgba(0, 0, 0, 0.67);
+        font-size: 22px;
+        height: 22px;
+        width: 22px;
+      }
+    }
+    mat-paginator {
+      -webkit-border-radius: 0 0 4px 4px;
+      -moz-border-radius: 0 0 4px 4px;
+      border-radius: 0 0 4px 4px;
+      overflow: hidden !important;
+    }
+  }
+  .mb-16 {
+    margin-bottom: 1rem;
+  }
+}

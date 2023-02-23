@@ -1,0 +1,73 @@
+:host {
+  .container {
+    position: relative;
+
+    .btn-clear {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+    }
+
+    .header {
+      position: relative;
+      padding: 0;
+
+      &__container {
+        padding-left: 1rem;
+        color: #172b4d;
+        font-weight: 600;
+      }
+
+      .icon {
+        width: 1rem;
+        height: 1rem;
+        font-size: 1rem;
+      }
+
+      .viewing-date {
+        z-index: 10;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+
+        span {
+          background: #fff;
+          padding: 0 0.75rem;
+          border-radius: 20px;
+          user-select: none;
+        }
+      }
+    }
+
+    .body {
+      overflow: overlay;
+      padding: 0 1.6rem;
+      margin-bottom: 1.6rem;
+    }
+  }
+}
+
+::ng-deep mat-dialog-container {
+  border-radius: 0px !important;
+}
+
+::ng-deep {
+  @keyframes slideDown {
+    0% {
+      transform: translateX(200%);
+    }
+    100% {
+      transform: none;
+    }
+  }
+
+  .cdk-overlay-pane.preview-message {
+    animation: slideDown 0.3s forwards 0s ease;
+
+    .mat-dialog-container {
+      padding: 0;
+    }
+  }
+}

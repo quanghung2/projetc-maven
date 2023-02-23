@@ -1,0 +1,12 @@
+<div class="description-wrapper">
+  <img
+    *ngIf="agent.photoUrl && agent.photoUrl.indexOf('http') >= 0; else noAvatar"
+    class="avatar"
+    [attr.src]="agent.photoUrl"
+  />
+  <ng-template #noAvatar>
+    <div class="avatar" [style.background-color]="agent.avatarColor">
+      {{ agent.displayName | firstWord }}
+    </div>
+  </ng-template>
+</div>

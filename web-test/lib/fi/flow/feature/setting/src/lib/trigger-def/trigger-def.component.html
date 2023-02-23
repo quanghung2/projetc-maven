@@ -1,0 +1,512 @@
+<form [formGroup]="formTrigger" novalidate>
+  <mat-horizontal-stepper
+    #stepper
+    [@.disabled]="true"
+    labelPosition="bottom"
+    (selectionChange)="stepIndexChanged(stepper)"
+  >
+    <mat-step *ngIf="!triggerDef">
+      <ng-template matStepLabel>{{ selectedName ? selectedName : 'Basic info' }}</ng-template>
+      <div class="stepper-content">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
+            <img *ngIf="iconUrl.value" [src]="iconUrl.value" fxFlex="60px" />
+            <div class="mb-8" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px" fxFlex>
+              <p class="mb-8">Recommend size: 60 x 60 pixels. Images with smaller size will scale.</p>
+              <input
+                #uploadFile
+                type="file"
+                class="upload-file"
+                (change)="onFileChange($event, iconUrl)"
+                accept="image/*"
+              />
+              <button mat-stroked-button type="button" (click)="uploadFile.click()" [loading]="uploading">
+                Upload icon
+              </button>
+            </div>
+          </div>
+
+          <mat-form-field hideRequiredMarker="true">
+            <input matInput placeholder="Name" formControlName="name" required />
+            <mat-error *ngIf="name.invalid">{{ getErrorInput(name) }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Description" formControlName="description" />
+            <mat-error *ngIf="formTrigger.get('description').invalid">
+              {{ getErrorInput(formTrigger.get('description')) }}
+            </mat-error>
+          </mat-form-field>
+
+          <section fxLayout="row" *ngIf="isShowVisibility">
+            <b3n-visibility-domain
+              fxFlex="50"
+              [domainVisibility]="$any(formTrigger.get('domainVisibility'))"
+            ></b3n-visibility-domain>
+          </section>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          matStepperNext
+          (click)="selectedName = name.value"
+          [disabled]="name.invalid || formTrigger.get('description').invalid"
+        >
+          Next
+        </button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Register request</ng-template>
+      <div class="stepper-content">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px" formGroupName="registerRequest">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+            <label class="title">Method</label>
+            <mat-radio-group color="primary" formControlName="httpVerb">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                <mat-radio-button value="GET">GET</mat-radio-button>
+                <mat-radio-button value="POST">POST</mat-radio-button>
+                <mat-radio-button value="PUT">PUT</mat-radio-button>
+                <mat-radio-button value="PATCH">PATCH</mat-radio-button>
+                <mat-radio-button value="DELETE">DELETE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+            <section fxLayout="column">
+              <label class="title">Max retry</label>
+              <mat-form-field>
+                <mat-select formControlName="maxRetry">
+                  <mat-option [value]="0">0</mat-option>
+                  <mat-option [value]="1">1</mat-option>
+                  <mat-option [value]="2">2</mat-option>
+                  <mat-option [value]="3">3</mat-option>
+                  <mat-option [value]="4">4</mat-option>
+                  <mat-option [value]="5">5</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </section>
+
+            <section fxLayout="column">
+              <label class="title">Path</label>
+              <mat-form-field hideRequiredMarker="true" formGroupName="url">
+                <input matInput formControlName="template" required />
+                <mat-error *ngIf="registerUrlTemplate.invalid">{{ getErrorInput(registerUrlTemplate) }}</mat-error>
+              </mat-form-field>
+            </section>
+
+            <section formGroupName="headers" fxLayout="column" fxLayoutGap="8px">
+              <label class="title">Header template</label>
+              <ng-container formArrayName="templatesTemp">
+                <ng-container
+                  *ngFor="let header of registerHeaders.get('templatesTemp')['controls']; let headerIndex = index"
+                  [formGroupName]="headerIndex"
+                >
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-form-field hideRequiredMarker="true" fxFlex="40">
+                      <input matInput placeholder="Key" formControlName="key" required />
+                      <mat-error *ngIf="header.get('key').invalid">{{ getErrorInput(header.get('key')) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field hideRequiredMarker="true" fxFlex>
+                      <input matInput placeholder="Value" formControlName="value" required />
+                      <mat-error *ngIf="header.get('value').invalid">
+                        {{ getErrorInput(header.get('value')) }}
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="onRemoveHeaderParam(registerHeaders.get('templatesTemp'), headerIndex)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <p>
+                <a href="javascript:;" class="link" (click)="onEnterHeaderParam(registerHeaders.get('templatesTemp'))">
+                  + Add
+                </a>
+              </p>
+            </section>
+
+            <section>
+              <label class="title">Body template</label>
+              <mat-form-field appearance="outline" formGroupName="body" id="trigger_register_body">
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  [cdkAutosizeMinRows]="5"
+                  [cdkAutosizeMaxRows]="10"
+                  formControlName="template"
+                  b3nFormatObjToJson
+                  id="trigger_register_body"
+                  [control]="registerBodyTemplate"
+                  [top]="'30'"
+                  [right]="'8'"
+                ></textarea>
+              </mat-form-field>
+              <mat-error *ngIf="registerBodyTemplate.invalid">{{ getErrorInput(registerBodyTemplate) }}</mat-error>
+            </section>
+          </div>
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px" formGroupName="registerConfig">
+          <mat-checkbox color="primary" formControlName="multipleRegistrationAllowed">
+            Multiple registration allowed
+          </mat-checkbox>
+          <mat-checkbox color="primary" formControlName="reRegisterAllowed">Re-register allowed</mat-checkbox>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          matStepperNext
+          [disabled]="
+            registerUrlTemplate.invalid || registerHeaders.get('templatesTemp').invalid || registerBodyTemplate.invalid
+          "
+        >
+          Next
+        </button>
+        <button *ngIf="!triggerDef" mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Unregister request</ng-template>
+      <div class="stepper-content" formGroupName="unregisterRequest">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+          <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="8px">
+            <label class="title">Method</label>
+            <mat-radio-group color="primary" formControlName="httpVerb">
+              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="32px">
+                <mat-radio-button value="GET">GET</mat-radio-button>
+                <mat-radio-button value="POST">POST</mat-radio-button>
+                <mat-radio-button value="PUT">PUT</mat-radio-button>
+                <mat-radio-button value="PATCH">PATCH</mat-radio-button>
+                <mat-radio-button value="DELETE">DELETE</mat-radio-button>
+              </div>
+            </mat-radio-group>
+          </div>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+            <section fxLayout="column">
+              <label class="title">Max retry</label>
+              <mat-form-field>
+                <mat-select formControlName="maxRetry">
+                  <mat-option [value]="0">0</mat-option>
+                  <mat-option [value]="1">1</mat-option>
+                  <mat-option [value]="2">2</mat-option>
+                  <mat-option [value]="3">3</mat-option>
+                  <mat-option [value]="4">4</mat-option>
+                  <mat-option [value]="5">5</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </section>
+
+            <section fxLayout="column">
+              <label class="title">Path</label>
+              <mat-form-field hideRequiredMarker="true" formGroupName="url">
+                <input matInput formControlName="template" required />
+                <mat-error *ngIf="unregisterUrlTemplate.invalid">{{ getErrorInput(unregisterUrlTemplate) }}</mat-error>
+              </mat-form-field>
+            </section>
+
+            <section formGroupName="headers" fxLayout="column" fxLayoutGap="8px">
+              <label class="title">Header template</label>
+              <ng-container formArrayName="templatesTemp">
+                <ng-container
+                  *ngFor="let header of unregisterHeaders.get('templatesTemp')['controls']; let headerIndex = index"
+                  [formGroupName]="headerIndex"
+                >
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                    <mat-form-field hideRequiredMarker="true" fxFlex="40">
+                      <input matInput placeholder="Key" formControlName="key" required />
+                      <mat-error *ngIf="header.get('key').invalid">{{ getErrorInput(header.get('key')) }}</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field hideRequiredMarker="true" fxFlex>
+                      <input matInput placeholder="Value" formControlName="value" required />
+                      <mat-error *ngIf="header.get('value').invalid">
+                        {{ getErrorInput(header.get('value')) }}
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      type="button"
+                      (click)="onRemoveHeaderParam(unregisterHeaders.get('templatesTemp'), headerIndex)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <p>
+                <a
+                  href="javascript:;"
+                  class="link"
+                  (click)="onEnterHeaderParam(unregisterHeaders.get('templatesTemp'))"
+                >
+                  + Add
+                </a>
+              </p>
+            </section>
+
+            <section>
+              <label class="title">Body template</label>
+              <mat-form-field appearance="outline" formGroupName="body" id="trigger_unregister_body">
+                <textarea
+                  matInput
+                  cdkTextareaAutosize
+                  [cdkAutosizeMinRows]="5"
+                  [cdkAutosizeMaxRows]="10"
+                  formControlName="template"
+                  b3nFormatObjToJson
+                  id="trigger_unregister_body"
+                  [control]="unregisterBodyTemplate"
+                  [top]="'30'"
+                  [right]="'8'"
+                ></textarea>
+              </mat-form-field>
+              <mat-error *ngIf="unregisterBodyTemplate.invalid">{{ getErrorInput(unregisterBodyTemplate) }}</mat-error>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          (click)="importRequest()"
+          [disabled]="
+            unregisterUrlTemplate.invalid ||
+            unregisterHeaders.get('templatesTemp').invalid ||
+            unregisterBodyTemplate.invalid
+          "
+        >
+          Next
+        </button>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Fill parameters</ng-template>
+      <div class="stepper-content" *ngIf="stepper.selectedIndex === (triggerDef ? 2 : 3)">
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="48px">
+          <div
+            *ngIf="
+              sharedInputParameters.get('url')['controls'].length > 0 ||
+              sharedInputParameters.get('headers')['controls'].length > 0 ||
+              sharedInputParameters.get('body')['controls'].length > 0
+            "
+          >
+            <h3><strong>Shared Parameters</strong></h3>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+              <b3n-fill-parameters
+                *ngIf="sharedInputParameters.get('url')['controls'].length > 0"
+                [title]="'URL'"
+                [group]="sharedInputParameters"
+                [key]="'url'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="sharedInputParameters.get('headers')['controls'].length > 0"
+                [title]="'HEADER'"
+                [group]="sharedInputParameters"
+                [key]="'headers'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="sharedInputParameters.get('body')['controls'].length > 0"
+                [title]="'BODY'"
+                [group]="sharedInputParameters"
+                [key]="'body'"
+                [isBody]="true"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              registerUrl.get('parameters')['controls'].length > 0 ||
+              registerHeaders.get('parameters')['controls'].length > 0 ||
+              registerBody.get('parameters')['controls'].length > 0
+            "
+          >
+            <h3><strong>Register Request Parameters</strong></h3>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+              <b3n-fill-parameters
+                *ngIf="registerUrl.get('parameters')['controls'].length > 0"
+                [title]="'URL'"
+                [group]="registerUrl"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="registerHeaders.get('parameters')['controls'].length > 0"
+                [title]="'HEADER'"
+                [group]="registerHeaders"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="registerBody.get('parameters')['controls'].length > 0"
+                [title]="'BODY'"
+                [group]="registerBody"
+                [key]="'parameters'"
+                [isBody]="true"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+            </div>
+          </div>
+
+          <div
+            *ngIf="
+              unregisterUrl.get('parameters')['controls'].length > 0 ||
+              unregisterHeaders.get('parameters')['controls'].length > 0 ||
+              unregisterBody.get('parameters')['controls'].length > 0
+            "
+          >
+            <h3><strong>Unregister Request Parameters</strong></h3>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px">
+              <b3n-fill-parameters
+                *ngIf="unregisterUrl.get('parameters')['controls'].length > 0"
+                [title]="'URL'"
+                [group]="unregisterUrl"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="unregisterHeaders.get('parameters')['controls'].length > 0"
+                [title]="'HEADER'"
+                [group]="unregisterHeaders"
+                [key]="'parameters'"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+
+              <b3n-fill-parameters
+                *ngIf="unregisterBody.get('parameters')['controls'].length > 0"
+                [title]="'BODY'"
+                [group]="unregisterBody"
+                [key]="'parameters'"
+                [isBody]="true"
+                [contextVariables]="contextVariables"
+                [type]="'trigger'"
+              ></b3n-fill-parameters>
+            </div>
+          </div>
+
+          <span fxFlexAlign="center" *ngIf="isNotParameter">Not parameters</span>
+        </div>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          type="button"
+          color="primary"
+          matStepperNext
+          [disabled]="
+            sharedInputParameters.invalid ||
+            registerUrl.invalid ||
+            registerHeaders.invalid ||
+            registerBody.invalid ||
+            unregisterUrl.invalid ||
+            unregisterHeaders.invalid ||
+            unregisterBody.invalid
+          "
+        >
+          Next
+        </button>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Event content</ng-template>
+      <div class="stepper-content" formGroupName="triggerRequestBody">
+        <mat-form-field appearance="outline" id="response_triggerDef">
+          <mat-label>Event content</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            [cdkAutosizeMinRows]="10"
+            [cdkAutosizeMaxRows]="20"
+            [formControl]="triggerRequestBodyCtrl"
+            [control]="triggerRequestBodyCtrl"
+            b3nFormatObjToJson
+            id="response_triggerDef"
+            [top]="'12'"
+            [right]="'8'"
+          ></textarea>
+          <mat-error *ngIf="triggerRequestBodyCtrl.invalid">{{ getErrorTriggerRequestBody() }}</mat-error>
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          [loading]="extracting"
+          [disabled]="!triggerRequestBodyCtrl.value"
+          (click)="extractJsonProps()"
+        >
+          Extract properties
+        </button>
+
+        <b3n-extract-json-prop
+          *ngIf="!extracting"
+          [formProperties]="triggerRequestBody"
+          [key]="'properties'"
+        ></b3n-extract-json-prop>
+      </div>
+
+      <div dir="rtl" class="stepper-button" fxLayoutGap="8px">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          [loading]="submitting"
+          [disabled]="formTrigger.invalid"
+          (click)="submitTrigger()"
+        >
+          {{ triggerDef ? 'Update' : 'Create' }}
+        </button>
+        <button mat-button type="button" matStepperPrevious>Back</button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+</form>
+<!-- {{ formTrigger.value | json }} -->

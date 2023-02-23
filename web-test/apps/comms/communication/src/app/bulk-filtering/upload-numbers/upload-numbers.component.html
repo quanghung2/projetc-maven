@@ -1,0 +1,44 @@
+<div *ngIf="!viewWidget; else widgetDrop" class="upload-div">
+  <div fxLayout="row" fxLayoutAlign="end start" class="cursor-pointer">
+    <label for="file-csv" class="mat-stroked-button">
+      {{ !backgroundUploading ? 'Upload' : 'Uploading...' }}
+    </label>
+    <div [matMenuTriggerFor]="uploadOption" class="dropdown-toggle b b-l-0">
+      <mat-icon> keyboard_arrow_down </mat-icon>
+    </div>
+  </div>
+</div>
+
+<ng-template #widgetDrop>
+  <div class="widget" fxLayoutAlign="center center" fxLayoutGap="1.6rem">
+    <ng-container *ngIf="!backgroundUploading; else uploading">
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="1rem">
+        <a href="javascript:void" (click)="downloadSampleFileService()">Download Sample</a>
+        <button mat-flat-button color="primary" (click)="uploadMoh?.click()">Browse CSV</button>
+        <a *ngIf="fileCSV" href="javascript:void" (click)="download()">Download Result</a>
+      </div>
+    </ng-container>
+    <ng-template #uploading>
+      <mat-spinner diameter="30"></mat-spinner>
+      <span>Please wait</span>
+    </ng-template>
+  </div>
+</ng-template>
+
+<form id="uploadMoh" hidden>
+  <input
+    #uploadMoh
+    type="file"
+    id="file-csv"
+    hidden
+    name="file-csv"
+    [(ngModel)]="file"
+    [disabled]="backgroundUploading"
+    (change)="onBackgroundFileChange($event)"
+    accept=".csv"
+  />
+</form>
+
+<mat-menu #uploadOption="matMenu" xPosition="before">
+  <button mat-menu-item (click)="downloadSampleFileService()">Download sample</button>
+</mat-menu>

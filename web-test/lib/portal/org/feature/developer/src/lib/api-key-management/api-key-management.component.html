@@ -1,0 +1,99 @@
+<mat-toolbar>
+  <h1>API Keys</h1>
+</mat-toolbar>
+<div class="api-keys p-16">
+  <ng-container *ngIf="!loading; else loadingTmp">
+    <div *ngIf="apiKeys && apiKeys.length > 0; else noKey" class="api-keys__content">
+      <div class="api-keys__content__actions-bar" fxLayout="row">
+        <span class="spacer"></span>
+        <button
+          mat-raised-button
+          [loading]="creating"
+          [disabled]="creating || apiKeys.length >= 5"
+          color="primary"
+          (click)="createKey()"
+        >
+          Create
+        </button>
+      </div>
+      <table mat-table [dataSource]="apiKeys">
+        <ng-container matColumnDef="apiKey">
+          <th mat-header-cell *matHeaderCellDef>API Key</th>
+          <td mat-cell *matCellDef="let element">
+            <div fxLayout="row" fxLayoutAlign="start center">
+              <span> {{ element.apiKey.substr(0, 12) }} </span>
+              <span class="copy-btn-container">
+                <mat-icon class="copy-btn" matTooltip="Copy" [cdkCopyToClipboard]="element.apiKey" (click)="copied()"
+                  >content_copy</mat-icon
+                >
+              </span>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element">
+            <div
+              class="key-status"
+              [class.active]="element.status === 'ACTIVE'"
+              [class.disabled]="element.status === 'DISABLED'"
+            >
+              {{ element.status | titlecase }}
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>Created At</th>
+          <td mat-cell *matCellDef="let element">{{ element.createdDateTime | date: 'yyyy-MM-dd HH:mm' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <div class="actions">
+              <button mat-button color="warn" (click)="disableKey(element)" *ngIf="element.status === 'ACTIVE'">
+                Disable
+              </button>
+              <button mat-button color="primary" (click)="activateKey(element)" *ngIf="element.status === 'DISABLED'">
+                Activate
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #noKey>
+    <div class="api-keys__content__no-key" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon class="api-keys__content__no-key__icon" svgIcon="api-key"></mat-icon>
+      <h1 class="api-keys__content__no-key__message">You have no key</h1>
+
+      <button mat-raised-button [loading]="creating" [disabled]="creating" color="primary" (click)="createKey()">
+        Create
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loadingTmp class="spinner-container">
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner mode="indeterminate" diameter="40" strokeWidth="2"></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-template #permissionDenied>
+  <div class="access-denied" fxLayout="column" fxLayoutAlign="center center">
+    <mat-icon svgIcon="lock" color="primary"></mat-icon>
+
+    <div>
+      <div class="access-denied__title">Access denied</div>
+      <div class="access-denied__message">Sorry, but you don't have permission to access this page.</div>
+    </div>
+  </div>
+</ng-template>

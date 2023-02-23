@@ -1,0 +1,91 @@
+<div mat-dialog-title>Assign users</div>
+<div mat-dialog-content>
+  <ng-container
+    *ngIf="data.licenseStatis.isDeveloper"
+    [ngTemplateOutlet]="developerAssignemnt"
+    [ngTemplateOutletContext]="{ licenseStatis: data.licenseStatis }"
+  >
+  </ng-container>
+  <ng-container
+    *ngIf="data.licenseStatis.isExtension"
+    [ngTemplateOutlet]="extensionAssignment"
+    [ngTemplateOutletContext]="{ licenseStatis: data.licenseStatis }"
+  >
+  </ng-container>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [loading]="progressing"
+    [disabled]="!selectedMembers.length"
+    (click)="assign()"
+  >
+    Assign
+  </button>
+</div>
+
+<ng-template #developerAssignemnt let-licenseStatis="licenseStatis">
+  <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+    <div class="secondary-text">
+      You have {{ data.licenseStatis.statsByUser.available }} available licenses for assignment
+    </div>
+    <mat-form-field class="example-chip-list">
+      <mat-label>Assign members</mat-label>
+      <mat-chip-list #assignedMemberList>
+        <mat-chip
+          *ngFor="let member of selectedMembers"
+          [selectable]="true"
+          [removable]="true"
+          (removed)="remove(member)"
+        >
+          {{ member.displayName }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Enter member..."
+          #memberInput
+          [formControl]="memberCtrl"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="assignedMemberList"
+        />
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let member of filteredMembers$ | async" [value]="member">
+          {{ member.displayName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</ng-template>
+
+<ng-template #extensionAssignment>
+  <form [formGroup]="assignExtensionFG" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+    <div class="secondary-text">
+      You have {{ data.licenseStatis.statsByUser.available }} available licenses for assignment
+    </div>
+    <mat-form-field>
+      <mat-label>Extension Number</mat-label>
+      <mat-select formControlName="licenseId">
+        <mat-option *ngFor="let license of licenses" [value]="license.id">{{ license.resourceKey }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="example-chip-list">
+      <mat-label>Assign member</mat-label>
+      <input
+        matInput
+        #memberInput
+        [formControl]="memberCtrl"
+        [matAutocomplete]="auto"
+        placeholder="Enter member name"
+      />
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="memberDisplayFn">
+        <mat-option *ngFor="let member of filteredMembers$ | async" [value]="member">
+          {{ member.displayName }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+</ng-template>

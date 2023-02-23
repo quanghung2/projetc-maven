@@ -1,0 +1,166 @@
+<mat-progress-bar *ngIf="loadingV2" mode="indeterminate"></mat-progress-bar>
+
+<div class="toolbar__wrapper">
+  <mat-toolbar>
+    <span *ngIf="!isTV">Dashboard</span>
+    <ng-container *ngIf="isTV && currentOrg">
+      <img class="org__logo" *ngIf="currentOrg.logoUrl" [src]="currentOrg.logoUrl" />
+    </ng-container>
+    <ng-container *ngIf="!loadingV2 && !errorMsg">
+      <nav mat-tab-nav-bar class="ml-24">
+        <a
+          *ngIf="unstarActiveDashboard2Tab"
+          mat-tab-link
+          [style.width.px]="TAB_WIDTH"
+          [active]="activeDashboard?.uuid === unstarActiveDashboard2Tab.uuid"
+        >
+          <p class="tab">{{ unstarActiveDashboard2Tab.name }}</p>
+        </a>
+        <ng-container *ngIf="dashboard2StarredTabs.length <= maxTab; else extendTabs">
+          <ng-container
+            *ngFor="let tab of dashboard2StarredTabs; let i = index"
+            [ngTemplateOutlet]="dashboard2TabsTemplate"
+            [ngTemplateOutletContext]="{ tab: tab, i: i }"
+          >
+          </ng-container>
+        </ng-container>
+        <ng-template #extendTabs>
+          <ng-container
+            *ngFor="let _ of [].constructor(maxTab < 0 ? 0 : maxTab); let i = index"
+            [ngTemplateOutlet]="dashboard2TabsTemplate"
+            [ngTemplateOutletContext]="{ tab: dashboard2StarredTabs[i], i: i }"
+          >
+          </ng-container>
+        </ng-template>
+        <ng-template #dashboard2TabsTemplate let-tab="tab" let-i="i">
+          <a
+            mat-tab-link
+            (click)="active(tab.uuid)"
+            [style.width.px]="TAB_WIDTH"
+            [active]="activeDashboard?.uuid === tab.uuid"
+          >
+            <p class="tab">{{ tab.name }}</p>
+          </a>
+        </ng-template>
+      </nav>
+      <div class="remain__tab" *ngIf="dashboard2StarredTabs.length > maxTab">
+        + {{ dashboard2StarredTabs.length - maxTab }}
+      </div>
+      <div class="ml-auto">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="isTV" (click)="logout()">
+          <mat-icon color="warn">logout</mat-icon>
+        </button>
+        <ng-container *ngIf="!isTV">
+          <button mat-icon-button (click)="openPublicDeviceDialog()" matTooltip="Public Access Authenticate">
+            <mat-icon>connected_tv</mat-icon>
+          </button>
+          <button mat-icon-button [matMenuTriggerFor]="settings" matTooltip="Manage">
+            <mat-icon>settings</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="Permission Group Management"
+            [routerLink]="['permission-management']"
+            *ngIf="currentOrg?.isOwner || (currentOrg?.isAdmin && grantedManageDashboard)"
+          >
+            <mat-icon class="material-icons-outlined">admin_panel_settings</mat-icon>
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            *ngIf="currentOrg?.isOwner || (currentOrg?.isAdmin && grantedManageDashboard)"
+            (click)="storeDashboardV2()"
+            class="ml-16 add-dashboard__btn"
+          >
+            <mat-icon class="mr-10">add</mat-icon>
+            <span class="mr-10">Add</span>
+          </button>
+        </ng-container>
+      </div>
+    </ng-container>
+  </mat-toolbar>
+</div>
+
+<b3n-dashboard-detail-v2
+  *ngIf="activeDashboard && !errorMsg"
+  [dashboard]="activeDashboard"
+  [dashboardMap]="dashboardMap"
+  [grantedManageDashboard]="grantedManageDashboard"
+></b3n-dashboard-detail-v2>
+
+<div *ngIf="!activeDashboard" class="dashboard__error">
+  <ng-container *ngIf="errorMsg">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ errorMsg }}</span>
+  </ng-container>
+</div>
+
+<mat-list [style.padding]="0"></mat-list>
+
+<mat-menu #menu="matMenu" xPosition="before" class="dashboard__menu">
+  <div mat-subheader [style.fontWeight]="500" *ngIf="dashboard2StarredTabs.length">Starred</div>
+  <button
+    mat-menu-item
+    *ngFor="let tab of dashboard2StarredTabs; let i = index"
+    (click)="active(tab.uuid)"
+    [class.active-item]="activeDashboard?.uuid === tab.uuid"
+    class="btn__tab"
+  >
+    <div class="star__wrapper">
+      <mat-icon
+        [class.disabled]="starring"
+        [matTooltip]="!isTV ? 'Unstar this dashboard' : ''"
+        (click)="!isTV && star($event, tab)"
+        >star</mat-icon
+      >
+      <span>{{ tab.name }}</span>
+    </div>
+    <div class="default" *ngIf="tab.isDefault">default</div>
+  </button>
+  <div mat-subheader *ngIf="dashboard2UnstarredTabs.length" [style.fontWeight]="500">
+    Others ({{ dashboard2UnstarredTabs.length }})
+  </div>
+  <button
+    mat-menu-item
+    *ngFor="let tab of dashboard2UnstarredTabs; let i = index"
+    (click)="active(tab.uuid)"
+    [class.active-item]="activeDashboard?.uuid === tab.uuid"
+    class="btn__tab"
+  >
+    <div class="star__wrapper">
+      <mat-icon *ngIf="!isTV" matTooltip="Star this dashboard" (click)="star($event, tab)" [class.disabled]="starring"
+        >star_outline</mat-icon
+      >
+      <span>{{ tab.name }}</span>
+    </div>
+    <div class="default" *ngIf="tab.isDefault">default</div>
+  </button>
+</mat-menu>
+
+<mat-menu #settings="matMenu" xPosition="before" class="dashboard__menu">
+  <ng-container *ngIf="currentOrg?.isOwner || (currentOrg?.isAdmin && grantedManageDashboard); else member">
+    <button mat-menu-item class="btn__tab settings" (click)="storeDevice('Manage Your Access Devices', false)">
+      <mat-icon>personal_video</mat-icon>
+      Manage Your Access Devices
+    </button>
+    <button mat-menu-item class="btn__tab settings" (click)="storeDevice('Manage Members Access Devices', true)">
+      <mat-icon>add_to_queue</mat-icon>
+      Manage Members Access Devices
+    </button>
+    <mat-divider></mat-divider>
+    <!-- //TODO: Enable in future -->
+    <!-- <button mat-menu-item class="btn__tab settings" (click)="manageAccess()">
+      <mat-icon class="material-icons-outlined">lock_open</mat-icon>
+      Manage Users Dashboard Access
+    </button> -->
+  </ng-container>
+  <ng-template #member>
+    <button mat-menu-item class="btn__tab settings" (click)="storeDevice('Manage Your Access Devices', false)">
+      <mat-icon>personal_video</mat-icon>
+      Manage Your Access Devices
+    </button>
+  </ng-template>
+</mat-menu>

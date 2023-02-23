@@ -1,0 +1,16 @@
+:host {
+  .primaryColor-700 {
+    color: #1976d2;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .info {
+    color: rgb(0, 0, 255);
+  }
+
+  .checkbox {
+    margin-left: 0.4rem;
+  }
+}

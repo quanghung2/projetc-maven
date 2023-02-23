@@ -1,0 +1,109 @@
+<div ngModelGroup="block" class="transfer-block" fxLayout="column" fxLayoutGap="1.6rem">
+  <div fxLayout="column" fxLayoutGap="0.8rem">
+    <mat-form-field>
+      <mat-label>Transfer to</mat-label>
+      <mat-select [value]="block.dest.type" (selectionChange)="transferDestChange($event.value)">
+        <mat-option *ngFor="let option of destOptions" [value]="option.key">{{ option.value }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <ng-container *ngIf="block.dest.type === DestType.forwardBack2MSISDN">
+      <div class="px-16 py-8 teal-200 mat-caption">Forward back to SIM</div>
+    </ng-container>
+    <ng-container *ngIf="block.dest.type === DestType.number">
+      <mat-form-field>
+        <mat-label>Numbers (maximum {{MAX_NUMBER_ADDED}} numbers)</mat-label>
+        <mat-chip-list #chipList>
+          <mat-chip (removed)="remove(number)" *ngFor="let number of block.dest.numbers" [removable]="true">
+            {{ number }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            (matChipInputTokenEnd)="add($event)"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            matChipInputAddOnBlur="true"
+            name="selectedNumber"
+            placeholder="New phone number..."
+            [disabled]='block.dest.numbers.length >= MAX_NUMBER_ADDED'
+          />
+        </mat-chip-list>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="block.dest.type === DestType.bizphone">
+      <section class="forward-by-keys-section">
+        <mat-slide-toggle [(ngModel)]="block.dest.forwardByKeys" name="forwardByKeys"
+          >Forward to extension by keys pressed.
+        </mat-slide-toggle>
+      </section>
+
+      <mat-form-field>
+        <mat-label>Select extension type</mat-label>
+        <mat-select [(ngModel)]="block.dest.extType" name="extType" required>
+          <mat-option
+            *ngFor="let option of extensionTypeOptions"
+            [value]="option.key"
+            (click)="onChangeExtensionType(option)"
+            >{{ option.value }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="!block.dest.forwardByKeys && block.dest.extType === 'EXTENSION_GROUP'">
+        <mat-label>Select extension group</mat-label>
+        <mat-select [(ngModel)]="block.dest.ext" name="destExt" required>
+          <mat-option
+            *ngFor="let extGroup of bizPhoneExtGroups"
+            (click)="addExtGroup(extGroup)"
+            [value]="extGroup.extGroupKey"
+            >#ExtensionGroup({{ extGroup.extGroupKey }} - {{ extGroup.name }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="!block.dest.forwardByKeys && block.dest.extType === 'CONFERENCE'">
+        <mat-label>Select conference room</mat-label>
+        <mat-select [(ngModel)]="block.dest.ext" name="destExt" required>
+          <mat-option *ngFor="let room of bizPhoneConferenceRooms" (click)="addRoom(room)" [value]="room.roomNumber">
+            #Room({{ room.roomNumber }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="!block.dest.forwardByKeys && block.dest.extType === 'EXTENSION'">
+        <mat-select placeholder="Select extension" [(ngModel)]="block.dest.ext" name="destExt" required>
+          <mat-option *ngFor="let ext of bizPhoneExts" (click)="addExt(ext)" [value]="ext.extKey">
+            #Extension({{ ext.extKey }}{{ ext.extLabel ? ' - ' + ext.extLabel : '' }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="block.dest.type === DestType.callcenter">
+      <mat-form-field>
+        <mat-select placeholder="Select queue" [(ngModel)]="block.dest.queueUuid" name="destQueueUuid" required>
+          <mat-option *ngFor="let queue of callCenterQueues" [value]="queue.uuid">
+            #Queue({{ queue.label }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+  </div>
+
+  <div fxLayout="column" fxLayoutGap="0.8rem">
+    <mat-form-field>
+      <mat-select placeholder="Caller ID" [(ngModel)]="block.callerIdStrategy.type" name="callerIdStrategyType">
+        <mat-option class="item" *ngFor="let option of callerIdStrategyOptions" [value]="option.key">
+          {{ option.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="px-16 py-8 teal-200 mat-caption">
+      {{
+        block.callerIdStrategy.type === CallerIdStrategyType.displayCaller
+          ? 'The number of the caller'
+          : 'The incoming number that receives the call'
+      }}
+    </div>
+  </div>
+</div>

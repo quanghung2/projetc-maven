@@ -1,0 +1,11 @@
+:host {
+  mat-chip {
+    &[data-status='true'] {
+      color: rgba(252, 13, 28, 0.8);
+    }
+  }
+
+  .text-red {
+    color: red;
+  }
+}

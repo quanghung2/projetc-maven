@@ -1,0 +1,17 @@
+:host {
+  .dialog-content-container {
+    padding-bottom: 1.6rem;
+  }
+}
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 16px;
+}
+.queue-type {
+  display: inline-grid;
+  .mat-caption {
+    margin-bottom: 0.8rem !important;
+    mat-radio-button {
+      width: 40%;
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<form [formGroup]="formConfigs">
+  <ng-container formGroupName="transformFunction">
+    <mat-form-field>
+      <mat-select placeholder="Transform function" formControlName="type" (selectionChange)="changeTransform($event)">
+        <mat-option *ngFor="let item of funcTransforms" [value]="item.token">{{ item.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <ng-container formArrayName="argumentsFake">
+      <ng-container *ngFor="let function of argumentsFake.controls; let idx = index">
+        <ng-container [formGroupName]="idx">
+          <b3n-context-variable
+            [optionForControl]="
+              $any({
+                title: function.value.title,
+                expressionTree: function.value.expressionTree,
+                key: 'value',
+                isOptional: false,
+                disabled: !editable,
+                dataType: function.value.dataType
+              })
+            "
+            [contextVariables]="contextVariables"
+            (selectedValue)="selectParams($event, $any(function))"
+          ></b3n-context-variable>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</form>

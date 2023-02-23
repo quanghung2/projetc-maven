@@ -1,0 +1,35 @@
+@import '../../../functions.scss';
+$main-color: #005fad;
+$active-color: $main-color;
+$red: #007be0;
+$redHover: saturate(darken($red, 5), 10);
+$redActive: saturate(darken($red, 5), 15);
+.slide-show {
+  text-align: center;
+  width: 450px;
+  .ui.image {
+    width: auto;
+    margin: 0 auto;
+    box-shadow: 0 3px 9px 0 rgba(0, 0, 0, 0.1);
+  }
+  .selection {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    .circle {
+      cursor: pointer;
+      width: 12px;
+      height: 12px;
+      border: 1px solid #8e8e93;
+      background-color: transparen;
+      border-radius: 50%;
+    }
+
+    .active {
+      color: #8e8e93 !important;
+      background-color: #8e8e93;
+    }
+  }
+}

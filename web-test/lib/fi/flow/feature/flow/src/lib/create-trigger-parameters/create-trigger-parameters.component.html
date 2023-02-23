@@ -1,0 +1,101 @@
+<div [formGroup]="formCreateFlow" fxLayout="column" fxLayoutAlign="start stretch">
+  <section *ngIf="isShowDropdow">
+    <mat-form-field *ngIf="showForApp === AppName.PROGRAMMABLE_FLOW" hideRequiredMarker="true">
+      <mat-select
+        placeholder="Select event"
+        panelClass="select-event"
+        [formControl]="triggerCtrl"
+        [compareWith]="compareTriggerDef"
+        required
+      >
+        <mat-option class="option-event" *ngFor="let t of filteredTriggerDefs" [value]="t">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <img *ngIf="t.iconUrl" [src]="t.iconUrl" />
+            <label class="name mb-0">{{ t.displayName }}</label>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="triggerCtrl.invalid">{{ getErrorTrigger() }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="showForApp !== AppName.PROGRAMMABLE_FLOW" hideRequiredMarker="true">
+      <mat-select placeholder="Select event" panelClass="select-event" [formControl]="triggerCtrl" required>
+        <mat-select-trigger>{{ triggerCtrl.value ? triggerCtrl.value.displayName : '' }}</mat-select-trigger>
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Search..."
+            noEntriesFoundLabel="No events found"
+            [formControl]="searchTriggerCtrl"
+          ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option class="option-event" *ngFor="let t of filteredTriggerDefs" [value]="t">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <img *ngIf="t.iconUrl" [src]="t.iconUrl" />
+            <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="0px">
+              <label class="name">{{ t.displayName }}</label>
+              <p>{{ t.description }}</p>
+            </div>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="triggerCtrl.invalid">{{ getErrorTrigger() }}</mat-error>
+    </mat-form-field>
+  </section>
+
+  <section *ngIf="selectedConnector?.needToSetAuthInfo || selectedConnector?.needToSetParam">
+    <h4 class="mb-8"><strong>Set Connector Config</strong></h4>
+    <b3n-connector-config
+      #config
+      [connector]="connectorToSetConfig"
+      (invalid)="configInvalid = $event"
+    ></b3n-connector-config>
+  </section>
+
+  <section *ngIf="selectedTriggerDef && showParameters">
+    <h4 class="mb-8"><strong>Parameters</strong></h4>
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+      <b3n-mappings
+        [isOptional]="false"
+        [formMappings]="formTriggerConfigs"
+        [isShowContextVar]="false"
+        [dataSourceUuids]="dataSourceUuids"
+      ></b3n-mappings>
+
+      <div class="option-param" *ngIf="showOptionalParam">
+        <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="expandOptionalParam.toggle()">
+          <span *ngIf="!expandOptionalParam.expanded">Show optional params</span>
+          <span *ngIf="expandOptionalParam.expanded">Hide optional params</span>
+          <mat-icon>{{ expandOptionalParam.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a>
+
+        <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+          <b3n-mappings
+            [isOptional]="true"
+            [formMappings]="formTriggerConfigs"
+            [isShowContextVar]="false"
+            [dataSourceUuids]="dataSourceUuids"
+          ></b3n-mappings>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </section>
+
+  <b3n-extend-trigger
+    #extendTrigger
+    *ngIf="selectedTriggerDef?.extensionConfig.extendable"
+    [editable]="true"
+  ></b3n-extend-trigger>
+
+  <div dir="rtl" class="mb-2">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      [loading]="creating"
+      [disabled]="disableSubmit()"
+      (click)="create()"
+    >
+      {{ replaceTriggerInput?.replace ? 'Replace' : 'Create' }}
+    </button>
+  </div>
+</div>

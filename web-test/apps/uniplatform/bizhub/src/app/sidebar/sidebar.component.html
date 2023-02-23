@@ -1,0 +1,21 @@
+<div class="sidebar">
+  <mat-toolbar>
+    <mat-toolbar-row><h2 class="">Business Hub</h2></mat-toolbar-row>
+  </mat-toolbar>
+  <mat-divider></mat-divider>
+  <mat-action-list>
+    <button
+      *ngFor="let item of links"
+      [routerLink]="[item.key]"
+      routerLinkActive="active"
+      mat-list-item
+      class="menu-item"
+    >
+      {{ item.value }}
+    </button>
+  </mat-action-list>
+  <div *ngIf="hasPermissionGroup" [routerLink]="['permission']" routerLinkActive="link-active" class="permission-gp">
+    <mat-icon class="material-icons-outlined">admin_panel_settings</mat-icon>
+    <span class="permission-text">Permission </span>
+  </div>
+</div>

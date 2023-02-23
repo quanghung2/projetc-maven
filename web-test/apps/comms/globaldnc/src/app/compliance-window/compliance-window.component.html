@@ -1,0 +1,304 @@
+<div class="ui page content container">
+  <div class="ui grid">
+    <div class="search-container">
+      <div class="label">Search numbers</div>
+      <form (submit)="beforeLookup()">
+        <div class="ui left icon input">
+          <input type="text" placeholder="Search numbers (e.g: +6581234567)" [(ngModel)]="number" name="number" />
+          <i class="search icon"></i>
+        </div>
+        <button class="hidden" type="submit"></button>
+      </form>
+      <!--<div class="info">
+				Each lookup will be charged at <strong>{{price.real}} {{price.currency}}</strong> (rounded up to the nearest 0.1 cents per transaction).
+			</div>-->
+      <div class="extra-info" *ngIf="!isLooked">
+        <div>Search numbers to view:</div>
+        <div>- <strong>Current DNC status</strong> with full validity period.</div>
+        <div>- <strong>Activity Logs</strong>.</div>
+      </div>
+    </div>
+
+    <div class="status-container" *ngIf="isLooked">
+      <div class="header">DNC Status</div>
+      <div class="lookup-result-container">
+        <table class="ui celled table">
+          <thead>
+            <tr>
+              <th class="border-none"></th>
+              <th colspan="3">DNC</th>
+              <th colspan="3">Consent</th>
+              <th>PDPC Id</th>
+            </tr>
+            <tr>
+              <th>Number</th>
+              <th>Voice Call</th>
+              <th>Fax Message</th>
+              <th>Text Message</th>
+              <th>Voice Call</th>
+              <th>Fax Message</th>
+              <th>Text Message</th>
+              <th>PDPC Id</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of lookResult">
+              <td>{{ r.number }}</td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.voice.dnc | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.voice.dnc | dncStatus }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.fax.dnc | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.fax.dnc | dncStatus }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.sms.dnc | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.sms.dnc | dncStatus }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.voice.consent | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.voice.consent | consentStatus }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.fax.consent | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.fax.consent | consentStatus }}
+                </span>
+              </td>
+              <td>
+                <span
+                  [attr.data-tooltip]="r.mediums.sms.consent | dncStatus: 'description'"
+                  [attr.data-position]="'top center'"
+                  [attr.data-inverted]="''"
+                >
+                  {{ r.mediums.sms.consent | consentStatus }}
+                </span>
+              </td>
+              <td>
+                <span>
+                  {{ r.pdpcTxnId }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="8" style="text-align: right">
+                <span *ngIf="expiredDate">Expired at {{ expiredDate | date: 'yyyy-MM-dd' }}</span>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div *ngIf="lookuping" class="ui active inverted dimmer inner-dimmer">
+          <div class="ui text loader"></div>
+        </div>
+      </div>
+
+      <div class="notes-container">
+        <div class="label">Notes</div>
+        <div class="collaps-eexplanation" [class.hidden]="expandNote">View all WL, BL, NR etc. explainations</div>
+        <i class="icon link expand more" [class.hidden]="expandNote" (click)="expandNote = true"></i>
+        <div class="clearfix"></div>
+        <table class="ui page unstackable table" [class.hidden]="!expandNote">
+          <thead>
+            <tr>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>WL</td>
+              <td class="description">Whitelist</td>
+            </tr>
+            <tr>
+              <td>NR</td>
+              <td class="description">Not registered on DNC Registry and Company List</td>
+            </tr>
+            <tr>
+              <td>BL</td>
+              <td class="description">Blacklist (Company Opt-out List)</td>
+            </tr>
+            <tr>
+              <td>DNC</td>
+              <td class="description">Do-not-call/text/fax as registered in DNC Registry</td>
+            </tr>
+            <tr>
+              <td>SKIPPED</td>
+              <td class="description">Not a valid Singapore number</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2"></th>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="clearfix"></div>
+        <div class="collaps-eexplanation" [class.hidden]="!expandNote">Close all</div>
+        <i class="icon link expand less" [class.hidden]="!expandNote" (click)="expandNote = false"></i>
+      </div>
+    </div>
+    <div class="log-container" *ngIf="isLooked">
+      <div class="header">Activity Logs</div>
+      <div class="ui page control borderless menu">
+        <div class="item vertical filter">
+          <label>Filter by Action</label>
+          <div sm-component class="ui underline selected dropdown" tabindex="0">
+            <div class="text">All Actions</div>
+            <i class="icon dropdown"></i>
+            <div class="menu" tabindex="-1">
+              <div class="item">All Actions</div>
+            </div>
+          </div>
+        </div>
+        <div class="item vertical filter">
+          <label>Filter by Remark</label>
+          <div sm-component class="ui underline selected dropdown" tabindex="0">
+            <div class="text">All Remarks</div>
+            <i class="icon dropdown"></i>
+            <div class="menu" tabindex="-1">
+              <div class="item">All Remarks</div>
+            </div>
+          </div>
+        </div>
+        <div class="item vertical filter">
+          <label>Filter by Medium</label>
+          <div sm-component class="ui underline selected dropdown" tabindex="0">
+            <div class="text">All Mediums</div>
+            <i class="icon dropdown"></i>
+            <div class="menu" tabindex="-1">
+              <div class="item">All Mediums</div>
+            </div>
+          </div>
+        </div>
+        <div class="item vertical calendar filter">
+          <label>From</label>
+          <div
+            sm-component
+            id="log-from-date"
+            class="ui calendar"
+            type="date"
+            maxDate="today"
+            endCalendar="log-to-date"
+            formatDate="yyyy-MM-dd"
+            affectOther="true"
+            (change)="changeFrom($event.date)"
+          >
+            <div class="ui fluid input left icon">
+              <i class="today icon"></i>
+              <input type="text" placeholder="From" value="{{ searchRequest.from | date: 'yyyy-MM-dd' }}" />
+            </div>
+          </div>
+        </div>
+        <div class="item vertical calendar filter">
+          <label>To</label>
+          <div
+            sm-component
+            id="log-to-date"
+            class="ui calendar"
+            type="date"
+            [attr.minDate]="searchRequest.from"
+            range="30 days"
+            startCalendar="log-from-date"
+            formatDate="yyyy-MM-dd"
+            (change)="changeTo($event.date)"
+          >
+            <div class="ui fluid input left icon">
+              <i class="today icon"></i>
+              <input type="text" placeholder="To" value="{{ searchRequest.to | date: 'yyyy-MM-dd' }}" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="count-entry-container">
+        <div class="label">Show</div>
+        <select sm-component class="ui dropdown mini" (change)="changePerPage($event.target.value)">
+          <option value="5" [selected]="pagination.perPage == 5">5</option>
+          <option value="10" [selected]="pagination.perPage == 10">10</option>
+          <option value="15" [selected]="pagination.perPage == 15">15</option>
+          <option value="20" [selected]="pagination.perPage == 20">20</option>
+        </select>
+        <div class="label">entries</div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="log-result-container">
+        <div class="empty" [class.hidden]="searchResult.totalCount != 0">
+          No record found. Change filters or search other numbers.
+        </div>
+        <table [class.hidden]="searchResult.totalCount == 0" class="ui page unstackable table">
+          <thead>
+            <tr>
+              <th>Target</th>
+              <th>From</th>
+              <th>When</th>
+              <th>Medium</th>
+              <th>DNC Status</th>
+              <th>Consent Status</th>
+              <th>PDPC Id</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let r of searchResult.entries">
+              <td>{{ r.number }}</td>
+              <td>{{ r.credential_detail }}</td>
+              <td>{{ r.created_at | date: 'yyyy-MM-dd HH:mm' }}</td>
+              <td>{{ r.medium.join(', ') }}</td>
+              <td>
+                {{ r.voice_dnc_result | dncStatus }} / {{ r.fax_dnc_result | dncStatus }} /
+                {{ r.sms_dnc_result | dncStatus }}
+              </td>
+              <td>
+                {{ r.voice_consent_result | consentStatus }} / {{ r.fax_consent_result | consentStatus }} /
+                {{ r.sms_consent_result | consentStatus }}
+              </td>
+              <td>{{ r.pdpc_txn_id }}</td>
+              <td>{{ r.remark }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="8">
+                <pagination
+                  [totalCount]="searchResult.totalCount"
+                  [perPage]="pagination.perPage"
+                  [currentPage]="pagination.currentPage"
+                  (pageChange)="changePage($event)"
+                ></pagination>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+        <div *ngIf="searching" class="ui active inverted dimmer inner-dimmer">
+          <div class="ui text loader"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

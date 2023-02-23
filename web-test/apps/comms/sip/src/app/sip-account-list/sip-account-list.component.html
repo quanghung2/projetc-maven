@@ -1,0 +1,63 @@
+<div sm-component class="ui modal" modal-id="sip-account-list-modal">
+  <div class="content">
+    <div class="ui column grid">
+      <div class="left aligned six wide column">
+        <div class="ui icon input loading" [class.loading]="loading">
+          <input type="text" [ngModel]="searchStr" (ngModelChange)="search($event)" />
+          <i class="search icon"></i>
+        </div>
+      </div>
+
+      <div class="right aligned right floated ten wide column">
+        <pagination
+          [totalCount]="searchResult.totalCount"
+          [perPage]="pagination.perPage"
+          [currentPage]="pagination.currentPage"
+          (pageChange)="onPageChanged($event)"
+          class="right aligned column right floated"
+        ></pagination>
+      </div>
+    </div>
+    <div *ngIf="!loading">
+      <div *ngIf="searchResult.totalCount > 0">
+        <table class="ui very basic compact unstackable table selectable">
+          <thead>
+            <tr>
+              <th class="left aligned">#</th>
+              <th>Sip Username</th>
+              <th>Label</th>
+              <th>Number</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of searchResult.itemsPerPage; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.sipUsername }}</td>
+              <td>{{ item.tag | truncate: '35' }}</td>
+              <td>
+                <span *ngIf="item.numbers.length == 1">{{ item.numbers }}</span>
+                <span *ngIf="item.numbers.length > 1">{{ item.numbers.length }} numbers</span>
+              </td>
+              <td><a href="javascript:void(0)" (click)="switchAccount(item)">View details</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="searchResult.totalCount == 0">
+        <div class="ui grid two column form">
+          <div class="row empty-content">
+            <div class="five wide column right aligned">
+              <i class="drive icon"></i>
+            </div>
+            <div class="eleven wide column">
+              <div class="empty-dial-plan">Empty result</div>
+              <div>No sip account matched with your search criteria, please try again.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

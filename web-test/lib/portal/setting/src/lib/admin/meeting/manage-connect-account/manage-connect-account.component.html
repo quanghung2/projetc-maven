@@ -1,0 +1,81 @@
+<div mat-dialog-title fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+  <span>Manage connect account</span> <span class="fill-remaining-space"></span>
+  <button mat-dialog-close class="actions"><mat-icon>close</mat-icon></button>
+</div>
+<mat-dialog-content>
+  <div fxLayout="column" fxLayoutGap="2rem" class="content-body">
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Google</div>
+      <div class="item-right">
+        <button
+          [loading]="isLoadingGoogle"
+          *ngIf="!isEnableGoogle"
+          mat-stroked-button
+          color="primary"
+          (click)="enableGoogleConnector()"
+        >
+          Connect
+        </button>
+        <button
+          [loading]="isLoadingGoogle"
+          *ngIf="isEnableGoogle"
+          mat-stroked-button
+          color="primary"
+          (click)="disconnecGoogleConnector()"
+        >
+          Disconnect
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div fxLayout="row" fxLayoutGap="0.5rem" fxLayoutAlign="space-between center">
+      <div class="item-left">Zoom</div>
+      <div class="item-right">
+        <button
+          [loading]="isLoadingZoom"
+          *ngIf="!isEnableZoom"
+          mat-stroked-button
+          color="primary"
+          (click)="enableZoomConnector()"
+        >
+          Connect
+        </button>
+        <button
+          [loading]="isLoadingZoom"
+          *ngIf="isEnableZoom"
+          mat-stroked-button
+          color="primary"
+          (click)="disconnectZoomConnector()"
+        >
+          Disconnect
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="item-left">MsTeam</div>
+      <div class="item-right">
+        <button
+          [loading]="isLoadingMsTeam"
+          *ngIf="!isEnableMsTeam"
+          mat-stroked-button
+          color="primary"
+          (click)="enableMSTeamConnector()"
+        >
+          Connect
+        </button>
+        <button
+          [loading]="isLoadingMsTeam"
+          *ngIf="isEnableMsTeam"
+          mat-stroked-button
+          color="primary"
+          (click)="disconnectMSTeamConnector()"
+        >
+          Disconnect
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+</mat-dialog-content>

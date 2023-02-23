@@ -1,0 +1,127 @@
+// // -----------------------------------------------------------------------------------------------------
+@use '@angular/material' as mat;
+// // @ Custom color maps for Fuse
+// // -----------------------------------------------------------------------------------------------------
+// $b3n-white: (
+//   500: white,
+//   contrast: (
+//     500: $dark-primary-text
+//   )
+// );
+
+// $b3n-black: (
+//   500: black,
+//   contrast: (
+//     500: $light-primary-text
+//   )
+// );
+
+// $b3n-navy: (
+//   50: #ececee,
+//   100: #c5c6cb,
+//   200: #9ea1a9,
+//   300: #7d818c,
+//   400: #5c616f,
+//   500: #3c4252,
+//   600: #353a48,
+//   700: #2d323e,
+//   800: #262933,
+//   900: #1e2129,
+//   A100: #c5c6cb,
+//   A200: #9ea1a9,
+//   A400: #5c616f,
+//   A700: #2d323e,
+//   contrast: (
+//     50: $dark-primary-text,
+//     100: $dark-primary-text,
+//     200: $dark-primary-text,
+//     300: $light-primary-text,
+//     400: $light-primary-text,
+//     500: $light-primary-text,
+//     600: $light-primary-text,
+//     700: $light-primary-text,
+//     800: $light-primary-text,
+//     900: $light-primary-text,
+//     A100: $dark-primary-text,
+//     A200: $light-primary-text,
+//     A400: $light-primary-text,
+//     A700: $light-primary-text
+//   )
+// );
+
+// // Generate Fuse color classes for custom palettes
+// $custom_palettes: (
+//   fuse-white: $b3n-white,
+//   b3n-black: $b3n-black,
+//   b3n-navy: $b3n-navy
+// );
+
+// @include b3n-color-classes($custom_palettes);
+
+// -----------------------------------------------------------------------------------------------------
+// @ Typography
+// -----------------------------------------------------------------------------------------------------
+
+// Angular Material typography
+$typography: mat.define-typography-config(
+  $font-family: 'Roboto, sans-serif',
+  // $button: mat-typography-level(14px, 14px, 500),
+  // $input: mat-typography-level(16px, 1.125, 400) // line-height must be unitless !!!
+);
+
+// Setup the typography
+@include mat.all-component-typographies($typography);
+
+// -----------------------------------------------------------------------------------------------------
+// @ Component theming
+// -----------------------------------------------------------------------------------------------------
+
+// Import app and page component themes here to enable theming for them
+
+@import './sidebar/sidebar.theme';
+// Define a mixin for easier access
+@mixin components-theme($theme) {
+  @include sidebar-theme($theme);
+}
+
+// -----------------------------------------------------------------------------------------------------
+// @ Define the default theme
+// -----------------------------------------------------------------------------------------------------
+
+// Define the primary, accent and warn palettes
+$default-primary-palette: mat.define-palette(mat.$blue-palette);
+$default-accent-palette: mat.define-palette(mat.$light-blue-palette, 600, 400, 700);
+$default-warn-palette: mat.define-palette(mat.$red-palette);
+
+// Create the Material theme object
+$theme: mat.define-light-theme($default-primary-palette, $default-accent-palette, $default-warn-palette);
+
+// Add ".theme-default" class to the body to activate this theme.
+// Class name must start with "theme-" !!!
+body.theme-default {
+  // Create an Angular Material theme from the $theme map
+  @include mat.all-component-themes($theme);
+
+  // Apply the theme to the b3n Core
+  @include b3n-core-theme($theme);
+
+  // Apply the theme to the user components
+  @include components-theme($theme);
+
+  // Generate b3n color classes for primary, accent and warn colors
+  $palettes: (
+    primary: $default-primary-palette,
+    accent: $default-accent-palette,
+    warn: $default-warn-palette
+  );
+
+  @include b3n-color-classes($palettes);
+  .mat-drawer-container,
+  .mat-toolbar {
+    background-color: inherit;
+  }
+  .mat-toolbar {
+    font-size: 14px;
+    font-weight: 400;
+  }
+}

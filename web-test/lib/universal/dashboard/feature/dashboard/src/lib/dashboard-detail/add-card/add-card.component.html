@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Add chart</h1>
+<div mat-dialog-content>
+  <form fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="1em">
+    <mat-form-field>
+      <mat-label>Select a question</mat-label>
+      <mat-select [(value)]="selectedQuestion">
+        <mat-option *ngFor="let question of questions" [value]="question">{{ question.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end" fxLayoutGap="0.5em">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-stroked-button color="primary" (click)="progress()" [disabled]="!selectedQuestion || progressing">
+    <span *ngIf="!progressing">Add</span>
+    <span *ngIf="progressing">Adding...</span>
+  </button>
+</div>

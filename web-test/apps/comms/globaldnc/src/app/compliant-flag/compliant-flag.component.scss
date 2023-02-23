@@ -1,0 +1,26 @@
+:host {
+  .compliant-flag-container {
+    width: 900px;
+    margin: 3rem auto;
+
+    .header {
+      color: #333333;
+      font-size: 24px;
+      font-weight: 500;
+    }
+
+    .header-container {
+      color: #333333;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .body {
+      padding: 1rem;
+
+      .text-exception {
+        padding-bottom: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<div [formGroup]="searchFG" fxHide.lt-md fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="0.5rem">
+  <mat-form-field class="search-common" appearance="outline">
+    <mat-label>Search By</mat-label>
+    <mat-select placeholder="Search By" formControlName="type">
+      <mat-option *ngFor="let search of searchList" [value]="search.key">{{ search.value }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="search-common" appearance="outline">
+    <mat-label>Search</mat-label>
+    <input matInput formControlName="value" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>

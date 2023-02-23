@@ -1,0 +1,222 @@
+<mat-drawer-container>
+  <mat-drawer-content>
+    <mat-toolbar><h1>Members</h1></mat-toolbar>
+    <ng-container *ngTemplateOutlet="notification"></ng-container>
+    <pom-action-bar
+      (importMemberEvent)="refreshMembersPage(true)"
+      (addMemberEvent)="onAddNewMember($event)"
+      [filterFG]="filterFG"
+      [includePendingStatus]="hasPendingMember && isUpperAdmin"
+      [isManagedEveryone]="isManagedEveryone"
+      [managedTeams]="managedTeams"
+    ></pom-action-bar>
+
+    <ng-template #spinner>
+      <div *ngIf="loading$ | async" class="spinner-container" fxLayout="column" fxLayoutAlign="center center">
+        <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+      </div>
+    </ng-template>
+
+    <ng-template #notification>
+      <div
+        *ngIf="filterFG?.value?.status !== Status.PENDING && pendingMembers.length"
+        (click)="changeStatus()"
+        class="notification"
+      >
+        There are {{ pendingMembers.length }} pending invites
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="!(loading$ | async); else spinner">
+      <div *ngIf="filterFG?.value.status !== Status.PENDING" class="member-container px-16">
+        <div *ngIf="membersPage?.content.length">
+          <table [dataSource]="membersPage.content" mat-table>
+            <ng-container matColumnDef="uuid">
+              <th *matHeaderCellDef mat-header-cell>Uuid</th>
+              <td *matCellDef="let member" mat-cell>
+                <div
+                  (click)="copy($event)"
+                  class="uuid-column"
+                  matTooltip="Click to copy"
+                  [cdkCopyToClipboard]="member.uuid"
+                >
+                  {{ member.shortUuid }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="displayName">
+              <th *matHeaderCellDef mat-header-cell>Name</th>
+              <td *matCellDef="let member" mat-cell>
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                  <img *ngIf="member.photoUrl" src="{{ member.photoUrl }}" />
+                  <mat-icon *ngIf="!member.photoUrl" svgIcon="member"></mat-icon>
+                  <span>{{ member.displayName }} </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="role">
+              <th *matHeaderCellDef mat-header-cell>Role</th>
+              <td *matCellDef="let member" mat-cell>
+                <div [class]="member.role">
+                  {{ member.role | lowercase }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ext">
+              <th *matHeaderCellDef mat-header-cell>Extension</th>
+              <td *matCellDef="let member" mat-cell>
+                {{ extensionMap[member.uuid]?.extKey }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th *matHeaderCellDef mat-header-cell>Email</th>
+              <td *matCellDef="let member" mat-cell>{{ member.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="mobileNumber">
+              <th *matHeaderCellDef mat-header-cell>Phone</th>
+              <td *matCellDef="let member" mat-cell>{{ member.mobileNumber }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th *matHeaderCellDef mat-header-cell></th>
+              <td *matCellDef="let member" mat-cell>
+                <div class="action">
+                  <button
+                    mat-icon-button
+                    *ngIf="
+                      (isOwner || isAdmin) &&
+                      member.role !== MemberRole.OWNER &&
+                      member.memberStatus === MemberStatus.disabled
+                    "
+                    (click)="delete(member, $event)"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+            <tr
+              (click)="showDetail(member, $event); sidenav.open()"
+              *matRowDef="let member; columns: displayedColumns"
+              mat-row
+            ></tr>
+          </table>
+
+          <mat-paginator
+            (page)="pageChanged($event)"
+            [class.disable]="membersPage.content.length"
+            [length]="membersPage.totalCount"
+            [pageIndex]="pageable.page"
+            [pageSizeOptions]="[10, 15, 20]"
+            [pageSize]="pageable.perPage"
+            hidePageSize
+            showFirstLastButtons
+          ></mat-paginator>
+        </div>
+
+        <ng-container *ngIf="membersPage?.content?.length === 0">
+          <div class="no-member-found" fxLayout="column" fxLayoutAlign="center center">
+            <mat-icon class="no-member-found-icon" svgIcon="member"></mat-icon>
+            <div>No members found</div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div *ngIf="filterFG?.value.status === Status.PENDING" class="member-container px-16">
+        <ng-container *ngIf="pendingMembers?.length; else noPendingMembers">
+          <table [dataSource]="dataSource" mat-table>
+            <ng-container matColumnDef="uuid">
+              <th *matHeaderCellDef mat-header-cell>Uuid</th>
+              <td *matCellDef="let member" mat-cell>
+                <div
+                  (click)="copy($event)"
+                  [cbContent]="member.member.uuid"
+                  class="uuid-column"
+                  matTooltip="Click to copy"
+                  ngxClipboard
+                >
+                  {{ member.member.shortUuid }}
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="displayName">
+              <th *matHeaderCellDef mat-header-cell>Name</th>
+              <td *matCellDef="let member" mat-cell>
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                  <img *ngIf="member.photoUrl" src="{{ member.photoUrl }}" />
+                  <mat-icon *ngIf="!member.photoUrl" svgIcon="member"></mat-icon>
+                  <span>{{ member.member.displayName }} </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="role">
+              <th *matHeaderCellDef mat-header-cell>Role</th>
+              <td *matCellDef="let member" mat-cell>
+                <label [class]="member.role">
+                  {{ member.role | lowercase }}
+                </label>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="email">
+              <th *matHeaderCellDef mat-header-cell>Email</th>
+              <td *matCellDef="let member" mat-cell>{{ member.email }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="expireAt">
+              <th *matHeaderCellDef mat-header-cell>Expire At</th>
+              <td *matCellDef="let member" mat-cell>{{ member.expireAt | userDate }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th *matHeaderCellDef mat-header-cell></th>
+              <td *matCellDef="let member" mat-cell>
+                <div class="action">
+                  <button mat-icon-button (click)="confirmAndSendActivation(member)" matTooltip="Send Activation Email">
+                    <mat-icon>send</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="deletePending(member, $event)" matTooltip="Delete">
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr *matHeaderRowDef="displayPendingMemberColumns" mat-header-row></tr>
+            <tr *matRowDef="let member; columns: displayPendingMemberColumns" mat-row></tr>
+          </table>
+          <mat-paginator
+            #pendingMembersPaginator
+            [length]="pendingMembers?.length"
+            [pageSize]="10"
+            hidePageSize
+            showFirstLastButtons
+          ></mat-paginator>
+        </ng-container>
+        <ng-template #noPendingMembers>
+          <div class="no-member-found" fxLayout="column" fxLayoutAlign="center center">
+            <mat-icon class="no-member-found-icon" svgIcon="member"></mat-icon>
+            <div>No pending members found</div>
+          </div>
+        </ng-template>
+      </div>
+    </ng-container>
+  </mat-drawer-content>
+
+  <mat-drawer #sidenav class="member-detail" mode="over" opened="false" position="end" (closed)="closeDrawer()">
+    <pom-member-detail
+      [groups]="groups"
+      (closeRightSidenav)="closeDrawer()"
+      (memberDetailChanged)="refreshMembersPage($event); sidenav.close()"
+    ></pom-member-detail>
+  </mat-drawer>
+</mat-drawer-container>

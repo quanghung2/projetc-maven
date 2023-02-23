@@ -1,0 +1,108 @@
+<div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+  <strong>Connectors</strong>
+  <a
+    #trigger="matMenuTrigger"
+    href="javascript:;"
+    class="link"
+    [matMenuTriggerFor]="menuconnector"
+    (click)="unSelectConnectorAndActionDef()"
+  >
+    + Add
+  </a>
+</div>
+
+<div (click)="trigger?.closeMenu()">
+  <div fxLayout="column" fxLayoutAlign="start stretch" *ngFor="let connector of connectorsSuggestions">
+    <div class="connector" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px" fxFlex>
+        <img [src]="connector.iconUrl" class="logo" fxFlex="32px" />
+        <h4 class="mb-0">{{ connector.name }}</h4>
+      </div>
+
+      <div>
+        <button
+          mat-icon-button
+          *ngIf="isShowSetConfigConnector(connector)"
+          matTooltip="Click to change connector config"
+          (click)="setConfig(connector)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          *ngIf="connector.type !== 'BUILT_IN'"
+          matTooltip="Click to remove connector"
+          (click)="removeConnector(connector)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div fxLayout="column" class="actions-def" *ngIf="connector?.actionDefs?.length">
+      <div
+        *ngFor="let actionDef of connector.actionDefs"
+        fxLayout="row"
+        fxLayoutAlign="space-between stretch"
+        class="group-action"
+        [class.selected]="actionDefSelected?.uuid === actionDef.uuid"
+        [class.click-action-background]="actionDefWhenHover?.uuid === actionDef.uuid"
+      >
+        <label
+          fxFlex
+          [style.opacity]="invalidAction(actionDef) ? '0.5' : '1'"
+          (click)="selectedActionDef(connector, actionDef)"
+        >
+          {{ actionDef.name }}
+        </label>
+
+        <button
+          mat-icon-button
+          [disableRipple]="true"
+          [matMenuTriggerFor]="informationAction"
+          #menuTrigger="matMenuTrigger"
+          (click)="actionDefWhenHover = actionDef"
+        >
+          <mat-icon>info</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<mat-menu #menuconnector="matMenu" overlapTrigger="false" class="fif-menu connector-favorite-menu">
+  <div class="header" (click)="$event.stopPropagation()">
+    <mat-form-field>
+      <input matInput placeholder="Search connectors" [formControl]="searchConnector" />
+      <mat-icon matSuffix *ngIf="!searchConnector.value">search</mat-icon>
+      <mat-icon class="remove-text" matSuffix *ngIf="searchConnector.value" (click)="searchConnector.setValue('')">
+        close
+      </mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div
+    *ngFor="let connector of connectors"
+    class="connector-item"
+    fxLayout="row"
+    fxLayoutAlign="start center"
+    fxLayoutGap="8px"
+    (click)="addConnector($event, connector)"
+  >
+    <img [src]="connector.iconUrl" class="logo" fxFlex="32px" />
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <h4 class="mb-0" fxFlex>{{ connector.name }}</h4>
+      <span class="description">{{ connector?.description }}</span>
+    </div>
+  </div>
+</mat-menu>
+
+<mat-menu
+  #informationAction="matMenu"
+  overlapTrigger="false"
+  class="fif-menu information-menu"
+  (closed)="onCloseInformationMenu()"
+>
+  <b3n-action-def-info [actionDefWhenHover]="actionDefWhenHover"></b3n-action-def-info>
+</mat-menu>

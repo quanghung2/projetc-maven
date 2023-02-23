@@ -1,0 +1,24 @@
+.menu-tree {
+  padding: 8px 16px 16px 11px;
+  position: relative;
+
+  .remove-text:hover {
+    cursor: pointer;
+  }
+}
+
+.header {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 999;
+  padding: 8px 0;
+}
+
+.hint {
+  cursor: pointer;
+}

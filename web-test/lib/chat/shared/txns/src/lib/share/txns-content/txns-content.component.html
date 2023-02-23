@@ -1,0 +1,41 @@
+<ng-container *ngIf="loadingHistory$ | async as isLoading">
+  <div class="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="loadingFirst; else viewLoading">
+  <div
+    fxFlex
+    infiniteScroll
+    [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="50"
+    [scrollWindow]="false"
+    class="messages-viewport flex column justify-content-start align-items-none gap-025"
+    tabindex="0"
+    #viewport
+  >
+    <div
+      class="msg-item"
+      *ngFor="let msg of messages; let i = index; trackBy: trackByIdx"
+      [attr.data-ts]="msg.ts"
+      [id]="msg.clientId"
+    >
+      <!-- isSame date -->
+      <div class="group-by-date" *ngIf="i > 0 && diffDates(msg.ts, messages[i - 1].ts)">
+        <span>{{ msg.ts | viewDate }}</span>
+      </div>
+
+      <csh-chat-message
+        [message]="msg"
+        [previousMessage]="i === 0 ? null : messages[i - 1]"
+        [parentElr]="msg.mt === MsgType.attachment ? viewport : null"
+      ></csh-chat-message>
+    </div>
+  </div>
+</ng-container>
+<ng-template #viewLoading>
+  <div fxFill fxLayoutAlign="center center">
+    <mat-spinner diameter="30"></mat-spinner>
+  </div>
+</ng-template>

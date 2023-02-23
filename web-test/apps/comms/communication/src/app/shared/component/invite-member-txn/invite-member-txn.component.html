@@ -1,0 +1,45 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Assign members</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+
+<ng-container *ngIf="loading">
+  <div class="container-dialog" mat-dialog-content fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner diameter="35"></mat-spinner>
+  </div>
+</ng-container>
+
+<div *ngIf="!loading" mat-dialog-content>
+  <mat-form-field appearance="outline">
+    <mat-label>Agent</mat-label>
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let member of members; trackBy: trackBy"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(member)"
+      >
+        <csh-render-member [user]="member" [showStatus]="false"></csh-render-member>
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input
+        #memberInput
+        [formControl]="memberCtrl"
+        [matAutocomplete]="auto"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        [matChipInputAddOnBlur]="addOnBlur"
+      />
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let member of filteredMembers | async; trackBy: trackBy" [value]="member">
+        <csh-render-member [user]="member" [key]="key"></csh-render-member>
+      </mat-option>
+      <mat-option *ngIf="(filteredMembers | async)?.length === 0" disabled>No members available</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button color="primary" [loading]="processing" (click)="submit()">Assign</button>
+</div>

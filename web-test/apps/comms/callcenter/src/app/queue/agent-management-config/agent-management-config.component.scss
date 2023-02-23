@@ -1,0 +1,49 @@
+:host {
+  .agent__header {
+    font-size: 18px;
+
+    .agent-proficiency-info-icon {
+      font-size: 21px;
+      margin-left: 5px;
+      color: gray;
+    }
+  }
+
+  .valueProficiency {
+    color: red;
+  }
+
+  .agent__rows {
+    border: solid thin lightgray;
+    padding-top: 0;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 5px;
+
+    .sortable-box {
+      font-size: 14px;
+      cursor: move;
+
+      &:hover {
+        background: #f4f4f4;
+      }
+
+      mat-icon {
+        font-size: 21px;
+        color: gray;
+        cursor: no-drop;
+      }
+
+      .proficiency__input {
+        width: 65px;
+        border-radius: 0;
+        margin-right: 15px;
+      } 
+      ::placeholder {
+        color: red;
+      }
+    }
+  }
+}

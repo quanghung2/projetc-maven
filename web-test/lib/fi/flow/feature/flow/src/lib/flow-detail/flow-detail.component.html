@@ -1,0 +1,253 @@
+<b3n-header-flow fromPage="flow" (toggle)="toggleOverViewTree()"></b3n-header-flow>
+
+<mat-sidenav-container [autosize]="true" *ngIf="flow$ | async as flow">
+  <mat-sidenav
+    id="side-nav-connector"
+    mode="side"
+    fixedInViewport="true"
+    fixedTopGap="62.3"
+    position="start"
+    disableClose
+    [@.disabled]="true"
+    [opened]="
+      showForApp !== AppName.PROGRAMMABLE_FLOW &&
+      flow.editable &&
+      trigger !== null &&
+      (trigger.configs !== null || flow.type === 'SUBROUTINE' || flow.type === 'BUSINESS_ACTION')
+    "
+  >
+    <b3n-sidebar-suggestion (connectorSelected)="selectConnector($event, flow)"></b3n-sidebar-suggestion>
+  </mat-sidenav>
+
+  <mat-sidenav
+    id="side-nav-overview-tree"
+    #sidenav
+    mode="side"
+    fixedInViewport="true"
+    fixedTopGap="62.3"
+    position="end"
+    [resizableMinWidth]="resizableMinWidth"
+    [resizableGrabWidth]="5"
+    [opened]="isOpenOverviewTree"
+    disableClose
+    appResizable
+  >
+    <b3n-overview-tree (click)="unSelectedActionNode()"></b3n-overview-tree>
+  </mat-sidenav>
+
+  <mat-sidenav-content (click)="unSelectedActionNode()">
+    <div *ngIf="flow.type && trigger" class="flow-container" fxLayout="row" fxLayoutAlign="center start">
+      <!-- Select event -->
+      <mat-card *ngIf="flow.type === 'NORMAL' && !trigger.configs" class="w-select-trigger">
+        <h2 class="mb-8"><strong>Choose an event</strong></h2>
+        <b3n-select-trigger></b3n-select-trigger>
+      </mat-card>
+
+      <!-- Have event -->
+      <ng-container
+        *ngIf="
+          (flow.type === 'NORMAL' && trigger.configs) || flow.type === 'SUBROUTINE' || flow.type === 'BUSINESS_ACTION'
+        "
+      >
+        <!-- Main flow -->
+        <div *ngIf="isMainFlow" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px" fxFlex="480px">
+          <mat-card
+            *ngIf="flow.totalWarnings > 0"
+            class="warning-action"
+            fxLayout="row"
+            fxLayoutAlign="space-between center"
+          >
+            <span>This flow has issues</span>
+            <button
+              mat-stroked-button
+              color="warn"
+              style="background: white"
+              (click)="onNavigateToResolveDeprecate(flow)"
+            >
+              Resolve
+            </button>
+          </mat-card>
+
+          <div fxLayout="column" fxLayoutAlign="start stretch">
+            <div
+              [id]="
+                flow.ui.treeNodeSelected?.isSubroutineTrigger
+                  ? flow.ui.treeNodeSelected.subroutineUuid
+                  : trigger?.def?.triggerDefUuid
+              "
+              class="panel mat-elevation-z2"
+              [class.highlight]="flow.ui.treeNodeSelected?.isTrigger || flow.ui.treeNodeSelected?.isSubroutineTrigger"
+              fxLayout="column"
+              fxLayoutAlign="start stretch"
+            >
+              <div class="panel__header" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+                  <ng-container *ngIf="flow.type === 'NORMAL' && trigger.def">
+                    <img [src]="trigger.def.iconUrl" class="logo" fxFlex="40px" />
+                    <h3 class="mb-0" fxFlex>
+                      <strong>1. {{ trigger.def.triggerDefName }}</strong>
+                    </h3>
+                  </ng-container>
+                  <ng-container *ngIf="flow.type === 'SUBROUTINE'">
+                    <img src="assets/flow-shared/icons/shortcut.svg" class="logo" fxFlex="40px" />
+                    <h3 class="mb-0" fxFlex><strong>1. When triggered by other flows</strong></h3>
+                  </ng-container>
+                  <ng-container *ngIf="flow.type === 'BUSINESS_ACTION'">
+                    <img src="assets/flow-shared/icons/electric_bolt.svg" class="logo" fxFlex="40px" />
+                    <h3 class="mb-0" fxFlex><strong>1. Business action</strong></h3>
+                  </ng-container>
+                </div>
+
+                <button mat-icon-button [matMenuTriggerFor]="actionMenu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </div>
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="edit(flow.type)">{{ flow.editable ? 'Edit' : 'View' }}</button>
+                <button mat-menu-item (click)="viewTriggerOutput(flow)">Output</button>
+                <button mat-menu-item [matMenuTriggerFor]="callerMenu" *ngIf="flow.type === 'SUBROUTINE'">
+                  Callers
+                </button>
+                <button mat-menu-item *ngIf="flow.editable && flow.type === 'NORMAL'" (click)="replaceTrigger(flow)">
+                  Replace
+                </button>
+              </mat-menu>
+              <mat-menu #callerMenu="matMenu">
+                <button *ngFor="let c of callers" mat-menu-item (click)="goToFlow(c)">{{ c.name }}</button>
+                <button *ngIf="callers.length === 0" mat-menu-item disabled>No callers</button>
+              </mat-menu>
+            </div>
+
+            <div
+              fxLayout="column"
+              fxLayoutAlign="start center"
+              *ngIf="flow.editable || (!flow.editable && flow.ui.actions?.length > 0)"
+            >
+              <div class="vertical-line"></div>
+              <div class="vertical-line-temp" *ngIf="!isShowAddAction(flow, 'TRIGGER_ID')"></div>
+
+              <section *ngIf="isShowAddAction(flow, 'TRIGGER_ID')" class="parent-circle">
+                <button
+                  *ngIf="showForApp !== AppName.PROGRAMMABLE_FLOW"
+                  mat-icon-button
+                  class="btn-add-action mat-elevation-z2"
+                  (click)="$event.stopPropagation(); onSelectedActionNodeOfTrigger(flow)"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+                <b3n-action-suggestion
+                  *ngIf="showForApp === AppName.PROGRAMMABLE_FLOW"
+                  [actionUuid]="'TRIGGER_ID'"
+                  (connectorSelected)="selectConnector($event, flow)"
+                ></b3n-action-suggestion>
+                <div
+                  class="circle"
+                  [style.opacity]="
+                    (flow.ui.actionSelected && flow.ui.actionSelected?.actionUuid === 'TRIGGER_ID') || connectorSelected
+                      ? '1'
+                      : '0'
+                  "
+                ></div>
+                <div
+                  class="add-action-message mat-elevation-z2"
+                  fxLayout="row"
+                  fxLayoutAlign="center center"
+                  *ngIf="
+                    showForApp !== AppName.PROGRAMMABLE_FLOW &&
+                    flow.ui.actionSelected?.actionUuid === 'TRIGGER_ID' &&
+                    !connectorSelected
+                  "
+                >
+                  Please choose an action from the sidebar or add a&nbsp;
+                  <a href="javascript:;" class="link" (click)="selectCustomAction(flow)">external action</a>
+                </div>
+              </section>
+              <mat-icon class="down">keyboard_arrow_down</mat-icon>
+            </div>
+
+            <b3n-list-action
+              [connectorSelected]="connectorSelected"
+              (reloadActions)="getActions()"
+              (onAddAction)="onAddAction($event, flow)"
+              (selectedAction)="selectConnector($event, flow)"
+            ></b3n-list-action>
+          </div>
+        </div>
+
+        <!-- Path (select path of switching) -->
+        <div *ngIf="!isMainFlow" fxLayout="column" fxLayoutAlign="start center" fxFlex="480px">
+          <section fxLayout="row" fxLayoutAlign="center start" fxFlexFill>
+            <div fxFlex="160px" [hidden]="sidenav.opened"></div>
+            <div fxLayout="column" fxLayoutAlign="start stretch" fxFlex="480px">
+              <div
+                [id]="paramsReq.pathId"
+                class="panel mat-elevation-z2 mt-16"
+                [class.highlight]="
+                  flow.ui.treeNodeSelected?.pathId === paramsReq.pathId && flow.ui.treeNodeSelected?.showHighLightAction
+                "
+                fxLayout="column"
+                fxLayoutAlign="start stretch"
+              >
+                <div class="panel__header" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+                  <img src="assets/flow-shared/icons/brandching.svg" class="logo" fxFlex="40px" />
+                  <h3 class="mb-0" fxFlex>
+                    <strong>{{ getActionNameOfPath(flow) }}</strong>
+                  </h3>
+                </div>
+              </div>
+
+              <div
+                fxLayout="column"
+                *ngIf="flow.editable || (!flow.editable && showListAction && !connectorSelected)"
+                fxLayoutAlign="start center"
+              >
+                <div class="vertical-line"></div>
+                <div class="vertical-line-temp" *ngIf="!isShowAddAction(flow, 'PATH_ID')"></div>
+                <section *ngIf="isShowAddAction(flow, 'PATH_ID')" class="parent-circle">
+                  <button
+                    *ngIf="showForApp !== AppName.PROGRAMMABLE_FLOW"
+                    mat-icon-button
+                    class="btn-add-action mat-elevation-z2"
+                    (click)="$event.stopPropagation(); onSelectActionNodeFromPreviousAction(flow)"
+                  >
+                    <mat-icon>add</mat-icon>
+                  </button>
+                  <b3n-action-suggestion
+                    *ngIf="showForApp === AppName.PROGRAMMABLE_FLOW"
+                    [actionUuid]="'PATH_ID'"
+                    (connectorSelected)="selectConnector($event, flow)"
+                  ></b3n-action-suggestion>
+                  <div
+                    class="circle"
+                    [style.opacity]="flow.ui.actionSelected?.actionUuid === 'PATH_ID' || connectorSelected ? '1' : '0'"
+                  ></div>
+                  <div
+                    class="add-action-message mat-elevation-z2"
+                    fxLayout="row"
+                    fxLayoutAlign="center center"
+                    *ngIf="showForApp !== AppName.PROGRAMMABLE_FLOW && flow.ui.actionSelected?.actionUuid === 'PATH_ID'"
+                  >
+                    Please choose an action from the sidebar or add a&nbsp;
+                    <a href="javascript:;" class="link" (click)="selectCustomAction(flow)">external action</a>
+                  </div>
+                </section>
+
+                <mat-icon class="down">keyboard_arrow_down</mat-icon>
+              </div>
+
+              <b3n-list-action
+                *ngIf="showListAction"
+                [pathId]="paramsReq.pathId"
+                [connectorSelected]="connectorSelected"
+                (reloadActions)="getActions()"
+                (onAddAction)="onAddAction($event, flow)"
+                (selectedAction)="selectConnector($event, flow)"
+              ></b3n-list-action>
+            </div>
+            <b3n-breadcrumb-flow [hidden]="sidenav.opened" fxFlex="160px"></b3n-breadcrumb-flow>
+          </section>
+        </div>
+      </ng-container>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

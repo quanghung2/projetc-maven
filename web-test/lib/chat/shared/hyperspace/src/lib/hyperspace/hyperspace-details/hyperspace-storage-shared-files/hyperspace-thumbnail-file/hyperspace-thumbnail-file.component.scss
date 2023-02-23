@@ -1,0 +1,36 @@
+:host {
+  .shared_files {
+    opacity: 0.7;
+    font-size: 12px !important;
+  }
+
+  .thumbnail {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 5px !important;
+  }
+
+  .title {
+    font-weight: 700 !important;
+  }
+
+  .right-actions {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  ::ng-deep .mat-list-item-content {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin: 5px 0;
+    font-size: 12px;
+
+    &:hover {
+      .right-actions {
+        display: initial;
+      }
+    }
+  }
+}

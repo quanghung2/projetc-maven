@@ -1,0 +1,31 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Renewal date configuration </mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    <form [formGroup]="form" class="form__wrapper">
+      <mat-form-field>
+        <mat-label>Domain</mat-label>
+        <input type="text" aria-label="Domain" matInput formControlName="domain" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let renewalConfig of renewalConfigsFilter" [value]="renewalConfig">
+            {{ renewalConfig.domain }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error>* Domain is required</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Renew day(s)</mat-label>
+        <input inputNumberKeydown type="number" aria-label="Renew days" matInput formControlName="renewDaysBefore" />
+        <mat-error *ngIf="renewDaysBefore.errors?.['required']">* Renew day(s) is required</mat-error>
+        <mat-error *ngIf="renewDaysBefore.errors?.['min']">* Renew day(s) should be equal or greater than 0 </mat-error>
+      </mat-form-field>
+    </form>
+    <div class="action__wrapper">
+      <button mat-raised-button color="primary" [loading]="saving" [disabled]="form.invalid" (click)="save()">
+        Update
+      </button>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

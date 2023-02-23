@@ -1,0 +1,22 @@
+:host {
+  .container {
+    padding: 0 1.6rem;
+    position: relative;
+
+    .icon-info {
+      border-radius: 4px !important;
+      width: 40px;
+      height: 40px;
+      &.active {
+        background-color: rgba(29, 28, 29, 0.13);
+      }
+    }
+
+    .title {
+      .display-name {
+        color: #172b4d;
+        font-weight: 600;
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<div sm-component class="ui modal" modal-id="create-plan-modal">
+  <i class="close icon"></i>
+  <div class="header">Create incoming plan</div>
+
+  <div class="content">
+    <form class="ui form" autocomplete="off">
+      <div class="field">
+        <label>Start Withs</label>
+        <input type="text" [(ngModel)]="planModel.startWith" name="startWith" autocomplete="none" />
+      </div>
+      <div class="field">
+        <label>Number Length</label>
+        <input type="text" [(ngModel)]="planModel.numberLength" name="numberLength" autocomplete="none" />
+      </div>
+      <div class="field">
+        <label>Remove Prefix</label>
+        <input type="number" [(ngModel)]="planModel.removePrefix" name="removePrefix" autocomplete="none" />
+      </div>
+      <div class="field">
+        <label>Append Prefix</label>
+        <input type="text" [(ngModel)]="planModel.appendPrefix" name="appendPrefix" autocomplete="none" />
+      </div>
+      <div class="ui checkbox">
+        <input type="checkbox" [(ngModel)]="planModel.doPrependPlus" name="doPrependPlus" autocomplete="none" />
+        <label>Prepend Plus Sign In Front</label>
+      </div>
+    </form>
+  </div>
+  <div class="actions">
+    <div class="middle aligned floating blocks">
+      <div class="block"></div>
+      <div class="block">
+        <div class="right">
+          <div class="ui cancel link button">Cancel</div>
+          <button
+            class="ui large primary button"
+            (click)="addPlan()"
+            [disabled]="
+              (!planModel.startWith && !planModel.numberLength) || (!planModel.removePrefix && planModel.doPrependPlus)
+            "
+          >
+            Create
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

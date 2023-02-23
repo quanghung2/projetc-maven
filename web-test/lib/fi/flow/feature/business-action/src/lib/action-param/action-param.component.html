@@ -1,0 +1,39 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+  <section *ngIf="connectorsToSetConfig?.length > 0">
+    <h4 class="mb-8">Connector Config</h4>
+    <ng-container *ngFor="let c of connectorsToSetConfig; let i = index">
+      <h4 class="mb-8">Connector: {{ c.name }}</h4>
+      <b3n-connector-config #connectorsConfig [connector]="c" (changeConfigs)="emitValue()"></b3n-connector-config>
+    </ng-container>
+  </section>
+
+  <section *ngIf="showParameters">
+    <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+      <b3n-action-config
+        [isOptional]="false"
+        [formMappings]="formActionConfig"
+        [exceptValueOfDts]="exceptValueOfDts"
+      ></b3n-action-config>
+
+      <div class="option-param" *ngIf="showOptionalSection">
+        <a class="link" fxLayout="row" fxLayoutAlign="start center" (click)="expandOptionalParam.toggle()">
+          <span *ngIf="!expandOptionalParam.expanded">Show optional params</span>
+          <span *ngIf="expandOptionalParam.expanded">Hide optional params</span>
+          <mat-icon>{{ expandOptionalParam.expanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </a>
+
+        <mat-expansion-panel #expandOptionalParam class="mat-elevation-z0">
+          <b3n-action-config
+            [isOptional]="true"
+            [formMappings]="formActionConfig"
+            [exceptValueOfDts]="exceptValueOfDts"
+          ></b3n-action-config>
+        </mat-expansion-panel>
+      </div>
+    </div>
+  </section>
+
+  <p *ngIf="connectorsToSetConfig?.length === 0 && !showParameters">
+    <i>No parameters</i>
+  </p>
+</div>

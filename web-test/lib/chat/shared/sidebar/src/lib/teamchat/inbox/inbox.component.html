@@ -1,0 +1,39 @@
+<mat-nav-list class="convo-list">
+  <ng-container *ngIf="inbox?.length > 0">
+    <mat-list-item
+      *ngFor="let item of inbox; let i = index; trackBy: trackByTxn"
+      mat-list-item
+      [routerLink]="
+        item?.inboxUuid 
+          ? ['contacts', item.customerUuid, 'txns', 'inboxes', item.inboxUuid]
+          : ['contacts', item.customerUuid, 'txns', 'active']
+      "
+      (click)="closeSidebar($event)"
+      routerLinkActive="active"
+      class="convo item-convo"
+    >
+      <mat-icon matListIcon class="icon material-icons-outlined" [class.unread]="item.unreadCount > 0">
+        timer
+      </mat-icon>
+
+      <div
+        matLine
+        class="convo__headline flex justify-content-space-between align-items-center gap-20"
+        [class.unread]="item.unreadCount > 0"
+        [matBadge]="item.unreadCount < 10 ? item.unreadCount : '9+'"
+        matBadgeOverlap="false"
+        [matBadgeHidden]="!item.unreadCount || item.unreadCount === 0"
+        matBadgeSize="small"
+        matBadgeColor="warn"
+      >
+        <ng-container *ngIf="item.customerUuid | selectContact | async as info">
+          <span style="text-overflow: ellipsis; overflow: hidden">
+            {{ info.displayName }}
+          </span>
+        </ng-container>
+      </div>
+
+      <mat-icon matSuffix class="icon hidden star-channel s-16">star </mat-icon>
+    </mat-list-item>
+  </ng-container>
+</mat-nav-list>

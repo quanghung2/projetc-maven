@@ -1,0 +1,62 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Routing</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <mat-select #supplierUuid="ngModel" [(ngModel)]="newRouting.supplierUuid" placeholder="Supplier" required>
+        <mat-option *ngFor="let supplier of supportedSuppliers" [value]="supplier.supplierUuid">
+          {{ supplier.name }} - {{ supplier.supplierUuid | slice: 0:8 }}
+        </mat-option>
+      </mat-select>
+      <mat-spinner *ngIf="loading" class="loading" [diameter]="20">Loading...</mat-spinner>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select
+        [disabled]="ctaActionName !== 'Create'"
+        #type="ngModel"
+        [(ngModel)]="newRouting.type"
+        placeholder="Type"
+        required
+      >
+        <mat-option *ngFor="let type of supportedTypes" [value]="type">
+          {{ type | replaceSpecialCharacter | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        [disabled]="ctaActionName !== 'Create'"
+        type="text"
+        placeholder="Organization"
+        matInput
+        [(ngModel)]="orgUuid"
+        (ngModelChange)="filterOrg($event)"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="customOrg">
+        <mat-option *ngFor="let org of filteredOrg" [value]="org">
+          {{ org.name }} - {{ org.uuid | slice: 0:8 }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-spinner class="loading" *ngIf="loading" [diameter]="20">Loading...</mat-spinner>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button
+    [disabled]="!orgUuid || !newRouting.type || !newRouting.supplierUuid || updating"
+    mat-raised-button
+    color="primary"
+    (click)="updateSellerRouting()"
+  >
+    {{ ctaActionName }}
+    <mat-spinner *ngIf="updating" class="loading" [diameter]="20">Loading...</mat-spinner>
+  </button>
+</div>

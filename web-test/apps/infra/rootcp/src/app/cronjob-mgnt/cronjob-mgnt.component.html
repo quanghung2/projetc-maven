@@ -1,0 +1,66 @@
+<mat-toolbar><h1>Chronos Config</h1></mat-toolbar>
+<mat-toolbar>
+  <form fxFlex="1 1 auto">
+    <mat-form-field fxFlex="300px">
+      <mat-label>Service</mat-label>
+      <mat-select [value]="selectedCategory">
+        <mat-option *ngFor="let category of categories" [value]="category" (click)="categorySelected(category)">
+          {{ category }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <div fxLayout="row" fxLayoutAlign="start start">
+    <div class="chose-button">
+      <button mat-raised-button color="primary" (click)="addNewJob()"><mat-icon>add</mat-icon> Add new job</button>
+      <button mat-raised-button [loading]="isLoading" (click)="refresh()">
+        <mat-icon>autorenew</mat-icon> Refresh
+      </button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<table *ngIf="!isLoading" mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+  <ng-container matColumnDef="command">
+    <th mat-header-cell *matHeaderCellDef>Command</th>
+    <td mat-cell *matCellDef="let element">{{ element.command }}</td>
+  </ng-container>
+  <ng-container matColumnDef="lastSuccess">
+    <th mat-header-cell *matHeaderCellDef>Last Success</th>
+    <td mat-cell *matCellDef="let element">{{ element.lastSuccess | date: 'yyyy/MM/dd hh:mm a' }}</td>
+  </ng-container>
+  <ng-container matColumnDef="lastError">
+    <th mat-header-cell *matHeaderCellDef>Last Error</th>
+    <td mat-cell *matCellDef="let element">{{ element.lastError | date: 'yyyy/MM/dd hh:mm a' }}</td>
+  </ng-container>
+  <ng-container matColumnDef="interval">
+    <th mat-header-cell *matHeaderCellDef>Interval</th>
+    <td mat-cell *matCellDef="let element">{{ element.duration }}</td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Actions</th>
+    <td mat-cell *matCellDef="let element">
+      <mat-icon class="icon-action" matTooltip="edit" (click)="editJob(element)">edit</mat-icon>
+      <mat-icon class="icon-action" matTooltip="run" (click)="runJob(element)">play_circle_outline</mat-icon>
+      <mat-icon *ngIf="element.disabled == true" class="icon-action" matTooltip="enable" (click)="enableJob(element)"
+        >power_settings_new</mat-icon
+      >
+      <mat-icon
+        *ngIf="element.disabled == false"
+        class="icon-action-red"
+        matTooltip="disable"
+        (click)="disableJob(element)"
+        >hide_source</mat-icon
+      >
+      <mat-icon class="icon-action-red" matTooltip="delete" (click)="deleteJob(element)">delete</mat-icon>
+      <mat-icon class="icon-action" matTooltip="clone" (click)="cloneJob(element)">copy_all</mat-icon>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-paginator [pageSize]="10" hidePageSize showFirstLastButtons></mat-paginator>

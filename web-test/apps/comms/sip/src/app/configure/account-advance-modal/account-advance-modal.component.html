@@ -1,0 +1,57 @@
+<div class="ui modal" id="config-advanced-configuration">
+  <div class="header">Advanced configuration</div>
+  <div class="content">
+    <div class="ui grid two column">
+      <div class="row capacity">
+        <div class="four wide column left aligned info-label"><label class="title">Capability: </label></div>
+        <div class="radio-btn" *ngFor="let option of capacityOptions">
+          <div class="ui radio checkbox capacity__checkbox">
+            <input
+              class="capacity__checkbox__input"
+              id="{{ option.key }}"
+              type="radio"
+              [(ngModel)]="selectedCapacity"
+              [value]="option.key"
+            />
+            <label class="capacity__checkbox__label" for="{{ option.key }}">{{ option.value }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row sip-type">
+        <div class="four wide column left aligned info-label"><label class="title">Mode: </label></div>
+        <div class="radio-btn" *ngFor="let option of sipTypeOptions">
+          <div class="ui radio checkbox sip-type__checkbox">
+            <input
+              class="sip-type__checkbox__input"
+              name="{{ option.key }}"
+              id="{{ option.key }}"
+              type="radio"
+              [(ngModel)]="selectedSipGateWay"
+              [value]="option.key"
+            />
+            <label class="sip-type__checkbox__label" for="{{ option.key }}">{{ option.value }}</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row isdn-incoming">
+        <div class="four wide column left aligned info-label"><label></label></div>
+        <div class="isdn-incoming-toggle">
+          <div class="switcher switcher-customize">
+            <input [(ngModel)]="handleIsdnIncoming" class="toggle" type="checkbox" id="toggle2" [checked]="'true'" />
+            <label class="switcher label" for="toggle2"></label>
+            <div class="box"></div>
+          </div>
+          <label for="toggle2" class="isdn-incoming-title"
+            >Toggle to turn {{ handleIsdnIncoming ? 'off' : 'on' }} ISDN incoming</label
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" (click)="hide(false)">Cancel</div>
+    <div class="ui primary button" (click)="confirmUpdateConfig()">Update</div>
+  </div>
+</div>

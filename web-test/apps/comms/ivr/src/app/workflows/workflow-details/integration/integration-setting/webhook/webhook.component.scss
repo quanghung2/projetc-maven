@@ -1,0 +1,61 @@
+.webhook {
+  mat-form-field {
+    width: 50%;
+    //margin-bottom: .5rem;
+  }
+  button {
+    //margin-bottom: 1.6rem;
+  }
+  mat-hint {
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+  mat-card {
+    margin-bottom: 1.6rem;
+  }
+
+  .webhook-url {
+    margin-bottom: 1.6rem !important;
+  }
+  tr {
+    text-align: left;
+    background: white;
+  }
+  th,
+  td {
+    padding: 0.3rem;
+    border-bottom: 1px solid rgb(224, 224, 224);
+    padding-left: 1.5rem;
+  }
+  th,
+  td:nth-child(2) {
+    width: 33%;
+  }
+  th,
+  td:nth-child(1) {
+    width: 33%;
+  }
+  mat-icon {
+    color: gray;
+    //font-size: 20px;
+  }
+  table {
+    margin-bottom: 1.6rem;
+    border-collapse: collapse;
+    thead {
+      tr {
+        height: 56px;
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.54);
+        font-weight: 500;
+      }
+    }
+  }
+  .params-title {
+    font-weight: 500;
+    margin-top: 1.6rem;
+  }
+  .suffix-icon {
+    margin-bottom: -2rem !important;
+  }
+}

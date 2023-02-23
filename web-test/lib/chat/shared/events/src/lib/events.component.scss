@@ -1,0 +1,42 @@
+.module__name {
+  color: #172b4d;
+  font-weight: 600;
+  height: 64px;
+  display: flex;
+  align-items: center;
+}
+
+.events-grid {
+  display: flex;
+  flex-direction: column;
+  padding: 0 40px;
+
+  .rowgroup {
+    margin-top: 25px;
+
+    .date__header {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .row {
+      display: flex;
+      align-items: baseline;
+      border-bottom: #dadce0 1px solid;
+      background-color: #fafafa;
+      padding: 10px;
+      font-size: 14px;
+
+      .time {
+        display: flex;
+        width: 90px;
+      }
+
+      .detail {
+        margin-left: 36px;
+        font-weight: 500;
+      }
+    }
+  }
+}

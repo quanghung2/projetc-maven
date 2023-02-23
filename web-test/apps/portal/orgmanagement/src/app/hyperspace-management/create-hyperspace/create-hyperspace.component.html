@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>Create hyperpsace</h1>
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="start none" fxFill [formGroup]="group">
+    <mat-form-field>
+      <mat-label>Uuid organization</mat-label>
+      <input
+        matInput
+        autocomplete="off"
+        placeholder="Enter uuid organization"
+        formControlName="uuid"
+        [errorStateMatcher]="matcher"
+      />
+      <mat-error *ngIf="group.get('uuid').hasError('required')"> OrgUuid is required </mat-error>
+      <mat-error *ngIf="group.get('uuid').hasError('invalid')"> OrgUuid is invalid </mat-error>
+    </mat-form-field>
+
+    <!-- <mat-form-field>
+      <mat-label>Hyperspace name </mat-label>
+      <input matInput autocomplete="off" placeholder="Enter name" formControlName="name" />
+      <mat-error *ngIf="group.get('name').hasError('required')"> Hyperspace name is required </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input matInput autocomplete="off" placeholder="Enter description" formControlName="description" />
+    </mat-form-field> -->
+  </div>
+</div>
+<div mat-dialog-actions class="right-floated">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" [disabled]="processing" color="primary" (click)="submit()">
+    Create
+  </button>
+</div>

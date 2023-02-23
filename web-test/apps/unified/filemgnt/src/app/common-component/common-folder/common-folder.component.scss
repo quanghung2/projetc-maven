@@ -1,0 +1,57 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  .common-container {
+    padding: 0 10px;
+
+    .folder-container {
+      height: calc(100vh - 200px);
+      overflow: auto;
+      padding-top: 10px;
+
+      .mat-list-base {
+        padding-top: 35px;
+      }
+      mat-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 130px);
+        justify-content: space-between;
+        overflow-x: hidden;
+        grid-gap: 15px;
+
+        mat-list-item {
+          margin-bottom: 80px;
+          margin-left: 15px;
+        }
+      }
+
+      .folder {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &:hover {
+          color: #1976d2;
+
+          .custom-check {
+            visibility: visible;
+          }
+        }
+
+        .material-icons-outlined {
+          font-size: 80px;
+          -webkit-text-stroke: 3px white;
+        }
+
+        .custom-check {
+          visibility: var(--value);
+          position: absolute;
+          top: -25px;
+          left: 5px;
+        }
+      }
+    }
+  }
+}

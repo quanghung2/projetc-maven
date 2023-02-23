@@ -1,0 +1,72 @@
+<h1 class="header-primary" mat-dialog-title>Schedule campaign</h1>
+<p class="header-secondary">The campaign can only be scheduled to start and pause within the working time settings.</p>
+<div mat-dialog-content>
+  <section>
+    <div fxLayout="row" fxLayoutGap="1.6rem">
+      <mat-form-field class="working-schedule__picker">
+        <input
+          matInput
+          readonly
+          [matDatepicker]="schedulePicker"
+          autocomplete="false"
+          placeholder="New Schedule"
+          [min]="min"
+          [max]="max"
+          (dateChange)="addSchedule($event)"
+        />
+        <mat-datepicker-toggle matSuffix [for]="schedulePicker"></mat-datepicker-toggle>
+        <mat-datepicker #schedulePicker type="datetime"></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <form class="working-schedule" *ngIf="numberListData.fromCampaign" [formGroup]="form">
+      <mat-form-field fxFlex="1 1 0">
+        <input
+          matInput
+          readonly
+          placeholder="Schedule"
+          name="scheduleAt"
+          [min]="campaignMinDate"
+          [matDatepicker]="schedule"
+          (click)="schedule.open()"
+          formControlName="scheduleAt"
+        />
+        <mat-datepicker-toggle matSuffix [for]="schedule"></mat-datepicker-toggle>
+        <mat-datepicker-toggle matSuffix (click)="clearDate()">
+          <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #schedule type="datetime" [twelveHour]="false"></mat-datepicker>
+        <mat-error
+          >Please select date greater than {{ today | date: 'short' }} ({{ identityProfile.currentOrg.timezone }})
+        </mat-error>
+      </mat-form-field>
+    </form>
+
+    <div class="working-schedule" *ngIf="numberListData.type !== CampaignType.outboundContactCenter">
+      <div class="working-schedule__title custom-day" fxLayout="row" fxLayoutAlign="start center">
+        Added schedule ({{ numberListData.listScheduledAt.length }})
+        <mat-icon class="working-schedule__add-icon" (click)="schedulePicker.open()" matTooltip="Add schedule"
+          >add</mat-icon
+        >
+      </div>
+      <mat-chip-list class="public-schedules">
+        <mat-chip
+          id="chip_{{ i }}"
+          *ngFor="let schedule of numberListData.listScheduledAt; let i = index"
+          removable="true"
+          (removed)="removeSchedule(i)"
+          >{{ schedule | date: 'medium' }}
+          <mat-icon matChipRemove>close</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </section>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-flat-button (click)="onSave()" color="primary" [disabled]="numberListData.fromCampaign && form.invalid">
+    <span *ngIf="!processing" class="first-word">Save</span>
+    <span *ngIf="processing">Saving...</span>
+  </button>
+</div>

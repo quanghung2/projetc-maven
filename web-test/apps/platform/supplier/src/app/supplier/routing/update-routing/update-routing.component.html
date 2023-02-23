@@ -1,0 +1,35 @@
+<div mat-dialog-title>{{ ctaActionName }} Routing</div>
+
+<div mat-dialog-content>
+  <div [formGroup]="formRouting" fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="8px">
+    <mat-form-field>
+      <mat-select placeholder="Supplier" formControlName="supplierUuid" required>
+        <mat-option *ngFor="let supplier of supportedSuppliers" [value]="supplier.supplierUuid">
+          {{ supplier.name }} - {{ supplier.supplierUuid | slice: 0:8 }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formRouting.get('supplierUuid').invalid">This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Type" formControlName="type" required>
+        <mat-option *ngFor="let type of supportedTypes" [value]="type">
+          {{ type | replaceSpecialCharacter | titlecase }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formRouting.get('type').invalid">This field is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput placeholder="Org UUID" formControlName="orgUuid" required />
+      <mat-error *ngIf="formRouting.get('orgUuid').invalid">This field is required</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [disabled]="formRouting.invalid" [loading]="updating" (click)="update()">
+    {{ ctaActionName }}
+  </button>
+</div>

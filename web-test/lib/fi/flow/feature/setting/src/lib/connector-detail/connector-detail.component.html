@@ -1,0 +1,181 @@
+<ng-container *ngIf="connector">
+  <div class="header-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+    <ul fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <li><mat-icon class="pt-2" (click)="backToList()">arrow_back</mat-icon></li>
+      <li
+        *ngIf="
+          !createTrigger &&
+          !createAction &&
+          !createDataSource &&
+          !editingTriggerDef &&
+          !editingActionDef &&
+          !editingDataSource
+        "
+      >
+        {{ connector.name }}
+      </li>
+      <li
+        class="name"
+        *ngIf="
+          createTrigger ||
+          createAction ||
+          createDataSource ||
+          editingTriggerDef ||
+          editingActionDef ||
+          editingDataSource
+        "
+      >
+        <a
+          href="javascript:;"
+          (click)="
+            createTrigger = false;
+            createAction = false;
+            createDataSource = false;
+            editingTriggerDef = null;
+            editingActionDef = null;
+            editingDataSource = null
+          "
+          >{{ connector.name }}</a
+        >
+      </li>
+      <li *ngIf="createTrigger">Create Event</li>
+      <li *ngIf="createAction">Create Action</li>
+      <li *ngIf="createDataSource">Create Value</li>
+      <li *ngIf="editingTriggerDef">{{ editingTriggerDef.name }}</li>
+      <li *ngIf="editingActionDef">{{ editingActionDef.name }}</li>
+      <li *ngIf="editingDataSource">{{ editingDataSource.name }}</li>
+    </ul>
+
+    <div
+      fxLayout="row"
+      fxLayoutAlign="end center"
+      *ngIf="
+        !createTrigger &&
+        !createAction &&
+        !createDataSource &&
+        !editingTriggerDef &&
+        !editingActionDef &&
+        !editingDataSource
+      "
+    >
+      <button mat-stroked-button color="primary" (click)="createDefinition()" *ngIf="connector.type !== 'SUBROUTINE'">
+        Create Definition
+      </button>
+      <button mat-stroked-button [matMenuTriggerFor]="actionMenu" class="ml-8 pr-8 pl-16">
+        <span>Actions</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #actionMenu="matMenu">
+        <button mat-menu-item (click)="editConnector()">Edit Connector</button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!createTrigger && !createAction && !createDataSource">
+    <ng-container *ngIf="!editingTriggerDef && !editingActionDef && !editingDataSource">
+      <div class="container flow-container" *ngIf="!loading">
+        <ul class="nav-tab" fxLayoutGap="4px">
+          <li (click)="tabChange(0)" *ngIf="triggerDefs?.length > 0" [class.active]="showTriggerDef">
+            Event Definitions
+          </li>
+          <li (click)="tabChange(1)" *ngIf="actionDefs?.length > 0" [class.active]="showActionDef">
+            Action Definitions
+          </li>
+          <li (click)="tabChange(2)" *ngIf="dataSources?.length > 0" [class.active]="showDataSource">Value List</li>
+        </ul>
+
+        <h3
+          class="text-nodata"
+          *ngIf="triggerDefs?.length === 0 && actionDefs?.length === 0 && dataSources?.length === 0"
+        >
+          <p>You don't have any definition.</p>
+          <button
+            *ngIf="connector.type !== 'SUBROUTINE'"
+            mat-raised-button
+            color="primary"
+            (click)="createDefinition()"
+          >
+            Create Definition
+          </button>
+        </h3>
+
+        <div fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="4px">
+          <b3n-table-definition
+            *ngIf="showTriggerDef && triggerDefs.length > 0"
+            [defs]="triggerDefs"
+            [displayedColumns]="['name', 'publish', 'version']"
+            [connectorUuid]="connector.uuid"
+            [isShowVisibility]="!!connector?.domainVisibility?.published"
+            (editTriggerDef)="editingTriggerDef = $event"
+            (onReload)="onReload('trigger')"
+          ></b3n-table-definition>
+
+          <b3n-table-definition
+            *ngIf="showActionDef && actionDefs.length > 0"
+            [defs]="actionDefs"
+            [displayedColumns]="['name', 'publish', 'version']"
+            [connectorUuid]="connector.uuid"
+            [isShowVisibility]="!!connector?.domainVisibility?.published"
+            (editActionDef)="editingActionDef = $event"
+            (onReload)="onReload('action')"
+          ></b3n-table-definition>
+
+          <b3n-table-definition
+            *ngIf="showDataSource && dataSources.length > 0"
+            [defs]="dataSources"
+            [displayedColumns]="['name', 'type']"
+            [connectorUuid]="connector.uuid"
+            (editDataSource)="editingDataSource = $event"
+          ></b3n-table-definition>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="container container-step flow-container">
+      <b3n-trigger-def
+        *ngIf="editingTriggerDef"
+        [connectorUuid]="connector.uuid"
+        [triggerDef]="editingTriggerDef"
+        [isShowVisibility]="!!connector?.domainVisibility?.published"
+        (exit)="editingTriggerDef = null; loadListDef('trigger')"
+      ></b3n-trigger-def>
+      <b3n-action-def
+        *ngIf="editingActionDef"
+        [connectorUuid]="connector.uuid"
+        [connectorType]="connector.type"
+        [actionDef]="editingActionDef"
+        [isShowVisibility]="!!connector?.domainVisibility?.published"
+        (exit)="editingActionDef = null; loadListDef('action')"
+      ></b3n-action-def>
+      <b3n-data-source
+        *ngIf="editingDataSource"
+        [connectorUuid]="connector.uuid"
+        [connectorType]="connector.type"
+        [dataSource]="editingDataSource"
+        (exit)="editingDataSource = null; loadListDef('datasource')"
+      ></b3n-data-source>
+    </div>
+  </ng-container>
+
+  <div class="container container-step flow-container" *ngIf="createTrigger || createAction || createDataSource">
+    <b3n-trigger-def
+      *ngIf="createTrigger"
+      [connectorUuid]="connector.uuid"
+      [isShowVisibility]="!!connector?.domainVisibility?.published"
+      (exit)="loadListDef('trigger'); createTrigger = false"
+    ></b3n-trigger-def>
+    <b3n-action-def
+      *ngIf="createAction"
+      [connectorUuid]="connector.uuid"
+      [connectorType]="connector.type"
+      [isShowVisibility]="!!connector?.domainVisibility?.published"
+      (exit)="loadListDef('action'); createAction = false"
+    ></b3n-action-def>
+    <b3n-data-source
+      *ngIf="createDataSource"
+      [connectorUuid]="connector.uuid"
+      [connectorType]="connector.type"
+      (exit)="loadListDef('datasource'); createDataSource = false"
+    ></b3n-data-source>
+  </div>
+</ng-container>

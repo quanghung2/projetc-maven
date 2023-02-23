@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  margin-top: 3rem;
+
+  .dial-plan {
+    margin-bottom: 2rem;
+    .action-bar {
+      &.mb-8 {
+        margin-bottom: 0.5rem;
+      }
+      margin-top: 1rem !important;
+      &__title {
+        color: rgba(0, 0, 0, 0.67);
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .mat-table {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden !important;
+
+    tr.mat-row:hover {
+      background: rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+    }
+
+    .mat-column-actions {
+      text-align: right;
+    }
+    .mat-column-allowed {
+      width: 75px;
+    }
+
+    .actions-column {
+      visibility: hidden;
+    }
+    tr.mat-row:hover .actions-column {
+      visibility: visible;
+    }
+    .mat-icon.actions-icon {
+      color: rgba(0, 0, 0, 0.67);
+      font-size: 22px;
+      height: 22px;
+      width: 22px;
+    }
+  }
+
+  mat-paginator {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+    overflow: hidden !important;
+  }
+}

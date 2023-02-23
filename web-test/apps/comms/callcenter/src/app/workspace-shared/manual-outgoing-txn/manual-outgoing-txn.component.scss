@@ -1,0 +1,14 @@
+:host {
+  .container {
+    padding-bottom: 1.6rem;
+
+    .mat-form-field {
+      width: 100%;
+    }
+
+    ul {
+      padding-bottom: 0;
+      margin: 0;
+    }
+  }
+}

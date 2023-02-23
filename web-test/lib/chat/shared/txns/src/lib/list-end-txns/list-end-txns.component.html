@@ -1,0 +1,66 @@
+<ng-container *ngIf="contact$ | async as contact">
+  <div class="case-container flex-column">
+    <div fxFlex="64px" class="header">
+      <b3n-case-header [contact]="contact"></b3n-case-header>
+    </div>
+    <mat-divider></mat-divider>
+
+    <ng-container *ngIf="contact.type === UserContactType.customer">
+      <div class="tab-navigation" fxFlex="55px" fxLayoutAlign="start center">
+        <ng-container *ngIf="changeTab$ | async as tab">
+          <button mat-raised-button [class.active]="tab === TabTxn.call" (click)="onChangeTab(TabTxn.call)">
+            <mat-icon>phone</mat-icon>
+            <span>Calls</span>
+          </button>
+          <button mat-raised-button [class.active]="tab === TabTxn.livechat" (click)="onChangeTab(TabTxn.livechat)">
+            <mat-icon svgIcon="livechat"></mat-icon>
+            <span>Chat</span>
+          </button>
+          <button mat-raised-button [class.active]="tab === TabTxn.whatsapp" (click)="onChangeTab(TabTxn.whatsapp)">
+            <mat-icon svgIcon="whatsapp"></mat-icon>
+            <span>Whatsapp</span>
+          </button>
+        </ng-container>
+      </div>
+
+      <mat-divider></mat-divider>
+    </ng-container>
+
+    <ng-container *ngIf="changeTab$ | async as tab">
+      <ng-container *ngIf="tab === TabTxn.livechat">
+        <ng-container *ngTemplateOutlet="chat"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="tab === TabTxn.whatsapp">
+        <ng-container *ngTemplateOutlet="chat"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="tab === TabTxn.call">
+        <div fxFlex="auto" class="body call scroller-firefox">
+          <poh-unified-history [isUnifiedWorkspace]="true" [noTitle]="true" [contact]="contact"></poh-unified-history>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <ng-template #chat>
+    <ng-container *ngIf="endTxns$ | async as endTxns; else noTxn">
+      <ng-container *ngIf="endTxns.length > 0; else noTxn">
+        <div *ngIf="viewDate$ | async as viewDate" class="viewing-date flex justify-content-center align-items-center">
+          <span>{{ viewDate | viewDate }}</span>
+        </div>
+        <b3n-txns-content
+          fxFlex="auto"
+          class="body"
+          [txns]="endTxns"
+          [contact]="contact"
+          [newestTxn]="endTxns[endTxns.length - 1]"
+          [isArchived]="true"
+        ></b3n-txns-content>
+        <b3n-txns-footer [txn]="endTxns[endTxns.length - 1]"></b3n-txns-footer>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</ng-container>
+
+<ng-template #noTxn>
+  <div class="secondary-text no-case">No active txn</div>
+</ng-template>

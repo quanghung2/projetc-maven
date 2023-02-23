@@ -1,0 +1,72 @@
+<div *ngIf="storePlanForm">
+  <div *ngIf="!data.callerIdPlan" mat-dialog-title>New Caller ID Plan</div>
+  <div *ngIf="data.callerIdPlan" mat-dialog-title>Update Caller ID Plan</div>
+  <form [formGroup]="storePlanForm" fxLayout="column" fxLayoutGap="2rem">
+    <section fxLayout="column" fxLayoutGap="0.5rem">
+      <h3 class="secondary-text">Matching pattern</h3>
+      <div class="box-container">
+        <mat-form-field class="full-width">
+          <mat-label>Start with</mat-label>
+          <input
+            formControlName="startWith"
+            matInput
+            onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+          />
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Number length</mat-label>
+          <input
+            formControlName="numberLength"
+            matInput
+            onkeypress="return (48 <= event.charCode && event.charCode <= 57) || event.charCode === 44"
+          />
+        </mat-form-field>
+        <div *ngIf="startWith.value || numberLength.value">
+          Start with
+          <span class="border border-radius-4 py-2 px-8">{{
+            startWith.value?.length > 0 ? startWith.value : '-'
+          }}</span>
+          and has length of
+          <span class="border border-radius-4 py-2 px-8">{{
+            numberLength.value?.length > 0 ? numberLength.value : '-'
+          }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section fxLayout="column" fxLayoutGap="0.5rem">
+      <h3 class="secondary-text">Replacement</h3>
+      <div class="box-container">
+        <mat-form-field class="full-width">
+          <mat-label>Remove prefix</mat-label>
+          <input
+            formControlName="removePrefix"
+            matInput
+            onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+          />
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Append prefix</mat-label>
+          <input
+            formControlName="appendPrefix"
+            matInput
+            onkeypress="return 48 <= event.charCode && event.charCode <= 57"
+          />
+        </mat-form-field>
+        <div *ngIf="removePrefix.value || appendPrefix.value">
+          Remove <span class="border border-radius-4 py-2 px-8"> {{ removePrefix.value || '-' }}</span> leading digits
+          and prepend
+          <span class="border border-radius-4 py-2 px-8"> {{ appendPrefix.value || '-' }} </span>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <div align="end" mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button (click)="add()" [disabled]="!validForm" [loading]="adding" color="primary" mat-flat-button>
+      <span *ngIf="data.callerIdPlan">Update</span>
+      <span *ngIf="!data.callerIdPlan">Add</span>
+    </button>
+  </div>
+</div>

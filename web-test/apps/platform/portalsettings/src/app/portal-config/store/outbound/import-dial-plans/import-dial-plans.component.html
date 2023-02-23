@@ -1,0 +1,68 @@
+<div class="ui medium modal">
+  <loader [loading]="loading"></loader>
+  <div class="header">Import default dial plan rules by country</div>
+  <div class="content">
+    <div class="ui selection dropdown">
+      <i class="dropdown icon"></i>
+      <div class="default text">Select country</div>
+      <div class="menu">
+        <div class="item" [attr.data-value]="country.id" *ngFor="let country of countries">
+          {{ country.name }}
+        </div>
+      </div>
+    </div>
+    <table class="ui basic table">
+      <thead>
+        <tr>
+          <th>
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                [disabled]="!dialPlans.length"
+                [(ngModel)]="checkAll"
+                [checked]="checkAll"
+                (click)="check()"
+              />
+            </div>
+          </th>
+          <th>Start with</th>
+          <th>Number length</th>
+          <th>Remove prefix</th>
+          <th>Append prefix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row" *ngFor="let dialPlan of dialPlans">
+          <td>
+            <div class="ui checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="dialPlan.isChecked"
+                [checked]="dialPlan.isChecked"
+                (click)="check(dialPlan)"
+              />
+            </div>
+          </td>
+          <td>
+            {{ dialPlan.planDetail.startWith }}
+          </td>
+          <td>
+            {{ dialPlan.planDetail.numberLength }}
+          </td>
+          <td>
+            {{ dialPlan.planDetail.removePrefix }}
+          </td>
+          <td>
+            {{ dialPlan.planDetail.appendPrefix }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="actions">
+    <div class="ui deny button">Cancel</div>
+    <div class="ui primary button" [class.disabled]="loading || noPlanChecked || !selectedCountryId" (click)="save()">
+      Import
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+:host {
+  .container {
+    padding: 0 1.6rem 1.6rem 1.6rem;
+    .btnCancel {
+      margin-right: 10px;
+    }
+
+    .dialog-title {
+      display: inline-flex !important;
+    }
+
+    .name {
+      font-weight: 500;
+      font-family: 'Open Sans', sans-serif;
+      margin-bottom: 4px !important;
+      max-width: 170px;
+      white-space: nowrap !important;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      margin: 0;
+      vertical-align: middle;
+      // cursor: pointer;
+      color: #1264a3;
+      background-color: rgba(29, 155, 209, 0.1);
+      border-radius: 0.3em;
+      border: none;
+    }
+  }
+}

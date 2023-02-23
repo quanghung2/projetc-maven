@@ -1,0 +1,55 @@
+<div *ngIf="integration" class="fresh-desk-content">
+  <mat-form-field>
+    <mat-label>subdomain</mat-label>
+    <input required name="subDomain" (blur)="loadFreshdeskFields()" [(ngModel)]="integration.subDomain" matInput />
+    <span matPrefix>https://</span> <span matSuffix>.freshdesk.com/</span>
+    <mat-hint
+      >Enter the subdomain of your Freshdesk account. It is the unique web address you chose when you setup the account.
+      You can see it on your address bar when you login.
+    </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Email Address</mat-label>
+    <input required name="email" [(ngModel)]="integration.registeredEmail" matInput />
+    <mat-hint>Enter the email address that is used to create ticket. </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>API Key</mat-label>
+    <input required name="key" (blur)="loadFreshdeskFields()" [(ngModel)]="integration.apiKey" matInput />
+    <mat-hint>See https://support.freshdesk.com/support/solutions/articles/215517-how-to-find-your-api-key </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field
+    *ngFor="let field of fields; let index = index"
+    [class.hide]="!(field.choices && field.choices.length && haveRequiredFields)"
+  >
+    <mat-label>{{ field.label }}</mat-label>
+    <mat-select required name="{{ field.label }}" [(ngModel)]="integration.extra[field.type]">
+      <mat-option *ngFor="let choice of field.choices" [value]="choice.key"> {{ choice.value }} </mat-option>
+    </mat-select>
+    <mat-error>{{ field.label }} is required</mat-error>
+  </mat-form-field>
+
+  <div *ngIf="fetching" fxLayout="column" fxLayoutAlign="start center" class="fresh-desk-content__spinner">
+    <mat-spinner diameter="30" strokeWidth="2"></mat-spinner>
+  </div>
+
+  <mat-form-field
+    *ngFor="let field of customFields"
+    [class.nested]="field.isNestedField"
+    [class.hide]="!haveRequiredFields"
+  >
+    <mat-label>{{ field.label }}</mat-label>
+    <mat-select
+      name="nestedField{{ field.label }}"
+      (selectionChange)="customFieldsChanged($event, field)"
+      [(ngModel)]="field.value"
+      [disabled]="!field.choices || field.choices.length === 0"
+    >
+      <mat-option value="">None</mat-option>
+      <mat-option *ngFor="let choice of field.choices" [value]="choice.key"> {{ choice.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

@@ -1,0 +1,34 @@
+<div class="remark-dialog">
+  <h1 mat-dialog-title>Busy remark settings</h1>
+
+  <div mat-dialog-content>
+    <div fxLayout="column">
+      <mat-form-field>
+        <input matInput [formControl]="remarkCtrl" (keyup.enter)="addRemark()" placeholder="Enter new remark" />
+        <mat-error *ngIf="remarkCtrl.invalid">Maximum 30 characters</mat-error>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-label>Remarks</mat-label>
+      </div>
+
+      <div cdkDropList class="agents" *ngIf="remarks?.length > 0" (cdkDropListDropped)="drop($event)">
+        <div class="sortable-box" *ngFor="let remark of remarks; let i = index" cdkDrag>
+          {{ i + 1 }}. {{ remark | titlecase }} <span class="fill-remaining-space"></span>
+          <mat-icon
+            *ngIf="(remark | lowercase) !== 'lunch break' && (remark | lowercase) !== 'toilet break'"
+            (click)="deleteRemark(remark)"
+            matTooltip="Delele"
+          >
+            delete
+          </mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Close</button>
+    <button [disabled]="loading" [loading]="loading" mat-raised-button (click)="save()" color="primary">Save</button>
+  </div>
+</div>

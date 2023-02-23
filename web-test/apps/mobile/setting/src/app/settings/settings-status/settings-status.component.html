@@ -1,0 +1,14 @@
+<div class="status__container">
+  <mat-list class="m-0 p-0">
+    <h3 mat-subheader>Set Status</h3>
+  </mat-list>
+  <div class="select__wrapper">
+    <div *ngFor="let s of status" class="option" (click)="save(s.key)">
+      <ng-container [ngSwitch]="s.key">
+        <mat-icon *ngSwitchCase="'dnd'" aria-hidden="false" aria-label="icon">do_not_disturb_on_total_silence</mat-icon>
+        <div *ngSwitchDefault [class]="s.key"></div>
+      </ng-container>
+      <p>{{ s.value }}</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+<form
+  [formGroup]="completedForm"
+  fxFlex
+  fxLayout="row"
+  fxLayoutGap="0.5em"
+  fxLayoutAlign="end center"
+  class="action-bar"
+>
+  <mat-form-field>
+    <mat-select [compareWith]="compareCode" placeholder="Type" formControlName="type">
+      <mat-option *ngFor="let option of typeOptions" [value]="option.key"> {{ option.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="userOptions" class="queues-filtering">
+    <mat-select multiple formControlName="usersFiltering" placeholder="Filter by users">
+      <div class="queues__all" [class.queue-select__all]="selectAllAgent">
+        <mat-checkbox color="primary" [checked]="selectAllAgent" (change)="toggleSelectAllAgent($event.checked)">{{
+          selectAllAgent ? 'Unselect All' : 'Select All'
+        }}</mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-select-trigger *ngIf="selectAllAgent">All</mat-select-trigger>
+      <mat-option *ngFor="let option of userOptions" [value]="option.key"> {{ option.value }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="queues" class="queues-filtering">
+    <mat-select multiple formControlName="queuesFiltering" placeholder="Filter by queues">
+      <div class="queues__all" [class.queue-select__all]="selectAllQueues">
+        <mat-checkbox color="primary" [checked]="selectAllQueues" (change)="toggleSelectAllQueue($event.checked)">{{
+          selectAllQueues ? 'Unselect All' : 'Select All'
+        }}</mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-select-trigger *ngIf="selectAllQueues">All</mat-select-trigger>
+      <mat-option *ngFor="let queueItem of queues" [value]="queueItem.uuid"> {{ queueItem.label }} </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="queues-filtering">
+    <mat-select multiple formControlName="resultFiltering" placeholder="Filter by results">
+      <div class="queues__all" [class.queue-select__all]="selectAllResult">
+        <mat-checkbox color="primary" [checked]="selectAllResult" (change)="toggleSelectAllResult($event.checked)">{{
+          selectAllResult ? 'Unselect All' : 'Select All'
+        }}</mat-checkbox>
+      </div>
+      <mat-divider></mat-divider>
+      <mat-select-trigger *ngIf="selectAllResult">All</mat-select-trigger>
+      <mat-select-trigger *ngIf="!selectAllResult">{{ displayResultFiltered }}</mat-select-trigger>
+      <mat-option *ngFor="let result of resultOptions" [value]="result.key">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.25rem">
+          <span>{{ result.value }}</span>
+          <mat-icon
+            *ngIf="result.tooltipMessage"
+            [matTooltip]="result.tooltipMessage"
+            class="material-icons-outlined info-icon"
+            >info</mat-icon
+          >
+        </div>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field (click)="rangePicker.open()">
+    <mat-date-range-input [min]="minDate" [max]="maxDate" [rangePicker]="rangePicker" formGroupName="dateFiltering">
+      <input matStartDate formControlName="startDate" placeholder="Start date" />
+      <input matEndDate formControlName="endDate" placeholder="End date" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-button matDateRangePickerCancel>Cancel</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+  </mat-form-field>
+
+  <button mat-icon-button [loading]="fetching" (click)="refresh()" matTooltip="Refresh">
+    <mat-icon>autorenew</mat-icon>
+  </button>
+
+  <button mat-stroked-button class="export" (click)="export()">Export</button>
+</form>

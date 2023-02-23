@@ -1,0 +1,46 @@
+<div class="stored-card">
+  <h2>Stored Credit Card</h2>
+  <ng-container *ngIf="isLoading; else hasData">
+    <div class="loading-container">
+      <mat-spinner [diameter]="40" [strokeWidth]="2"></mat-spinner>
+    </div>
+  </ng-container>
+  <ng-template #hasData>
+    <div fxLayout="column" fxLayoutGap="1.6rem">
+      <span>
+        Any previously stored credit cards used to purchase subscriptions will be listed below.You can choose to delete
+        a credit card, and set which credit card is the default card to be used for recurring charges.</span
+      >
+
+      <div *ngIf="allGatewayStored.length === 0" class="box">
+        <div class="box-stored-card">No card has been stored yet.</div>
+      </div>
+
+      <div *ngIf="storedCards.gateways.length" class="box">
+        <div
+          class="box-stored-card"
+          fxLayout="row"
+          fxLayoutAlign="space-between center"
+          *ngFor="let gateway of storedCards.gateways"
+        >
+          <div fxLayout="column">
+            <div *ngIf="gateway.name !== 'stripe'">
+              Card used for purchase via <b>{{ gateway.name }}</b>
+            </div>
+            <div fxLayout="row" fxLayoutGap="0.8rem" fxLayoutAlign="start start" *ngIf="gateway.stripeCard">
+              <!-- <img class="icon-card" [src]="gateway.stripeCard.brandLogo" /> -->
+              <div class="content" fxLayout="column">
+                <div class="header">XXX XXX XXX {{ gateway.stripeCard.last4 }}</div>
+                <div class="description">Expires {{ gateway.stripeCard.expiry }}</div>
+              </div>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutGap="1.6rem">
+            <button *ngIf="gateway.name === storedCards.defaultGatewayName" mat-stroked-button disabled>Default</button>
+            <button mat-raised-button color="primary" (click)="removeDefault(gateway.name)">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

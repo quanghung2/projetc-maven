@@ -1,0 +1,52 @@
+/*
+ * Remove template code below
+ */
+:host {
+  display: block;
+  font-family: sans-serif;
+  max-width: 1400px;
+  margin: 50px auto;
+  overflow: hidden;
+  width: 100%;
+}
+.content {
+  width: 100%;
+}
+.supplier {
+  width: 100%;
+  .action-edit {
+    visibility: hidden !important;
+    align-items: center !important;
+  }
+  table {
+    width: 100%;
+    tr {
+      &.mat-row {
+        height: 52px;
+
+        &:hover {
+          background-color: #f0f0f0;
+          .action-edit {
+            visibility: visible !important;
+          }
+        }
+      }
+    }
+    th:not(:first-child),
+    td:not(:first-child) {
+      padding: 2px 4px !important;
+    }
+  }
+}
+.header {
+  .mat-icon {
+    font-size: 14px;
+    color: #424242;
+    cursor: pointer;
+    margin-left: 2px;
+  }
+}
+::ng-deep .blocked-tooltip {
+  white-space: pre-line;
+  font-size: 12px;
+}

@@ -1,0 +1,25 @@
+<div class="menu-tree">
+  <div class="header">
+    <mat-form-field>
+      <input
+        matInput
+        autocomplete="off"
+        placeholder="Search actions"
+        [formControl]="searchAction"
+        (keyup.enter)="onFilterData($event.target['value'])"
+      />
+      <mat-icon matSuffix *ngIf="!searchAction.value">search</mat-icon>
+      <mat-icon class="remove-text" matSuffix *ngIf="searchAction.value" (click)="searchAction.setValue('')">
+        close
+      </mat-icon>
+      <mat-hint align="end" class="hint" (click)="goToFirstElement()"> {{ dataSearch.length }} match </mat-hint>
+    </mat-form-field>
+  </div>
+
+  <b3n-tree-node
+    *ngFor="let node of trees"
+    [node]="node"
+    [isHasData]="dataSearch.length > 0"
+    (onSlectedData)="onSelectedData()"
+  ></b3n-tree-node>
+</div>

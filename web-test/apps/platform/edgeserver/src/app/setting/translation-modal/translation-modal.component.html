@@ -1,0 +1,34 @@
+<div class="translation-modal">
+  <h2 mat-dialog-title>{{ translationModalInput?.isEdit ? 'Update' : 'Add' }} Translation</h2>
+  <form [formGroup]="formGroup">
+    <mat-dialog-content class="mat-typography" fxLayout="column" fxLayoutAlign="start strecht" fxLayoutGap="0.8rem">
+      <mat-form-field>
+        <mat-label>Name*</mat-label>
+        <input matInput placeholder="Ex: abc1_xyz" formControlName="name" [b3nRetrictInput]="'([a-zA-Z]+[\\d_]*)+$'" />
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['required']">Name can't be empty</mat-error>
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['pattern']"
+          >Name must be at least 2 characters and the first character must be characters includes(a-zA-Z)</mat-error
+        >
+        <mat-error *ngIf="formGroup?.get('name')?.errors?.['isExistsTranslation']">Translation is existed</mat-error>
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutGap="0.8rem" fxLayoutAlign="start center">
+        <mat-form-field fxFlex>
+          <mat-label>Pattern*</mat-label>
+          <input matInput placeholder="Enter pattern" formControlName="pattern" />
+          <mat-error *ngIf="formGroup?.get('pattern')?.invalid">Pattern can't be empty</mat-error>
+        </mat-form-field>
+        <mat-form-field fxFlex>
+          <mat-label>Replacement*</mat-label>
+          <input matInput placeholder="Enter replacement" formControlName="replacement" />
+          <mat-error *ngIf="formGroup?.get('replacement')?.invalid">Replacement can't be empty</mat-error>
+        </mat-form-field>
+      </div>
+    </mat-dialog-content>
+  </form>
+  <mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" [loading]="isLoading" [disabled]="formGroup.invalid" (click)="onSave()">
+      {{ translationModalInput?.isEdit ? 'Update' : 'Create' }}
+    </button>
+  </mat-dialog-actions>
+</div>

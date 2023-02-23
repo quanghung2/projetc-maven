@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Job Detail</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutAlign="start start">
+    <div fxFlex="100">
+      <div fxLayout="row" class="mb-10">
+        <label fxFlex="20"> Job ID: </label><strong>{{ jobDetail.jobId }}</strong>
+      </div>
+      <div fxLayout="row" class="mb-10">
+        <label fxFlex="20">Type: </label>
+        <strong>{{ jobDetail.type || '-' | titlecase }}</strong>
+      </div>
+      <div fxLayout="row">
+        <label fxFlex="20">Files/Prefix: </label>
+        <textarea
+          matInput
+          class="script-text-color"
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="2"
+          cdkAutosizeMaxRows="10"
+          cols="70"
+          [value]="jobDetail.prefixes.join('\n')"
+          disabled
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end"><button mat-button mat-dialog-close>Close</button></div>

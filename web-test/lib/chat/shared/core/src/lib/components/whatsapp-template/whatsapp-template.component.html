@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+  <div class="dialog-title">Send template</div>
+</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Select template</mat-label>
+    <mat-select [(value)]="selected">
+      <mat-option *ngFor="let template of templates$ | async" [value]="template">
+        {{ template.id }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <p>{{ selected?.content }}</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="btnCancel">Cancel</button>
+  <button mat-raised-button [loading]="processing" color="primary" (click)="submit()">Send</button>
+</div>

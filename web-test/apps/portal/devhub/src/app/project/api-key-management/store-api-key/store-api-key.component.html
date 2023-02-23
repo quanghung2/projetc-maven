@@ -1,0 +1,17 @@
+<div mat-dialog-title>Create an API Key</div>
+
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+
+    <input [(ngModel)]="name" matInput required (keyup.enter)="create()" />
+    <mat-error>Name is required</mat-error>
+  </mat-form-field>
+</div>
+
+<div align="end" mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button (click)="create()" [disabled]="!name || progressing" [loading]="progressing" color="primary" mat-flat-button>
+    Create
+  </button>
+</div>

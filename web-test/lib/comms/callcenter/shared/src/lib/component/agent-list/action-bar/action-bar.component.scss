@@ -1,0 +1,14 @@
+.action-bar {
+  padding: 0.8rem 1.6rem;
+}
+
+.icon {
+  zoom: 0.7;
+}
+
+.fetching-icon {
+  width: 40px;
+  > * {
+    float: right;
+  }
+}

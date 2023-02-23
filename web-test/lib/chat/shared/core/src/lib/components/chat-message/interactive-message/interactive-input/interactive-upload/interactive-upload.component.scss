@@ -1,0 +1,38 @@
+:host {
+  .container {
+    .attachment-avatar {
+      width: 32px;
+    }
+
+    .name-container {
+      position: relative;
+    }
+
+    .progress {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      width: 100%;
+    }
+
+    &:hover {
+      .clear-btn {
+        visibility: visible;
+      }
+    }
+
+    .clear-btn {
+      visibility: hidden;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      mat-icon {
+        width: 22px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 22px;
+        color: #7a7a7a;
+      }
+    }
+  }
+}

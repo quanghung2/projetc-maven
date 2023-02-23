@@ -1,0 +1,136 @@
+<div class="flex column justify-content-start align-items-none">
+  <section class="flex column justify-content-start align-items-none">
+    <div
+      [ngSwitch]="message.mt"
+      [class.system_message]="message.mt === MessageType.system"
+      class="normal_message_container main-text"
+    >
+      <ng-container *ngSwitchCase="MessageType.system">
+        <ng-container *ngIf="!builtTextMessage.isTriggerDirective; else trigger">
+          <span class="normal-text" [innerHTML]="builtTextMessage?.text | safe: 'html'"></span>
+        </ng-container>
+        <ng-template #trigger>
+          <span
+            class="normal-text"
+            lazyloadUnknown
+            [text]="builtTextMessage.text"
+            [innerHTML]="builtTextMessage?.text | safe: 'html'"
+          ></span>
+        </ng-template>
+      </ng-container>
+
+      <span
+        class="normal-text"
+        style="color: #2196f3; font-style: italic"
+        *ngSwitchCase="MessageType.whatsAppWelcome"
+        [innerHTML]="builtTextMessage?.text | safe: 'html'"
+      ></span>
+
+      <ng-container *ngSwitchDefault>
+        <ng-container *ngIf="!builtTextMessage.isTriggerDirective; else trigger">
+          <span
+            class="normal-text"
+            *ngIf="!isEditing"
+            [innerHTML]="builtTextMessage?.text | safe: 'html'"
+            [class.sending]="!message.id"
+            [class.red-fg]="isErrorFormat"
+          ></span>
+        </ng-container>
+        <ng-template #trigger>
+          <span
+            class="normal-text"
+            *ngIf="!isEditing"
+            lazyloadUnknown
+            [text]="builtTextMessage.text"
+            [innerHTML]="builtTextMessage?.text | safe: 'html'"
+            [class.sending]="!message.id"
+            (showProfile)="onShowProfile($event)"
+          ></span>
+        </ng-template>
+
+        <a
+          *ngIf="isSubstring || isExpand"
+          href="javascript:void"
+          class="show-more"
+          (click)="expandMsg.emit(!isExpand)"
+          [matTooltip]="isExpand ? 'Collapse' : 'Expand'"
+        >
+          ...
+        </a>
+
+        <div class="edit-msg" *ngIf="isEditing">
+          <csh-quill-editor [data]="quillInput" (messaged)="handleEnterMessage($event)" #quill></csh-quill-editor>
+          <span class="mat-caption">
+            Escape to <a (click)="resetEdit()">cancel</a> &#183; enter to <a (click)="send()">save </a>
+          </span>
+        </div>
+
+        <ng-container *ngIf="previewData">
+          <br />
+          <table class="preview-table" [style.borderColor]="isYoutube ? '#ff5252' : '#40c4ff'">
+            <tbody>
+              <!-- Youtube -->
+              <ng-container *ngIf="isYoutube; else others">
+                <tr>
+                  <td>
+                    <strong>
+                      <a [href]="extractUrl | safe: 'resourceUrl'" target="_blank">
+                        <img class="youtube-logo" src="./assets/icons/youtube.svg" />
+                        <br />
+                        {{ previewData.title.trim() }}
+                      </a>
+                    </strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <iframe
+                      width="444"
+                      height="250"
+                      [src]="embededUrlYoutube | safe: 'resourceUrl'"
+                      [srcdoc]="srcDocYoutube | safe: 'html'"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                  </td>
+                </tr>
+              </ng-container>
+
+              <ng-template #others>
+                <tr>
+                  <td style="text-align: justify">
+                    <strong>
+                      <a [href]="extractUrl | safe: 'resourceUrl'" target="_blank">
+                        <img
+                          *ngIf="previewData.icon.indexOf('https') >= 0"
+                          class="preview-logo"
+                          [src]="previewData.icon | safe: 'resourceUrl'"
+                        />
+                        {{ previewData.title.trim() }}
+                      </a>
+                    </strong>
+                    <br />
+                    <span class="mat-caption">{{ htmlDecode }}</span>
+                  </td>
+                  <td>
+                    <div *ngIf="backgroundImage" class="preview-img" [style.background-image]="backgroundImage"></div>
+                  </td>
+                </tr>
+              </ng-template>
+            </tbody>
+          </table>
+        </ng-container>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="isFailed || isTimeoutResponse">
+      <span class="text-failed mat-caption red-fg">
+        Failed to send message.
+        <ng-container *ngIf="message.ct !== ConvoType.whatsapp">
+          Click to <a (click)="resend()">resend</a> or
+          <a (click)="removeUnsend(message)">remove</a>
+        </ng-container>
+      </span>
+    </ng-container>
+  </section>
+</div>

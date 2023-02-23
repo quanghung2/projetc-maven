@@ -1,0 +1,114 @@
+<mat-menu #profileMenu="matMenu" class="custom-menu">
+  <div *ngIf="member" class="container flex column justify-content-start align-items-none gap-8">
+    <div>
+      <div class="menu-header" (click)="$event.stopPropagation()">
+        <div class="flex column justify-content-center align-items-center gap-5 avatar-wrapper">
+          <div class="relative">
+            <div *ngIf="!member.hasPhoto" class="avatar-menu">
+              {{ member.displayName | firstWord }}
+            </div>
+            <img *ngIf="member.hasPhoto" class="avatar-menu" [src]="member.photoUrl" />
+            <mat-icon [class]="member.isOnline ? 'status__online' : 'status__offline'">lens</mat-icon>
+          </div>
+        </div>
+
+        <div class="menu-header__info">
+          <p class="menu-header__info--name">{{ member.displayName }}</p>
+          <div
+            class="flex flex-wrap justify-content-start align-items-center gap-8"
+            *ngIf="userHyperspace$ | async as userHyperspace; else infoChannelHeader"
+          >
+            <ng-container *ngIf="member | getRoleChannelHyper: convo as role">
+              <span class="box">{{ role | titlecase }}</span>
+              <span *ngIf="userHyperspace.name" class="box" [class.other-org]="!userHyperspace.isCurrentOrg">
+                {{ userHyperspace.shortName }}
+              </span>
+            </ng-container>
+          </div>
+          <ng-template #infoChannelHeader>
+            <ng-container *ngIf="member | getRole: convo | async as role">
+              <span class="box">{{ role | titlecase }}</span>
+            </ng-container>
+          </ng-template>
+          <ng-container *ngIf="infoMember$ | async as info">
+            <ng-container *ngIf="info?.teams?.length">
+              <div *ngFor="let team of info?.teams" class="flex align-items-center gap-5 menu-header__info--team">
+                <mat-icon color="primary"> people </mat-icon>
+                <a href="javascript:void(0);" (click)="onOpenOrgChartDialog(info?.uuid)">{{ team.name | titlecase }}</a>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+
+      <div (click)="$event.stopPropagation()" class="menu-content">
+        <ng-container *ngIf="infoMember$ | async as info">
+          <p
+            class="menu-content__about secondary-text"
+            *ngIf="(info?.about || '').trim()"
+            [innerHTML]="info?.about | linkify"
+          ></p>
+          <p *ngIf="info?.email || info?.mobileNumber || (selectExtension$ | async)" class="menu-content__title">
+            Contact
+          </p>
+          <div *ngIf="info?.email" class="flex gap-10 align-items-center line">
+            <mat-icon>mail_outline</mat-icon>
+            <span>{{ info?.email }}</span>
+          </div>
+          <div *ngIf="info?.mobileNumber" class="flex gap-10 align-items-center line">
+            <mat-icon>phone</mat-icon>
+            <span>{{ info?.mobileNumber }}</span>
+          </div>
+          <div *ngIf="selectExtension$ | async as extension" class="flex gap-10 align-items-center line">
+            <mat-icon>phone</mat-icon>
+            <span># {{ extension?.extKey }}</span>
+          </div>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="userHyperspace$ | async; else infoChannelAction">
+        <ng-container *ngIf="member | getRoleChannelHyper: convo as role">
+          <ng-container *ngIf="me$ | async as me">
+            <div *ngIf="me.uuid !== member.uuid" class="menu-actions">
+              <button mat-stroked-button color="primary" (click)="createOrGetConvo(member)">Message</button>
+              <button
+                mat-stroked-button
+                *ngIf="role !== RoleType.guest; else inviteUser"
+                color="warn"
+                (click)="removeChannelHyper(member)"
+              >
+                Remove
+              </button>
+              <ng-template #inviteUser>
+                <button mat-raised-button color="primary" (click)="inviteChannelHyper()">Invite</button>
+              </ng-template>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #infoChannelAction>
+        <ng-container *ngIf="member | getRole: convo | async as role">
+          <ng-container *ngIf="me$ | async as me">
+            <div *ngIf="me.uuid !== member.uuid" class="menu-actions">
+              <button mat-stroked-button color="primary" (click)="createOrGetConvo(member)">Message</button>
+              <ng-container *ngIf="!isGeneral">
+                <button
+                  mat-stroked-button
+                  *ngIf="role !== RoleType.guest; else inviteUser"
+                  color="warn"
+                  (click)="remove(member)"
+                >
+                  Remove
+                </button>
+                <ng-template #inviteUser>
+                  <button mat-raised-button color="primary" (click)="invite()">Invite</button>
+                </ng-template>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
+</mat-menu>

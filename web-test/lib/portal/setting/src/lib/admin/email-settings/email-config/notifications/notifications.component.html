@@ -1,0 +1,8 @@
+<mat-slide-toggle
+  [color]="'primary'"
+  [checked]="agentNotification.incommingEmailNotification === 'active'"
+  (toggleChange)="updateNotification()"
+  class="toggle"
+>
+  <span>Send notification via email</span>
+</mat-slide-toggle>

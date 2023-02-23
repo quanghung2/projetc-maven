@@ -1,0 +1,24 @@
+<form #form="ngForm" fxLayout="column" fxLayoutGap="1.6rem">
+  <h1 mat-dialog-title>General Configuration</h1>
+  <ng-container *ngIf="popupConfig">
+    <h2 class="title">Notification</h2>
+    <mat-form-field class="short-line">
+      <mat-label>Popup show on</mat-label>
+      <mat-select [(value)]="popupConfig.defaultPopupShowedOn">
+        <mat-option *ngFor="let popup of popups" [value]="popup.key"> {{ popup.value }} </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="short-line">
+      <mat-label>Default Wrap Up Time (seconds)</mat-label>
+      <input [(ngModel)]="wrapupTime" matInput name="wrapupTime" type="number" />
+    </mat-form-field>
+
+    <div align="end" mat-dialog-actions>
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button (click)="update()" color="primary" [loading]="progressing" [disabled]="form.invalid" mat-flat-button>
+        Update
+      </button>
+    </div>
+  </ng-container>
+</form>

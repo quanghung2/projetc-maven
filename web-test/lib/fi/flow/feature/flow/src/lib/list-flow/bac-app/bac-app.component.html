@@ -1,0 +1,12 @@
+<div class="container py-16">
+  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="32px" class="mb-8">
+    <h2 class="mb-0"><strong>Business Action Creator</strong></h2>
+    <ul class="nav-tab mt-8" fxLayoutGap="4px">
+      <li (click)="tabChange(0)" [class.active]="showAction">Actions</li>
+      <li *ngIf="showTabRelationship" (click)="tabChange(1)" [class.active]="showRelationship">Relationships</li>
+    </ul>
+  </div>
+
+  <b3n-ba-action *ngIf="showAction"></b3n-ba-action>
+  <b3n-ba-relationship *ngIf="showRelationship"></b3n-ba-relationship>
+</div>

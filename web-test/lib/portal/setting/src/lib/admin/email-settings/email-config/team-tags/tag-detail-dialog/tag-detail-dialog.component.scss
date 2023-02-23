@@ -1,0 +1,23 @@
+@import '../../../email-settings.component';
+
+.form-container {
+  margin: 20px auto 0;
+  mat-form-field {
+    width: 100%;
+  }
+  .color {
+    display: flex;
+    margin: 20px 0;
+    .description {
+      flex: 1 1 auto;
+      .header {
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .hint {
+        color: $empty-color;
+      }
+    }
+  }
+}
+

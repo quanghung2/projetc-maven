@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>Export Transactions</h1>
+<div mat-dialog-content>
+  <div fxLayout="column">
+    <mat-form-field appearance="fill">
+      <mat-label>Export time range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input [(ngModel)]="timeRangeExport.start" matStartDate placeholder="Start date" />
+        <input [(ngModel)]="timeRangeExport.end" matEndDate placeholder="End date" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button (click)="export()" [loading]="exporting" color="primary">Export</button>
+</div>

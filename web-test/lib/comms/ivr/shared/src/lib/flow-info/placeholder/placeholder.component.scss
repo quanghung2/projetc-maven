@@ -1,0 +1,16 @@
+:host {
+  .header {
+    position: relative;
+
+    .close-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+    }
+  }
+
+  .table-data {
+    margin-top: 1.6rem;
+  }
+}

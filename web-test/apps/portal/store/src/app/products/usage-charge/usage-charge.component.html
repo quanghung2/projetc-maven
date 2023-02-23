@@ -1,0 +1,86 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+<div class="usage-charge__container" *ngIf="!loading">
+  <div class="usage-charge__header">
+    <h1>Telecom Rates</h1>
+    <div>
+      <span
+        >All rates in <strong>{{ currency }}</strong> applied for</span
+      >
+      <mat-form-field>
+        <input type="text" matInput [formControl]="countryControl" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country">
+            {{ country.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="usage-charge__details">
+    <div class="tab__wrapper">
+      <div
+        *ngFor="let telcom of telcoms"
+        (click)="changeTelcom(telcom)"
+        class="tab"
+        [class.active]="telcom.type == selectedTelcom.type"
+        [hidden]="telcom.hidden"
+      >
+        {{ telcom.type | tileCase }}
+      </div>
+      <mat-form-field>
+        <mat-label>{{ selectedProduct?.name || 'Filter by product' }}</mat-label>
+        <mat-select (selectionChange)="filterByProduct($event.value)">
+          <mat-option *ngFor="let product of products" [value]="product.productId">
+            {{ product.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <ng-container *ngIf="selectedTelcom">
+      <mat-progress-bar
+        *ngIf="selectedTelcom.loading; else selectedTelcomProducts"
+        mode="indeterminate"
+      ></mat-progress-bar>
+      <ng-template #selectedTelcomProducts>
+        <div *ngFor="let product of selectedTelcom.products" class="info__wrapper">
+          <ng-container [ngSwitch]="product.productId">
+            <h4 *ngSwitchCase="'call-outgoing'">MAKE A CALL</h4>
+            <h4 *ngSwitchCase="'call-incoming'">RECEIVE A CALL</h4>
+            <h4 *ngSwitchCase="'fax-outgoing'">SEND A FAX</h4>
+            <h4 *ngSwitchCase="'fax-incoming'">RECEIVE A FAX</h4>
+            <h4 *ngSwitchCase="'sms-outgoing'">SEND A MESSAGE</h4>
+            <h4 *ngSwitchCase="'sms-incoming'">RECEIVE A MESSAGE</h4>
+          </ng-container>
+
+          <ng-container *ngIf="product.filterSkusByName(selectedCountry).length > 0 && !selectedTelcom.hidden">
+            <div *ngFor="let pricing of product.filterSkusByName(selectedCountry)" class="available">
+              <div class="name">{{ product.getTelcomSurfixDescription() }} {{ pricing.name | tileCase }}</div>
+              <div class="time__wrapper">
+                <p class="time">
+                  {{ pricing.salesModels[0].amount }}
+                </p>
+                <p>per {{ product.productId | usageChargeUnit }}</p>
+              </div>
+            </div>
+          </ng-container>
+
+          <div
+            *ngIf="product.filterSkusByName(selectedCountry).length == 0 || selectedTelcom.hidden"
+            class="not-available"
+          >
+            Not available
+            <span
+              *ngIf="
+                selectedTelcom.type != 'fax' || (selectedProduct && selectedProduct.productId != '1FXekqSRnDZ5p5hm')
+              "
+            >
+              for {{ selectedProduct?.name }}</span
+            >
+            in {{ selectedCountry }}
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

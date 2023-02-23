@@ -1,0 +1,22 @@
+:host {
+  mat-drawer {
+    // box-shadow: none !important;
+    width: 580px;
+    position: fixed;
+    // background: $white;
+    // box-shadow: 0 0 20px $gray;
+    height: 100vh;
+  }
+  mat-drawer-content {
+    margin-right: 0 !important;
+    min-height: 100vh;
+  }
+}
+table {
+  width: 100%;
+
+  .mat-row:hover {
+    cursor: pointer;
+    background-color: #fafafa;
+  }
+}

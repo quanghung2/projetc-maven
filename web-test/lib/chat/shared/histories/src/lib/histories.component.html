@@ -1,0 +1,12 @@
+<ng-container *ngIf="contact$ | async as contact">
+  <div class="histories-container flex column justify-content-end align-items-none">
+    <div fxFlex="64px" class="header">
+      <b3n-histories-header [contact]="contact"></b3n-histories-header>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div #viewport fxFlex="auto" class="body scroller-firefox">
+      <poh-unified-history [isUnifiedWorkspace]="true" [noTitle]="true" [contact]="contact"></poh-unified-history>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,9 @@
+<div mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+  Disable job
+  <mat-icon mat-button mat-dialog-close style="cursor: pointer">close</mat-icon>
+</div>
+<p>Are you sure you want to disable it manually?</p>
+<div mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+  <button mat-raised-button (click)="disable()" [loading]="isLoading" color="warn">Disable it. Please!</button>
+</div>

@@ -1,0 +1,54 @@
+<h1 mat-dialog-title>
+  <span>{{ ctaActionName }} Access</span>
+</h1>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="space-between stretch" fxLayoutGap="1.6rem" class="dialog-content-container">
+    <mat-form-field>
+      <input
+        [disabled]="ctaActionName == 'Update'"
+        [(ngModel)]="newAccess.accessor"
+        matInput
+        placeholder="Accessor"
+        required
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <input
+        type="text"
+        placeholder="Report"
+        matInput
+        [(ngModel)]="codeTemplate"
+        (input)="filterReports()"
+        [matAutocomplete]="auto"
+        required
+      />
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setValueType()" [displayWith]="customReport">
+        <mat-option *ngFor="let temp of filteredTemplates" [value]="temp">
+          {{ temp.label }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutAlign="space-between stretch">
+      <span>
+        Type:
+        <b
+          ><span *ngIf="newAccess.type == 'agg'">Commulative</span>
+          <span *ngIf="newAccess.type == 'dump'">Historical</span></b
+        ></span
+      >
+      <div class="iam" fxLayout="row">
+        <span>Show in Report App: </span>
+        <mat-checkbox [(ngModel)]="newAccess.showInReportApp" color="primary"> </mat-checkbox>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+  <button mat-raised-button color="primary" [disabled]="!newAccess.accessor || !hasCode" (click)="updateAccessible()">
+    {{ ctaActionName }}
+  </button>
+</div>

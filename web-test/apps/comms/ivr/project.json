@@ -1,0 +1,94 @@
+{
+  "name": "comms-ivr",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/comms/ivr/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/comms/ivr",
+        "index": "apps/comms/ivr/src/index.html",
+        "main": "apps/comms/ivr/src/main.ts",
+        "polyfills": "apps/comms/ivr/src/polyfills.ts",
+        "tsConfig": "apps/comms/ivr/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/comms/ivr/src/favicon.ico",
+          "apps/comms/ivr/src/assets",
+          {
+            "input": "libs/comms/ivr/shared/src/assets",
+            "glob": "**/*",
+            "output": "assets/ivr-shared"
+          }
+        ],
+        "styles": ["apps/comms/ivr/src/styles.scss", "node_modules/jointjs/dist/joint.min.css"],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/shared/ui/material/src/lib", "node_modules"]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/comms/ivr/src/environments/environment.ts",
+              "with": "apps/comms/ivr/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "comms-ivr:build:production"
+        },
+        "development": {
+          "browserTarget": "comms-ivr:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "comms-ivr:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/comms/ivr/**/*.ts", "apps/comms/ivr/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

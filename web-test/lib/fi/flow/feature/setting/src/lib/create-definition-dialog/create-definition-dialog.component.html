@@ -1,0 +1,17 @@
+<h2 fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+  <span>Create Definition</span>
+  <mat-icon class="close" mat-dialog-close>close</mat-icon>
+</h2>
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+    <div *ngIf="data.connector.type === 'INTERNAL'" class="definition" (click)="select('trigger')" fxFlex>
+      <p>Event</p>
+    </div>
+    <div class="definition" (click)="select('action')" fxFlex>
+      <p>Action</p>
+    </div>
+    <div class="definition" (click)="select('datasource')" fxFlex>
+      <p>Value List</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<ng-container *ngIf="isApprovalBot$ | async; else personalChannel">
+  <div class="convo__footer approvalBot flex justify-content-center align-items-center gap-16">
+    <button mat-stroked-button color="primary" [loading]="isStarting" (click)="newRequest()">New request</button>
+  </div>
+</ng-container>
+
+<ng-template #personalChannel>
+  <ng-container *ngIf="channel?.isPersonalChat; else normalChannel">
+    <div class="convo__footer personalChannel"></div>
+  </ng-container>
+</ng-template>
+
+<ng-template #normalChannel>
+  <ng-container *ngIf="channel && channel.isOpen && channel.isMember; else noMemberChannel">
+    <div
+      class="quill channel"
+      *ngIf="{ replyingMessage: replyingMessage$ | async } as data"
+      [class.hasReply]="data?.replyingMessage"
+    >
+      <div class="flex column justify-content-start align-items-none">
+        <div *ngIf="!!data?.replyingMessage" class="reply-msg" fxLayout="row" fxLayoutAlign="start center">
+          <div fxFlex="auto" fxLayout="column" fxLayoutAlign="start none">
+            <div>
+              Replying to
+              <pre>@{{ data.replyingMessage.user }}</pre>
+            </div>
+            <span class="reply-msg_text">{{ data.replyingMessage.text }}</span>
+          </div>
+          <mat-icon (click)="removeReply()">clear</mat-icon>
+        </div>
+        <div class="flex justify-content-space-between align-items-center gap-8" >
+          <csh-quill-editor
+            [data]="quillEditorData"
+            (messaged)="handleEnterMessage($event)"
+            (uploadedFiles)="onUploadFile($event)"
+            (textChanged)="onTextChanged($event)"
+            (enterEditLastMessage)="handleEditLastMessage($event)"
+          ></csh-quill-editor>
+        </div>
+
+        <div
+          *ngIf="userTypings$ | async as userTypings"
+          class="user-typing"
+          [style.visibility]="userTypings?.length > 0 ? 'visible' : 'hidden'"
+        >
+          <span class="user">{{ userTypings | userTyping }}</span>
+          {{ userTypings?.length > 1 ? 'are' : 'is' }} typing
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #noMemberChannel>
+  <div
+    class="convo__footer flex justify-content-center align-items-center gap-8"
+    *ngIf="channel && (!channel.isMember || channel.isArchived)"
+    [class.notMember]="!channel.isMember || channel.isArchived"
+  >
+    <ng-container *ngIf="channel.isOpen && !channel.isMember">
+      <div class="warning-label flex justify-content-center align-items-center gap-5">
+        <span>You are viewing</span>
+        <div fxLayoutGap="0.2rem">
+          <mat-icon *ngIf="!channel.isPublic" class="icon">lock</mat-icon>
+          <mat-icon *ngIf="channel.isPublic" class="icon">#</mat-icon>
+          <b>{{ convoName }}</b>
+        </div>
+        <button mat-raised-button color="primary" (click)="joinConvo()">Join channel</button>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="channel.isArchived">
+      <div class="warning-label flex justify-content-center align-items-center gap-5">
+        <span>You are viewing</span>
+        <div fxLayoutGap="0.2rem">
+          <mat-icon *ngIf="!channel.isPublic" class="icon">lock</mat-icon>
+          <mat-icon *ngIf="channel.isPublic" class="icon">#</mat-icon>
+          <b>{{ convoName }}</b>
+        </div>
+        <span>, an archived channel</span>
+        <ng-container *ngIf="archivedBy$ | async as archivedBy">
+          <span> by</span>
+          <pre class="message_mention">@{{ archivedBy?.displayName }}</pre>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

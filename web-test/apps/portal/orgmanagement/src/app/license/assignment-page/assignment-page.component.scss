@@ -1,0 +1,56 @@
+:host {
+  ::ng-deep.mat-form-field.mat-form-field-type-mat-select .mat-form-field-infix {
+    min-width: 100px;
+  }
+
+  mat-drawer {
+    box-shadow: none !important;
+    width: 480px;
+    position: fixed;
+    height: 100vh;
+  }
+  mat-drawer-content {
+    margin-right: 0 !important;
+    min-height: 100vh;
+
+    .base-info {
+      .title {
+        height: 36px;
+        line-height: 36px;
+      }
+      .statistic {
+        padding: 8px 0 16px 0;
+        .available-block {
+          font-weight: 500;
+        }
+        .process-bar {
+          width: 160px;
+        }
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+
+    .mat-row:hover {
+      background-color: #fafafa;
+    }
+
+    .attendant-uuid {
+      width: fit-content;
+    }
+
+    .mat-column-actions {
+      width: 100px;
+
+      .unprovision {
+        visibility: hidden;
+      }
+    }
+
+    .mat-row:hover .unprovision {
+      visibility: visible;
+    }
+  }
+}

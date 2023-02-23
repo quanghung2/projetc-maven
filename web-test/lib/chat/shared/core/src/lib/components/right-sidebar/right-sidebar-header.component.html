@@ -1,0 +1,11 @@
+<div class="header_primary">
+  <div class="header_primary__content">
+    <ng-content select="csh-right-sidebar-title"></ng-content>
+    <ng-content select="csh-right-sidebar-subtitle"></ng-content>
+  </div>
+  <div #ref><ng-content select="csh-right-sidebar-action"></ng-content></div>
+  <button *ngIf="ref.children.length == 0" mat-icon-button (click)="close()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<ng-content></ng-content>

@@ -1,0 +1,43 @@
+<div *ngIf="loadingHistory$ | async" class="ui-loading">
+  <mat-progress-bar mode="query"></mat-progress-bar>
+</div>
+<div *ngIf="errApiLoadFirst" fxFill fxLayoutAlign="center center">
+  <ng-container *ngIf="refetchHistory$ | async"></ng-container>
+  <button color="primary" mat-icon-button (click)="flowLoadHistory()">
+    <mat-icon class="icon-refresh">refresh</mat-icon>
+  </button>
+</div>
+
+<div #viewport class="messages-viewport" *ngIf="!reloadView" tabindex="0">
+  <div
+    *uiScroll="let message of datasource; let i = index"
+    class="msg-item"
+    [id]="message?.current?.clientId"
+    [attr.data-ts]="message?.current?.ts"
+  >
+    <div *ngIf="!message.isFake; else fakeMsg">
+      <div class="group-by-date" *ngIf="message.pre && message.isDiffDate">
+        <span>{{ message.current?.ts | viewDate }}</span>
+      </div>
+      <csh-chat-message
+        [message]="message.current"
+        [previousMessage]="message.pre"
+        [parentElr]="message.current.mt === MsgType.attachment ? viewport : null"
+        [editingMessageId]="editingMessageId"
+        (showProfile)="onShowProfile($event)"
+        (mentionsChanged)="onMentionsChanged($event)"
+        (edited)="focusQuillEditor()"
+      ></csh-chat-message>
+    </div>
+
+    <ng-template #fakeMsg>
+      <div style="height: 20px"></div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-container *ngIf="enableScrollBottom$ | async">
+  <button class="read-message" mat-mini-fab (click)="scrollToLastestMessage()">
+    <mat-icon>expand_more</mat-icon>
+  </button>
+</ng-container>

@@ -1,0 +1,89 @@
+{
+  "name": "comms-globaldnc",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/comms/globaldnc/src",
+  "prefix": "b3n",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/comms/globaldnc",
+        "index": "apps/comms/globaldnc/src/index.html",
+        "main": "apps/comms/globaldnc/src/main.ts",
+        "polyfills": "apps/comms/globaldnc/src/polyfills.ts",
+        "tsConfig": "apps/comms/globaldnc/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/comms/globaldnc/src/favicon.ico", "apps/comms/globaldnc/src/assets"],
+        "styles": ["apps/comms/globaldnc/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "5kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/comms/globaldnc/src/environments/environment.ts",
+              "with": "apps/comms/globaldnc/src/environments/environment.prod.ts"
+            }
+          ],
+          "index": {
+            "input": "apps/comms/globaldnc/src/index.prod.html",
+            "output": "index.html"
+          },
+          "outputHashing": "all",
+          "optimization": {
+            "styles": {
+              "inlineCritical": false
+            }
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "comms-globaldnc:build:production"
+        },
+        "development": {
+          "browserTarget": "comms-globaldnc:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "comms-globaldnc:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["apps/comms/globaldnc/**/*.ts", "apps/comms/globaldnc/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

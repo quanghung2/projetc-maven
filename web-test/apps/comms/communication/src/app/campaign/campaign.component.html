@@ -1,0 +1,267 @@
+<mat-toolbar>
+  <div class="page-title">Campaign</div>
+</mat-toolbar>
+
+<section fxLayout="column" class="number-list px-16">
+  <div class="number-list__body" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="1.6rem">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Search by name"
+          [(ngModel)]="findCampaignReq.q"
+          #fileterName="ngModel"
+          (keyup.enter)="reload()"
+        />
+        <button mat-icon-button matSuffix>
+          <mat-icon (click)="reload()" class="search-box-icon">search</mat-icon>
+        </button>
+        <button *ngIf="findCampaignReq.q" (click)="findCampaignReq.q = ''" mat-icon-button matSuffix>
+          <mat-icon class="search-box-icon">clear</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="1.6rem">
+        <button mat-icon-button [loading]="loading" (click)="reload()">
+          <mat-icon>refresh</mat-icon>
+        </button>
+        <button (click)="create()" mat-flat-button color="primary">Create</button>
+      </div>
+    </div>
+
+    <div class="callcenter" *ngIf="numberLists">
+      <table mat-table [dataSource]="dataSource">
+        <!-- Number List Uuid -->
+        <ng-container matColumnDef="uuid">
+          <th mat-header-cell *matHeaderCellDef>UUID</th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              class="label"
+              mat-button
+              matTooltip="Click to copy"
+              ngxClipboard
+              [cbContent]="element.uuid"
+              (cbOnSuccess)="copied()"
+              (cbOnError)="copyFailed()"
+            >
+              {{ element.uuid | slice: 0:8 }}
+            </button>
+          </td>
+        </ng-container>
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+        </ng-container>
+
+        <!-- Tags Column -->
+        <ng-container matColumnDef="tags">
+          <th mat-header-cell *matHeaderCellDef class="tags-column">Tags</th>
+          <td mat-cell *matCellDef="let element" class="tags-column">{{ element.tags }}</td>
+        </ng-container>
+
+        <!-- Queue Column -->
+        <ng-container matColumnDef="queue">
+          <th mat-header-cell *matHeaderCellDef>Queue</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element.queueLable">{{ element.queueLable }}</span>
+          </td>
+        </ng-container>
+
+        <!-- description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let element">
+            <span *ngIf="element.type === CampaignType.voice">trigger Flow: {{ element.flowLable || '_' }}</span>
+            <span *ngIf="element.type === CampaignType.sms">Sender: {{ element.callerId || '_' }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Number Count Column -->
+        <ng-container matColumnDef="number-count">
+          <th mat-header-cell *matHeaderCellDef>Total Number</th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.numberCount }}</span>
+          </td>
+        </ng-container>
+
+        <!-- type Column -->
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">
+            <span>{{ element.type | typeCampaign: element.queueUuid }} </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let element" class="td-status">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.4rem">
+              <div class="status-chip" [class]="element.status">
+                {{ element.status | numberStatus }}
+              </div>
+              <mat-icon
+                class="s-16"
+                *ngIf="element.listScheduledAt.length > 0"
+                [matTooltip]="element.scheduledDisplay"
+                [matTooltipClass]="'blocked-tooltip'"
+                ngxClipboard
+                (click)="$event.stopPropagation()"
+              >
+                help_outline
+              </mat-icon>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Action Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="action-column"></th>
+          <td mat-cell *matCellDef="let element" class="action-column">
+            <div class="action-container" fxLayout="row" fxLayoutAlign="end center">
+              <ng-container *ngIf="element.status === Status.draft || element.status === Status.scheduled">
+                <button mat-icon-button matTooltip="Schedule" (click)="schedule(element)">
+                  <mat-icon>today</mat-icon>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="element.status === Status.draft">
+                <button
+                  *ngIf="element.status === Status.draft"
+                  mat-icon-button
+                  matTooltip="Edit"
+                  (click)="edit(element.uuid)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </ng-container>
+
+              <button
+                *ngIf="element.status === Status.draft; else viewDetailCampaign"
+                mat-icon-button
+                matTooltip="View Numbers"
+                (click)="numberManagement(element)"
+              >
+                <mat-icon>dehaze</mat-icon>
+              </button>
+
+              <ng-template #viewDetailCampaign>
+                <button mat-icon-button matTooltip="Detail Campaign" (click)="numberManagement(element)">
+                  <mat-icon>dehaze</mat-icon>
+                </button>
+              </ng-template>
+
+              <button
+                *ngIf="element.status === Status.finished"
+                mat-icon-button
+                matTooltip="View Report"
+                (click)="reportCampaignManagement(element)"
+              >
+                <mat-icon>assignment</mat-icon>
+              </button>
+
+              <ng-container *ngIf="element.status === Status.draft">
+                <span matTooltip="{{ element.unstartCampaignReason }}">
+                  <button
+                    mat-icon-button
+                    [matTooltip]="
+                      element.actionIconToolTipContent === CHECK_DNC ? CHECK_CONSENT : element.actionIconToolTipContent
+                    "
+                    color="primary"
+                    (click)="changeNumberListStt(element)"
+                    *ngIf="element.checkDnc && element.status === numberListStatus.draft; else start"
+                    [disabled]="!element.checkDncAble || element.isCompleted"
+                  >
+                    <mat-icon [class.disable-color]="!element.checkDncAble">youtube_searched_for</mat-icon>
+                  </button>
+                </span>
+
+                <ng-template #start>
+                  <span>
+                    <button
+                      mat-icon-button
+                      [matTooltip]="
+                        element.actionIconToolTipContent === CHECK_DNC
+                          ? CHECK_CONSENT
+                          : element.actionIconToolTipContent
+                      "
+                      color="primary"
+                      *ngIf="element.status !== numberListStatus.published"
+                      (click)="changeNumberListStt(element)"
+                      [disabled]="!element.publishAble || element.isCompleted || !!element.scheduledAt"
+                    >
+                      <mat-icon [class.disable-color]="!element.publishAble">play_arrow</mat-icon>
+                    </button>
+                  </span>
+                </ng-template>
+              </ng-container>
+
+              <button mat-icon-button matTooltip="Duplicate" (click)="duplicate(element.uuid)">
+                <mat-icon>file_copy</mat-icon>
+              </button>
+
+              <button
+                *ngIf="element.status !== Status.published"
+                mat-icon-button
+                color="warn"
+                matTooltip="Archive"
+                (click)="delete(element.uuid)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">
+            <div fxLayout="column" fxLayoutAlign="center center">No record found</div>
+          </td>
+        </tr>
+      </table>
+      <mat-paginator
+        [length]="totalCount"
+        [pageIndex]="pageable.page - 1"
+        [pageSize]="pageable.perPage"
+        (page)="onChangePage($event.pageIndex + 1)"
+        hidePageSize
+        showFirstLastButtons
+        *ngIf="totalCount > 0"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</section>
+
+<!--
+<mat-menu #actionMenu="matMenu" class="action-menu-campaign">
+  <ng-template matMenuContent let-queue="queue">
+    <button mat-menu-item (click)="edit(queue.uuid)">
+      <mat-icon>edit</mat-icon>
+      <span>Edit</span>
+    </button>
+    <ng-container *ngIf="!isFlow">
+      <button mat-menu-item (click)="worktimeDialog(queue)">
+        <mat-icon>date_range</mat-icon>
+        <span>Worktime</span>
+      </button>
+      <button mat-menu-item (click)="schedule(queue)">
+        <mat-icon>schedule</mat-icon>
+        <span> {{ queue?.listScheduledAt?.length > 0 ? 'Reschedule' : 'Schedule' }}</span>
+      </button>
+      <button mat-menu-item (click)="duplicate(queue.uuid)">
+        <mat-icon>file_copy</mat-icon>
+        <span>Duplicate</span>
+      </button>
+    </ng-container>
+    <button mat-menu-item (click)="duplicate(queue.uuid)">
+      <mat-icon>file_copy</mat-icon>
+      <span>Duplicate</span>
+    </button>
+    <button mat-menu-item (click)="delete(queue.uuid)">
+      <mat-icon>delete</mat-icon>
+      <span> Delete </span>
+    </button>
+  </ng-template>
+</mat-menu> -->

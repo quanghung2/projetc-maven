@@ -1,0 +1,134 @@
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="bundles-progress-bar"></mat-progress-bar>
+<div class="orders">
+  <mat-toolbar class="orders__header">
+    <h1>Order Management</h1>
+  </mat-toolbar>
+
+  <div fxLayout="column" fxLayoutAlign="start stretch" class="orders__body px-16">
+    <div [formGroup]="filterFG" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+      <mat-form-field class="search-box">
+        <mat-label>Search</mat-label>
+        <input matInput formControlName="buyerUuid" placeholder="Search by customer UUID" />
+        <button mat-icon-button matSuffix>
+          <mat-icon class="search-icon">search</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field class="filter-status-container">
+        <mat-select formControlName="status" placeholder="Status">
+          <mat-option *ngFor="let item of InitData.filter.statuses" [value]="item.key">{{ item.value }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <span class="spacer"></span>
+      <button mat-button [disabled]="loading$ | async" (click)="refreshPage()">
+        <mat-icon>refresh</mat-icon> Refresh
+      </button>
+      <ng-container *ngIf="actionMapping$ | async as actionMapping">
+        <button *ngIf="actionMapping['ModifyOrder']" mat-raised-button color="primary" (click)="createOrUpdate()">
+          Create
+        </button>
+      </ng-container>
+    </div>
+    <ng-container [ngTemplateOutlet]="tableView"></ng-container>
+  </div>
+</div>
+
+<ng-template #tableView
+  ><table mat-table [dataSource]="dataSource" class="orders-table">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerUuid">
+      <th mat-header-cell *matHeaderCellDef>Customer ID</th>
+      <td mat-cell *matCellDef="let element">
+        <shc-copy-button [text]="element.orgUuid" tooltip="Click to copy"></shc-copy-button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef>Customer name</th>
+      <td mat-cell *matCellDef="let element">{{ orgsMap[element.orgUuid]?.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let element">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0.8rem">
+          <span
+            class="mat-caption box"
+            [class.yellow-200]="element.status === OrderStatus.pending"
+            [class.teal]="element.status === OrderStatus.approved"
+            [class.red]="element.status === OrderStatus.rejected"
+          >
+            {{ element.status }}
+          </span>
+          <mat-icon
+            *ngIf="!!element.remark"
+            [matTooltip]="element.remark"
+            class="teal-fg cursor-pointer s-20 material-icons-outlined"
+            >info</mat-icon
+          >
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef>Last updated</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.updatedAt | date }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div *ngIf="actionMapping$ | async as actionMapping" fxLayout="row" fxLayoutAlign="end center">
+          <button *ngIf="element.readonly" mat-icon-button matTooltip="View details" (click)="viewDetails(element)">
+            <mat-icon class="materials-outline">preview</mat-icon>
+          </button>
+          <button
+            *ngIf="element.canApprove && actionMapping['ProvisionOrder']"
+            mat-icon-button
+            matTooltip="Review"
+            (click)="approve(element)"
+          >
+            <mat-icon class="materials-outline">reviews</mat-icon>
+          </button>
+          <button
+            *ngIf="element.editable && actionMapping['ModifyOrder']"
+            mat-icon-button
+            matTooltip="Edit"
+            (click)="createOrUpdate(element)"
+          >
+            <mat-icon class="materials-outline">edit</mat-icon>
+          </button>
+          <button
+            *ngIf="element.canDelete && actionMapping['CancelOrder']"
+            mat-icon-button
+            color="warn"
+            matTooltip="Delete"
+            (click)="deleteOrder(element)"
+          >
+            <mat-icon class="materials-outline">delete_outline</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="6">
+        <div fxLayout="column" fxLayoutAlign="center center">No orders found</div>
+      </td>
+    </tr>
+  </table>
+  <mat-paginator
+    [pageIndex]="pageable.page"
+    [pageSize]="pageable.perPage"
+    [length]="totalCount"
+    (page)="onPageChange($event)"
+    showFirstLastButtons
+    hidePageSize
+  ></mat-paginator
+></ng-template>

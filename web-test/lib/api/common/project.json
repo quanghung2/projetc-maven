@@ -1,0 +1,16 @@
+{
+  "name": "api-common",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/api/common/src",
+  "prefix": "b3n",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/api/common/**/*.ts", "libs/api/common/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}

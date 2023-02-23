@@ -1,0 +1,51 @@
+:host {
+  display: block;
+
+  .dialog-content-container {
+    font-size: 15px;
+
+    .mat-dialog-content {
+      padding-right: 1.6rem;
+    }
+
+    .enabled-control {
+      width: 100%;
+      padding-bottom: 1.6rem;
+    }
+
+    .enabled-control__label {
+      margin-right: 20px;
+    }
+
+    .title {
+      line-height: 40px;
+      border-bottom: solid thin lightgray;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    .digit {
+      width: 100px;
+    }
+
+    .msg-area {
+      margin-bottom: 1.5rem;
+    }
+
+    .voice-mail-message {
+      margin-top: 1.5rem;
+    }
+  }
+
+  .spinner-container {
+    min-height: 500px;
+    min-width: 500px;
+  }
+
+  .btn-info {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer;
+  }
+}

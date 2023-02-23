@@ -1,0 +1,84 @@
+.system-settings__container {
+  max-width: 650px;
+  margin: auto;
+
+  h3 {
+    font-weight: 500;
+  }
+  .actions-bar {
+    margin: 1.6rem 0;
+  }
+}
+
+.system-settings__loading {
+  margin: 0 16px;
+}
+
+.remarks,
+.content-info {
+  h2,
+  p {
+    margin: 0;
+  }
+}
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .content__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+    }
+
+    .information {
+      font-size: 14px;
+      position: relative;
+
+      i {
+        font-size: 14px;
+
+        &:hover {
+          color: #2196f3;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+.remarks {
+  .agents {
+    font-size: 14px;
+    cursor: move;
+    border: solid thin lightgray;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 0px;
+
+    .sortable-box {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      box-sizing: border-box;
+      cursor: move;
+      padding: 0.8rem 1.6rem;
+    }
+  }
+}
+
+h2.fw-500 {
+  font-weight: 500;
+}

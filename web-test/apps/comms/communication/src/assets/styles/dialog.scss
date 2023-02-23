@@ -1,0 +1,13 @@
+.dialog-content-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.dialog-content-container > * {
+  width: 100%;
+}
+
+.width-full {
+  width: 100% !important;
+}

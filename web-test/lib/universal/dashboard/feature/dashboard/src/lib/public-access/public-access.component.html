@@ -1,0 +1,77 @@
+<p *ngIf="fetching" fxLayout="column" fxLayoutAlign="center center">
+  <mat-spinner diameter="40" strokeWidth="2"></mat-spinner>
+</p>
+
+<ng-container [ngSwitch]="state">
+  <ng-container *ngSwitchCase="State.existed">
+    <ng-container *ngTemplateOutlet="extedLink"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="State.noLink"> <ng-container *ngTemplateOutlet="noLink"></ng-container> </ng-container>
+  <ng-container *ngSwitchCase="State.creating">
+    <ng-container *ngTemplateOutlet="creatingLink"></ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #noLink>
+  <h1 mat-dialog-title>Enable public access</h1>
+  <div mat-dialog-content>
+    <p class="mat-body">
+      Currently, your dashboard is not publicly viewable. Please make your dashboard public to continue.
+    </p>
+  </div>
+  <div mat-dialog-actions align="end" fxLayoutGap="0.5em">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-stroked-button color="primary" (click)="state = State.creating">Enable public access</button>
+  </div>
+</ng-template>
+
+<ng-template #creatingLink>
+  <h1 mat-dialog-title>Create public access</h1>
+  <div mat-dialog-content>
+    <form #form="ngForm" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="1em">
+      <div>Enter PIN code to protect the public link access.</div>
+      <mat-form-field>
+        <input
+          type="text"
+          matInput
+          placeholder="PIN"
+          required
+          minlength="4"
+          maxlength="8"
+          [(ngModel)]="password"
+          #pinCtr="ngModel"
+          name="pinCtr"
+        />
+        <mat-error *ngIf="pinCtr.invalid && (pinCtr.dirty || pinCtr.touched) && pinCtr.errors?.['required']"
+          >PIN is required
+        </mat-error>
+        <mat-error *ngIf="pinCtr.invalid && (pinCtr.dirty || pinCtr.touched) && pinCtr.errors?.['minlength']"
+          >Min lenght is 4
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions align="end" fxLayoutGap="0.5em">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      [disabled]="(form && form.invalid) || progressing"
+      mat-stroked-button
+      color="primary"
+      (click)="createPublicLink()"
+    >
+      Create
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #extedLink>
+  <h1 mat-dialog-title>Copy public access link</h1>
+  <div mat-dialog-content>
+    <textarea #publicLinkText readonly="" [value]="publicAccessLink" class="public-link__content"></textarea>
+  </div>
+  <div mat-dialog-actions align="end" fxLayoutGap="0.5em">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-stroked-button color="warn" (click)="revoke()">Revoke public access</button>
+    <button mat-stroked-button color="primary" (click)="copy()">Copy</button>
+  </div>
+</ng-template>

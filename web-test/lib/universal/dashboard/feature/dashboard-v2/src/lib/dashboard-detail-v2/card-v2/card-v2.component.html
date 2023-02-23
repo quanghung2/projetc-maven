@@ -1,0 +1,46 @@
+<mat-card class="card card-v2" *ngIf="questionV2 && questionV2Info">
+  <mat-card-title class="card__header">
+    {{ questionV2.name }}
+  </mat-card-title>
+  <mat-icon
+    class="material-icons-outlined info"
+    *ngIf="questionV2Info.messages?.note"
+    [matTooltip]="questionV2Info.messages.note"
+    >info</mat-icon
+  >
+  <mat-card-content class="card__content call-center-call" #cardContent>
+    <div *ngIf="!data" class="no-data white-box">
+      {{ errorMsg ? errorMsg : 'Loading...' }}
+    </div>
+    <ng-container *ngIf="data" [ngSwitch]="true">
+      <b3n-call-center-pie-widget
+        [data]="errorMsg ? null : data"
+        [questionV2]="questionV2"
+        [cardContentHeight]="cardContent.offsetHeight - 16"
+        *ngSwitchCase="questionV2Info.source.type === QuestionV2SourceType.PIE_CHART"
+      >
+      </b3n-call-center-pie-widget>
+      <b3n-call-center-table-widget
+        [data]="errorMsg ? null : data"
+        [questionV2]="questionV2"
+        [cardContentHeight]="cardContent.offsetHeight - 32"
+        *ngSwitchCase="
+          questionV2Info.source.type === QuestionV2SourceType.TABLE_CHART ||
+          (questionV2Info.source.type === QuestionV2SourceType.CURR &&
+            questionV2.uuid !== DASHBOARD_2_QUESTION_USER_STATE_UUID)
+        "
+      ></b3n-call-center-table-widget>
+      <b3n-call-center-line-widget
+        [data]="errorMsg ? null : data"
+        [questionV2]="questionV2"
+        [cardContentHeight]="cardContent.offsetHeight - 16"
+        *ngSwitchCase="questionV2Info.source.type === QuestionV2SourceType.LINE_CHART"
+      ></b3n-call-center-line-widget>
+      <b3n-user-state-widget
+        [data]="errorMsg ? null : data"
+        [questionV2]="questionV2"
+        *ngSwitchCase="questionV2.uuid === DASHBOARD_2_QUESTION_USER_STATE_UUID"
+      ></b3n-user-state-widget>
+    </ng-container>
+  </mat-card-content>
+</mat-card>

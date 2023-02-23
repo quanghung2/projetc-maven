@@ -1,0 +1,33 @@
+<ng-container *ngIf="addonMapping$ | async as addonMapping">
+  <ng-container *ngIf="licenses$ | async as licenses">
+    <div class="mt-16">
+      <h3 fxLayout="row" fxLayoutAlign="flex-end center">
+        <button mat-button color="primary" (click)="assignLicenses(licenses)">Assign</button>
+      </h3>
+    </div>
+
+    <mat-list *ngIf="licenses.length">
+      <ng-container *ngFor="let license of licenses; let i = index">
+        <h3 matSubheader fxLayout="row" fxLayoutAlign="space-between center">
+          {{ license.displayText }}
+          <button mat-icon-button matTooltip="Unassign" (click)="unassign(license)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </h3>
+        <ng-container *ngIf="license.mappings.length">
+          <ng-container *ngFor="let addon of license.mappings; let idx = index">
+            <mat-list-item>
+              <mat-icon matListAvatar class="blue-fg s-24">check</mat-icon>
+              <h4 matLine>
+                {{ addonMapping[addon.sku]?.skuName }}
+                {{ resourcesMapping[addon.id] ? '(' + resourcesMapping[addon.id]['key'] + ')' : '' }}
+              </h4>
+            </mat-list-item>
+            <mat-divider *ngIf="idx < license.mappings.length - 1"></mat-divider>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </mat-list>
+    <p *ngIf="!licenses.length" class="text-center secondary-text">No assigned licenses</p>
+  </ng-container>
+</ng-container>

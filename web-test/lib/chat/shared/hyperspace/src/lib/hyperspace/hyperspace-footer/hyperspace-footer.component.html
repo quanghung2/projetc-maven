@@ -1,0 +1,58 @@
+<ng-container *ngIf="channel && channel.isOpen && channel.isMember">
+  <div class="quill channel">
+    <div class="flex column justify-content-start align-items-none">
+      <div class="flex justify-content-space-between align-items-center gap-8">
+        <csh-quill-editor
+          [data]="quillEditorData"
+          [hyper]="hyper"
+          (messaged)="handleEnterMessage($event)"
+          (uploadedFiles)="onUploadFile($event)"
+          (textChanged)="onTextChanged($event)"
+          (enterEditLastMessage)="handleEditLastMessage($event)"
+        ></csh-quill-editor>
+      </div>
+
+      <div
+        *ngIf="userTypings$ | async as userTypings"
+        class="user-typing"
+        [style.visibility]="userTypings?.length > 0 ? 'visible' : 'hidden'"
+      >
+        <span class="user">{{ userTypings | userHyperTyping: hyper.id }}</span>
+        {{ userTypings?.length > 1 ? 'are' : 'is' }} typing
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div
+  class="convo__footer flex justify-content-center align-items-center gap-8"
+  *ngIf="channel && (!channel.isMember || channel.isArchived)"
+  [class.notMember]="!channel.isMember || channel.isArchived"
+>
+  <ng-container *ngIf="channel && channel.isOpen && !channel.isMember">
+    <div class="warning-label flex justify-content-center align-items-center gap-5">
+      <span>You are viewing</span>
+      <div fxLayoutGap="0.2rem">
+        <mat-icon *ngIf="!channel.isPublic" class="icon">lock</mat-icon>
+        <mat-icon *ngIf="channel.isPublic" class="icon">#</mat-icon>
+        <b>{{ convoName }}</b>
+      </div>
+      <button mat-raised-button color="primary" (click)="joinConvo()">Join channel</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="channel && channel.isArchived">
+    <div class="warning-label flex justify-content-center align-items-center gap-5">
+      <span>You are viewing</span>
+      <div fxLayoutGap="0.2rem">
+        <mat-icon *ngIf="!channel.isPublic" class="icon">lock</mat-icon>
+        <mat-icon *ngIf="channel.isPublic" class="icon">#</mat-icon>
+        <b>{{ convoName }}</b>
+      </div>
+      <span>, an archived channel</span>
+      <ng-container *ngIf="archivedBy$ | async as archivedBy">
+        <span> by</span>
+        <pre class="message_mention">@{{ archivedBy?.displayName }}</pre>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

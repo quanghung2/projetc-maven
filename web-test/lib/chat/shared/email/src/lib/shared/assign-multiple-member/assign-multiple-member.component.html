@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Assign members</h1>
+<div mat-dialog-content>
+  <div class="form-container">
+    <div
+      member-box
+      [isAgentMember]='true'
+      (memberIdsChanged)="onMemberIdsChanged($event)"
+      class="member-box"
+    ></div>
+  </div>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [loading]="isLoading" (click)="submit()">Assign</button>
+</div>

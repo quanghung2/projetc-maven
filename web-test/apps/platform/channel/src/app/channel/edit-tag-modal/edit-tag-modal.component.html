@@ -1,0 +1,39 @@
+<div class="edit-tag">
+  <h2 mat-dialog-title>Edit Tags</h2>
+
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="formGroup">
+      <ng-container formArrayName="tags">
+        <div *ngFor="let tag of tags.controls; index as idx">
+          <ng-container [formGroupName]="idx">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="1.6rem">
+              <mat-form-field fxFlex>
+                <mat-label>Key</mat-label>
+                <input type="text" placeholder="Pick one" matInput formControlName="key" [matAutocomplete]="auto" />
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                  <mat-option *ngFor="let key of this.defaultKeys | filterTags: tag.get('key').value" [value]="key">
+                    {{ key }}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <mat-form-field fxFlex>
+                <mat-label>Value</mat-label>
+                <input formControlName="value" matInput placeholder="Enter Value" (change)="onChangeValue($any(tag))" />
+              </mat-form-field>
+              <button mat-icon-button color="warn" style="cursor: pointer" (click)="deleteTag(idx)">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </form>
+    <a class="edit-tag__link-button" (click)="onAddTag()">Add tag</a>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button [loading]="progressing" [disabled]="formGroup.invalid" color="primary" (click)="onSave()">
+      Update
+    </button>
+  </mat-dialog-actions>
+</div>

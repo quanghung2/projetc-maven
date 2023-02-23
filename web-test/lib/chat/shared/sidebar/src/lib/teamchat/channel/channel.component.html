@@ -1,0 +1,63 @@
+<mat-nav-list class="convo-list">
+  <mat-list-item
+    *ngFor="let convo of channelCs; trackBy: trackByFn"
+    mat-list-item
+    [routerLink]="!convo.hyperspaceId ? ['conversations', convo.id] : ['hyperspace', convo.hyperspaceId, convo.id]"
+    (click)="closeSidebar($event)"
+    routerLinkActive="active"
+    class="convo item-convo"
+  >
+    <ng-container
+      *ngIf="{
+        isDraft: convo.isDraft$ | async
+      } as data"
+    >
+      <mat-icon matListIcon *ngIf="convo.hyperspaceId; else iconTeamChat" class="icon s-16">share</mat-icon>
+
+      <ng-template #iconTeamChat>
+        <mat-icon matListIcon *ngIf="data.isDraft" class="icon s-16">edit</mat-icon>
+        <ng-container *ngIf="!data.isDraft">
+          <mat-icon matListIcon class="icon" [class.unread]="convo.unreadCount > 0">
+            {{ convo.icon }}
+          </mat-icon>
+        </ng-container>
+      </ng-template>
+
+      <div
+        matLine
+        class="convo__headline flex justify-content-space-between align-items-start gap-20"
+        [class.unread]="convo.unreadCount > 0"
+      >
+        <span class="text-overflow-ellipsis">
+          {{ convo?.name }}
+        </span>
+
+        <div
+          *ngIf="convo.mentionCount > 0"
+          [matBadge]="convo.mentionCount < 10 ? convo.mentionCount : '9+'"
+          matBadgeOverlap="false"
+          [matBadgeHidden]="convo.mentionCount === 0 || !convo.isMember"
+          matBadgeSize="small"
+          matBadgeColor="warn"
+        ></div>
+      </div>
+
+      <mat-icon
+        matSuffix
+        matTooltip="Unstar this channel"
+        class="icon star-channel"
+        *ngIf="convo.isStarred"
+        (click)="unstarConvo($event, convo)"
+        >star
+      </mat-icon>
+      <!-- <mat-icon
+        matSuffix
+        matTooltip="Star this channel"
+        class="icon star-channel"
+        *ngIf="!convo.isStarred"
+        (click)="starConvo($event, convo)"
+        >star_border
+      </mat-icon> -->
+    </ng-container>
+  </mat-list-item>
+</mat-nav-list>

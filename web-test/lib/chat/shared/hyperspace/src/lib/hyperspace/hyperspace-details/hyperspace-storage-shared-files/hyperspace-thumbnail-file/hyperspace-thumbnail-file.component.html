@@ -1,0 +1,13 @@
+<mat-list-item (click)="isImgFile ? view() : null">
+  <img mat-list-avatar class="thumbnail" [src]="isImgFile ? (src | safe: 'url') : logoFileType" />
+  <div mat-line class="title">{{ file.name }}</div>
+  <div mat-line class="shared_files flex justify-content-space-between align-items-center gap-8">
+    <span class="title">{{ (file.userId | selectUser | async)?.displayName }}</span>
+    <span>{{ file.createdTime | date: "MMM d 'at' h:mm a" }}</span>
+  </div>
+  <div class="right-actions">
+    <button mat-icon-button (click)="download($event)" matTooltip="Download">
+      <mat-icon>save_alt</mat-icon>
+    </button>
+  </div>
+</mat-list-item>

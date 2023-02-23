@@ -1,0 +1,16 @@
+.scrollbar,
+.scrollbar--content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.scrollbar--content::-webkit-scrollbar,
+.scrollbar-thumb--none-radius::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar--content::-webkit-scrollbar-thumb,
+.scrollbar-thumb--none-radius::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.26);
+}
